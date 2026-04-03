@@ -1,0 +1,11 @@
+node_modules/
+platforms/
+plugins/
+*.zip
+*.log
+*.apk
+gradle-8.7/
+gradle/
+.gradle/
+build/
+captures/

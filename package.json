@@ -1,0 +1,29 @@
+{
+  "name": "riverescapeweb",
+  "version": "1.0.0",
+  "description": "",
+  "main": "game.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@capacitor/android": "^8.3.0",
+    "@capacitor/cli": "^8.3.0",
+    "@capacitor/core": "^8.3.0",
+    "admob-plus-cordova": "^2.0.0-alpha.19"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^3.0.5"
+  },
+  "cordova": {
+    "plugins": {
+      "admob-plus-cordova": {
+        "APP_ID_ANDROID": "ca-app-pub-7739440971804169~2645131828"
+      }
+    }
+  }
+}

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>RiverEscape Mobil</title>
+    <link rel="stylesheet" href="style.css?v=62">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Outfit:wght@700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="game-container">
+        <!-- Arka planda çalışacak Canvas -->
+        <canvas id="gameCanvas"></canvas>
+        
+        <!-- UI (Oyun Arayüzü) Katmanı -->
+            <button id="pause-btn" style="position: absolute; top: 70px; right: 10px; display: none; background: rgba(0,0,0,0.7); color: white; border: 1px solid #fff; padding: 6px 12px; font-family: 'Press Start 2P', cursive; font-size: 8px; z-index: 60; border-radius: 4px; pointer-events: auto; cursor: pointer;">⏸ DURDUR</button>
+
+            <!-- PAUSE EKRANI -->
+            <div id="pause-screen" class="screen hidden" style="background: rgba(0,0,0,0.85); flex-direction: column; align-items: center; justify-content: center; z-index: 100;">
+                <h2 style="color: white; font-family: 'Press Start 2P', cursive; margin-bottom: 25px; text-align: center; font-size: 18px;">DURAKLATILDI</h2>
+                <div class="buttons" style="display:flex; flex-direction:column; gap:15px; align-items:center; width: 100%;">
+                    <button id="resume-btn" style="background: linear-gradient(to right, #00b09b, #96c93d); color: white; border: none; padding: 15px 40px; font-weight: bold; font-family: 'Press Start 2P', cursive; border-radius: 8px; font-size: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); outline: none;">▶ Devam</button>
+                    <button id="pause-settings-open-btn" style="background: #444; color: #FFD700; border: 2px solid #FFD700; padding: 10px 40px; font-weight: bold; font-family: 'Outfit', sans-serif; border-radius: 8px; font-size: 14px; outline: none;">⚙️ AYARLAR</button>
+                    <button id="quit-btn" style="background-color: #f12711; font-family: 'Press Start 2P', cursive; text-shadow: none; font-size: 14px; font-weight:bold; padding: 15px; border-radius: 8px; color: #fff; border: none; outline:none;">Ana Menü</button>
+                </div>
+            </div>
+            
+            <div id="start-screen" class="screen active">
+                <h1>River Escape</h1>
+                <p>Dokunarak veya Ok Tuşlarıyla kayığı sağa sola kaydır.</p>
+                <div class="buttons" style="display:flex; flex-direction:column; gap:15px; align-items:center;">
+                    <button id="start-btn">Oyna</button>
+                    <button id="shop-open-btn" style="background: linear-gradient(to right, #8e2de2, #4a00e0); color: white; border: none; padding: 15px 40px; font-weight: bold; font-family: 'Press Start 2P', cursive; border-radius: 8px; font-size: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); outline: none;">🛒 Mağaza</button>
+                    <button id="settings-open-btn" style="background: #333; color: white; border: 2px solid #FFD700; padding: 15px 40px; font-weight: bold; font-family: 'Press Start 2P', cursive; border-radius: 8px; font-size: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); outline: none;">⚙️ AYARLAR</button>
+                </div>
+            </div>
+
+            <div id="game-over-screen" class="screen hidden" style="background: rgba(0,0,0,0.85);">
+                <h2>Oyun Bitti!</h2>
+                <p>Skorun: <span id="finalScoreValue">0</span></p>
+                <p style="color: gold; margin-top: -10px; font-weight: bold;">Toplanan Altın: <span id="finalGoldValue">0</span></p>
+                <div class="buttons" style="display:flex; flex-direction:column; gap:10px; width: 85%; margin: 0 auto;">
+                    <button id="revive-btn" style="background: linear-gradient(to right, #f12711, #f5af19); color: white; border: none; padding: 12px; font-weight: bold; border-radius: 8px; font-size: 14px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); outline: none;">▶ Reklam İzle & Canlan</button>
+                    <button id="x2-gold-start-btn" style="display: none; background: linear-gradient(to right, #f2c94c, #f2994a); color: #000; border: none; padding: 12px; font-weight: bold; border-radius: 8px; font-size: 14px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); outline: none;">💰 x2 Altın Katlayıcıyla Başla (Reklam)</button>
+                    <button id="gameover-shop-btn" style="background: linear-gradient(to right, #8e2de2, #4a00e0); color: white; border: none; padding: 12px; font-weight: bold; border-radius: 8px; font-size: 14px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); outline: none;">🛒 Mağaza</button>
+                    <button id="restart-btn" style="background-color: #444; padding: 12px; font-size: 14px; font-weight: bold; border-radius: 8px; color: #ddd; border: none; margin-top: 10px; width: 100%; outline: none;">Baştan Başla (Vazgeç)</button>
+                </div>
+            </div>
+
+            <!-- YENİ AYARLAR EKRANI -->
+            <div id="settings-screen" class="screen hidden" style="z-index: 2000;">
+                <h2 style="color: #FFD700; font-family: 'Press Start 2P', cursive; margin-bottom: 25px; font-size: 18px;">AYARLAR</h2>
+                
+                <div class="settings-item">
+                    <span class="settings-label">🎵 Müzik</span>
+                    <label class="switch">
+                        <input type="checkbox" id="music-toggle" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="settings-item">
+                    <span class="settings-label">🔊 Efektler</span>
+                    <label class="switch">
+                        <input type="checkbox" id="sfx-toggle" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <button id="settings-close-btn" style="background-color: #4CAF50; font-family: 'Outfit', sans-serif; font-size: 16px; font-weight:bold; padding: 14px; border-radius: 12px; width: 100%; color: #fff; border: none; outline:none; margin-top: 10px; cursor:pointer; box-shadow: 0 4px #2E7D32;">SAVE & CLOSE</button>
+            </div>
+
+            <!-- MAĞAZA EKRANI -->
+            <div id="shop-screen" class="screen hidden" style="background: rgba(0,0,0,0.9); flex-direction: column; align-items: center; justify-content: center; z-index: 100;">
+                <h2 style="color: gold; font-family: 'Press Start 2P', cursive; text-shadow: 2px 2px #000; margin-bottom: 25px;">🛒 MAĞAZA</h2>
+                
+                <div style="background: #2e2e2e; padding: 15px; border-radius: 10px; width: 85%; margin-bottom: 15px; border: 2px solid #555; box-shadow: 0 4px 10px rgba(0,0,0,0.5);">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <div style="text-align: left;">
+                            <span style="font-size:28px; vertical-align: middle;">🧲</span>
+                            <strong style="color:#fff; font-size:16px; font-family: 'Outfit', sans-serif; vertical-align: middle; margin-left: 5px;">Mıknatıs</strong>
+                            <div style="font-size:12px; color:#ccc; margin-top:8px; font-family: 'Outfit', sans-serif;">Süre: <span id="magnet-duration" style="color:#00e5ff; font-weight:bold;">0sn</span> (Seviye <span id="magnet-lvl">0</span>)</div>
+                        </div>
+                        <button id="buy-magnet-btn" style="background:#f2994a; color:#fff; border:none; padding:10px 15px; border-radius:5px; font-weight:bold; font-size:14px; outline:none; font-family: 'Outfit', sans-serif;">Geliştir<br><span id="magnet-price">150</span> 💰</button>
+                    </div>
+                </div>
+
+                <div style="background: #2e2e2e; padding: 15px; border-radius: 10px; width: 85%; margin-bottom: 25px; border: 2px solid #555; box-shadow: 0 4px 10px rgba(0,0,0,0.5);">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <div style="text-align: left;">
+                            <span style="font-size:28px; vertical-align: middle;">🛡️</span>
+                            <strong style="color:#fff; font-size:16px; font-family: 'Outfit', sans-serif; vertical-align: middle; margin-left: 5px;">Kalkan</strong>
+                            <div style="font-size:12px; color:#ccc; margin-top:8px; font-family: 'Outfit', sans-serif;">Çıkma: <span id="shield-chance" style="color:#64dd17; font-weight:bold;">%0</span> (Seviye <span id="shield-lvl">0</span>)</div>
+                        </div>
+                        <button id="buy-shield-btn" style="background:#f2994a; color:#fff; border:none; padding:10px 15px; border-radius:5px; font-weight:bold; font-size:14px; outline:none; font-family: 'Outfit', sans-serif;">Geliştir<br><span id="shield-price">200</span> 💰</button>
+                    </div>
+                </div>
+                <div style="width: 85%; margin-bottom: 25px;">
+                    <button id="ad-gold-btn" style="background: linear-gradient(to right, #00C9FF, #92FE9D); color: #000; width: 100%; border: none; padding: 12px; font-weight: bold; border-radius: 8px; font-size: 14px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); outline: none;">🎁 +50 Altın (Reklam İzle)</button>
+                </div>
+                <button id="shop-close-btn" style="background-color: #f12711; font-family: 'Outfit', sans-serif; text-shadow: none; font-size: 16px; font-weight:bold; padding: 15px; border-radius: 8px; width: 85%; color: #fff; border: none; outline:none;">Kapat</button>
+            </div>
+
+            <!-- LEVEL 2 GEÇİŞ EFEKT EKRANI -->
+            <div id="level-up-overlay" class="screen hidden" style="pointer-events: none; z-index: 50; background: transparent; backdrop-filter: none; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.5s;">
+                <div style="text-align: center;">
+                    <h1 style="color: #ff4500; font-size: 40px; font-family: 'Press Start 2P', cursive; text-shadow: 4px 4px 0 #000; margin: 0;">LEVEL 2</h1>
+                    <h2 style="color: #fb8c00; font-size: 24px; font-family: 'Outfit', sans-serif; text-shadow: 3px 3px 0 #000; margin-top: 10px; font-weight: 900; letter-spacing: 5px;">🔥 LAVA RIVER 🔥</h2>
+                </div>
+            </div>
+    </div>
+
+    <!-- Scriptleri Yükle -->
+    <script src="game_v3.js?v=64"></script>
+</body>
+</html>

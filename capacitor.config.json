@@ -1,0 +1,11 @@
+{
+  "appId": "com.gemini.riverescape",
+  "appName": "River Escape",
+  "webDir": "www",
+  "bundledWebRuntime": false,
+  "cordova": {
+    "preferences": {
+      "APP_ID_ANDROID": "ca-app-pub-7739440971804169~2645131828"
+    }
+  }
+}
