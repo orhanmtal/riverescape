@@ -6,7 +6,8 @@ const filesToFix = [
     'android/app/capacitor.build.gradle',
     'android/capacitor-cordova-android-plugins/build.gradle',
     'node_modules/@capacitor/android/capacitor/build.gradle',
-    'node_modules/@capacitor-community/admob/android/build.gradle'
+    'node_modules/@capacitor-community/admob/android/build.gradle',
+    'node_modules/@capacitor/haptics/android/build.gradle'
 ];
 
 filesToFix.forEach(relPath => {

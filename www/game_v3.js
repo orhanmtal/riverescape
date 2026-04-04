@@ -201,7 +201,19 @@ function showToast(msg) {
 }
 
 // --- ADMOB YÖNETİCİSİ v3 (@capacitor-community/admob — Capacitor Native API) ---
-const REWARDED_AD_UNIT_ID = "ca-app-pub-7739440971804169/6392805140";
+const REWARDED_AD_UNIT_ID = "ca-app-pub-7739440971804169/6392805140"; // PRODUCTION ID
+let admobInitialized = false;
+let rewardedAdReady = false;
+let rewardedAdLoading = false;
+
+function getCapacitorAdMob() {
+    try {
+        if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.AdMob) {
+            return window.Capacitor.Plugins.AdMob;
+        }
+    } catch(e) {}
+    return null;
+}
 
 // Ödül için global değişkenler
 let pendingRewardCallback = null;
@@ -227,25 +239,25 @@ async function initAdMob() {
         AdMob.addListener('onRewardedVideoAdReward', (info) => {
             console.log('[AdMob] Ödül Kazanıldı!', info);
             adExecuted = true;
-            if (pendingRewardCallback) {
-                const callback = pendingRewardCallback;
-                pendingRewardCallback = null; // Mükerrer ödülü engelle
-                callback();
-            }
+            // Aksiyonu Dismissed (Kapatılma) olayına saklıyoruz
         });
 
         // 2. Reklam Kapatıldığında
         AdMob.addListener('onRewardedVideoAdDismissed', () => {
             console.log('[AdMob] Reklam Kapatıldı.');
             
-            // Eğer ödül verildiyse (adExecuted true) zaten callback çalıştı.
-            // Eğer verilmediyse, butonu tekrar aktif etmemiz lazım.
+            // v1.78: Eğer ödül kazanıldıysa, aksiyonu otomatik tetikle
+            if (adExecuted && pendingRewardCallback) {
+                const callback = pendingRewardCallback;
+                pendingRewardCallback = null;
+                callback();
+            }
+
             setTimeout(() => {
                 adExecuted = false;
                 rewardedAdReady = false;
                 preloadRewardedAd();
                 
-                // UI temizliği için butonu aktif et (Eğer bir buton bekliyorsa)
                 const lastBtn = window.lastAdButton;
                 if (lastBtn) {
                      lastBtn.innerText = window.lastAdButtonText;
@@ -277,7 +289,7 @@ async function preloadRewardedAd() {
         rewardedAdLoading = true;
         await AdMob.prepareRewardVideoAd({
             adId: REWARDED_AD_UNIT_ID,
-            isTesting: false,
+            isTesting: false, // v1.74: TEST REKLAMI
         });
         rewardedAdReady = true;
         rewardedAdLoading = false;
@@ -299,58 +311,65 @@ async function showRewardedAd(btnElem, defaultText, callback) {
         return;
     }
 
-    btnElem.innerText = t.loadingAd;
+    // v1.73: ASLA DONMAYAN (Independent Countdown)
     btnElem.disabled = true;
+    let countdown = 4;
+    btnElem.innerText = `${t.loadingAd} (${countdown})`;
 
-    // UI Referanslarını kaydet
+    // UI Referanslarını kaydet (Dismiss sonrası sıfırlama için) v1.78 FIX
     window.lastAdButton = btnElem;
     window.lastAdButtonText = defaultText;
 
-    const AdMob = getCapacitorAdMob();
-
-    if (AdMob) {
-        try {
-            if (!admobInitialized) await initAdMob();
-
-            // v168 FIX: Reklam hazır değilse butonu 8 saniye sonra otomatik aç (Bekleme yapmasın)
-            let loadTimer = setTimeout(() => {
-                if (btnElem.disabled && !adExecuted) {
-                     btnElem.innerText = defaultText;
-                     btnElem.disabled = false;
-                     showToast(t.adLoadFail);
-                }
-            }, 8000); 
-
-            if (!rewardedAdReady) {
-                console.log('[AdMob] Pre-loading for show...');
-                await AdMob.prepareRewardVideoAd({
-                    adId: REWARDED_AD_UNIT_ID,
-                    isTesting: false,
-                });
-                rewardedAdReady = true;
+    // Bağımsız Görsel Geri Sayım (Plugin'den tamamen bağımsız çalışır)
+    let countdownTimer = setInterval(() => {
+        countdown--;
+        if (countdown > 0) {
+            btnElem.innerText = `${t.loadingAd} (${countdown})`;
+        } else {
+            clearInterval(countdownTimer);
+            if (btnElem.disabled && !adExecuted) {
+                console.warn('[AdMob] 1.73: Timeout Reset.');
+                btnElem.innerText = defaultText;
+                btnElem.disabled = false;
+                showToast(t.adLoadFail);
             }
-
-            clearTimeout(loadTimer); // Eğer hazırsa veya yüklendiyse butonu otomatik açma zamanlayıcısını iptal et
-            
-            pendingRewardCallback = callback;
-            adExecuted = false;
-
-            console.log('[AdMob] Action: Show Ad.');
-            await AdMob.showRewardVideoAd();
-
-        } catch(e) {
-            console.error('[AdMob] Error:', e);
-            showToast(t.adLoadFail);
-            btnElem.innerText = defaultText;
-            btnElem.disabled = false;
-            rewardedAdReady = false;
         }
-    } else {
-        showToast("Dev mode: Plugin not detected. Simulating reward...");
+    }, 1000);
+
+    const AdMob = getCapacitorAdMob();
+    if (!AdMob) {
+        clearInterval(countdownTimer);
+        showToast("Simulation Reward...");
         btnElem.innerText = defaultText;
         btnElem.disabled = false;
         callback();
+        return;
     }
+
+    // Plugin işlemlerini 'AWAIT' etmeden, arkada (Non-blocking) başlatıyoruz.
+    // Böylece Plugin kilitlense bile UI kitlenmeyecek!
+    (async () => {
+        try {
+            if (!admobInitialized) await initAdMob();
+
+            if (!rewardedAdReady) {
+                console.log('[AdMob] 1.74: Async Testing Loading...');
+                await AdMob.prepareRewardVideoAd({ adId: REWARDED_AD_UNIT_ID, isTesting: false });
+                rewardedAdReady = true;
+            }
+
+            if (rewardedAdReady) {
+                clearInterval(countdownTimer); // Reklam hazırsa sayacı durdur
+                pendingRewardCallback = callback;
+                adExecuted = false;
+                console.log('[AdMob] 1.73: Show Triggered.');
+                await AdMob.showRewardVideoAd();
+            }
+        } catch(e) {
+            console.error('[AdMob] 1.73: Async Error:', e);
+            rewardedAdReady = false;
+        }
+    })();
 }
 
 // --- HAPTICS (TİTREŞİM SİSTEMİ) v3.2 ---
@@ -2058,6 +2077,7 @@ if(adGoldBtn) {
             totalGold += 50; 
             saveGame();
             updateShopUI();
+            showToast(`${translations[currentLang].rewardPrefix} 50 GOLD! 💰`);
             for(let i=0; i<4; i++) setTimeout(playCoinSound, i*100);
         });
     });
