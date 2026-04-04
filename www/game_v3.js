@@ -200,28 +200,75 @@ function showToast(msg) {
     }, 2500);
 }
 
-// --- ADMOB YÖNETİCİSİ (ÖDÜLLÜ REKLAMLAR) ---
-const ADMOB_APP_ID = "ca-app-pub-7739440971804169~2645131828";
+// --- ADMOB YÖNETİCİSİ v3 (@capacitor-community/admob — Capacitor Native API) ---
 const REWARDED_AD_UNIT_ID = "ca-app-pub-7739440971804169/6392805140";
 
-// v161: CİHAZ HAZIR OLDUĞUNDA ADMOB'U BAŞLAT
-document.addEventListener('deviceready', async () => {
-    if (typeof admob !== 'undefined') {
-        console.log("AdMob Initializing on Device...");
-        try {
-            await admob.start();
-            // Reklamı erkenden yüklemeye başla (Arka planda)
-            admob.rewardVideo.load({ adUnitId: REWARDED_AD_UNIT_ID });
-        } catch (e) {
-            console.error("AdMob startup failed:", e);
-        }
-    }
-}, false);
+let admobInitialized = false;
+let rewardedAdReady = false;
+let rewardedAdLoading = false;
 
-function showRewardedAd(btnElem, defaultText, callback) {
+// Capacitor AdMob plugin referansı
+function getCapacitorAdMob() {
+    try {
+        if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.AdMob) {
+            return window.Capacitor.Plugins.AdMob;
+        }
+    } catch(e) {}
+    return null;
+}
+
+async function initAdMob() {
+    if (admobInitialized) return;
+    const AdMob = getCapacitorAdMob();
+    if (!AdMob) {
+        console.warn('[AdMob] Capacitor AdMob plugin bulunamadı.');
+        return;
+    }
+    try {
+        await AdMob.initialize({
+            requestTrackingAuthorization: true,
+            testingDevices: [],
+            initializeForTesting: false,
+        });
+        admobInitialized = true;
+        console.log('[AdMob] SDK initialized OK.');
+        preloadRewardedAd();
+    } catch(e) {
+        console.error('[AdMob] initialize failed:', e);
+    }
+}
+
+async function preloadRewardedAd() {
+    if (rewardedAdLoading || rewardedAdReady) return;
+    const AdMob = getCapacitorAdMob();
+    if (!AdMob || !admobInitialized) return;
+    try {
+        rewardedAdLoading = true;
+        console.log('[AdMob] Preloading rewarded ad...');
+        await AdMob.prepareRewardVideoAd({
+            adId: REWARDED_AD_UNIT_ID,
+            isTesting: false,
+        });
+        rewardedAdReady = true;
+        rewardedAdLoading = false;
+        console.log('[AdMob] Rewarded ad preloaded OK.');
+    } catch(e) {
+        rewardedAdLoading = false;
+        rewardedAdReady = false;
+        console.warn('[AdMob] Preload failed:', e);
+    }
+}
+
+// Capacitor'da plugin hazır olduğunda başlat
+document.addEventListener('deviceready', initAdMob, false);
+window.addEventListener('load', () => {
+    setTimeout(() => { if (!admobInitialized) initAdMob(); }, 1000);
+    setTimeout(() => { if (!admobInitialized) initAdMob(); }, 3000);
+});
+
+async function showRewardedAd(btnElem, defaultText, callback) {
     const t = translations[currentLang];
-    
-    // İnternet Kontrolü
+
     if (!navigator.onLine) {
         showToast(t.adLoadFail);
         btnElem.innerText = defaultText;
@@ -231,95 +278,90 @@ function showRewardedAd(btnElem, defaultText, callback) {
 
     btnElem.innerText = t.loadingAd;
     btnElem.disabled = true;
-    
-    // Uygulama telefonda (Cordova/AdMob) çalışıyorsa:
-    if (typeof admob !== 'undefined') {
-        let adExecuted = false;
-        
-        let adCheckTimeout = setTimeout(() => {
-            if (!adExecuted) {
-                console.warn("Ad timeout: Failed to load within 12 seconds.");
-                adExecuted = true;
-                showToast(t.adLoadFail); // Zaman aşımı uyarısı
-                btnElem.innerText = defaultText;
-                btnElem.disabled = false;
+
+    const AdMob = getCapacitorAdMob();
+
+    if (AdMob) {
+        // Plugin mevcut — Capacitor native reklam
+        try {
+            // Henüz init olmadıysa yap
+            if (!admobInitialized) await initAdMob();
+
+            // Reklam hazır değilse yükle
+            if (!rewardedAdReady) {
+                console.log('[AdMob] Loading ad on-demand...');
+                await AdMob.prepareRewardVideoAd({
+                    adId: REWARDED_AD_UNIT_ID,
+                    isTesting: false,
+                });
+                rewardedAdReady = true;
             }
-        }, 12000); 
 
-        // Başarılı İzleme (Sadece burada ÖDÜL verilir!)
-        document.addEventListener('admob.reward_video.reward', function onReward() {
-            if (!adExecuted) {
-                adExecuted = true;
-                clearTimeout(adCheckTimeout);
-                document.removeEventListener('admob.reward_video.reward', onReward);
-                
-                console.log("Ad rewarded successfully!");
-                callback(); // Ödülü ver
-                
-                btnElem.innerText = defaultText;
-                btnElem.disabled = false;
-                // Bir sonraki kullanım için arka planda yükle
-                admob.rewardVideo.load({ adUnitId: REWARDED_AD_UNIT_ID });
-            }
-        });
+            // Reward event dinle
+            let adExecuted = false;
 
-        // Reklam Kapandığında (Ödül almadan çıkarsa buraya düşer)
-        const onDismiss = () => {
-             if (!adExecuted) {
-                adExecuted = true;
-                clearTimeout(adCheckTimeout);
-                document.removeEventListener('admob.reward_video.dismiss', onDismiss);
-                
-                console.log("Ad dismissed by user without reward.");
-                btnElem.innerText = defaultText;
-                btnElem.disabled = false;
-                // Yeni reklam yükle
-                admob.rewardVideo.load({ adUnitId: REWARDED_AD_UNIT_ID });
-             }
-        };
-
-        // Yükleme Hatası (İnternet yoksa veya reklam dönmüyorsa)
-        const onFail = () => {
-             if (!adExecuted) {
-                adExecuted = true;
-                clearTimeout(adCheckTimeout);
-                document.removeEventListener('admob.reward_video.load_fail', onFail);
-                
-                console.log("Ad load failed.");
-                showToast(t.adLoadFail); // Kullanıcıya uyarı ver
-                
-                btnElem.innerText = defaultText;
-                btnElem.disabled = false;
-                admob.rewardVideo.load({ adUnitId: REWARDED_AD_UNIT_ID });
-             }
-        };
-
-        document.addEventListener('admob.reward_video.load_fail', onFail);
-        document.addEventListener('admob.reward_video.dismiss', onDismiss);
-        
-        // Önce göster, hazır değilse yükle ve göster mantığı
-        admob.rewardVideo.show().catch(() => {
-            console.log("Ad not ready, trying direct load and show...");
-            admob.rewardVideo.load({ adUnitId: REWARDED_AD_UNIT_ID }).then(() => {
-                admob.rewardVideo.show();
-            }).catch(e => {
-                console.error("Ad load/show failed:", e);
-                onFail();
+            const rewardListener = await AdMob.addListener('onRewardedVideoAdReward', () => {
+                if (!adExecuted) {
+                    adExecuted = true;
+                    console.log('[AdMob] Reward earned!');
+                    rewardListener.remove();
+                    callback();
+                    btnElem.innerText = defaultText;
+                    btnElem.disabled = false;
+                    rewardedAdReady = false;
+                    preloadRewardedAd();
+                }
             });
-        });
-    } 
-    // Tarayıcıdaki Hızlı Test (Simülasyon) Modu
-    else {
-        console.log("SIM Ad Loading... (No real AdMob detected)");
-        setTimeout(() => {
-            // ÖNEMLİ: TEST/ÜRETİM MODUNDA BEDAVA ÖDÜLÜ KAPATTIK!
-            // callback(); // Sadece gerçek cihazda onay gelirse ödül verilecek.
-            
-            showToast(translations[currentLang].adNotReady);
-            
+
+            const closeListener = await AdMob.addListener('onRewardedVideoAdClosed', () => {
+                closeListener.remove();
+                if (!adExecuted) {
+                    adExecuted = true;
+                    console.log('[AdMob] Ad closed without reward.');
+                    btnElem.innerText = defaultText;
+                    btnElem.disabled = false;
+                    rewardedAdReady = false;
+                    preloadRewardedAd();
+                }
+            });
+
+            // Timeout güvencesi
+            setTimeout(() => {
+                if (!adExecuted) {
+                    adExecuted = true;
+                    console.warn('[AdMob] Timeout 15s.');
+                    rewardListener.remove();
+                    closeListener.remove();
+                    showToast(t.adLoadFail);
+                    btnElem.innerText = defaultText;
+                    btnElem.disabled = false;
+                    rewardedAdReady = false;
+                    preloadRewardedAd();
+                }
+            }, 15000);
+
+            console.log('[AdMob] Showing rewarded ad...');
+            await AdMob.showRewardVideoAd();
+
+        } catch(e) {
+            console.error('[AdMob] Error:', e);
+            showToast(t.adLoadFail);
             btnElem.innerText = defaultText;
             btnElem.disabled = false;
-        }, 1500);
+            rewardedAdReady = false;
+        }
+    } else {
+        // Tarayıcı / plugin yok — teşhis mesajı
+        const diagInfo = [
+            'Capacitor=' + (window.Capacitor ? 'YES' : 'NO'),
+            'Plugins=' + (window.Capacitor && window.Capacitor.Plugins ? Object.keys(window.Capacitor.Plugins).join(',') : 'none'),
+            'AdMob=' + (AdMob ? 'OK' : 'NULL'),
+            'init=' + admobInitialized
+        ].join(' | ');
+        console.log('[AdMob] DIAG:', diagInfo);
+        showToast(diagInfo);
+        btnElem.innerText = defaultText;
+        btnElem.disabled = false;
     }
 }
 
