@@ -1038,8 +1038,12 @@ function gameOver() {
         
         // v122: Altınlar GameOver ekranında gösterilir ama KASAya aktarım 
         // ancak kullanıcı Quit veya Restart dediğinde (ya da reklam izlemediğinde) kesinleşir.
-        if(finalScoreElem) finalScoreElem.innerText = Math.floor(score);
-        if(finalGoldElem) finalGoldElem.innerText = goldCount;
+        // v165 FIX: UI elemanlarını doğrudan DOM'dan çek (Cache null kalmış olabilir)
+        const fsElem = document.getElementById('finalScoreValue');
+        const fgElem = document.getElementById('finalGoldValue');
+        
+        if (fsElem) fsElem.innerText = Math.floor(score);
+        if (fgElem) fgElem.innerText = goldCount;
         
         if (x2GoldBtn) x2GoldBtn.style.display = (deathCountForX2 >= 3) ? 'flex' : 'none';
         
