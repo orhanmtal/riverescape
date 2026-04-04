@@ -1106,8 +1106,8 @@ function update(dt) {
         if (touchX < player.x + player.width/2 - 15) dx = -1;
         else if (touchX > player.x + player.width/2 + 15) dx = 1;
         
-        if (touchY < player.y + player.height/2 - 15) dy = -1;
-        else if (touchY > player.y + player.height/2 + 15) dy = 1;
+        if (touchY < player.y + player.height/2 - 30) dy = -1;
+        else if (touchY > player.y + player.height/2 + 30) dy = 1;
     }
 
     // SADECE ileri-geri (Y ekseni) hareket edildiğinde skordan düş (0'ın altına inmez)
@@ -1158,12 +1158,13 @@ function update(dt) {
         }
     }
 
+    // v166 FIX: İleri-Geri (Y) hızını %40 yavaşlatarak kontrolü arttırıyoruz
     player.x += dx * player.speed * moveDt;
+    player.y += dy * (player.speed * 0.6) * moveDt; 
+    
     if (player.x < playRiverLeft) player.x = playRiverLeft;
     if (player.x > playRiverRight) player.x = playRiverRight;
     
-    // Y Ekseni Sınırları (Ekranın üstüne veya altına çıkmasın)
-    player.y += dy * player.speed * moveDt;
     if (player.y < 50) player.y = 50; 
     if (player.y > canvas.height - player.height - 20) player.y = canvas.height - player.height - 20;
 
