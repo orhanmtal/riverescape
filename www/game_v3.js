@@ -302,7 +302,7 @@ async function showRewardedAd(btnElem, defaultText, callback) {
     btnElem.innerText = t.loadingAd;
     btnElem.disabled = true;
 
-    // UI Referanslarını kaydet (Dismissed durumunda geri dönmek için)
+    // UI Referanslarını kaydet
     window.lastAdButton = btnElem;
     window.lastAdButtonText = defaultText;
 
@@ -312,9 +312,17 @@ async function showRewardedAd(btnElem, defaultText, callback) {
         try {
             if (!admobInitialized) await initAdMob();
 
-            // Reklam hazır değilse (veya önceki kullanıldıysa) tekrar yükle
+            // v168 FIX: Reklam hazır değilse butonu 8 saniye sonra otomatik aç (Bekleme yapmasın)
+            let loadTimer = setTimeout(() => {
+                if (btnElem.disabled && !adExecuted) {
+                     btnElem.innerText = defaultText;
+                     btnElem.disabled = false;
+                     showToast(t.adLoadFail);
+                }
+            }, 8000); 
+
             if (!rewardedAdReady) {
-                console.log('[AdMob] Loading ad on-demand...');
+                console.log('[AdMob] Pre-loading for show...');
                 await AdMob.prepareRewardVideoAd({
                     adId: REWARDED_AD_UNIT_ID,
                     isTesting: false,
@@ -322,19 +330,13 @@ async function showRewardedAd(btnElem, defaultText, callback) {
                 rewardedAdReady = true;
             }
 
+            clearTimeout(loadTimer); // Eğer hazırsa veya yüklendiyse butonu otomatik açma zamanlayıcısını iptal et
+            
             pendingRewardCallback = callback;
             adExecuted = false;
 
-            console.log('[AdMob] Showing rewarded ad...');
+            console.log('[AdMob] Action: Show Ad.');
             await AdMob.showRewardVideoAd();
-
-            // Güvenlik: 20 saniye sonra hala bir şey olmadıysa butonu aç
-            setTimeout(() => {
-                if (btnElem.disabled && !adExecuted) {
-                    btnElem.innerText = defaultText;
-                    btnElem.disabled = false;
-                }
-            }, 20000);
 
         } catch(e) {
             console.error('[AdMob] Error:', e);
@@ -362,7 +364,6 @@ function getCapacitorHaptics() {
 }
 
 async function triggerVibration(pattern) {
-    // isVibrationEnabled kontrolü game_v3.js içinde tanımlı ayarlardan gelir
     if (typeof isVibrationEnabled !== 'undefined' && !isVibrationEnabled) return;
     
     const Haptics = getCapacitorHaptics();
@@ -370,17 +371,16 @@ async function triggerVibration(pattern) {
     try {
         if (Haptics) {
             if (Array.isArray(pattern)) {
-                // Büyük çarpışmalar (Dizi gönderilen durumlar)
-                await Haptics.notification({ type: 'error' });
+                // Büyük çarpışmalar (GameOver vb.)
+                await Haptics.notification({ type: 'warning' });
             } else if (typeof pattern === 'number' && pattern >= 30) {
-                // Orta seviye uyarılar
-                await Haptics.impact({ style: 'heavy' });
+                // v168: 'heavy' yerine 'medium' (Daha şık ve profesyonel)
+                await Haptics.impact({ style: 'medium' });
             } else {
                 // Altın toplama veya hafif sürtünme (Tık hissi)
                 await Haptics.impact({ style: 'light' });
             }
         } else {
-            // Fallback (Tarayıcı için standart API)
             if (navigator.vibrate) navigator.vibrate(pattern);
         }
     } catch (e) {
