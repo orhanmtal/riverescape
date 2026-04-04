@@ -203,19 +203,9 @@ function showToast(msg) {
 // --- ADMOB YÖNETİCİSİ v3 (@capacitor-community/admob — Capacitor Native API) ---
 const REWARDED_AD_UNIT_ID = "ca-app-pub-7739440971804169/6392805140";
 
-let admobInitialized = false;
-let rewardedAdReady = false;
-let rewardedAdLoading = false;
-
-// Capacitor AdMob plugin referansı
-function getCapacitorAdMob() {
-    try {
-        if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.AdMob) {
-            return window.Capacitor.Plugins.AdMob;
-        }
-    } catch(e) {}
-    return null;
-}
+// Ödül için global değişkenler
+let pendingRewardCallback = null;
+let adExecuted = false;
 
 async function initAdMob() {
     if (admobInitialized) return;
@@ -230,8 +220,49 @@ async function initAdMob() {
             testingDevices: [],
             initializeForTesting: false,
         });
+
+        // --- GLOBAL REWARD LISTENERS v3.1 (Hata Payını Sıfırlar) ---
+        
+        // 1. Ödül Kazanıldığında
+        AdMob.addListener('onRewardedVideoAdReward', (info) => {
+            console.log('[AdMob] Ödül Kazanıldı!', info);
+            adExecuted = true;
+            if (pendingRewardCallback) {
+                const callback = pendingRewardCallback;
+                pendingRewardCallback = null; // Mükerrer ödülü engelle
+                callback();
+            }
+        });
+
+        // 2. Reklam Kapatıldığında
+        AdMob.addListener('onRewardedVideoAdDismissed', () => {
+            console.log('[AdMob] Reklam Kapatıldı.');
+            
+            // Eğer ödül verildiyse (adExecuted true) zaten callback çalıştı.
+            // Eğer verilmediyse, butonu tekrar aktif etmemiz lazım.
+            setTimeout(() => {
+                adExecuted = false;
+                rewardedAdReady = false;
+                preloadRewardedAd();
+                
+                // UI temizliği için butonu aktif et (Eğer bir buton bekliyorsa)
+                const lastBtn = window.lastAdButton;
+                if (lastBtn) {
+                     lastBtn.innerText = window.lastAdButtonText;
+                     lastBtn.disabled = false;
+                }
+            }, 300);
+        });
+
+        // 3. Yükleme Hatası (Fail) durumunda
+        AdMob.addListener('onRewardedVideoAdFailedToLoad', (error) => {
+            console.warn('[AdMob] Yükleme Hatası:', error);
+            rewardedAdReady = false;
+            rewardedAdLoading = false;
+        });
+
         admobInitialized = true;
-        console.log('[AdMob] SDK initialized OK.');
+        console.log('[AdMob] SDK initialized OK with Global Listeners.');
         preloadRewardedAd();
     } catch(e) {
         console.error('[AdMob] initialize failed:', e);
@@ -244,7 +275,6 @@ async function preloadRewardedAd() {
     if (!AdMob || !admobInitialized) return;
     try {
         rewardedAdLoading = true;
-        console.log('[AdMob] Preloading rewarded ad...');
         await AdMob.prepareRewardVideoAd({
             adId: REWARDED_AD_UNIT_ID,
             isTesting: false,
@@ -259,13 +289,6 @@ async function preloadRewardedAd() {
     }
 }
 
-// Capacitor'da plugin hazır olduğunda başlat
-document.addEventListener('deviceready', initAdMob, false);
-window.addEventListener('load', () => {
-    setTimeout(() => { if (!admobInitialized) initAdMob(); }, 1000);
-    setTimeout(() => { if (!admobInitialized) initAdMob(); }, 3000);
-});
-
 async function showRewardedAd(btnElem, defaultText, callback) {
     const t = translations[currentLang];
 
@@ -279,15 +302,17 @@ async function showRewardedAd(btnElem, defaultText, callback) {
     btnElem.innerText = t.loadingAd;
     btnElem.disabled = true;
 
+    // UI Referanslarını kaydet (Dismissed durumunda geri dönmek için)
+    window.lastAdButton = btnElem;
+    window.lastAdButtonText = defaultText;
+
     const AdMob = getCapacitorAdMob();
 
     if (AdMob) {
-        // Plugin mevcut — Capacitor native reklam
         try {
-            // Henüz init olmadıysa yap
             if (!admobInitialized) await initAdMob();
 
-            // Reklam hazır değilse yükle
+            // Reklam hazır değilse (veya önceki kullanıldıysa) tekrar yükle
             if (!rewardedAdReady) {
                 console.log('[AdMob] Loading ad on-demand...');
                 await AdMob.prepareRewardVideoAd({
@@ -297,51 +322,19 @@ async function showRewardedAd(btnElem, defaultText, callback) {
                 rewardedAdReady = true;
             }
 
-            // Reward event dinle
-            let adExecuted = false;
-
-            const rewardListener = await AdMob.addListener('onRewardedVideoAdReward', () => {
-                if (!adExecuted) {
-                    adExecuted = true;
-                    console.log('[AdMob] Reward earned!');
-                    rewardListener.remove();
-                    callback();
-                    btnElem.innerText = defaultText;
-                    btnElem.disabled = false;
-                    rewardedAdReady = false;
-                    preloadRewardedAd();
-                }
-            });
-
-            const closeListener = await AdMob.addListener('onRewardedVideoAdClosed', () => {
-                closeListener.remove();
-                if (!adExecuted) {
-                    adExecuted = true;
-                    console.log('[AdMob] Ad closed without reward.');
-                    btnElem.innerText = defaultText;
-                    btnElem.disabled = false;
-                    rewardedAdReady = false;
-                    preloadRewardedAd();
-                }
-            });
-
-            // Timeout güvencesi
-            setTimeout(() => {
-                if (!adExecuted) {
-                    adExecuted = true;
-                    console.warn('[AdMob] Timeout 15s.');
-                    rewardListener.remove();
-                    closeListener.remove();
-                    showToast(t.adLoadFail);
-                    btnElem.innerText = defaultText;
-                    btnElem.disabled = false;
-                    rewardedAdReady = false;
-                    preloadRewardedAd();
-                }
-            }, 15000);
+            pendingRewardCallback = callback;
+            adExecuted = false;
 
             console.log('[AdMob] Showing rewarded ad...');
             await AdMob.showRewardVideoAd();
+
+            // Güvenlik: 20 saniye sonra hala bir şey olmadıysa butonu aç
+            setTimeout(() => {
+                if (btnElem.disabled && !adExecuted) {
+                    btnElem.innerText = defaultText;
+                    btnElem.disabled = false;
+                }
+            }, 20000);
 
         } catch(e) {
             console.error('[AdMob] Error:', e);
@@ -351,17 +344,10 @@ async function showRewardedAd(btnElem, defaultText, callback) {
             rewardedAdReady = false;
         }
     } else {
-        // Tarayıcı / plugin yok — teşhis mesajı
-        const diagInfo = [
-            'Capacitor=' + (window.Capacitor ? 'YES' : 'NO'),
-            'Plugins=' + (window.Capacitor && window.Capacitor.Plugins ? Object.keys(window.Capacitor.Plugins).join(',') : 'none'),
-            'AdMob=' + (AdMob ? 'OK' : 'NULL'),
-            'init=' + admobInitialized
-        ].join(' | ');
-        console.log('[AdMob] DIAG:', diagInfo);
-        showToast(diagInfo);
+        showToast("Dev mode: Plugin not detected. Simulating reward...");
         btnElem.innerText = defaultText;
         btnElem.disabled = false;
+        callback();
     }
 }
 
