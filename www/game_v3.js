@@ -351,6 +351,43 @@ async function showRewardedAd(btnElem, defaultText, callback) {
     }
 }
 
+// --- HAPTICS (TİTREŞİM SİSTEMİ) v3.2 ---
+function getCapacitorHaptics() {
+    try {
+        if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Haptics) {
+            return window.Capacitor.Plugins.Haptics;
+        }
+    } catch(e) {}
+    return null;
+}
+
+async function triggerVibration(pattern) {
+    // isVibrationEnabled kontrolü game_v3.js içinde tanımlı ayarlardan gelir
+    if (typeof isVibrationEnabled !== 'undefined' && !isVibrationEnabled) return;
+    
+    const Haptics = getCapacitorHaptics();
+    
+    try {
+        if (Haptics) {
+            if (Array.isArray(pattern)) {
+                // Büyük çarpışmalar (Dizi gönderilen durumlar)
+                await Haptics.notification({ type: 'error' });
+            } else if (typeof pattern === 'number' && pattern >= 30) {
+                // Orta seviye uyarılar
+                await Haptics.impact({ style: 'heavy' });
+            } else {
+                // Altın toplama veya hafif sürtünme (Tık hissi)
+                await Haptics.impact({ style: 'light' });
+            }
+        } else {
+            // Fallback (Tarayıcı için standart API)
+            if (navigator.vibrate) navigator.vibrate(pattern);
+        }
+    } catch (e) {
+        console.error("[Haptics] Titreşim hatası:", e);
+    }
+}
+
 // ----------------------------------------------------
 // LUCKY WHEEL SİSTEMİ v120
 // ----------------------------------------------------
