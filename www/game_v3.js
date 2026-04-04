@@ -1733,11 +1733,13 @@ function draw() {
     ctx.fillStyle = "#ffd600";
     ctx.fillText(`${t.goldLabel} ${goldCount}`, 15, 42);
 
-    // v98: CANLAR (❤️❤️❤️)
-    let heartText = "";
-    for(let i=0; i<lives; i++) heartText += "❤️";
-    ctx.font = "12px Arial";
-    ctx.fillText(heartText, 15, 62);
+    // v166 FIX: Kalp emojisi yerine Çizimle Kalp yapıyoruz (Garanti görünürlük)
+    ctx.font = "bold 9px 'Press Start 2P', cursive";
+    ctx.fillStyle = "#ff5252";
+    for(let i=0; i<lives; i++) {
+        drawHeart(15 + (i * 18), 62, 12, "#ff5252");
+    }
+    ctx.fillStyle = "#ffffff"; // Temizlik
 
     // --- DASH ENERJİ BARI ---
     ctx.fillStyle = "rgba(0,0,0,0.5)";
@@ -1890,41 +1892,53 @@ if(qbg) qbg.addEventListener('click', () => {
 
 if(reviveBtn) reviveBtn.addEventListener('click', () => {
     showRewardedAd(reviveBtn, translations[currentLang].reviveBtn, () => {
+        // v166 GARANTİ CANLANMA
         isGameOver = false;
         isPlaying = true;
+        isPaused = false;
         lives = 3; 
         hasShield = true;
         
-        // --- HİNLİK MEKANİĞİ v151 (LAVA SINIRI DAHİL) ---
-        if (score >= 900 && score < 1000) {
-            score = 900; 
-        } else if (score >= 1900 && score < 2000) {
-            score = 1900; 
-        } else if (score >= 2900 && score < 3000) {
-            score = 2900; 
-        } else if (score >= 3900 && score < 4000) {
-            score = 3900;
-        } else if (score >= 5900 && score < 6000) {
-            score = 5900;
-        } else if (score >= 9900 && score < 10000) {
-            score = 9900;
-        }
+        // UI'yi anında tazele
+        setTimeout(() => {
+            if(gameOverScreen) gameOverScreen.style.display = 'none';
+            if(pauseBtn) pauseBtn.style.display = 'block';
+            draw(); // Görseli hemen güncelle (Canlar görünsün)
+        }, 100);
+
+        // --- HİNLİK MEKANİĞİ v151 ---
+        if (score >= 900 && score < 1000) score = 900; 
+        else if (score >= 1900 && score < 2000) score = 1900; 
+        else if (score >= 2900 && score < 3000) score = 2900; 
+        else if (score >= 3900 && score < 4000) score = 3900;
+        else if (score >= 5900 && score < 6000) score = 5900;
+        else if (score >= 9900 && score < 10000) score = 9900;
         
-        console.log("Hinlik Mekaniği: Skora reset atıldı!");
-        
-        gameOverScreen.classList.remove('active');
-        gameOverScreen.classList.add('hidden');
-        gameOverScreen.style.display = 'none';
-        if(pauseBtn) pauseBtn.style.display = 'block';
-        
-        // MÜZİĞİ YENİDEN BAŞLAT v125 (Burada kesilme bug'ı vardı)
         if(!isMusicScheduled) bgMusicScheduler();
-        
         lastTime = performance.now();
         requestAnimationFrame(gameLoop);
         setTimeout(() => { hasShield = false; }, 3000);
     });
 });
+
+// v166: GARANTİ ÇİZİM FONKSİYONU (Kalpler vs.)
+function drawHeart(x, y, size, color) {
+    ctx.save();
+    ctx.beginPath();
+    let d = size;
+    ctx.moveTo(x, y + d / 4);
+    ctx.quadraticCurveTo(x, y, x + d / 4, y);
+    ctx.quadraticCurveTo(x + d / 2, y, x + d / 2, y + d / 4);
+    ctx.quadraticCurveTo(x + d / 2, y, x + d * 3/4, y);
+    ctx.quadraticCurveTo(x + d, y, x + d, y + d / 4);
+    ctx.quadraticCurveTo(x + d, y + d / 2, x + d * 5/8, y + d * 3/4);
+    ctx.lineTo(x + d / 2, y + d);
+    ctx.lineTo(x + d * 3/8, y + d * 3/4);
+    ctx.quadraticCurveTo(x, y + d / 2, x, y + d / 4);
+    ctx.fillStyle = color;
+    ctx.fill();
+    ctx.restore();
+}
 
 if(spinOpenBtn) spinOpenBtn.addEventListener('click', () => {
     spinScreen.classList.remove('hidden');
