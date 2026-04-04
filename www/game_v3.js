@@ -1892,20 +1892,22 @@ if(qbg) qbg.addEventListener('click', () => {
 
 if(reviveBtn) reviveBtn.addEventListener('click', () => {
     showRewardedAd(reviveBtn, translations[currentLang].reviveBtn, () => {
-        // v166 GARANTİ CANLANMA
+        // v166 GARANTİ CANLANMA (Force Restart)
         isGameOver = false;
         isPlaying = true;
         isPaused = false;
         lives = 3; 
         hasShield = true;
         
-        // UI'yi anında tazele
-        setTimeout(() => {
-            if(gameOverScreen) gameOverScreen.style.display = 'none';
-            if(pauseBtn) pauseBtn.style.display = 'block';
-            draw(); // Görseli hemen güncelle (Canlar görünsün)
-        }, 100);
-
+        // UI'yi zorla kapat (Hem class hem style)
+        if(gameOverScreen) {
+            gameOverScreen.classList.remove('active');
+            gameOverScreen.classList.add('hidden');
+            gameOverScreen.style.display = 'none';
+            gameOverScreen.style.opacity = '0';
+        }
+        if(pauseBtn) pauseBtn.style.display = 'block';
+        
         // --- HİNLİK MEKANİĞİ v151 ---
         if (score >= 900 && score < 1000) score = 900; 
         else if (score >= 1900 && score < 2000) score = 1900; 
@@ -1917,6 +1919,8 @@ if(reviveBtn) reviveBtn.addEventListener('click', () => {
         if(!isMusicScheduled) bgMusicScheduler();
         lastTime = performance.now();
         requestAnimationFrame(gameLoop);
+        
+        draw(); // Görseli hemen güncelle
         setTimeout(() => { hasShield = false; }, 3000);
     });
 });
