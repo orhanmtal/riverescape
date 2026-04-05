@@ -65,6 +65,9 @@ function updateWheelForWeapon() {
 }
 
 // --- GÖRSEL EFEKT SİSTEMİ v126 ---
+let particles = [];
+let totalLoops = 0; // v153: SONSUL DÖNGÜ SİSTEMİ
+
 // v1.68: NATIVE HAPTIC ENGINE (Capacitor)
 function playHaptic(style = 'medium') {
     if (typeof isVibrationEnabled !== 'undefined' && !isVibrationEnabled) return;
