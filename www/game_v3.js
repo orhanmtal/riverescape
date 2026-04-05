@@ -4,14 +4,11 @@ const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 let currentLang = 'en'; // v151 FIX: Global tanım eklendi
 
-const scoreElem = null;
-const goldElem = null;
 const startScreen = document.getElementById('start-screen');
 const gameOverScreen = document.getElementById('game-over-screen');
 const startBtn = document.getElementById('start-btn');
 const restartBtn = document.getElementById('restart-btn');
 const finalScoreElem = document.getElementById('finalScoreValue');
-const currentLevelUIElem = null;
 const pauseBtn = document.getElementById('pause-btn');
 const pauseScreen = document.getElementById('pause-screen');
 const resumeBtn = document.getElementById('resume-btn');
@@ -28,6 +25,8 @@ const spinOpenBtn = document.getElementById('spin-open-btn');
 const spinScreen = document.getElementById('spin-screen');
 const spinCloseBtn = document.getElementById('spin-close-btn');
 const spinBtnMain = document.getElementById('spin-btn-main');
+const buyWeaponBtn = document.getElementById('buy-weapon-btn');
+const bombActionBtn = document.getElementById('bomb-action-btn');
 
 let deathCountForX2 = 0;
 let lives = 3; // v98: 3 Can Sistemi
@@ -45,20 +44,46 @@ let canSpinFree = true;
 let isSpinning = false;
 let wheelAngle = 0;
 let spinVelocity = 0;
-const wheelRewards = [
-    { type: 'gold', value: 10,  color: '#f1c40f', label: '10G' },
-    { type: 'gold', value: 25,  color: '#f39c12', label: '25G' },
+let wheelRewards = [
+    { type: 'gold', value: 50,  color: '#f1c40f', label: '50G' },
+    { type: 'gold', value: 100, color: '#f39c12', label: '100G' },
     { type: 'magnet', value: 1, color: '#9b59b6', label: 'MAG' },
-    { type: 'gold', value: 50,  color: '#e67e22', label: '50G' },
+    { type: 'gold', value: 150, color: '#e67e22', label: '150G' },
     { type: 'shield', value: 1, color: '#2ecc71', label: 'SHLD' },
-    { type: 'gold', value: 100, color: '#e74c3c', label: '100G' }, // BÜYÜK ÖDÜL
-    { type: 'gold', value: 10,  color: '#f1c40f', label: '10G' },
-    { type: 'gold', value: 75,  color: '#d35400', label: '75G' }
+    { type: 'gold', value: 200, color: '#e74c3c', label: '200G' },
+    { type: 'gold', value: 50,  color: '#f1c40f', label: '50G' },
+    { type: 'gold', value: 100, color: '#d35400', label: '100G' }
 ];
 
+function updateWheelForWeapon() {
+    if (hasWeapon) {
+        // İlk 50G ödülünü 10 BOMBA ile değiştir v1.68
+        wheelRewards[0] = { type: 'bomb', value: 10, color: '#333', label: '💣10' };
+        // Son 100G ödülünü 5 BOMBA ile değiştir v1.68
+        wheelRewards[7] = { type: 'bomb', value: 5, color: '#444', label: '💣5' };
+    }
+}
+
 // --- GÖRSEL EFEKT SİSTEMİ v126 ---
-let particles = [];
-let totalLoops = 0; // v153: SONSUL DÖNGÜ SİSTEMİ
+// v1.68: NATIVE HAPTIC ENGINE (Capacitor)
+function playHaptic(style = 'medium') {
+    if (typeof isVibrationEnabled !== 'undefined' && !isVibrationEnabled) return;
+    try {
+        const Haptics = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Haptics;
+        if (Haptics) {
+            const hStyle = (style === 'heavy') ? 'HEAVY' : (style === 'light' ? 'LIGHT' : 'MEDIUM');
+            Haptics.impact({ style: hStyle });
+        } else if (navigator.vibrate) {
+            navigator.vibrate(style === 'heavy' ? 100 : 50);
+        }
+    } catch(e) { console.warn("Haptics Error", e); }
+}
+
+// v153: SONSUL DÖNGÜ SİSTEMİ (v2)
+let shakeTimer = 0; // v1.68 Screen Shake
+let displayScore = 0; // v1.68 Score Ticker
+let displayGold = 0;  // v1.68 Gold Ticker
+let displayTotalGold = 0; // Vault ticker
 class Particle {
     constructor(x, y, color) {
         this.x = x; this.y = y;
@@ -185,7 +210,7 @@ document.addEventListener('DOMContentLoaded', initLanguage);
 let startingDoubleGold = false;
 let isDoubleGoldActive = false;
 
-function showToast(msg) {
+function showToast(msg, isReward = false) {
     const toast = document.getElementById('game-toast');
     const textElem = document.getElementById('toast-text');
     if (!toast || !textElem) return;
@@ -194,10 +219,23 @@ function showToast(msg) {
     toast.style.display = 'block';
     toast.style.opacity = '1';
     
+    if (isReward) {
+        toast.style.background = 'linear-gradient(to right, #ffd700, #ff8c00)';
+        toast.style.color = '#000';
+        toast.style.transform = 'translate(-50%, 0) scale(1.2)';
+    } else {
+        toast.style.background = 'rgba(0,0,0,0.85)';
+        toast.style.color = '#fff';
+        toast.style.transform = 'translate(-50%, 0) scale(1)';
+    }
+    
     setTimeout(() => {
         toast.style.opacity = '0';
-        setTimeout(() => { toast.style.display = 'none'; }, 300);
-    }, 2500);
+        toast.style.transform = 'translate(-50%, 20px) scale(0.9)';
+        setTimeout(() => {
+            if (toast.style.opacity === '0') toast.style.display = 'none';
+        }, 500);
+    }, 1500); // v1.68 Fix: 1.5 saniye ekranda kalacak!
 }
 
 // --- ADMOB YÖNETİCİSİ v3 (@capacitor-community/admob — Capacitor Native API) ---
@@ -246,7 +284,7 @@ async function initAdMob() {
         AdMob.addListener('onRewardedVideoAdDismissed', () => {
             console.log('[AdMob] Reklam Kapatıldı.');
             
-            // v1.78: Eğer ödül kazanıldıysa, aksiyonu otomatik tetikle
+            // v1.67: Eğer ödül kazanıldıysa, aksiyonu otomatik tetikle
             if (adExecuted && pendingRewardCallback) {
                 const callback = pendingRewardCallback;
                 pendingRewardCallback = null;
@@ -313,7 +351,7 @@ async function showRewardedAd(btnElem, defaultText, callback) {
 
     // v1.73: ASLA DONMAYAN (Independent Countdown)
     btnElem.disabled = true;
-    let countdown = 4;
+    let countdown = 8;
     btnElem.innerText = `${t.loadingAd} (${countdown})`;
 
     // UI Referanslarını kaydet (Dismiss sonrası sıfırlama için) v1.78 FIX
@@ -393,7 +431,7 @@ async function triggerVibration(pattern) {
                 // Büyük çarpışmalar (GameOver vb.)
                 await Haptics.notification({ type: 'warning' });
             } else if (typeof pattern === 'number' && pattern >= 30) {
-                // v168: 'heavy' yerine 'medium' (Daha şık ve profesyonel)
+                // v1.67: 'heavy' yerine 'medium' (Daha şık ve profesyonel)
                 await Haptics.impact({ style: 'medium' });
             } else {
                 // Altın toplama veya hafif sürtünme (Tık hissi)
@@ -548,6 +586,12 @@ function giveReward() {
         popupEmoji = '💰';
         popupLabel = t.rewardGold.toUpperCase();
         popupValue = '+' + reward.value;
+    } else if(reward.type === 'bomb') {
+        bombCount += reward.value;
+        rewardLabel = reward.value + ' ' + t.rewardBomb;
+        popupEmoji = '💣';
+        popupLabel = t.rewardBomb.toUpperCase();
+        popupValue = '+' + reward.value;
     } else if(reward.type === 'magnet') {
         magnetLevel++;
         rewardLabel = t.rewardMagnet + ' LVL UP!';
@@ -587,7 +631,7 @@ resizeCanvas();
 
 
 const levelAssets = [
-    { threshold: 0,    bgKey: 'ilkbahar', speed: 160, spawn: 0.70, titleEN: translations.en.l1Title, titleTR: translations.tr.l1Title, color: "#64dd17", pKey: "ilkbahar" },
+    { threshold: 0,    bgKey: 'ilkbahar', speed: 140, spawn: 1.20, titleEN: translations.en.l1Title, titleTR: translations.tr.l1Title, color: "#64dd17", pKey: "ilkbahar" },
     { threshold: 1000,  bgKey: 'yaz',      speed: 220, spawn: 0.55, titleEN: translations.en.l2Title, titleTR: translations.tr.l2Title, color: "#ffd600", pKey: "yaz" },
     { threshold: 2000, bgKey: 'sonbahar', speed: 280, spawn: 0.45, titleEN: translations.en.l3Title, titleTR: translations.tr.l3Title, color: "#ff6d00", pKey: "sonbahar" },
     { threshold: 3000, bgKey: 'kis',      speed: 340, spawn: 0.35, titleEN: translations.en.l4Title, titleTR: translations.tr.l4Title, color: "#00e5ff", pKey: "kis" },
@@ -623,17 +667,23 @@ let screenFlash = 0; // Seviye geçişi parlaması v132
 let totalGold = 0;
 let magnetLevel = 0;
 let shieldLevel = 0;
+let bombCount = 0; // v1.68: BOMBA STOKU
 let powerupTimer = 0;
 let hasShield = false;
+let hasWeapon = false; // BU ARTIK SADECE "VARMİ" DEGİL "AKTİF Mİ" DURUMU
+let lastShotTime = 0;
+let bullets = [];
 
 function saveGame() {
     const data = {
         gold: totalGold,
         magnet: magnetLevel,
         shield: shieldLevel,
-        musicVol: isMusicVolume,
+         musicVol: isMusicVolume,
         sfxVol: isSFXVolume,
-        vib: isVibrationEnabled
+        vib: isVibrationEnabled,
+        weapon: hasWeapon,
+        bombs: bombCount
     };
     localStorage.setItem('riverEscapeSave', JSON.stringify(data));
     updateShopUI();
@@ -658,6 +708,26 @@ function updateShopUI() {
         document.getElementById('shield-chance').innerText = '%' + (shieldLevel * 5);
         document.getElementById('shield-price').innerText = shieldLevel < 5 ? (1500 + shieldLevel * 750) : "MAX";
     }
+
+    let wb = document.getElementById('buy-weapon-btn');
+    if(wb) {
+        if(!hasWeapon) {
+            // LİSANS ALMAMIŞ
+            if(document.getElementById('shop-wpn-title')) document.getElementById('shop-wpn-title').innerText = t.weaponName;
+            if(document.getElementById('shop-wpn-desc')) document.getElementById('shop-wpn-desc').innerText = t.weaponDesc;
+            if(wb) wb.innerHTML = `${t.buyBtn}<br>10`;
+        } else {
+            // LİSANSLI, MÜHİMMAT ALABİLİR
+            if(document.getElementById('shop-wpn-title')) document.getElementById('shop-wpn-title').innerText = t.ammoName;
+            if(document.getElementById('shop-wpn-desc')) document.getElementById('shop-wpn-desc').innerText = t.ammoDesc + ` (Mevcut: ${bombCount})`;
+            wb.innerHTML = `${t.buyBtn}<br>1.000`;
+        }
+    }
+    // BOMBA BUTONU SAYAÇ GÜNCELLEMESİ v1.68
+    let bBadge = document.getElementById('bomb-badge');
+    if(bBadge) bBadge.innerText = bombCount;
+    
+    updateWheelForWeapon(); // Lisanslıysa çarkı güncelle
 }
 setTimeout(updateShopUI, 100);
 
@@ -729,6 +799,11 @@ if(btnMag) btnMag.addEventListener('click', () => {
     if(totalGold >= cost && magnetLevel < 5) {
         totalGold -= cost; magnetLevel++; saveGame();
         for(let i=0; i<3; i++) setTimeout(playCoinSound, i*150);
+        updateShopUI();
+    } else if (totalGold < cost) {
+        shakeTimer = 0.35; // Sarsıntı artırıldı
+        if(typeof playHaptic === 'function') playHaptic('heavy'); // TELEFON TİTREMESİ
+        showToast(translations[currentLang].noGold, false);
     }
 });
 
@@ -738,7 +813,68 @@ if(btnShd) btnShd.addEventListener('click', () => {
     if(totalGold >= cost && shieldLevel < 5) {
         totalGold -= cost; shieldLevel++; saveGame();
         for(let i=0; i<3; i++) setTimeout(playCoinSound, i*150);
+        updateShopUI();
+    } else if (totalGold < cost) {
+        shakeTimer = 0.35; 
+        if(typeof playHaptic === 'function') playHaptic('heavy'); // TELEFON TİTREMESİ
+        showToast(translations[currentLang].noGold, false);
     }
+});
+
+if(buyWeaponBtn) buyWeaponBtn.addEventListener('click', () => {
+    const t = translations[currentLang];
+    if (!hasWeapon) {
+        // LİSANS SATIN ALMA (TEST: 10)
+        if (totalGold >= 10) {
+            totalGold -= 10;
+            hasWeapon = true;
+            bombCount += 10;
+            saveGame();
+            for(let i=0; i<8; i++) setTimeout(playCoinSound, i*100);
+            showToast("LICENSE UNLOCKED! +10 BOMBS 💥", true);
+            updateShopUI();
+        } else {
+            shakeTimer = 0.35;
+            if(typeof playHaptic === 'function') playHaptic('heavy');
+            showToast(t.noGold, false);
+        }
+    } else {
+        // MÜHİMMAT TAZELEME (1.000)
+        if (totalGold >= 1000) {
+            totalGold -= 1000;
+            bombCount += 10;
+            saveGame();
+            for(let i=0; i<3; i++) setTimeout(playCoinSound, i*150);
+            showToast("+10 BOMBS REFILLED! 💣", true);
+            updateShopUI();
+        } else {
+            shakeTimer = 0.35;
+            if(typeof playHaptic === 'function') playHaptic('heavy');
+            showToast(t.noGold, false);
+        }
+    }
+});
+
+function fireBomb() {
+    if (!isPlaying || isPaused || isGameOver || bombCount <= 0) return;
+    
+    bombCount--;
+    bullets.push({
+        x: player.x + player.width / 2,
+        y: player.y,
+        radius: 8, // v1.68 Sleek: Daha küçük (12->8)
+        speed: 750 // Biraz daha hızlı
+    });
+    
+    if (typeof playCrashSound === 'function') playCrashSound();
+    triggerVibration(50);
+    saveGame();
+}
+
+if(bombActionBtn) bombActionBtn.addEventListener('click', fireBomb);
+
+window.addEventListener('keydown', (e) => {
+    if(e.code === 'Space') fireBomb();
 });
 
 const player = { x: canvas.width / 2, y: canvas.height - 150, width: 38, height: 68, speed: 320 };
@@ -829,7 +965,7 @@ function spawnObstacle() {
     }
 
     const baseSpeed = 200 + Math.random() * 100;
-    let spawnMargin = (currentLevel >= 4) ? 0.40 : 0.35;
+    let spawnMargin = (currentLevel >= 4) ? 0.38 : 0.30; // v1.68: Level 1-3'te nehir %40 daha geniş! (0.35 -> 0.30)
     const riverLeft = canvas.width * spawnMargin;
     const riverRight = canvas.width * (1 - spawnMargin) - 45; 
     
@@ -857,10 +993,10 @@ function spawnObstacle() {
     // Eğer bir önceki engelin tam önüne taş koyuyorsa, en azından kayığın geçebileceği jilet gibi bir "boşluk" (gap) bırak.
     if (typeof window.lastObsX === 'undefined') window.lastObsX = spawnX;
     if (currentLevel === 1) {
-        let gap = player.width + 25; // Kayık genişliğinden biraz büyük (Umut boşluğu)
+        let gap = player.width + 80; // v1.68: Çok daha geniş umut boşluğu (25 -> 80)
         if (Math.abs(spawnX - window.lastObsX) < gap) {
-            if (window.lastObsX < canvas.width / 2) spawnX += gap + 15; // Sağda boşluk aç
-            else spawnX -= gap + 15; // Solda boşluk aç
+            if (window.lastObsX < canvas.width / 2) spawnX = riverRight - 20; // Tam diğer uca at
+            else spawnX = riverLeft + 20; // Tam diğer uca at
         }
     }
     // Nehir dışına taşmasın
@@ -1045,6 +1181,7 @@ function startGame() {
     gameOverScreen.classList.remove('active'); gameOverScreen.classList.add('hidden');
     if(pauseScreen) { pauseScreen.classList.remove('active'); pauseScreen.classList.add('hidden'); pauseScreen.style.display = ''; }
     if(pauseBtn) { pauseBtn.style.display = 'block'; pauseBtn.innerText = "⏸ DURDUR"; }
+    if(bombActionBtn && hasWeapon) bombActionBtn.style.display = 'flex';
     
     // Revive butonlarını UI üzerinde sıfırla
     if(reviveBtn) {
@@ -1109,6 +1246,7 @@ function gameOver() {
         gameOverScreen.style.opacity = '1';
         gameOverScreen.style.zIndex = '5000';
         if(pauseBtn) pauseBtn.style.display = 'none';
+        if(bombActionBtn) bombActionBtn.style.display = 'none';
         
         let rb = document.getElementById('revive-btn');
         if(rb) {
@@ -1136,6 +1274,16 @@ function update(dt) {
     }
 
     score += dt * 5; 
+    
+    // v1.68 SCORE & GOLD TICKER (Yumuşak Geçiş)
+    if (displayScore < Math.floor(score)) displayScore += Math.ceil((score - displayScore) * 0.1);
+    else displayScore = Math.floor(score);
+    
+    if (displayGold < goldCount) displayGold++;
+    if (displayTotalGold < totalGold) displayTotalGold += Math.ceil((totalGold - displayTotalGold) * 0.1);
+    else displayTotalGold = totalGold;
+
+    if (shakeTimer > 0) shakeTimer -= dt;
 
     bgY += bgScrollSpeed * dt;
     let totalBgHeight = Math.ceil(canvas.height) * 2; // Artık Pre-Mirrored dokumuz tam 2 ekran boyunda
@@ -1447,9 +1595,53 @@ function update(dt) {
         }
     }
     obstacles = obstacles.filter(obs => obs.y < canvas.height + 100 && obs.x > -200 && obs.x < canvas.width + 200);
+
+    // Gülleleri güncelle ve engellerle çarpıştır
+    for (let i = bullets.length - 1; i >= 0; i--) {
+        let b = bullets[i];
+        b.y -= b.speed * dt;
+        
+        // Ekrandan çıkan gülleri sil
+        if (b.y < -50) {
+            bullets.splice(i, 1);
+            continue;
+        }
+
+        // Engel çarpışması
+        for (let j = obstacles.length - 1; j >= 0; j--) {
+            let obs = obstacles[j];
+            if (obs.type === 'hippo' && obs.isSubmerged) continue; // Su altındaki hipoya vurulmaz
+
+            if (b.x < obs.x + obs.width && b.x > obs.x &&
+                b.y < obs.y + obs.height && b.y > obs.y) {
+                
+                // PARÇALAMA!
+                playCrashSound();
+                triggerVibration(40);
+                
+                // Patlama efekt parçacıkları
+                for(let k=0; k<10; k++) {
+                    particles.push(new Particle(obs.x + obs.width/2, obs.y + obs.height/2, "#607d8b"));
+                }
+
+                obstacles.splice(j, 1);
+                bullets.splice(i, 1);
+                shakeTimer = 0.25; // PATLAMA - EKRANI SALLA!
+                break; 
+            }
+        }
+    }
 }
 
 function draw() {
+    ctx.save(); // Elite UX: Shake/Rotation için temel sakla
+    
+    // SCREEN SHAKE v1.68
+    if (shakeTimer > 0) {
+        let intensity = shakeTimer * 40; // Sarsıntı gücü (Artırıldı)
+        ctx.translate((Math.random() - 0.5) * intensity, (Math.random() - 0.5) * intensity);
+    }
+    
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     let currentBgTex = null;
@@ -1747,10 +1939,10 @@ function draw() {
     if (levelAssets[currentLevel-1]) {
         targetText = currentLevel < levelAssets.length ? `/${levelAssets[currentLevel].threshold}` : "/MAX";
     }
-    ctx.fillText(`${t.scoreLabel} ${Math.floor(score)}${targetText}`, 15, 25);
+    ctx.fillText(`${t.scoreLabel} ${displayScore}${targetText}`, 15, 25);
     
     ctx.fillStyle = "#ffd600";
-    ctx.fillText(`${t.goldLabel} ${goldCount}`, 15, 42);
+    ctx.fillText(`${t.goldLabel} ${displayGold}`, 15, 42);
 
     // v166 FIX: Kalp emojisi yerine Çizimle Kalp yapıyoruz (Garanti görünürlük)
     ctx.font = "bold 9px 'Press Start 2P', cursive";
@@ -1776,7 +1968,7 @@ function draw() {
     // SAĞ TARAF (KASA & LEVEL)
     ctx.textAlign = "right";
     ctx.fillStyle = "#f2c94c";
-    ctx.fillText(`💰${t.vaultLabel} ${totalGold}`, canvas.width - 15, 25);
+    ctx.fillText(`💰${t.vaultLabel} ${displayTotalGold}`, canvas.width - 15, 25);
     
     // Level Kutusu (Daha Şık ve Simetrik)
     let lvlText = `${t.levelLabel} ${currentLevel}`;
@@ -1844,6 +2036,41 @@ function draw() {
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         screenFlash -= 0.05; // Parlama yavaşça sönsün
     }
+
+    // Enerji Mermileri (v1.68 Sleek Energy)
+    bullets.forEach(b => {
+        ctx.save();
+        // Enerji Kuyruğu (Tail)
+        ctx.shadowBlur = 20;
+        ctx.shadowColor = "#f12711";
+        ctx.fillStyle = "rgba(241, 39, 17, 0.6)";
+        ctx.beginPath();
+        ctx.moveTo(b.x - b.radius, b.y);
+        ctx.lineTo(b.x + b.radius, b.y);
+        ctx.lineTo(b.x, b.y + b.radius * 3); // Arkaya doğru uzanan sivriltme
+        ctx.closePath();
+        ctx.fill();
+
+        // Parlayan Çekirdek (Core)
+        let coreGrad = ctx.createRadialGradient(b.x, b.y, 0, b.x, b.y, b.radius);
+        coreGrad.addColorStop(0, "#fff");
+        coreGrad.addColorStop(0.5, "#ff8a80");
+        coreGrad.addColorStop(1, "#f12711");
+        
+        ctx.fillStyle = coreGrad;
+        ctx.beginPath();
+        ctx.arc(b.x, b.y, b.radius, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // Çıkış Kıvılcımları (Mini Trail)
+        if(Math.random() < 0.3) {
+            particles.push(new Particle(b.x, b.y + b.radius, "#ff5722"));
+        }
+        
+        ctx.restore();
+    });
+
+    ctx.restore(); // Shake/Save'i kapat
 }
 
 function gameLoop(timestamp) {
@@ -2074,10 +2301,10 @@ const adGoldBtn = document.getElementById('ad-gold-btn');
 if(adGoldBtn) {
     adGoldBtn.addEventListener('click', () => {
         showRewardedAd(adGoldBtn, translations[currentLang].adGoldBtn, () => {
-            totalGold += 50; 
+            totalGold += 100; 
             saveGame();
             updateShopUI();
-            showToast(`${translations[currentLang].rewardPrefix} 50 GOLD! 💰`);
+            showToast(`${translations[currentLang].rewardPrefix} 100 GOLD! 💰`, true);
             for(let i=0; i<4; i++) setTimeout(playCoinSound, i*100);
         });
     });
@@ -2095,6 +2322,8 @@ function loadGame() {
         isMusicVolume = (data.musicVol !== undefined) ? data.musicVol : 1.0;
         isSFXVolume = (data.sfxVol !== undefined) ? data.sfxVol : 1.0;
         isVibrationEnabled = (data.vib !== undefined) ? data.vib : true;
+        hasWeapon = data.weapon || false;
+        bombCount = data.bombs || 0;
         
         // UI'yı güncelle
         const mSli = document.getElementById('music-slider');

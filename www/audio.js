@@ -24,7 +24,7 @@ function bgMusicScheduler() {
             nextNoteTime = audioCtx.currentTime + 0.05;
         }
         while (nextNoteTime < audioCtx.currentTime + 0.1) {
-            let isDZ = (currentLevel === 1 && score >= 900) || (currentLevel === 2 && score >= 1900) || (currentLevel === 3 && score >= 2900) || (currentLevel === 4 && score >= 3900);
+            let isDZ = (currentLevel === 1 && score >= 900) || (currentLevel === 2 && score >= 1900) || (currentLevel === 3 && score >= 2900) || (currentLevel === 4 && score >= 3900) || (currentLevel === 5 && score >= 5900) || (currentLevel === 6 && score >= 9900);
             playMelodyNote(melody[currentNote], nextNoteTime, isDZ);
             nextNoteTime += isDZ ? 0.12 : 0.2;
             currentNote = (currentNote + 1) % melody.length;

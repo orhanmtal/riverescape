@@ -28,8 +28,8 @@
                 </div>
             </div>
 
-            <!-- VERSION TAG v167 (Current Stable) -->
-            <div id="version-tag" style="position: absolute; bottom: 8px; right: 12px; color: rgba(255,255,255,0.5); font-size: 11px; z-index: 50; font-family: 'Outfit', sans-serif; font-weight: bold; pointer-events: none;">v1.67</div>
+            <!-- VERSION TAG v167 (Last Stable) -->
+            <div id="version-tag" style="position: absolute; bottom: 8px; right: 12px; color: rgba(255,255,255,0.5); font-size: 11px; z-index: 50; font-family: 'Outfit', sans-serif; font-weight: bold; pointer-events: none;">v1.68</div>
 
             <div id="start-screen" class="screen active">
                 <h1>River Escape</h1>
@@ -108,8 +108,16 @@
                     <button id="buy-shield-btn" class="shop-upgrade-btn">Geliştir<br><span id="shield-price">0</span></button>
                 </div>
 
+                <div class="shop-item">
+                    <div class="shop-item-info">
+                        <div class="shop-item-title" id="shop-wpn-title">Bomba Paketi</div>
+                        <div class="shop-item-desc" id="shop-wpn-desc">10 Adet Mühimmat.<br>(1.000 Altın)</div>
+                    </div>
+                    <button id="buy-weapon-btn" class="shop-upgrade-btn">Satın Al<br><span id="weapon-price">1000</span></button>
+                </div>
+
                 <div class="buttons" style="width: 90%; margin-top: 10px;">
-                    <button id="ad-gold-btn" style="background: linear-gradient(to right, #00C9FF, #92FE9D); color: #000; margin-bottom: 12px; font-size: 11px;">+50 ALTIN (AD)</button>
+                    <button id="ad-gold-btn" style="background: linear-gradient(to right, #00C9FF, #92FE9D); color: #000; margin-bottom: 12px; font-size: 11px;">+100 ALTIN (AD)</button>
                     <button id="shop-close-btn" style="background: #f12711; font-size: 12px;">Kapat</button>
                 </div>
             </div>
@@ -189,10 +197,47 @@
             </div>
     </div>
 
+    <!-- SLEEK CYBER ACTION BUTTON (v1.68 Sleek) -->
+    <div id="bomb-action-btn" style="
+        position:fixed; bottom:120px; right:20px; width:82px; height:82px; 
+        background: #111; 
+        border: 1px solid rgba(255, 255, 255, 0.1); 
+        border-radius:50%; 
+        display:none; justify-content:center; align-items:center; 
+        box-shadow: 0 0 20px rgba(241, 39, 17, 0.4), inset 0 0 10px rgba(241, 39, 17, 0.2); 
+        z-index:9999; cursor:pointer; touch-action: manipulation;
+        transition: all 0.2s ease;" 
+        onmousedown="this.style.transform='scale(0.9)'; this.style.boxShadow='0 0 40px #f12711';"
+        onmouseup="this.style.transform='scale(1)'; this.style.boxShadow='0 0 20px rgba(241, 39, 17, 0.4)';"
+        ontouchstart="this.style.transform='scale(0.9)'; this.style.boxShadow='0 0 40px #f12711';"
+        ontouchend="this.style.transform='scale(1)'; this.style.boxShadow='0 0 20px rgba(241, 39, 17, 0.4)';"
+        class="pulse-button">
+        
+        <!-- Minimalist Crosshair Icon -->
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#f12711" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M12 8v8"/>
+            <path d="M8 12h8"/>
+            <circle cx="12" cy="12" r="2" fill="#f12711"/>
+        </svg>
+
+        <!-- Minimalist Badge -->
+        <div id="bomb-badge" style="
+            position:absolute; top:-5px; right:-5px; 
+            background: #f12711;
+            color:white; border-radius:4px; padding:1px 6px; 
+            font-family:'Outfit', sans-serif; font-weight:900;
+            font-size:12px; box-shadow:0 0 10px rgba(241,39,17,0.5);">0</div>
+        
+        <!-- Rotating Outer Ring -->
+        <div style="position:absolute; inset:-4px; border-radius:50%; border: 2px dashed rgba(241, 39, 17, 0.3); animation: rotateRing 8s linear infinite; pointer-events:none;"></div>
+    </div>
+    <style>@keyframes rotateRing { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }</style>
+
     <!-- Scriptleri Yükle -->
-    <script src="translations.js"></script>
-    <script src="audio.js"></script>
-    <script src="assets.js"></script> 
-    <script src="game_v3.js"></script>
+    <script src="translations.js?v=1.68"></script>
+    <script src="audio.js?v=1.68"></script>
+    <script src="assets.js?v=1.68"></script> 
+    <script src="game_v3.js?v=1.68"></script>
 </body>
 </html>
