@@ -875,9 +875,12 @@ function fireBomb() {
 }
 
 if(bombActionBtn) bombActionBtn.addEventListener('click', fireBomb);
+const dashBtn = document.getElementById('dash-action-btn');
+if(dashBtn) dashBtn.addEventListener('click', activateDash);
 
 window.addEventListener('keydown', (e) => {
     if(e.code === 'Space') fireBomb();
+    if(e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W' || e.shiftKey) activateDash();
 });
 
 const player = { x: canvas.width / 2, y: canvas.height - 150, width: 38, height: 68, speed: 320 };
@@ -1159,6 +1162,11 @@ function startGame() {
     score = 0; goldCount = 0; // PRODUCTION RELEASE: v160
     lives = 3; 
     totalLoops = 0; 
+    
+    // v1.70 FORCE RESET POSITION
+    player.x = canvas.width / 2 - player.width / 2;
+    player.y = canvas.height - 150; 
+    
     updateLanguageUI();
     fillGoldBag();
     obstacles = []; golds = []; powerups = [];
@@ -1177,7 +1185,7 @@ function startGame() {
 
     bgImg = bgImgs['ilkbahar']; 
     playerImg = players.ilkbahar;
-    bgScrollSpeed = 100;
+    bgScrollSpeed = 75; // v1.70: Başlangıç hızı yavaşlatıldı (100 -> 75)
     lastTime = performance.now();
     
     startScreen.classList.remove('active'); startScreen.classList.add('hidden');
@@ -1275,6 +1283,10 @@ function update(dt) {
     } else {
         dashEnergy = Math.min(MAX_DASH_ENERGY, dashEnergy + DASH_RECHARGE_RATE * dt);
     }
+    
+    // v1.70 DASH UI Link
+    const dFill = document.getElementById('dash-energy-fill');
+    if(dFill) dFill.style.width = (dashEnergy / MAX_DASH_ENERGY * 100) + '%';
 
     score += dt * 5; 
     
@@ -1324,7 +1336,8 @@ function update(dt) {
 
     // X Ekseni Sınırları (Nehir Kanalı) - DİNAMİK (Level 4 Dar, Diğerleri Geniş)
     // X Ekseni Sınırları (Nehir Kanalı) - v154: LEVEL 4-6 ARASI DAR KANAL (0.40)
-    let margin = (currentLevel >= 4) ? 0.40 : 0.35;
+    // X Ekseni Sınırları (Nehir Kanalı) - v1.70 ferahlık güncellemesi
+    let margin = (currentLevel >= 4) ? 0.30 : 0.25; // %35 -> %25 (Daha geniş alan)
     const playRiverLeft = canvas.width * margin;
     const playRiverRight = canvas.width * (1 - margin) - player.width;
     
@@ -1486,7 +1499,7 @@ function update(dt) {
             
             // 1.2 Saniye sonra Boost biter, yeni seviye hızına geçer
             setTimeout(() => {
-                bgScrollSpeed = lAsset.speed;
+                bgScrollSpeed = lAsset.speed * 0.75; // v1.70: %25 Yavaşlatıldı
                 levelUpOverlay.style.opacity = '0';
                 setTimeout(() => {
                     levelUpOverlay.classList.remove('active');
@@ -1636,12 +1649,24 @@ function update(dt) {
     }
 }
 
-function draw() {
-    ctx.save(); // Elite UX: Shake/Rotation için temel sakla
+    // --- v1.70: %20 daha yavaş engeller
+    const currentLAsset = levelAssets[currentLevel - 1];
+    let baseSpeed = (currentLAsset ? currentLAsset.speed : 250) * 0.8; 
+    let spawnX = (Math.floor(Math.random() * 9) + 1) * (canvas.width / 10);
     
+    if (currentLevel >= 4 && Math.random() < 0.4) {    // Zoom seviyesi: 1.2x (Karaktere daha yakın bakış)
+    const zoom = 1.25;
+    const centerX = canvas.width / 2;
+    const centerY = player.y + player.height / 2;
+    
+    // Kamerayı oyuncuya odaklar (Zoom noktası oyuncu)
+    ctx.translate(centerX, centerY);
+    ctx.scale(zoom, zoom);
+    ctx.translate(-centerX, -centerY);
+
     // SCREEN SHAKE v1.68
     if (shakeTimer > 0) {
-        let intensity = shakeTimer * 40; // Sarsıntı gücü (Artırıldı)
+        let intensity = shakeTimer * 40; 
         ctx.translate((Math.random() - 0.5) * intensity, (Math.random() - 0.5) * intensity);
     }
     

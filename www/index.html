@@ -28,8 +28,8 @@
                 </div>
             </div>
 
-            <!-- VERSION TAG v167 (Last Stable) -->
-            <div id="version-tag" style="position: absolute; bottom: 8px; right: 12px; color: rgba(255,255,255,0.5); font-size: 11px; z-index: 50; font-family: 'Outfit', sans-serif; font-weight: bold; pointer-events: none;">v1.69</div>
+            <!-- VERSION TAG v1.70 (Last Stable) -->
+            <div id="version-tag" style="position: absolute; bottom: 8px; right: 12px; color: rgba(255,255,255,0.5); font-size: 11px; z-index: 50; font-family: 'Outfit', sans-serif; font-weight: bold; pointer-events: none;">v1.70</div>
 
             <div id="start-screen" class="screen active">
                 <h1>River Escape</h1>
@@ -49,9 +49,7 @@
                 <div class="buttons" style="display:flex; flex-direction:column; gap:10px; width: 85%; margin: 0 auto;">
                     <button id="revive-btn" style="background: linear-gradient(to right, #f12711, #f5af19); color: white; border: none; padding: 12px; font-weight: bold; border-radius: 8px; font-size: 14px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); outline: none;">CANLAN (AD)</button>
                     <button id="x2-gold-start-btn" style="display: none; background: linear-gradient(to right, #f2c94c, #f2994a); color: #000; border: none; padding: 12px; font-weight: bold; border-radius: 8px; font-size: 14px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); outline: none;">x2 ALTIN (AD)</button>
-                    <button id="gameover-shop-btn" style="background: linear-gradient(to right, #8e2de2, #4a00e0); color: white; border: none; padding: 12px; font-weight: bold; border-radius: 8px; font-size: 14px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); outline: none;">Mağaza</button>
-                    <button id="quit-btn-gameover" style="background: #2E7D32; color: white; border: none; padding: 12px; font-weight: bold; border-radius: 8px; font-size: 14px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); outline: none;">Ana Menü</button>
-                    <button id="restart-btn" style="background-color: #444; padding: 12px; font-size: 14px; font-weight: bold; border-radius: 8px; color: #ddd; border: none; margin-top: 10px; width: 100%; outline: none;">VAZGEÇ / SIFIRLA</button>
+                    <button id="restart-btn" style="background: linear-gradient(to right, #00C9FF, #92FE9D); color: #000; padding: 14px; font-size: 16px; font-weight: 900; border-radius: 12px; border: none; margin-top: 10px; width: 100%; outline: none; box-shadow: 0 4px #00897b; cursor: pointer;">YENİ OYUN</button>
                 </div>
             </div>
 
@@ -195,49 +193,59 @@
             ">
                 <span id="toast-text"></span>
             </div>
+            
+            <div id="controls-ui" style="position: absolute; bottom: 20px; right: 20px; display: flex; flex-direction: column; gap: 15px; z-index: 1000; pointer-events: none;">
+                <!-- DASH BUTTON v1.70 -->
+                <div id="dash-action-btn" style="
+                    width: 60px; height: 60px; border-radius: 50%;
+                    background: rgba(0, 229, 255, 0.15); border: 2px solid rgba(0, 229, 255, 0.5);
+                    display: flex; align-items: center; justify-content: center;
+                    cursor: pointer; pointer-events: auto; backdrop-filter: blur(4px);
+                    box-shadow: 0 0 20px rgba(0, 229, 255, 0.2); transition: all 0.2s;
+                " onmousedown="this.style.transform='scale(0.9)'; this.style.background='rgba(0, 229, 255, 0.4)'" onmouseup="this.style.transform='scale(1)'; this.style.background='rgba(0, 229, 255, 0.15)'">
+                    <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="#00e5ff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polyline>
+                    </svg>
+                    <!-- Energy Bar Overlay -->
+                    <div id="dash-energy-bar" style="position: absolute; bottom: -5px; width: 40px; height: 4px; background: #333; border-radius: 2px; overflow: hidden;">
+                        <div id="dash-energy-fill" style="width: 0%; height: 100%; background: #00e5ff; transition: width 0.1s;"></div>
+                    </div>
+                </div>
+
+                <!-- BOMB BUTTON -->
+                <div id="bomb-action-btn" style="
+                    display: none; position: relative; width: 70px; height: 70px;
+                    background: radial-gradient(circle at center, #1a1a1a 0%, #0d0d0d 100%);
+                    border-radius: 50%; border: 3px solid #333;
+                    cursor: pointer; pointer-events: auto;
+                    box-shadow: 0 0 25px rgba(0,0,0,0.8), inset 0 0 15px rgba(255,0,0,0.1);
+                    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                " onmousedown="this.style.transform='scale(0.9) rotate(-10deg)';" onmouseup="this.style.transform='scale(1) rotate(0deg)';" ontouchstart="this.style.transform='scale(0.9) rotate(-10deg)';" ontouchend="this.style.transform='scale(1) rotate(0deg)';">
+                    <!-- Neon Ring -->
+                    <div style="position: absolute; inset: -4px; border: 2px solid #ff3d00; border-radius: 50%; opacity: 0.6; animation: rotateRing 4s linear infinite; filter: blur(1px);"></div>
+                    
+                    <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="#ff3d00" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="filter: drop-shadow(0 0 5px #ff3d00);">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M3 12h3m12 0h3M12 3v3m0 12v3"></path>
+                    </svg>
+                    <div id="bomb-badge" style="
+                        position: absolute; top: -5px; right: -5px;
+                        background: #f12711; color: white;
+                        font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 900;
+                        padding: 3px 8px; border-radius: 12px;
+                        box-shadow: 0 4px 10px rgba(241, 39, 17, 0.5);
+                        border: 2px solid #fff; min-width: 15px; text-align: center;
+                    ">0</div>
+                </div>
+            </div>
     </div>
 
-    <!-- SLEEK CYBER ACTION BUTTON (v1.68 Sleek) -->
-    <div id="bomb-action-btn" style="
-        position:fixed; bottom:120px; right:20px; width:82px; height:82px; 
-        background: #111; 
-        border: 1px solid rgba(255, 255, 255, 0.1); 
-        border-radius:50%; 
-        display:none; justify-content:center; align-items:center; 
-        box-shadow: 0 0 20px rgba(241, 39, 17, 0.4), inset 0 0 10px rgba(241, 39, 17, 0.2); 
-        z-index:9999; cursor:pointer; touch-action: manipulation;
-        transition: all 0.2s ease;" 
-        onmousedown="this.style.transform='scale(0.9)'; this.style.boxShadow='0 0 40px #f12711';"
-        onmouseup="this.style.transform='scale(1)'; this.style.boxShadow='0 0 20px rgba(241, 39, 17, 0.4)';"
-        ontouchstart="this.style.transform='scale(0.9)'; this.style.boxShadow='0 0 40px #f12711';"
-        ontouchend="this.style.transform='scale(1)'; this.style.boxShadow='0 0 20px rgba(241, 39, 17, 0.4)';"
-        class="pulse-button">
-        
-        <!-- Minimalist Crosshair Icon -->
-        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#f12711" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="10"/>
-            <path d="M12 8v8"/>
-            <path d="M8 12h8"/>
-            <circle cx="12" cy="12" r="2" fill="#f12711"/>
-        </svg>
-
-        <!-- Minimalist Badge -->
-        <div id="bomb-badge" style="
-            position:absolute; top:-5px; right:-5px; 
-            background: #f12711;
-            color:white; border-radius:4px; padding:1px 6px; 
-            font-family:'Outfit', sans-serif; font-weight:900;
-            font-size:12px; box-shadow:0 0 10px rgba(241,39,17,0.5);">0</div>
-        
-        <!-- Rotating Outer Ring -->
-        <div style="position:absolute; inset:-4px; border-radius:50%; border: 2px dashed rgba(241, 39, 17, 0.3); animation: rotateRing 8s linear infinite; pointer-events:none;"></div>
-    </div>
     <style>@keyframes rotateRing { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }</style>
 
     <!-- Scriptleri Yükle -->
-    <script src="translations.js?v=1.69"></script>
-    <script src="audio.js?v=1.69"></script>
-    <script src="assets.js?v=1.69"></script> 
-    <script src="game_v3.js?v=1.69"></script>
+    <script src="translations.js?v=1.70"></script>
+    <script src="audio.js?v=1.70"></script>
+    <script src="assets.js?v=1.70"></script> 
+    <script src="game_v3.js?v=1.70"></script>
 </body>
 </html>
