@@ -1296,11 +1296,11 @@ function update(dt) {
     if (displayTotalGold < totalGold) displayTotalGold += Math.ceil((totalGold - displayTotalGold) * 0.1);
     else displayTotalGold = totalGold;
 
-    // v1.71 GLASS HUD SYNC
+    // v1.72 GLASS HUD SYNC (Safety Clamp)
     const scoreHud = document.getElementById('scoreValue-hud');
     const goldHud = document.getElementById('goldValue-hud');
-    if(scoreHud) scoreHud.innerText = Math.floor(score);
-    if(goldHud) goldHud.innerText = goldCount;
+    if(scoreHud) scoreHud.innerText = Math.max(0, Math.floor(score));
+    if(goldHud) goldHud.innerText = Math.max(0, goldCount);
 
     if (shakeTimer > 0) shakeTimer -= dt;
 
@@ -1656,14 +1656,19 @@ function update(dt) {
 function draw() {
     ctx.save();
     
-    // --- CAMERA ZOOM SYSTEM v1.70 ---
+    // --- CAMERA ZOOM SYSTEM v1.72 (Ghost Buster NaN Protection) ---
     const zoom = 1.25;
     const centerX = canvas.width / 2;
-    const centerY = player.y + player.height / 2;
+    // v1.72 FIX: player.y NaN ise merkezi 0'a daya (Siyah ekran engellendi)
+    const pY = (player && typeof player.y === 'number' && !isNaN(player.y)) ? player.y : (canvas.height / 2);
+    const pHeight = (player && typeof player.height === 'number') ? player.height : 60;
+    const centerY = pY + pHeight / 2;
     
-    ctx.translate(centerX, centerY);
-    ctx.scale(zoom, zoom);
-    ctx.translate(-centerX, -centerY);
+    if (!isNaN(centerX) && !isNaN(centerY)) {
+        ctx.translate(centerX, centerY);
+        ctx.scale(zoom, zoom);
+        ctx.translate(-centerX, -centerY);
+    }
 
     // v1.71 MODERN RIVER SURFACE FX
     if (currentLevel < 5) {
