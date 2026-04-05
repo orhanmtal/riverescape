@@ -31,8 +31,8 @@ android {
         applicationId "com.gemini.riverescape"
         minSdkVersion project.hasProperty('minSdkVersion') ? rootProject.ext.minSdkVersion : 24
         targetSdkVersion project.hasProperty('targetSdkVersion') ? rootProject.ext.targetSdkVersion : 36
-        versionCode 168
-        versionName "1.68"
+        versionCode 169
+        versionName "1.69"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
              // Strings and colors symbols reserved by Android platform
