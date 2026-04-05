@@ -634,19 +634,18 @@ resizeCanvas();
 
 
 const levelAssets = [
-    { threshold: 0,    bgKey: 'ilkbahar', speed: 140, spawn: 1.20, titleEN: translations.en.l1Title, titleTR: translations.tr.l1Title, color: "#64dd17", pKey: "ilkbahar" },
-    { threshold: 1000,  bgKey: 'yaz',      speed: 220, spawn: 0.55, titleEN: translations.en.l2Title, titleTR: translations.tr.l2Title, color: "#ffd600", pKey: "yaz" },
-    { threshold: 2000, bgKey: 'sonbahar', speed: 280, spawn: 0.45, titleEN: translations.en.l3Title, titleTR: translations.tr.l3Title, color: "#ff6d00", pKey: "sonbahar" },
-    { threshold: 3000, bgKey: 'kis',      speed: 340, spawn: 0.35, titleEN: translations.en.l4Title, titleTR: translations.tr.l4Title, color: "#00e5ff", pKey: "kis" },
-    { threshold: 4000, bgKey: 'lava',     speed: 450, spawn: 0.40, titleEN: translations.en.lavaRiver, titleTR: translations.tr.lavaRiver, color: "#ff4500", pKey: "lava" },
-    { threshold: 6000, bgKey: 'void',     speed: 600, spawn: 0.30, titleEN: translations.en.voidLevel, titleTR: translations.tr.voidLevel, color: "#9b59b6", pKey: "void" },
-    // v158: SONSUL İLERLEME (ENDLESS PROGRESSION)
-    { threshold: 10000, bgKey: 'ilkbahar', speed: 160 * 1.5, spawn: 0.70 / 1.5, titleEN: "NEW CYCLE - SPRING", titleTR: "YENİ TUR - İLKBAHAR", color: "#64dd17", pKey: "ilkbahar" },
-    { threshold: 12000, bgKey: 'yaz',      speed: 220 * 1.5, spawn: 0.55 / 1.5, titleEN: "NEW CYCLE - SUMMER", titleTR: "YENİ TUR - YAZ", color: "#ffd600", pKey: "yaz" },
-    { threshold: 14000, bgKey: 'sonbahar', speed: 280 * 1.5, spawn: 0.45 / 1.5, titleEN: "NEW CYCLE - AUTUMN", titleTR: "YENİ TUR - SONBAHAR", color: "#ff6d00", pKey: "sonbahar" },
-    { threshold: 16000, bgKey: 'kis',      speed: 340 * 1.5, spawn: 0.35 / 1.5, titleEN: "NEW CYCLE - WINTER", titleTR: "YENİ TUR - KIŞ", color: "#00e5ff", pKey: "kis" },
-    { threshold: 18000, bgKey: 'lava',     speed: 450 * 1.5, spawn: 0.30 / 1.5, titleEN: "ABYSSAL LAVA", titleTR: "DERİN LAV NEHRİ", color: "#ff4500", pKey: "lava" },
-    { threshold: 20000, bgKey: 'void',     speed: 600 * 1.5, spawn: 0.25,       titleEN: "COSMIC VOID",  titleTR: "KOZMİK BOŞLUK",   color: "#9b59b6", pKey: "void" }
+    { threshold: 0,    bgKey: 'ilkbahar', speed: 140, spawn: 1.20, titleEN: translations.en.l1Title, titleTR: translations.tr.l1Title, color: "#64dd17", pKey: "ilkbahar", margin: 0.35 },
+    { threshold: 1000,  bgKey: 'yaz',      speed: 220, spawn: 0.55, titleEN: translations.en.l2Title, titleTR: translations.tr.l2Title, color: "#ffd600", pKey: "yaz",      margin: 0.30 },
+    { threshold: 2000, bgKey: 'sonbahar', speed: 280, spawn: 0.45, titleEN: translations.en.l3Title, titleTR: translations.tr.l3Title, color: "#ff6d00", pKey: "sonbahar", margin: 0.30 },
+    { threshold: 3000, bgKey: 'kis',      speed: 340, spawn: 0.35, titleEN: translations.en.l4Title, titleTR: translations.tr.l4Title, color: "#00e5ff", pKey: "kis",      margin: 0.30 },
+    { threshold: 4000, bgKey: 'lava',     speed: 450, spawn: 0.40, titleEN: translations.en.lavaRiver, titleTR: translations.tr.lavaRiver, color: "#ff4500", pKey: "lava", margin: 0.38 },
+    { threshold: 6000, bgKey: 'void',     speed: 600, spawn: 0.30, titleEN: translations.en.voidLevel, titleTR: translations.tr.voidLevel, color: "#9b59b6", pKey: "void", margin: 0.40 },
+    { threshold: 10000, bgKey: 'ilkbahar', speed: 160 * 1.5, spawn: 0.70 / 1.5, titleEN: "NEW CYCLE - SPRING", titleTR: "YENİ TUR - İLKBAHAR", color: "#64dd17", pKey: "ilkbahar", margin: 0.35 },
+    { threshold: 12000, bgKey: 'yaz',      speed: 220 * 1.5, spawn: 0.55 / 1.5, titleEN: "NEW CYCLE - SUMMER", titleTR: "YENİ TUR - YAZ", color: "#ffd600", pKey: "yaz",      margin: 0.30 },
+    { threshold: 14000, bgKey: 'sonbahar', speed: 280 * 1.5, spawn: 0.45 / 1.5, titleEN: "NEW CYCLE - AUTUMN", titleTR: "YENİ TUR - SONBAHAR", color: "#ff6d00", pKey: "sonbahar", margin: 0.30 },
+    { threshold: 16000, bgKey: 'kis',      speed: 340 * 1.5, spawn: 0.35 / 1.5, titleEN: "NEW CYCLE - WINTER", titleTR: "YENİ TUR - KIŞ", color: "#00e5ff", pKey: "kis",      margin: 0.30 },
+    { threshold: 18000, bgKey: 'lava',     speed: 450 * 1.5, spawn: 0.30 / 1.5, titleEN: "ABYSSAL LAVA", titleTR: "DERİN LAV NEHRİ", color: "#ff4500", pKey: "lava", margin: 0.38 },
+    { threshold: 20000, bgKey: 'void',     speed: 600 * 1.5, spawn: 0.25,       titleEN: "COSMIC VOID",  titleTR: "KOZMİK BOŞLUK",   color: "#9b59b6", pKey: "void", margin: 0.40 }
 ];
 
 let isTransitioningLevel = false;
@@ -962,37 +961,34 @@ function spawnPowerup() {
 }
 
 function spawnObstacle() {
-    // GEÇİŞ ESNASINDA ARTIK DURMAK YOK! TEMPO SÜREKLİ! v135
-    // if (isTransitioningLevel) return; // BU SATIRI UÇURDUK!
-
     // Güçlendirici Çıkması
     if (Math.random() < 0.1 && (magnetLevel > 0 || shieldLevel > 0)) {
         spawnPowerup(); return;
     }
 
-    const baseSpeed = 200 + Math.random() * 100;
-    let spawnMargin = (currentLevel >= 4) ? 0.38 : 0.30; // v1.68: Level 1-3'te nehir %40 daha geniş! (0.35 -> 0.30)
+    // v1.71: %20 daha yavaş engeller + Dinamik Assets Margins
+    const currentLAsset = levelAssets[currentLevel - 1];
+    let baseSpeed = (currentLAsset ? currentLAsset.speed : 200) * 0.8; 
+    
+    let spawnMargin = currentLAsset ? currentLAsset.margin : 0.35; 
     const riverLeft = canvas.width * spawnMargin;
     const riverRight = canvas.width * (1 - spawnMargin) - 45; 
     
-    // v152: LEVEL 6 (VOID) SINIRI EKLENDİ
     let isDZ = (currentLevel === 1 && score >= 900) || (currentLevel === 2 && score >= 1900) || (currentLevel === 3 && score >= 2900) || (currentLevel === 4 && score >= 3900) || (currentLevel === 5 && score >= 5900) || (currentLevel === 6 && score >= 9900);
     
-    // Level 1 / Level 5 / Level 6 Özel Filtreleri
     let allowedSpecialTypes = [];
     if (currentLevel === 1) {
         allowedSpecialTypes.push('rock');
         if (score >= 500) allowedSpecialTypes.push('hippo'); 
         if (score >= 900 && score <= 1000) allowedSpecialTypes.push('croc'); 
     } else if (currentLevel === 5) {
-        allowedSpecialTypes = ['rock', 'fireball']; // Lav Seviyesi: Sadece Kaya ve Ateş Topu!
+        allowedSpecialTypes = ['rock', 'fireball']; 
     } else if (currentLevel === 6) {
-        allowedSpecialTypes = ['rock', 'asteroid']; // Boşluk Seviyesi: Sadece Kayalar ve Meteorlar!
+        allowedSpecialTypes = ['rock', 'asteroid']; 
     } else {
         allowedSpecialTypes = ['hippo', 'croc', 'rock']; 
     }
 
-    // %45 ihtimalle Özel Engel - Sadece izin verilen tiplerden birini seç!
     let spawnX = Math.random() * (riverRight - riverLeft) + riverLeft;
     
     // OYUNCUYA UMUT PAYI VER (0% İHTİMALİNİ BİTİR!) v146
@@ -1072,8 +1068,10 @@ function spawnObstacle() {
 }
 
 function spawnGold() {
-    const riverLeft = canvas.width * 0.35;
-    const riverRight = canvas.width * 0.65 - 30;
+    const currentAsset = levelAssets[currentLevel - 1];
+    const sMargin = currentAsset ? currentAsset.margin : 0.35;
+    const riverLeft = canvas.width * sMargin;
+    const riverRight = canvas.width * (1 - sMargin) - 30; 
     
     if (goldBag.length === 0) fillGoldBag();
     let gVal = goldBag.pop(); // Torbadan kesin şans çekiliyor
@@ -1297,6 +1295,12 @@ function update(dt) {
     if (displayGold < goldCount) displayGold++;
     if (displayTotalGold < totalGold) displayTotalGold += Math.ceil((totalGold - displayTotalGold) * 0.1);
     else displayTotalGold = totalGold;
+
+    // v1.71 GLASS HUD SYNC
+    const scoreHud = document.getElementById('scoreValue-hud');
+    const goldHud = document.getElementById('goldValue-hud');
+    if(scoreHud) scoreHud.innerText = Math.floor(score);
+    if(goldHud) goldHud.innerText = goldCount;
 
     if (shakeTimer > 0) shakeTimer -= dt;
 
@@ -1649,20 +1653,46 @@ function update(dt) {
     }
 }
 
-    // --- v1.70: %20 daha yavaş engeller
-    const currentLAsset = levelAssets[currentLevel - 1];
-    let baseSpeed = (currentLAsset ? currentLAsset.speed : 250) * 0.8; 
-    let spawnX = (Math.floor(Math.random() * 9) + 1) * (canvas.width / 10);
+function draw() {
+    ctx.save();
     
-    if (currentLevel >= 4 && Math.random() < 0.4) {    // Zoom seviyesi: 1.2x (Karaktere daha yakın bakış)
+    // --- CAMERA ZOOM SYSTEM v1.70 ---
     const zoom = 1.25;
     const centerX = canvas.width / 2;
     const centerY = player.y + player.height / 2;
     
-    // Kamerayı oyuncuya odaklar (Zoom noktası oyuncu)
     ctx.translate(centerX, centerY);
     ctx.scale(zoom, zoom);
     ctx.translate(-centerX, -centerY);
+
+    // v1.71 MODERN RIVER SURFACE FX
+    if (currentLevel < 5) {
+        const cMargin = (currentLAsset ? currentLAsset.margin : 0.35);
+        const rLeft = canvas.width * cMargin;
+        const rRight = canvas.width * (1 - cMargin);
+        
+        // Deep Water Gradient
+        let waterGrad = ctx.createLinearGradient(rLeft, 0, rRight, 0);
+        waterGrad.addColorStop(0, "rgba(0, 80, 180, 0.15)");
+        waterGrad.addColorStop(0.5, "rgba(0, 120, 255, 0.05)");
+        waterGrad.addColorStop(1, "rgba(0, 80, 180, 0.15)");
+        ctx.fillStyle = waterGrad;
+        ctx.fillRect(rLeft, 0, rRight - rLeft, canvas.height);
+
+        // Animated Flow Lines
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.15)";
+        ctx.lineWidth = 1;
+        for(let i=0; i<5; i++) {
+            let lx = rLeft + (canvas.width * (1 - 2*cMargin) * (i/4));
+            let offset = (performance.now() / 2) % 400;
+            ctx.beginPath();
+            ctx.setLineDash([20, 40]);
+            ctx.lineDashOffset = -offset;
+            ctx.moveTo(lx, 0); ctx.lineTo(lx, canvas.height);
+            ctx.stroke();
+            ctx.setLineDash([]);
+        }
+    }
 
     // SCREEN SHAKE v1.68
     if (shakeTimer > 0) {
