@@ -1,4 +1,4 @@
-// River Escape - Ses Motoru (Audio Engine) - v1.96.8.4 (DONDURUCU VADİ)
+// River Escape - Ses Motoru (Audio Engine) - v1.96.9.5 (FINAL L4)
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 let audioCtx;
 
@@ -214,7 +214,7 @@ function updateAmbientWind(level, isPlaying) {
     if(!audioCtx) return;
     if(!windSource) initWindGenerator();
     
-    // Sadece Level 4 ve oyun oynanırken rüzgar eser
+    // v1.96.9.2: Oyun durunca rüzgar da DURUR.
     const targetGain = (level === 4 && isPlaying) ? (0.15 * isSFXVolume) : 0;
     const now = audioCtx.currentTime;
     

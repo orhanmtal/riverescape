@@ -1,4 +1,4 @@
-// RİVER ESCAPE ELİTE - v1.96.9.0 (WINTER ELITE RELEASE)
+// RİVER ESCAPE ELİTE - v1.96.9.5 (FINAL LEVEL 4 RELEASE)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -1268,7 +1268,11 @@ function startGame() {
     startScreen.classList.remove('active'); startScreen.classList.add('hidden');
     gameOverScreen.classList.remove('active'); gameOverScreen.classList.add('hidden');
     if(pauseScreen) { pauseScreen.classList.remove('active'); pauseScreen.classList.add('hidden'); pauseScreen.style.display = ''; }
-    if(pauseBtn) { pauseBtn.style.display = 'block'; pauseBtn.innerText = "⏸ DURDUR"; }
+    if(pauseBtn) { 
+        pauseBtn.style.display = 'block'; 
+        pauseBtn.style.opacity = '0.5'; 
+        pauseBtn.innerText = isPaused ? "▶" : "⏸"; 
+    }
     if(bombActionBtn && hasWeapon) bombActionBtn.style.display = 'flex';
     
     // Revive butonlarını UI üzerinde sıfırla
@@ -1409,6 +1413,8 @@ function update(dt) {
     if (isPlaying) {
         score += dt * 5; 
         if(typeof updateAmbientWind === 'function') updateAmbientWind(currentLevel, true);
+    } else {
+        if(typeof updateAmbientWind === 'function') updateAmbientWind(currentLevel, false);
     }
     
     // v1.68 SCORE & GOLD TICKER (Yumuşak Geçiş)
