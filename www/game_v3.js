@@ -1,4 +1,4 @@
-// RİVER ESCAPE ELİTE - v1.96.5.0 (LEVEL FLOW OVERHAUL)
+// RİVER ESCAPE ELİTE - v1.96.5.1 (LEVEL 3 TUNING)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -636,7 +636,7 @@ resizeCanvas();
 const levelAssets = [
     { threshold: 0,    bgKey: 'ilkbahar', speed: 90,  spawn: 2.50, titleEN: translations.en.l1Title, titleTR: translations.tr.l1Title, color: "#64dd17", pKey: "ilkbahar", margin: 0.38 },
     { threshold: 1000,  bgKey: 'yaz',      speed: 160, spawn: 1.55, titleEN: translations.en.l2Title, titleTR: translations.tr.l2Title, color: "#ffd600", pKey: "ilkbahar", margin: 0.30 },
-    { threshold: 2500, bgKey: 'sonbahar', speed: 200, spawn: 1.30, titleEN: translations.en.l3Title, titleTR: translations.tr.l3Title, color: "#ff6d00", pKey: "sonbahar", margin: 0.30 },
+    { threshold: 2500, bgKey: 'sonbahar', speed: 220, spawn: 1.15, titleEN: translations.en.l3Title, titleTR: translations.tr.l3Title, color: "#ff6d00", pKey: "sonbahar", margin: 0.30 },
     { threshold: 4500, bgKey: 'kis',      speed: 260, spawn: 1.00, titleEN: translations.en.l4Title, titleTR: translations.tr.l4Title, color: "#00e5ff", pKey: "kis",      margin: 0.30 },
     { threshold: 7000, bgKey: 'lava',     speed: 380, spawn: 0.60, titleEN: translations.en.lavaRiver, titleTR: translations.tr.lavaRiver, color: "#ff4500", pKey: "lava", margin: 0.38 },
     { threshold: 10000, bgKey: 'void',     speed: 550, spawn: 0.35, titleEN: translations.en.voidLevel, titleTR: translations.tr.voidLevel, color: "#9b59b6", pKey: "void", margin: 0.40 },
@@ -1197,7 +1197,7 @@ function togglePause() {
 function startGame() {
     initAudio(); 
     isPlaying = true; isGameOver = false; isPaused = false;
-    score = 0; goldCount = 0; // PRODUCTION: OYUN SIFIRDAN BAŞLAR (v1.96.5.0)
+    score = 2490; goldCount = 0; // DEBUG: START FROM LEVEL 3 PREP (2490)
     lives = 3; 
     totalLoops = 0; 
     
