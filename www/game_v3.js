@@ -1,4 +1,4 @@
-// RİVER ESCAPE ELİTE - v1.96.3.2 (START SCORE 1890)
+// RİVER ESCAPE ELİTE - v1.96.4.0 (DEATH VALLEY)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -982,7 +982,13 @@ function spawnObstacle() {
     const riverLeft = canvas.width * spawnMargin;
     const riverRight = canvas.width * (1 - spawnMargin) - 45;
     
-    let isDZ = (currentLevel === 1 && score >= 900) || (currentLevel === 2 && score >= 1900) || (currentLevel === 3 && score >= 2900) || (currentLevel === 4 && score >= 3900) || (currentLevel === 5 && score >= 5900) || (currentLevel === 6 && score >= 9900);
+    // --- ÖLÜM VADİSİ (DEATH VALLEY) v1.96.4.0 ---
+    if (currentLevel === 2 && score >= 1800 && score < 2000) {
+        baseSpeed *= 1.6; // Ekstrem hız
+        spawnInterval = 0.75; // Sel gibi engel akışı
+    }
+    
+    let isDZ = (currentLevel === 1 && score >= 900) || (currentLevel === 2 && score >= 1800) || (currentLevel === 3 && score >= 2900) || (currentLevel === 4 && score >= 3900) || (currentLevel === 5 && score >= 5900) || (currentLevel === 6 && score >= 9900);
     
     let allowedSpecialTypes = [];
     if (currentLevel === 1) {
@@ -1188,7 +1194,7 @@ function togglePause() {
 function startGame() {
     initAudio(); 
     isPlaying = true; isGameOver = false; isPaused = false;
-    score = 1890; goldCount = 0; // DEBUG: START FROM LEVEL 2 (1890)
+    score = 1790; goldCount = 0; // DEBUG: START FROM DEATH VALLEY PREP (1790)
     lives = 3; 
     totalLoops = 0; 
     
