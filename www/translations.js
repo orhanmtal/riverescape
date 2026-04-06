@@ -66,7 +66,8 @@ const translations = {
         voidLevel: "SONSUZ BOŞLUK",
         gameCompleted: "ŞAMPİYON! YENİ TUR BAŞLIYOR...",
         dashReady: "ZIPLAMA HAZIR!",
-        adNotReady: "⚠️ Reklam henüz hazır değil, lütfen daha sonra tekrar deneyin."
+        adNotReady: "⚠️ Reklam henüz hazır değil, lütfen daha sonra tekrar deneyin.",
+        deathValley: "ÖLÜM VADİSİ"
     },
     en: {
         startDesc: "Move left/right. Double Tap or Up Arrow to Dash.",
@@ -134,6 +135,7 @@ const translations = {
         voidLevel: "THE VOID",
         gameCompleted: "CHAMPION! NEW LOOP STARTING...",
         dashReady: "DASH READY!",
-        adNotReady: "⚠️ Ad is not ready yet, please try again later."
+        adNotReady: "⚠️ Ad is not ready yet, please try again later.",
+        deathValley: "DEATH VALLEY"
     }
 };
