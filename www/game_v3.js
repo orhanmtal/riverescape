@@ -1,4 +1,4 @@
-// RİVER ESCAPE ELİTE - v1.96.1.2 (UI CLEANUP)
+// RİVER ESCAPE ELİTE - v1.96.2.1 (BOAT SYNC)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -635,13 +635,13 @@ resizeCanvas();
 
 const levelAssets = [
     { threshold: 0,    bgKey: 'ilkbahar', speed: 90,  spawn: 2.50, titleEN: translations.en.l1Title, titleTR: translations.tr.l1Title, color: "#64dd17", pKey: "ilkbahar", margin: 0.38 },
-    { threshold: 1000,  bgKey: 'yaz',      speed: 140, spawn: 1.80, titleEN: translations.en.l2Title, titleTR: translations.tr.l2Title, color: "#ffd600", pKey: "yaz",      margin: 0.30 },
+    { threshold: 1000,  bgKey: 'yaz',      speed: 140, spawn: 1.80, titleEN: translations.en.l2Title, titleTR: translations.tr.l2Title, color: "#ffd600", pKey: "ilkbahar", margin: 0.30 },
     { threshold: 2000, bgKey: 'sonbahar', speed: 200, spawn: 1.30, titleEN: translations.en.l3Title, titleTR: translations.tr.l3Title, color: "#ff6d00", pKey: "sonbahar", margin: 0.30 },
     { threshold: 3000, bgKey: 'kis',      speed: 260, spawn: 1.00, titleEN: translations.en.l4Title, titleTR: translations.tr.l4Title, color: "#00e5ff", pKey: "kis",      margin: 0.30 },
     { threshold: 4000, bgKey: 'lava',     speed: 380, spawn: 0.60, titleEN: translations.en.lavaRiver, titleTR: translations.tr.lavaRiver, color: "#ff4500", pKey: "lava", margin: 0.38 },
     { threshold: 6000, bgKey: 'void',     speed: 550, spawn: 0.35, titleEN: translations.en.voidLevel, titleTR: translations.tr.voidLevel, color: "#9b59b6", pKey: "void", margin: 0.40 },
     { threshold: 10000, bgKey: 'ilkbahar', speed: 180, spawn: 1.10, titleEN: "NEW CYCLE - SPRING", titleTR: "YENİ TUR - İLKBAHAR", color: "#64dd17", pKey: "ilkbahar", margin: 0.38 },
-    { threshold: 12000, bgKey: 'yaz',      speed: 240, spawn: 0.85, titleEN: "NEW CYCLE - SUMMER", titleTR: "YENİ TUR - YAZ", color: "#ffd600", pKey: "yaz",      margin: 0.30 },
+    { threshold: 12000, bgKey: 'yaz',      speed: 240, spawn: 0.85, titleEN: "NEW CYCLE - SUMMER", titleTR: "YENİ TUR - YAZ", color: "#ffd600", pKey: "ilkbahar", margin: 0.30 },
     { threshold: 14000, bgKey: 'sonbahar', speed: 300, spawn: 0.65, titleEN: "NEW CYCLE - AUTUMN", titleTR: "YENİ TUR - SONBAHAR", color: "#ff6d00", pKey: "sonbahar", margin: 0.30 },
     { threshold: 16000, bgKey: 'kis',      speed: 380, spawn: 0.50, titleEN: "NEW CYCLE - WINTER", titleTR: "YENİ TUR - KIŞ", color: "#00e5ff", pKey: "kis",      margin: 0.30 },
     { threshold: 18000, bgKey: 'lava',     speed: 500, spawn: 0.35, titleEN: "ABYSSAL LAVA", titleTR: "DERİN LAV NEHRİ", color: "#ff4500", pKey: "lava", margin: 0.38 },
