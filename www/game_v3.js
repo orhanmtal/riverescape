@@ -1,4 +1,4 @@
-// RİVER ESCAPE ELİTE - v1.96.1.1 (HUD FIX)
+// RİVER ESCAPE ELİTE - v1.96.1.2 (UI CLEANUP)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -1154,7 +1154,7 @@ function togglePause() {
             pauseScreen.classList.add('active');
             pauseScreen.style.display = 'flex';
         }
-        if(pauseBtn) pauseBtn.innerText = "▶ " + t.resumeBtn.toUpperCase();
+        if(pauseBtn) pauseBtn.innerText = "▶";
         // audioCtx.suspend() yerine scheduler isPaused kontrolü yeterlidir
     } else {
         if(pauseScreen) {
@@ -1162,7 +1162,7 @@ function togglePause() {
             pauseScreen.classList.add('hidden');
             pauseScreen.style.display = 'none';
         }
-        if(pauseBtn) pauseBtn.innerText = "⏸ " + t.pauseTitle.toUpperCase();
+        if(pauseBtn) pauseBtn.innerText = "⏸";
         lastTime = performance.now(); 
         requestAnimationFrame(gameLoop);
     }
