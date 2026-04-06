@@ -20,8 +20,8 @@ function makeWhiteTransparent(imageElement) {
 
         for (var i = 0; i < data.length; i += 4) {
             let r = data[i], g = data[i+1], b = data[i+2];
-            // Beyazlık mühürü (v158: Daha katı tolerans - ARTİFAKT TEMİZLİĞİ)
-            if (r > 165 && g > 165 && b > 165) { 
+            // Ekstra güvenlik: Çok parlak beyazları da uçur
+            if (r > 245 && g > 245 && b > 245) { 
                 data[i+3] = 0; 
             }
         }
@@ -59,7 +59,7 @@ function loadBg(key, src) {
 }
 
 // ASSETS YÜKLEME
-let bgImgIlkbahar = loadBg('ilkbahar', 'assets/ArkaPlan.png');
+let bgImgIlkbahar = loadBg('ilkbahar', 'assets/ArkaPlan_Elite_Spring_Straight.png');
 let bgImgYaz = loadBg('yaz', 'assets/ArkaPlan_Yaz.png');
 let bgImgSonbahar = loadBg('sonbahar', 'assets/ArkaPlan_Sonbahar.png');
 let bgImgKis = loadBg('kis', 'assets/ArkaPlan_Kis.png');
@@ -111,11 +111,32 @@ let hippoImg = new Image(); // crossOrigin silindi (local)
 
 hippoImg.onload = () => { hippoImg = makeWhiteTransparent(hippoImg); }; hippoImg.src = 'assets/Hippo.png';
 
-let fireballImg = new Image(); // v151 Fireball
-fireballImg.onload = () => { fireballImg = makeWhiteTransparent(fireballImg); }; fireballImg.src = 'assets/Fireball.png';
+// --- v2.00 INDIVIDUAL ELITE ASSETS (No more Grid!) ---
+let obsTiles = {};
+function loadIndividualTiles(key, rockSrc, logSrc, crocSrc, hippoSrc) {
+    obsTiles[key] = { isIndividual: true };
+    const load = (type, src) => {
+        if (!src) return;
+        let img = new Image();
+        img.onload = () => { obsTiles[key][type] = makeWhiteTransparent(img); };
+        img.src = src;
+    };
+    load('rock', rockSrc);
+    load('horizontal_log', logSrc);
+    load('vertical_log', logSrc);
+    load('vertical', logSrc); // Geri uyumluluk
+    load('croc', crocSrc);
+    load('hippo', hippoSrc);
+}
 
-let meteorImg = new Image(); // v152 Meteor
-meteorImg.onload = () => { meteorImg = makeWhiteTransparent(meteorImg); }; meteorImg.src = 'assets/Meteor.png';
+// Level-Specific Assets (Elite Individual System)
+loadIndividualTiles('ilkbahar', '', 'assets/Kutuk.png', 'assets/Timsah.png', 'assets/Hippo.png');
+loadIndividualTiles('yaz', '', 'assets/Kutuk.png', 'assets/Timsah.png', 'assets/Hippo.png');
+loadIndividualTiles('sonbahar', '', 'assets/Kutuk.png', 'assets/Timsah.png', 'assets/Hippo.png');
+
+loadIndividualTiles('kis', '', 'assets/Kutuk.png', 'assets/Timsah.png', 'assets/Hippo.png');
+loadIndividualTiles('lava', '', 'assets/Kutuk.png', 'assets/Timsah.png', 'assets/Hippo.png');
+loadIndividualTiles('void', '', 'assets/Kutuk.png', 'assets/Timsah.png', 'assets/Hippo.png');
 
 // PARALLAX SİSTEMİ (BULUTLAR/SİS)
 let clouds = [];

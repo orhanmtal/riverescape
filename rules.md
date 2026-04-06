@@ -37,3 +37,8 @@ Bu dosya, projenin "Mihenk Taşı" kalitesinde kalması ve gelecekte yapılacak 
 
 ## 8. Dash (Zıplama) Mekaniği Kuralı
 - **Stratejik Kurtarış:** Dash (Gök Kesici) mekaniği her zaman bir "Umut Boşluğu" kurtarıcısı olarak var olmalı, tıkanmış geçitlerde oyuncuya 0.8 saniyelik bir zırh ve dikey hareket kabiliyeti sunmalıdır. Ancak bu sistem enerji tabanlı olmalı ve oyuncunun tüm engelleri Dash ile geçmesine (abuse) izin vermemeli, stratejik kullanımı zorunlu kılmalıdır.
+
+## 9. Versiyonlama Standartı (Elite Mühür)
+- **Elite Base:** Projenin ana "Elite" sürümü `v1.96.0` olarak kabul edilir.
+- **Minor Geliştirme:** Bu sürümden sonra yapılacak her küçük iyileştirme, hata onarımı veya minor özellik eklemesi `v1.96.1.x` (Örn: 1.96.1.1, 1.96.1.2) şeklinde ilerlemelidir.
+- **Senkronizasyon:** Her versiyon artışında; `game_v3.js` (header), `index.html` (tag & cache-bust), `package.json` ve `build.gradle` (versionName) dosyaları harfiyen aynı numarada mühürlenmelidir.
