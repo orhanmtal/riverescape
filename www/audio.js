@@ -1,4 +1,4 @@
-// River Escape - Ses Motoru (Audio Engine) - v1.96.4.1 (PANIC SYNC)
+// River Escape - Ses Motoru (Audio Engine) - v1.96.5.0 (LEVEL FLOW)
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 let audioCtx;
 
@@ -24,9 +24,18 @@ function bgMusicScheduler() {
             nextNoteTime = audioCtx.currentTime + 0.05;
         }
         while (nextNoteTime < audioCtx.currentTime + 0.1) {
-            let isDZ = (currentLevel === 1 && score >= 900) || (currentLevel === 2 && score >= 1800) || (currentLevel === 3 && score >= 2900) || (currentLevel === 4 && score >= 3900) || (currentLevel === 5 && score >= 5900) || (currentLevel === 6 && score >= 9900);
+            // v1.96.5.0: DİNAMİK ÖLÜM VADİSİ (DZ) MANTIĞI
+            let isDZ = 
+                (currentLevel === 1 && score >= 900) || 
+                (currentLevel === 2 && score >= 2200) || 
+                (currentLevel === 3 && score >= 4200) || 
+                (currentLevel === 4 && score >= 6700) || 
+                (currentLevel === 5 && score >= 9600) || 
+                (currentLevel === 6 && score >= 13500) ||
+                (currentLevel >= 7 && (score % 1000 >= 800));
+
             playMelodyNote(melody[currentNote], nextNoteTime, isDZ);
-            nextNoteTime += isDZ ? 0.11 : 0.2; // v1.96.4.1: Ölüm Vadisi'nde tempo daha da hızlandı!
+            nextNoteTime += isDZ ? 0.10 : 0.2; // Ölüm Vadisi'nde tempo hızlanır
             currentNote = (currentNote + 1) % melody.length;
         }
     }
@@ -124,7 +133,6 @@ function playPowerupSound() {
     osc.start(); osc.stop(audioCtx.currentTime + 0.4);
 }
 
-// Çark Tıkırtısı (Kısa Mekanik Ses)
 function playSpinClick() {
     if(!audioCtx) return;
     const osc = audioCtx.createOscillator();
@@ -137,7 +145,6 @@ function playSpinClick() {
     osc.start(); osc.stop(audioCtx.currentTime + 0.05);
 }
 
-// Çark Ödül Sesi (Mutlu Arpej)
 function playSpinReward() {
     if(!audioCtx) return;
     const notes = [659.25, 830.61, 987.77, 1318.51]; // E5, G#5, B5, E6
@@ -154,7 +161,6 @@ function playSpinReward() {
     });
 }
 
-// v156: ZAFER FANFARI (EPIC VICTORY)
 function playVictoryFanfare() {
     if(!audioCtx) return;
     const notes = [523.25, 659.25, 783.99, 1046.50, 1318.51, 1567.98, 2093.00]; // C5, E5, G5, C6, E6, G6, C7

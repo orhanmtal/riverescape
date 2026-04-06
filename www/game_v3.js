@@ -1,4 +1,4 @@
-// RİVER ESCAPE ELİTE - v1.96.4.1 (PANIC SYNC)
+// RİVER ESCAPE ELİTE - v1.96.5.0 (LEVEL FLOW OVERHAUL)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -636,16 +636,11 @@ resizeCanvas();
 const levelAssets = [
     { threshold: 0,    bgKey: 'ilkbahar', speed: 90,  spawn: 2.50, titleEN: translations.en.l1Title, titleTR: translations.tr.l1Title, color: "#64dd17", pKey: "ilkbahar", margin: 0.38 },
     { threshold: 1000,  bgKey: 'yaz',      speed: 160, spawn: 1.55, titleEN: translations.en.l2Title, titleTR: translations.tr.l2Title, color: "#ffd600", pKey: "ilkbahar", margin: 0.30 },
-    { threshold: 2300, bgKey: 'sonbahar', speed: 200, spawn: 1.30, titleEN: translations.en.l3Title, titleTR: translations.tr.l3Title, color: "#ff6d00", pKey: "sonbahar", margin: 0.30 },
-    { threshold: 3000, bgKey: 'kis',      speed: 260, spawn: 1.00, titleEN: translations.en.l4Title, titleTR: translations.tr.l4Title, color: "#00e5ff", pKey: "kis",      margin: 0.30 },
-    { threshold: 4000, bgKey: 'lava',     speed: 380, spawn: 0.60, titleEN: translations.en.lavaRiver, titleTR: translations.tr.lavaRiver, color: "#ff4500", pKey: "lava", margin: 0.38 },
-    { threshold: 6000, bgKey: 'void',     speed: 550, spawn: 0.35, titleEN: translations.en.voidLevel, titleTR: translations.tr.voidLevel, color: "#9b59b6", pKey: "void", margin: 0.40 },
-    { threshold: 10000, bgKey: 'ilkbahar', speed: 180, spawn: 1.10, titleEN: "NEW CYCLE - SPRING", titleTR: "YENİ TUR - İLKBAHAR", color: "#64dd17", pKey: "ilkbahar", margin: 0.38 },
-    { threshold: 12000, bgKey: 'yaz',      speed: 240, spawn: 0.85, titleEN: "NEW CYCLE - SUMMER", titleTR: "YENİ TUR - YAZ", color: "#ffd600", pKey: "ilkbahar", margin: 0.30 },
-    { threshold: 14000, bgKey: 'sonbahar', speed: 300, spawn: 0.65, titleEN: "NEW CYCLE - AUTUMN", titleTR: "YENİ TUR - SONBAHAR", color: "#ff6d00", pKey: "sonbahar", margin: 0.30 },
-    { threshold: 16000, bgKey: 'kis',      speed: 380, spawn: 0.50, titleEN: "NEW CYCLE - WINTER", titleTR: "YENİ TUR - KIŞ", color: "#00e5ff", pKey: "kis",      margin: 0.30 },
-    { threshold: 18000, bgKey: 'lava',     speed: 500, spawn: 0.35, titleEN: "ABYSSAL LAVA", titleTR: "DERİN LAV NEHRİ", color: "#ff4500", pKey: "lava", margin: 0.38 },
-    { threshold: 20000, bgKey: 'void',     speed: 700, spawn: 0.25, titleEN: "COSMIC VOID",  titleTR: "KOZMİK BOŞLUK",   color: "#9b59b6", pKey: "void", margin: 0.40 }
+    { threshold: 2500, bgKey: 'sonbahar', speed: 200, spawn: 1.30, titleEN: translations.en.l3Title, titleTR: translations.tr.l3Title, color: "#ff6d00", pKey: "sonbahar", margin: 0.30 },
+    { threshold: 4500, bgKey: 'kis',      speed: 260, spawn: 1.00, titleEN: translations.en.l4Title, titleTR: translations.tr.l4Title, color: "#00e5ff", pKey: "kis",      margin: 0.30 },
+    { threshold: 7000, bgKey: 'lava',     speed: 380, spawn: 0.60, titleEN: translations.en.lavaRiver, titleTR: translations.tr.lavaRiver, color: "#ff4500", pKey: "lava", margin: 0.38 },
+    { threshold: 10000, bgKey: 'void',     speed: 550, spawn: 0.35, titleEN: translations.en.voidLevel, titleTR: translations.tr.voidLevel, color: "#9b59b6", pKey: "void", margin: 0.40 },
+    { threshold: 14000, bgKey: 'ilkbahar', speed: 120, spawn: 2.10, titleEN: "NEW CYCLE", titleTR: "YENİ TUR", color: "#64dd17", pKey: "ilkbahar", margin: 0.38 }
 ];
 
 let isTransitioningLevel = false;
@@ -982,13 +977,21 @@ function spawnObstacle() {
     const riverLeft = canvas.width * spawnMargin;
     const riverRight = canvas.width * (1 - spawnMargin) - 45;
     
-    // --- ÖLÜM VADİSİ (DEATH VALLEY) v1.96.4.0 ---
-    if (currentLevel === 2 && score >= 1800 && score < 2000) {
-        baseSpeed *= 1.6; // Ekstrem hız
-        spawnInterval = 0.75; // Sel gibi engel akışı
+    // v1.96.5.0: DİNAMİK ÖLÜM VADİSİ (DZ) MANTIĞI
+    let isDZ = 
+        (currentLevel === 1 && score >= 900) || 
+        (currentLevel === 2 && score >= 2200) || 
+        (currentLevel === 3 && score >= 4200) || 
+        (currentLevel === 4 && score >= 6700) || 
+        (currentLevel === 5 && score >= 9600) || 
+        (currentLevel === 6 && score >= 13500) ||
+        (currentLevel >= 7 && (score % 1000 >= 800));
+
+    // Death Valley (DZ) Etkileri - TÜM SEVİYELER İÇİN GENEL
+    if (isDZ) {
+        baseSpeed *= 1.4; // %40 Hız artışı (Dengeli Ölüm Vadisi)
+        spawnInterval *= 0.6; // Engeller %40 daha sık gelir
     }
-    
-    let isDZ = (currentLevel === 1 && score >= 900) || (currentLevel === 2 && score >= 1800) || (currentLevel === 3 && score >= 2900) || (currentLevel === 4 && score >= 3900) || (currentLevel === 5 && score >= 5900) || (currentLevel === 6 && score >= 9900);
     
     let allowedSpecialTypes = [];
     if (currentLevel === 1) {
@@ -1194,7 +1197,7 @@ function togglePause() {
 function startGame() {
     initAudio(); 
     isPlaying = true; isGameOver = false; isPaused = false;
-    score = 1790; goldCount = 0; // DEBUG: START FROM DEATH VALLEY PREP (1790)
+    score = 0; goldCount = 0; // PRODUCTION: OYUN SIFIRDAN BAŞLAR (v1.96.5.0)
     lives = 3; 
     totalLoops = 0; 
     
