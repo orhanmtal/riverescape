@@ -1,4 +1,4 @@
-// RİVER ESCAPE ELİTE - v1.96.3.0 (GİRDAP & ZIKZAK)
+// RİVER ESCAPE ELİTE - v1.96.3.1 (GİRDAP YAYILIMI)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -989,10 +989,16 @@ function spawnObstacle() {
         allowedSpecialTypes.push('rock');
         if (score >= 500) allowedSpecialTypes.push('hippo'); 
         if (score >= 900 && score <= 1000) allowedSpecialTypes.push('croc'); 
-    } else if (currentLevel === 2) {
-        allowedSpecialTypes = ['hippo', 'croc', 'rock', 'whirlpool'];
     } else {
-        allowedSpecialTypes = ['hippo', 'croc', 'rock']; 
+        // Seviye Bazlı Baz Engeller
+        if (currentLevel === 5) allowedSpecialTypes = ['rock', 'fireball'];
+        else if (currentLevel === 6) allowedSpecialTypes = ['rock', 'asteroid'];
+        else allowedSpecialTypes = ['hippo', 'croc', 'rock'];
+
+        // Girdap Kuralı: İlkbahar hariç her yerde olabilir
+        if (currentLAsset.bgKey !== 'ilkbahar') {
+            allowedSpecialTypes.push('whirlpool');
+        }
     }
 
     let spawnX = Math.random() * (riverRight - riverLeft) + riverLeft;
