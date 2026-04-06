@@ -1,4 +1,4 @@
-// RİVER ESCAPE ELİTE - v1.96.0 (FORCE REFRESH)
+// RİVER ESCAPE ELİTE - v1.96.1.1 (HUD FIX)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -1246,7 +1246,11 @@ function gameOver() {
     // SON CAN DA GİTTİ - GERÇEK GAMEOVER
     isGameOver = true;
     isPlaying = false;
-    playDeathSound(); // Artık Final Ölüm sesi EN versiyonunda da çalacak!
+    
+    // v1.96.1: HUD Senkronizasyonu (Görsel Mühür Fix)
+    syncEliteHUD();
+    
+    playDeathSound(); 
     deathCountForX2++;
     
     try {
@@ -1281,6 +1285,40 @@ function gameOver() {
     } catch (e) {
         console.error("GameOver hatası:", e);
     }
+}
+
+// v1.96.1: ELITE HUD SYNC (Global Function)
+function syncEliteHUD() {
+    try {
+        const livesHud = document.getElementById('lives-hud');
+        const scoreHud = document.getElementById('scoreValue-hud');
+        const goldHud = document.getElementById('goldValue-hud');
+        const sLabelHud = document.getElementById('scoreLabel-hud');
+        const gLabelHud = document.getElementById('goldLabel-hud');
+        const lvlNameHud = document.getElementById('levelName-hud');
+        
+        const langPack = translations[currentLang] || translations.en;
+        
+        if(livesHud) {
+            let hearts = "";
+            for(let i=0; i<3; i++) {
+                hearts += (i < lives) ? "❤️" : "🖤";
+            }
+            livesHud.innerText = hearts;
+        }
+        
+        if(sLabelHud) sLabelHud.innerText = langPack.scoreLabel || "SCORE:";
+        if(gLabelHud) gLabelHud.innerText = langPack.goldLabel || "GOLD:";
+        if(scoreHud) scoreHud.innerText = Math.max(0, Math.floor(score));
+        if(goldHud) goldHud.innerText = Math.max(0, goldCount);
+
+        const currentLAsset = levelAssets[currentLevel - 1];
+        if(currentLAsset && lvlNameHud) {
+            const lvlLabel = langPack.levelLabel || "LVL";
+            const lvlTitle = currentLang === 'tr' ? currentLAsset.titleTR : currentLAsset.titleEN;
+            lvlNameHud.innerText = `${lvlLabel} ${currentLevel}: ${lvlTitle}`;
+        }
+    } catch(e) { console.warn("HUD Sync Error:", e); }
 }
 
 function update(dt) {
@@ -1330,15 +1368,7 @@ function update(dt) {
         if(scoreHud) scoreHud.innerText = Math.max(0, Math.floor(score));
         if(goldHud) goldHud.innerText = Math.max(0, goldCount);
         
-        // v1.74 Elite Lives Sync
-        const livesHud = document.getElementById('lives-hud');
-        if(livesHud) {
-            let hearts = "";
-            for(let i=0; i<3; i++) {
-                hearts += (i < lives) ? "❤️" : "🖤";
-            }
-            livesHud.innerText = hearts;
-        }
+        syncEliteHUD();
 
         if(currentLAsset) {
             const lvlLabel = langPack.levelLabel || "LVL";
