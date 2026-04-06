@@ -1,4 +1,4 @@
-// RİVER ESCAPE ELİTE - v1.96.2.2 (DIFFICULTY TUNE)
+// RİVER ESCAPE ELİTE - v1.96.3.0 (GİRDAP & ZIKZAK)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -989,10 +989,8 @@ function spawnObstacle() {
         allowedSpecialTypes.push('rock');
         if (score >= 500) allowedSpecialTypes.push('hippo'); 
         if (score >= 900 && score <= 1000) allowedSpecialTypes.push('croc'); 
-    } else if (currentLevel === 5) {
-        allowedSpecialTypes = ['rock', 'fireball']; 
-    } else if (currentLevel === 6) {
-        allowedSpecialTypes = ['rock', 'asteroid']; 
+    } else if (currentLevel === 2) {
+        allowedSpecialTypes = ['hippo', 'croc', 'rock', 'whirlpool'];
     } else {
         allowedSpecialTypes = ['hippo', 'croc', 'rock']; 
     }
@@ -1030,11 +1028,25 @@ function spawnObstacle() {
                 speedY: baseSpeed - 20, speedX: 0, isSubmerged: true
             });
         } else if (selectedType === 'croc') {
+            const isZigZag = Math.random() < 0.5; // %50 Şansla zikzak yapar
             obstacles.push({
                 type: 'croc',
                 x: spawnX,
-                y: -100, width: 38, height: 65, // Şirin bebek timsah (Boyu çok kısaldı)
-                speedY: baseSpeed + 40, speedX: 0
+                y: -100, width: 38, height: 65, 
+                speedY: baseSpeed + (isZigZag ? 60 : 40), 
+                speedX: 0,
+                isZigZag: isZigZag,
+                zigzagOffset: Math.random() * Math.PI * 2 // Rastgele faz
+            });
+        } else if (selectedType === 'whirlpool') {
+            const size = 80 + Math.random() * 40;
+            obstacles.push({
+                type: 'whirlpool',
+                x: spawnX,
+                y: -150, width: size, height: size,
+                speedY: bgScrollSpeed, speedX: 0,
+                rotation: 0,
+                pullStrength: 120 // Çekim gücü
             });
         } else if (selectedType === 'rock') {
             let rockSize = 40 + Math.random() * 20;
@@ -1666,15 +1678,38 @@ function update(dt) {
             
             // Gerçekçi S-şeklinde yüzme hareketi (Sinüs dalgası ile)
             obs.swimFactor = (obs.swimFactor || 0) + dt * 10;
-            let naturalSway = Math.sin(obs.swimFactor) * 35; // Timsahın kuyruk salınım hızı
+            let naturalSway = Math.sin(obs.swimFactor) * 35; 
             
-            // Kayığa doğru yumuşak ve kurnazca takip et
-            let diffX = pxC - cx;
-            obs.speedX = (diffX > 0 ? 50 : -50) + naturalSway;
+            // v1.96.3: EĞER ZIKZAK TİMSAH İSE Hareket Genişliğini Artır
+            if (obs.isZigZag) {
+                obs.zigzagOffset = (obs.zigzagOffset || 0) + dt * 4;
+                obs.speedX = Math.sin(obs.zigzagOffset) * 150; // Geniş zikzak
+            } else {
+                // Kayığa doğru yumuşak ve kurnazca takip et
+                let diffX = pxC - cx;
+                obs.speedX = (diffX > 0 ? 50 : -50) + naturalSway;
+                if (Math.abs(diffX) < 15) obs.speedX = naturalSway * 0.5;
+            }
+        } else if (obs.type === 'whirlpool') {
+            obs.rotation += dt * 300; // Görsel dönüş hızı
             
-            // Eğer tam üstündeyse salınımı azaltıp kilitlen
-            if (Math.abs(diffX) < 15) obs.speedX = naturalSway * 0.5;
+            // --- GİRDAP ÇEKİM KUVVETİ (PULL FORCE) ---
+            let gx = obs.x + obs.width/2;
+            let gy = obs.y + obs.height/2;
+            let pxC = player.x + player.width/2;
+            let pyC = player.y + player.height/2;
             
+            let distToPlayer = Math.sqrt((pxC - gx)**2 + (pyC - gy)**2);
+            
+            // Eğer oyuncu girdaba yeterince yakınsa (300px), onu yavaşça kendine çeker
+            if (distToPlayer < 300 && !isDashing) {
+                let pullDirX = gx - pxC;
+                let pullDirY = gy - pyC;
+                // Merkeze yaklaştıkça çekim artar
+                let pullStr = (1 - distToPlayer/300) * obs.pullStrength;
+                player.x += (pullDirX / distToPlayer) * pullStr * dt;
+                player.y += (pullDirY / distToPlayer) * pullStr * dt;
+            }
         } else if (obs.type === 'hippo') {
             // Su aygırı suyun altından gelir, oyuncuya 220px yaklaştığında aniden yüzeye çıkar!
             if (obs.isSubmerged && obs.y > player.y - 220) {
@@ -2051,6 +2086,23 @@ function draw(dt) {
                 ctx.ellipse(obs.width*0.1, -obs.height*0.2, obs.width*0.15, obs.height*0.08, 0, 0, Math.PI*2);
                 ctx.fill();
                 
+                ctx.restore();
+            } else if (obs.type === 'whirlpool') {
+                ctx.save();
+                ctx.translate(obs.x + obs.width/2, obs.y + obs.height/2);
+                ctx.rotate(obs.rotation * Math.PI / 180);
+                // Su Girdabı Spiral (Elite)
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.45)';
+                ctx.lineWidth = 3;
+                for(let j=0; j<3; j++) {
+                    ctx.beginPath();
+                    ctx.arc(0, 0, (obs.width/2) * (1 - j*0.25), 0, Math.PI * 1.7);
+                    ctx.stroke();
+                }
+                ctx.fillStyle = 'rgba(0, 40, 80, 0.3)';
+                ctx.beginPath();
+                ctx.arc(0, 0, obs.width/5, 0, Math.PI * 2);
+                ctx.fill();
                 ctx.restore();
             } else {
                 ctx.fillStyle = "#666";
