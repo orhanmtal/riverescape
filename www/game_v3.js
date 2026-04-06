@@ -1,4 +1,4 @@
-// RİVER ESCAPE ELİTE - v1.96.9.5 (FINAL LEVEL 4 RELEASE)
+// RİVER ESCAPE ELİTE - v1.97.2.3 (ORGANIC SPAWN RELEASE)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -99,8 +99,7 @@ class Particle {
     update(dt) {
         this.x += this.speedX;
         this.y += this.speedY;
-        this.life -= dt * 1.5; 
-        if(this.size > 0.1) this.size -= 0.05;
+        this.life -= dt * 0.8;
     }
     draw() {
         ctx.save();
@@ -113,6 +112,17 @@ class Particle {
     }
 }
 
+// v1.97.0.3: DYNAMİC WİNDİNG RİVER MOTORU (Büklüm Büklüm Nehir)
+function getRiverShift(y) {
+    if (currentLevel !== 5) return 0;
+    // v1.97: Arka plan kaymasına (bgY) bağlı sinüs dalgası
+    // v1.97.1.8: SOFT SYNC (Damped oscillation)
+    // Görsel 1 tam ekran boyunda (canvas.height) kendini tekrar eder
+    const amplitude = canvas.width * 0.05; // v1.97.1.9: Salınım minimuma indirildi (%8 -> %5)
+    const frequency = (Math.PI * 2) / canvas.height; 
+    const phase = Math.PI / 1.5; 
+    return Math.sin(((bgY + y) * frequency) + phase) * amplitude;
+}
 
 function initLanguage() {
     // Tarayıcı veya cihaz dilini al
@@ -134,10 +144,8 @@ function updateLanguageUI() {
     setText('settings-open-btn', t.settingsBtn);
     if(document.querySelector('#start-screen p')) document.querySelector('#start-screen p').innerText = t.startDesc;
     
-    setText('pause-btn', t.pauseTitle);
     setText('resume-btn', t.resumeBtn);
     setText('quit-btn', t.quitBtn);
-    setText('pause-title', t.pauseTitle);
     if(document.getElementById('settings-open-btn-pause')) document.getElementById('settings-open-btn-pause').innerHTML = `⚙️ ${t.settingsBtn}`;
     
     setText('gameover-title', t.gameOver);
@@ -638,7 +646,7 @@ const levelAssets = [
     { threshold: 1000,  bgKey: 'yaz',      speed: 160, spawn: 1.55, titleEN: translations.en.l2Title, titleTR: translations.tr.l2Title, color: "#ffd600", pKey: "ilkbahar", margin: 0.30 },
     { threshold: 2500, bgKey: 'sonbahar', speed: 220, spawn: 1.15, titleEN: translations.en.l3Title, titleTR: translations.tr.l3Title, color: "#ff6d00", pKey: "ilkbahar", margin: 0.35 },
     { threshold: 4500, bgKey: 'kis',      speed: 260, spawn: 1.00, titleEN: translations.en.l4Title, titleTR: translations.tr.l4Title, color: "#00e5ff", pKey: "ilkbahar", margin: 0.39 },
-    { threshold: 7000, bgKey: 'lava',     speed: 380, spawn: 0.60, titleEN: translations.en.lavaRiver, titleTR: translations.tr.lavaRiver, color: "#ff4500", pKey: "lava", margin: 0.38 },
+    { threshold: 7000, bgKey: 'lava',     speed: 162, spawn: 1.80, titleEN: translations.en.lavaRiver, titleTR: translations.tr.lavaRiver, color: "#ff4500", pKey: "lava", margin: 0.43 },
     { threshold: 10000, bgKey: 'void',     speed: 550, spawn: 0.35, titleEN: translations.en.voidLevel, titleTR: translations.tr.voidLevel, color: "#9b59b6", pKey: "void", margin: 0.40 },
     { threshold: 14000, bgKey: 'ilkbahar', speed: 120, spawn: 2.10, titleEN: "NEW CYCLE", titleTR: "YENİ TUR", color: "#64dd17", pKey: "ilkbahar", margin: 0.38 }
 ];
@@ -666,10 +674,11 @@ let transitionTimer = 0;
 // OYUN SİSTEMİ 
 // ----------------------------------------------------
 let isPlaying = false, isGameOver = false, isPaused = false;
-let score = 0, goldCount = 0, lastTime = 0; // PRODUCTION YAPISINA DÖNÜLDÜ
+let score = 0, goldCount = 0, lastTime = 0; // v1.97.2.3 RELEASE
 let currentLevel = 1;
 let bgY = 0; let bgScrollSpeed = 100; 
 let screenFlash = 0; // Seviye geçişi parlaması v132
+let gameLoopRequestId = null; // v1.97.0.4: LOOP CONTROL
 
 // KALICI KAYIT VE MAĞAZA
 // KALICI KAYIT VE MAĞAZA
@@ -953,8 +962,10 @@ function fillGoldBag() {
 function spawnPowerup() {
     const currentAsset = levelAssets[currentLevel - 1];
     const sMargin = currentAsset ? currentAsset.margin : 0.35;
-    const riverLeft = canvas.width * sMargin;
-    const riverRight = canvas.width * (1 - sMargin) - 40;
+    const spawnY = -50;
+    const riverShift = getRiverShift(spawnY);
+    const riverLeft = (canvas.width * sMargin) + riverShift;
+    const riverRight = (canvas.width * (1 - sMargin)) + riverShift - 40;
     
     let type = 'magnet';
     // v1.97: Mıknatıs oranını %30'a çekerek kalkanı daha değerli yapıyoruz
@@ -966,10 +977,13 @@ function spawnPowerup() {
         if(magnetLevel > 0) type = 'magnet'; else { spawnGold(); return; }
     }
     
+    const spawnX = Math.random() * (riverRight - riverLeft) + riverLeft;
+    
     powerups.push({
         type: type,
-        x: Math.random() * (riverRight - riverLeft) + riverLeft,
-        y: -50,
+        x: spawnX,
+        relativeX: spawnX - riverShift, // v1.97.0.3: Elite Drift Support
+        y: spawnY,
         radius: 18,
         speed: 250
     });
@@ -988,8 +1002,10 @@ function spawnObstacle() {
     let baseSpeed = (currentLAsset ? currentLAsset.speed : 200) * 1.4; // Kütükler suyun akıntısıyla daha hızlı gelsin
     
     let spawnMargin = currentLAsset ? currentLAsset.margin : 0.35; 
-    const riverLeft = canvas.width * spawnMargin;
-    const riverRight = canvas.width * (1 - spawnMargin) - 45;
+    const spawnY = -150 - (Math.random() * 150); // v1.97.2.3: Organic Y-Jitter (Breaks horizontal walls)
+    const riverShift = getRiverShift(spawnY);
+    const riverLeft = (canvas.width * spawnMargin) + riverShift;
+    const riverRight = (canvas.width * (1 - spawnMargin)) + riverShift - 45;
     
     // v1.96.6.6: DİNAMİK ÖLÜM VADİSİ (DZ) MANTIĞI - Senkronize edildi
     let isDZ = getDZStatus();
@@ -1009,7 +1025,7 @@ function spawnObstacle() {
         // Seviye Bazlı Baz Engeller
         if (currentLevel === 4) allowedSpecialTypes = ['hippo', 'rock', 'iceBerg', 'slidingIce', 'whirlpool'];
         else if (currentLevel === 3) allowedSpecialTypes = ['hippo', 'croc', 'rock', 'leafTornado'];
-        else if (currentLevel === 5) allowedSpecialTypes = ['rock', 'fireball'];
+        else if (currentLevel === 5) allowedSpecialTypes = ['rock', 'whirlpool', 'fireball'];
         else allowedSpecialTypes = ['hippo', 'croc', 'rock'];
 
         // Girdap Kuralı: İlkbahar ve Sonbahar hariç her yerde olabilir (L3'te hortum var)
@@ -1020,27 +1036,35 @@ function spawnObstacle() {
 
     let spawnX = Math.random() * (riverRight - riverLeft) + riverLeft;
     
-    // OYUNCUYA UMUT PAYI VER (0% İHTİMALİNİ BİTİR!) v146
-    // Eğer bir önceki engelin tam önüne engel koyuyorsa, her seviyede garanti geçiş boşluğu (gap) bırak.
-    if (typeof window.lastObsX === 'undefined') window.lastObsX = spawnX;
-    
-    // Tester şikayeti üzerine tüm levellarda UMUT PAYI aktif edildi ve aralığı çok genişletildi
-    // v1.96.8.7: GELİŞMİŞ UMUT PAYI (Genişlik Odaklı)
-    let gap = player.width + 80; // Sadece merkezler değil, geçiş koridoru garantisi
-    if (Math.abs(spawnX - window.lastObsX) < gap) {
-        // Çarpışmayı önlemek için zıt kıyıya fırlat veya güvenli mesafeye it
-        if (window.lastObsX < (riverLeft + riverRight) / 2) {
-             spawnX = Math.min(riverRight - 15, window.lastObsX + gap + 10);
-        } else {
-             spawnX = Math.max(riverLeft + 15, window.lastObsX - gap - 10);
-        }
-    }
-    // Nehir dışına taşmasın
-    if (spawnX < riverLeft) spawnX = riverLeft + 5;
-    if (spawnX > riverRight - 10) spawnX = riverRight - 10;
-    
-    window.lastObsX = spawnX; // Hafızaya al
+    // OYUNCUYA UMUT PAYI VER (0% İHTİMALİNİ BİTİR!) v146 (Elite Drift Synced)
+    // --- v1.97.2.2: ELITE LANE JUSTICE (Stacked Obstacle Prevent) ---
+    // Sadece sonuncuya değil, ekranın üstündeki tüm engellere bak!
+    let relSpawnX = spawnX - riverShift;
+    let maxAttempts = 10;
+    let isBlocked = true;
+    let spawnGap = player.width + 75; // Kayıktan biraz daha geniş "güvenli şerit"
 
+    while (isBlocked && maxAttempts > 0) {
+        isBlocked = false;
+        maxAttempts--;
+        for (let obs of obstacles) {
+            // Sadece ekranın üst yarısındaki (y < 450) engellerin şeritlerini kontrol et
+            if (obs.y < 450 && Math.abs(relSpawnX - (obs.relativeX || (obs.x - getRiverShift(obs.y)))) < spawnGap) {
+                isBlocked = true;
+                // Engeli yan şeride fırlat (Zıplama mesafesi: 90-130px)
+                const jumpDir = (relSpawnX < 0) ? 1 : -1; 
+                relSpawnX += jumpDir * (90 + Math.random() * 40);
+                break;
+            }
+        }
+        // Nehir Sınırlarını Koru (Relative bazda)
+        const leftLimitRel = (canvas.width * spawnMargin) - riverShift + 10;
+        const rightLimitRel = (canvas.width * (1 - spawnMargin)) - riverShift - 55;
+        if (relSpawnX < leftLimitRel) relSpawnX = leftLimitRel;
+        if (relSpawnX > rightLimitRel) relSpawnX = rightLimitRel;
+    }
+    spawnX = relSpawnX + riverShift;
+    window.lastObsRelX = relSpawnX; // Geriye uyumluluk için tutuyorum
     if (Math.random() < 0.45 && allowedSpecialTypes.length > 0) { 
         let selectedType = allowedSpecialTypes[Math.floor(Math.random() * allowedSpecialTypes.length)];
         
@@ -1048,7 +1072,8 @@ function spawnObstacle() {
             obstacles.push({
                 type: 'hippo',
                 x: spawnX,
-                y: -100, width: 45, height: 50, // İyice zayıflatıldı
+                relativeX: spawnX - riverShift, // v1.97.0.3: Elite Drift Support
+                y: spawnY + 50, width: 45, height: 50, // İyice zayıflatıldı
                 speedY: baseSpeed - 20, speedX: 0, isSubmerged: true
             });
         } else if (selectedType === 'croc') {
@@ -1056,7 +1081,8 @@ function spawnObstacle() {
             obstacles.push({
                 type: 'croc',
                 x: spawnX,
-                y: -100, width: 38, height: 65, 
+                relativeX: spawnX - riverShift, // v1.97.0.3: Elite Drift Support
+                y: spawnY + 50, width: 38, height: 65, 
                 speedY: baseSpeed + (isZigZag ? 60 : 40), 
                 speedX: 0,
                 isZigZag: isZigZag,
@@ -1069,7 +1095,8 @@ function spawnObstacle() {
             obstacles.push({
                 type: 'whirlpool',
                 x: spawnX,
-                y: -150, width: size, height: size,
+                relativeX: spawnX - riverShift, // v1.97.0.3: Elite Drift Support
+                y: spawnY, width: size, height: size,
                 speedY: bgScrollSpeed, speedX: 0,
                 rotation: 0,
                 pullStrength: isL4 ? 100 : 120 // Biraz daha az çeksin
@@ -1080,8 +1107,9 @@ function spawnObstacle() {
             obstacles.push({
                 type: selectedType,
                 x: spawnX,
-                y: -100, width: rockSize, height: rockSize * 0.8,
-                speedY: bgScrollSpeed, speedX: 0
+                relativeX: spawnX - riverShift, // v1.97.0.3: Elite Drift Support
+                y: spawnY + 50, width: rockSize, height: rockSize * 0.8,
+                speedY: bgScrollSpeed * (0.95 + Math.random() * 0.1), speedX: 0 // v1.97.2.2: Speed variance
             });
         } else if (selectedType === 'slidingIce') {
             // v1.96.8.7: DAHA KÜÇÜK VE DENGELİ ŞARAPNEL (35-55)
@@ -1089,7 +1117,8 @@ function spawnObstacle() {
             obstacles.push({
                 type: 'slidingIce',
                 x: spawnX,
-                y: -100, width: size, height: size,
+                relativeX: spawnX - riverShift, // v1.97.0.3: Elite Drift Support
+                y: spawnY + 50, width: size, height: size,
                 speedY: baseSpeed * 0.8, 
                 speedX: (Math.random() < 0.5 ? 1 : -1) * (70 + Math.random() * 60), // Daha yavaş
                 rotation: Math.random() * Math.PI,
@@ -1099,16 +1128,18 @@ function spawnObstacle() {
             obstacles.push({
                 type: 'fireball',
                 x: spawnX,
-                y: -150, width: 70, height: 70,
-                speedY: baseSpeed + 150, // ÇOK HIZLI!
-                speedX: (Math.random() - 0.5) * 50 // Biraz sağa sola sapabilir
+                relativeX: spawnX - riverShift, // v1.97.0.3: Elite Drift Support
+                y: spawnY, width: 52, height: 52, // v1.97.1.8: %25 KÜÇÜLTÜLDÜ (70->52)
+                speedY: (baseSpeed + 150) * 0.75 * (0.92 + Math.random() * 0.16), // v1.97.2.2: Dynamic desync
+                speedX: (currentLevel === 5 ? 0 : (Math.random() - 0.5) * 50) // Level 5'te SABİT (Daha elite kontrol)
             });
         } else if (selectedType === 'asteroid') {
             const astSize = 70 + Math.random() * 30;
             obstacles.push({
                 type: 'asteroid',
                 x: spawnX,
-                y: -150, width: astSize, height: astSize,
+                relativeX: spawnX - riverShift, // v1.97.0.3: Elite Drift Support
+                y: spawnY, width: astSize, height: astSize,
                 speedY: baseSpeed + 200, // IŞIK HIZINDA!
                 speedX: (Math.random() - 0.5) * 100 // Daha fazla savrulma
             });
@@ -1117,14 +1148,16 @@ function spawnObstacle() {
             obstacles.push({
                 type: 'leafTornado',
                 x: spawnX,
-                y: -150, width: size, height: size,
+                relativeX: spawnX - riverShift, // v1.97.0.3: Elite Drift Support
+                y: spawnY, width: size, height: size,
                 speedY: bgScrollSpeed + 20, 
                 speedX: 0,
                 rotation: 0,
                 pullStrength: 150, // Girdaptan daha güçlü!
                 zigzagFreq: 0.003 + Math.random() * 0.002, // Daha yavaş şık salınım
                 zigzagAmp: 40 + Math.random() * 50,
-                baseX: spawnX
+                baseX: spawnX,
+                baseRelX: spawnX - riverShift // v1.97.0.3: Drift Synced baseX
             });
         }
         return;
@@ -1137,7 +1170,8 @@ function spawnObstacle() {
     obstacles.push({
         type: 'vertical',
         x: spawnX,
-        y: -100,
+        relativeX: spawnX - riverShift, // v1.97.0.3: Elite Drift Support
+        y: spawnY + 50,
         width: 40,  // İnce
         height: 55, // Boyu bir daha kırpıldı (toplamda 100'den 55'e)
         speedY: baseSpeed,
@@ -1148,48 +1182,53 @@ function spawnObstacle() {
 function spawnGold() {
     const currentAsset = levelAssets[currentLevel - 1];
     const sMargin = currentAsset ? currentAsset.margin : 0.35;
-    const riverLeft = canvas.width * sMargin;
-    const riverRight = canvas.width * (1 - sMargin) - 30; 
+    const spawnY = -50;
+    const riverShift = getRiverShift(spawnY);
+    const riverLeft = (canvas.width * sMargin) + riverShift;
+    const riverRight = (canvas.width * (1 - sMargin)) + riverShift - 30; 
     
     if (goldBag.length === 0) fillGoldBag();
-    let gVal = goldBag.pop(); // Torbadan kesin şans çekiliyor
-    
+    let gVal = goldBag.pop();
+
+    let gx = Math.random() * (riverRight - riverLeft) + riverLeft;
+    let gy = spawnY;
+    let speed = 250;
     let gColor = "gold", gRadius = 15;
+
     if (gVal === 1) { gColor = "gold"; gRadius = 15; }
     else if (gVal === 5) { gColor = "#00e5ff"; gRadius = 18; }
     else if (gVal === 10) { gColor = "#ff00ff"; gRadius = 22; }
 
-    let gx = Math.random() * (riverRight - riverLeft) + riverLeft;
-    let gy = -50;
-    let speed = 250;
-
-    if (gVal === 10) {
-        // HIRS VE RİSK MEKANİĞİ: 10'luk altını almak ecel terleri döktürmeli
+    if (gVal === 10 && currentLevel !== 5 && currentLevel !== 6) {
+        // HIRS VE RİSK MEKANİĞİ: 10'luk altını almak ecel terleri döktürmeli (L5/L6 hariç)
         let trapDir = Math.random() < 0.5 ? 1 : -1; 
+        let trapX1 = gx;
+        let trapY1 = gy - 150;
         
-        // Önce gelen sahte kütük, oyuncuyu refleksle yana kaçırır
         obstacles.push({
             type: 'vertical',
-            x: gx,
-            y: gy - 150, // Oyuncuya daha uzak, kaçma payı var
+            x: trapX1,
+            relativeX: trapX1 - getRiverShift(trapY1), // v1.97.0.3: Trap Drift
+            y: trapY1,
             width: 40,  
-            height: 55, // Boyu bir daha kırpıldı
+            height: 55,
             speedY: speed,
             speedX: 0
         });
 
-        // Altın yandadır
         gx += trapDir * 75;
         if (gx < riverLeft + 30) gx = riverLeft + 30;
         if (gx > riverRight - 30) gx = riverRight - 30;
 
-        // İkinci kütük
+        let trapX2 = gx - (trapDir * 62);
+        let trapY2 = gy - 250;
         obstacles.push({
             type: 'vertical',
-            x: gx - (trapDir * 62), 
-            y: gy - 250, // Daha da yukarda
+            x: trapX2,
+            relativeX: trapX2 - getRiverShift(trapY2), // v1.97.0.3: Trap Drift
+            y: trapY2,
             width: 40,  
-            height: 55, // Boyu bir daha kırpıldı
+            height: 55,
             speedY: speed,
             speedX: 0
         });
@@ -1197,6 +1236,13 @@ function spawnGold() {
 
     golds.push({
         x: gx,
+        relativeX: gx - getRiverShift(gy), // v1.97.0.3: Gold Drift
+        margin: 0.32,      // v1.97.0.3: Widened River for better flow (0.39 -> 0.32)
+        baseColor: '#27ae60',
+        accentColor: '#2ecc71',
+        speed: 100,
+        spawnInterval: 1.8, // v1.97.0.3: Slower starts (1.3 -> 1.8)
+        spawnIntervalMin: 0.9, // v1.97.0.3: Fairer difficulty (0.5 -> 0.9)
         y: gy,
         radius: gRadius,
         speed: speed, 
@@ -1235,7 +1281,7 @@ function togglePause() {
 function startGame() {
     initAudio(); 
     isPlaying = true; isGameOver = false; isPaused = false;
-    score = 0; goldCount = 0; // PRODUCTION START
+    score = 0; goldCount = 0; // v1.97.2.3: FRESH START
     lives = 3; 
     totalLoops = 0; 
     
@@ -1256,13 +1302,13 @@ function startGame() {
     startingDoubleGold = false; 
     
     spawnTimer = 0; goldTimer = 0;
-    spawnInterval = 1.3; 
+    spawnInterval = levelAssets[0].spawn; 
     currentLevel = 1; 
 
     // v1.73.6: Ultra-Elite Background Sync
-    bgImg = bgImgs['ilkbahar']; 
-    playerImg = players.ilkbahar;
-    bgScrollSpeed = 75; // v1.70: Başlangıç hızı yavaşlatıldı (100 -> 75)
+    bgImg = bgImgs[levelAssets[0].bgKey]; 
+    playerImg = players.ilkbahar; // v1.97.2.2: Standard Release Sprite
+    bgScrollSpeed = levelAssets[0].speed;
     lastTime = performance.now();
     
     startScreen.classList.remove('active'); startScreen.classList.add('hidden');
@@ -1293,7 +1339,8 @@ function startGame() {
     nextNoteTime = audioCtx.currentTime + 0.1;
     if(!isMusicScheduled) bgMusicScheduler();
     
-    requestAnimationFrame(gameLoop);
+    if (gameLoopRequestId) cancelAnimationFrame(gameLoopRequestId);
+    gameLoopRequestId = requestAnimationFrame(gameLoop);
 }
 
 function gameOver() {
@@ -1306,7 +1353,9 @@ function gameOver() {
         playCrashSound();
         // Geçici Dokunulmazlık / Kalkan (3 saniye)
         hasShield = true;
+        // v1.97.0.3: FULL POSITION RESET ON HIT (Sıfır Umut Tuzağı)
         player.x = canvas.width / 2 - player.width / 2;
+        player.y = canvas.height - 150;
         obstacles = []; // Ekranı temizle
         setTimeout(() => { hasShield = false; }, 3000);
         return; // Oyuna devam!
@@ -1413,8 +1462,10 @@ function update(dt) {
     if (isPlaying) {
         score += dt * 5; 
         if(typeof updateAmbientWind === 'function') updateAmbientWind(currentLevel, true);
+        if(typeof updateAmbientLava === 'function') updateAmbientLava(currentLevel, true);
     } else {
         if(typeof updateAmbientWind === 'function') updateAmbientWind(currentLevel, false);
+        if(typeof updateAmbientLava === 'function') updateAmbientLava(currentLevel, false);
     }
     
     // v1.68 SCORE & GOLD TICKER (Yumuşak Geçiş)
@@ -1481,10 +1532,11 @@ function update(dt) {
         score = Math.max(0, score - (Math.abs(dy) * player.speed * dt * 0.1));
     }
 
-    // X Ekseni Sınırları (Nehir Kanalı) - v1.96.8.2: Dinamik Sınır Sistemi
-    const pMargin = (currentLAsset && typeof currentLAsset.margin === 'number') ? currentLAsset.margin : 0.38;
-    const playRiverLeft = canvas.width * pMargin;
-    const playRiverRight = canvas.width * (1 - pMargin) - player.width;
+    // X Ekseni Sınırları (Nehir Kanalı) - v1.97.0.3: Dinamik Büklüm Sistemi
+    const pMargin = (currentLAsset && typeof currentLAsset.margin === 'number') ? currentLAsset.margin : 0.32;
+    const riverShift = getRiverShift(player.y);
+    const playRiverLeft = (canvas.width * pMargin) + riverShift;
+    const playRiverRight = (canvas.width * (1 - pMargin)) + riverShift - player.width;
     
     // PLAYER X CLAMP: Karaya çıkışı fiziksel olarak da engelle!
     if (player.x < playRiverLeft) player.x = playRiverLeft;
@@ -1492,13 +1544,12 @@ function update(dt) {
     
     // KIYIYA SÜRTMÜ KONTROLÜ (Ölüm Yok, Sadece YAVAŞLATMA ve SARSINTI)
     let moveDt = dt; 
-    let isDZ = (currentLevel === 1 && score >= 900) || (currentLevel === 2 && score >= 1900) || (currentLevel === 3 && score >= 2900) || (currentLevel === 4 && score >= 3900) || (currentLevel === 5 && score >= 5900) || (currentLevel === 6 && score >= 9900);
+    let isDZ = getDZStatus();
     
     if (player.x <= playRiverLeft + 5 || player.x >= playRiverRight - 5) {
         // Kıyıya sürtünce artık ÖLDÜRMÜYOR (Ölüm Bölgesi/isDZ olsa bile kaldırıldı)
         // Normal sürtünme mekaniği
         moveDt = dt * 0.4; // Sadece KAYIK yavaşlar!
-        player.x += (Math.random() - 0.5) * 2; // Sarsıntı
         
         // --- TELEFON TİTREŞİMİ (Edge Collision) v127 ---
         if (typeof triggerVibration === 'function') {
@@ -1519,8 +1570,24 @@ function update(dt) {
         }
     }
 
-    // v166 FIX: İleri-Geri (Y) hızını %40 yavaşlatarak kontrolü arttırıyoruz
-    player.x += dx * player.speed * moveDt;
+    // --- v1.97.1.9: PLAYER ELITE MANUAL CONTROL (No Auto-Drift) ---
+    if (currentLevel === 5) {
+        // Absolute control in Lava River - No automatic drift
+        player.x += dx * player.speed * moveDt;
+        
+        // SOFT LAVA PUSH (Edge Protection)
+        // If the player touches the edge, push them back into the lava
+        const pushForce = 3;
+        if (player.x < playRiverLeft + 15) player.x += pushForce;
+        if (player.x > playRiverRight - 15) player.x -= pushForce;
+        
+        player.relativeX = undefined; // Reset drift tracker
+    } else {
+        // Diğer seviyelerde klasik hareket sistemi
+        player.x += dx * player.speed * moveDt;
+        player.relativeX = undefined; 
+    }
+
     player.y += dy * (player.speed * 0.6) * moveDt; 
     
     if (player.x < playRiverLeft) player.x = playRiverLeft;
@@ -1560,7 +1627,7 @@ function update(dt) {
         
         // Seviye içi kademeli zorlaşma (Kullanıcı talebiyle aralıklar İYİCE açıldı)
         let minSpawnInterval = 2.5 - (currentLevel * 0.2); // Lv1 min: 2.3, Lv2 min: 2.1 vs.
-        if (minSpawnInterval < 0.85) minSpawnInterval = 0.85; // Mutlak alt sınır, kayalar arası en az 0.85sn mesafe
+        if (minSpawnInterval < 0.9) minSpawnInterval = 0.9; // Mutlak alt sınır, kayalar arası en az 0.9sn mesafe
         
         if(spawnInterval > minSpawnInterval) {
             spawnInterval -= (currentLevel === 1 ? 0.005 : 0.010); 
@@ -1680,6 +1747,12 @@ function update(dt) {
         let p = powerups[i];
         p.y += p.speed * dt;
         
+        // v1.97.0.3: ELITE DRIFT
+        if (currentLevel === 5) {
+            if (p.relativeX === undefined) p.relativeX = p.x - getRiverShift(p.y - p.speed * dt);
+            p.x = getRiverShift(p.y) + p.relativeX;
+        }
+        
         if (px < p.x + p.radius && px + pw > p.x - p.radius &&
             py < p.y + p.radius && py + ph > p.y - p.radius) {
             playPowerupSound(); 
@@ -1704,7 +1777,15 @@ function update(dt) {
             if (dist < 400) { 
                 g.x += (dx / dist) * 450 * dt;
                 g.y += (dy / dist) * 450 * dt;
-            } else g.y += g.speed * dt;
+                // v1.97.0.3: Re-calculate relativeX when pulled by magnet
+                if (currentLevel === 5) g.relativeX = g.x - getRiverShift(g.y);
+            } else {
+                g.y += g.speed * dt;
+                if (currentLevel === 5) {
+                    if (g.relativeX === undefined) g.relativeX = g.x - getRiverShift(g.y - g.speed * dt);
+                    g.x = getRiverShift(g.y) + g.relativeX;
+                }
+            }
         } else {
             g.y += g.speed * dt;
         }
@@ -1750,7 +1831,11 @@ function update(dt) {
             obs.rotation += dt * 300; // Görsel dönüş hızı
             
             if (obs.type === 'leafTornado') {
-                obs.x = obs.baseX + Math.sin(performance.now() * obs.zigzagFreq) * obs.zigzagAmp;
+                if (currentLevel === 5) {
+                    obs.relativeX = obs.baseRelX + Math.sin(performance.now() * obs.zigzagFreq) * obs.zigzagAmp;
+                } else {
+                    obs.x = obs.baseX + Math.sin(performance.now() * obs.zigzagFreq) * obs.zigzagAmp;
+                }
             }
             
             // --- GİRDAP/HORTUM ÇEKİM KUVVETİ (PULL FORCE) ---
@@ -1780,18 +1865,37 @@ function update(dt) {
         }
 
         obs.y += obs.speedY * dt;
-        obs.x += obs.speedX * dt;
+        
+        // v1.97.0.3: ELITE DRIFT - Nesnelerin nehir kıvrımını takip etmesi
+        if (currentLevel === 5) {
+            // Eğer nesne ilk defa güncelleniyorsa ve relativeX yoksa ata (Eski nesnelerle uyum)
+            if (obs.relativeX === undefined) obs.relativeX = obs.x - getRiverShift(obs.y - obs.speedY * dt);
+            
+            // Düşman hareketini (speedX) relativeX üzerinden uygula
+            if (obs.speedX) obs.relativeX += obs.speedX * dt;
+            
+            // Toplam X = Kıvrım Kayması + Nehir İçi Konum
+            obs.x = getRiverShift(obs.y) + obs.relativeX;
+        } else {
+            obs.x += obs.speedX * dt;
+        }
 
         // v1.96.8.6: YATAY KAYAN BUZLAR İÇİN KENARLARDAN SEKME (BOUNCE)
         if (obs.type === 'slidingIce') {
             const sMargin = currentLAsset ? currentLAsset.margin : 0.39;
-            const bLeft = canvas.width * sMargin;
-            const bRight = canvas.width * (1 - sMargin) - obs.width;
+            const riverShift = getRiverShift(obs.y);
+            const bLeft = (canvas.width * sMargin) + (currentLevel === 5 ? riverShift : 0);
+            const bRight = (canvas.width * (1 - sMargin)) + (currentLevel === 5 ? riverShift : 0) - obs.width;
             
             if (obs.x < bLeft || obs.x > bRight) {
-                obs.speedX *= -1; // Sekme!
-                if(obs.x < bLeft) obs.x = bLeft;
-                if(obs.x > bRight) obs.x = bRight;
+                obs.speedX *= -1;
+                if (currentLevel === 5) {
+                    // Update relativeX to stay inside after bounce
+                    obs.relativeX = obs.x - riverShift;
+                } else {
+                    if(obs.x < bLeft) obs.x = bLeft;
+                    if(obs.x > bRight) obs.x = bRight;
+                }
             }
             if (obs.rotSpeed) obs.rotation += obs.rotSpeed * dt;
         }
@@ -1826,6 +1930,17 @@ function update(dt) {
             }
         }
     }
+    
+    // v1.97.0.3: STRICT "ELITE" CLAMPING (Never touch walls)
+    const finalPMargin = currentLAsset ? currentLAsset.margin : 0.32;
+    const finalShift = getRiverShift(player.y);
+    const wallSafeBuffer = 8; // v1.97.0.3: Stresi azaltan güvenli mesafe tamponu
+    const fLeft = (canvas.width * finalPMargin) + finalShift + wallSafeBuffer;
+    const fRight = (canvas.width * (1 - finalPMargin)) + finalShift - player.width - wallSafeBuffer;
+    
+    if (player.x < fLeft) player.x = fLeft;
+    if (player.x > fRight) player.x = fRight;
+
     obstacles = obstacles.filter(obs => obs.y < canvas.height + 100 && obs.x > -200 && obs.x < canvas.width + 200);
 
     // Gülleleri güncelle ve engellerle çarpıştır
@@ -1876,7 +1991,8 @@ function draw(dt) {
     let currentLAsset = levelAssets[currentLevel - 1];
     
     // --- CAMERA ZOOM SYSTEM v1.72 (Ghost Buster NaN Protection) ---
-    const zoom = 1.25;
+    // v1.97.0.3: DYNAMIC ELITE ZOOM (1.25 -> 1.76 Closer perspective)
+    let zoom = 1.76; 
     const centerX = canvas.width / 2;
     // v1.72 FIX: player.y NaN ise merkezi 0'a daya (Siyah ekran engellendi)
     const pY = (player && typeof player.y === 'number' && !isNaN(player.y)) ? player.y : (canvas.height / 2);
@@ -2046,6 +2162,13 @@ function draw(dt) {
         ctx.fillStyle = `rgba(255, 255, 255, ${c.opacity})`;
         ctx.fill();
     });
+
+    // v1.97.0.2: LAVA ELITE ATMOSPHERIC OVERLAYS
+    if(currentLevel === 4) { if(typeof drawFrostVignette === 'function') drawFrostVignette(); }
+    if(currentLevel === 5) {
+        if(typeof drawLavaGlow === 'function') drawLavaGlow();
+        if(typeof drawHeatHaze === 'function') drawHeatHaze();
+    }
 
     // v1.68 SCORE & GOLD GÖRSELLEŞTİRME (Canvas Altınları)
     golds.forEach(g => {
@@ -2276,47 +2399,42 @@ function draw(dt) {
                 
                 ctx.restore();
                 drawSuccess = true;
-            } else {
-                ctx.fillStyle = "#795548"; // Standart Kaya
-                ctx.beginPath(); ctx.arc(obs.x + obs.width/2, obs.y + obs.height/2, obs.width/2, 0, Math.PI*2); ctx.fill();
-            }
-        }
-        
-        // v1.74 PROCEDURAL SPECIALS (Fireball, etc.)
-        if (obs.type === 'fireball') {
-            // --- v1.74 PROCEDURAL FIREBALL (404-Proof!) ---
-            ctx.save();
-            ctx.translate(obs.x + obs.width/2, obs.y + obs.height/2);
-            
-            // Demonic Glow
-            const pulse = 1.0 + Math.sin(performance.now()/100) * 0.2;
-            ctx.shadowBlur = 25 * pulse;
-            ctx.shadowColor = "#ff4500";
-            
-            // Tail / Flame streaks
-            for(let j=0; j<5; j++) {
-                let sLen = 30 + Math.random()*40;
-                let sOff = (Math.random()-0.5) * 20;
-                ctx.fillStyle = (j % 2 === 0) ? "#ff4500" : "#ff8c00";
+            } else if (obs.type === 'fireball') {
+                // --- v1.97.0.2 PROCEDURAL NEON FIREBALL (Elite!) ---
+                ctx.save();
+                ctx.translate(obs.x + obs.width/2, obs.y + obs.height/2);
+                
+                // Core Glow
+                const pulse = 1.0 + Math.sin(performance.now()/100) * 0.2;
+                ctx.shadowBlur = 30 * pulse;
+                ctx.shadowColor = "#ff4500";
+                
+                // Neon Body
+                ctx.fillStyle = "#ff8c00";
                 ctx.beginPath();
-                ctx.arc(sOff, -sLen/2, 5, 0, Math.PI*2);
+                ctx.arc(0, 0, obs.width/2 * pulse, 0, Math.PI * 2);
                 ctx.fill();
-            }
-
-            // Core
-            let fireGrad = ctx.createRadialGradient(0, 0, 2, 0, 0, obs.width/2);
-            fireGrad.addColorStop(0, "#ffffff");
-            fireGrad.addColorStop(0.3, "#fff176");
-            fireGrad.addColorStop(0.6, "#ff9800");
-            fireGrad.addColorStop(1, "transparent");
-            
-            ctx.fillStyle = fireGrad;
-            ctx.beginPath();
-            ctx.arc(0, 0, obs.width/2, 0, Math.PI*2);
-            ctx.fill();
-            
-            ctx.restore();
-        } else if (obs.type === 'asteroid') {
+                
+                // Bright Core
+                ctx.fillStyle = "#ffff00";
+                ctx.beginPath();
+                ctx.arc(0, 0, obs.width/4, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Particle Sparks
+                ctx.fillStyle = "#ff4500";
+                for(let j=0; j<8; j++) {
+                    let off = (performance.now()/5 + j*45) * Math.PI / 180;
+                    let rx = Math.cos(off) * (obs.width/1.2);
+                    let ry = Math.sin(off) * (obs.width/1.2);
+                    ctx.beginPath();
+                    ctx.arc(rx, ry, 3, 0, Math.PI*2);
+                    ctx.fill();
+                }
+                
+                ctx.restore();
+                drawSuccess = true;
+            } else if (obs.type === 'asteroid') {
             // --- v1.74 PROCEDURAL ASTEROID (404-Proof!) ---
             ctx.save();
             ctx.translate(obs.x + obs.width/2, obs.y + obs.height/2);
@@ -2342,8 +2460,10 @@ function draw(dt) {
             ctx.beginPath(); ctx.arc(10, 8, 4, 0, Math.PI*2); ctx.fill();
             
             ctx.restore();
+            drawSuccess = true;
         }
-    });
+    }
+});
 
     // --- PARÇACIKLARIN (Particles) ÇİZİMİ v126 ---
     particles.forEach(p => p.draw());
@@ -2381,6 +2501,9 @@ function draw(dt) {
             ctx.restore();
         }
     }
+    
+    // v1.97.0.2: Haze wrap-up
+    if(typeof endHeatHaze === 'function') endHeatHaze();
 
     // v1.74: All Legacy Canvas HUD elements removed. Using modern HTML Glass HUD.
     // Lives and Dash are now synced to DOM.
@@ -2410,7 +2533,7 @@ function draw(dt) {
 
     // v1.96.8.4: DONDURUCU VADİ - FROST VIGNETTE (Elite Atmosfer)
     if (currentLevel === 4) {
-        drawFrostVignette();
+        if(typeof drawFrostVignette === 'function') drawFrostVignette();
     }
 
     // Güzelleştirme: Gölgeyi resetle
@@ -2552,7 +2675,7 @@ function gameLoop(timestamp) {
     draw(dt); 
     
     // Döngüyü devam ettir
-    requestAnimationFrame(gameLoop);
+    gameLoopRequestId = requestAnimationFrame(gameLoop);
 }
 
 // v1.74: Giriş ekranında da döngüyü başlat
@@ -2636,7 +2759,8 @@ if(reviveBtn) reviveBtn.addEventListener('click', () => {
         
         if(!isMusicScheduled) bgMusicScheduler();
         lastTime = performance.now();
-        requestAnimationFrame(gameLoop);
+        if (gameLoopRequestId) cancelAnimationFrame(gameLoopRequestId);
+        gameLoopRequestId = requestAnimationFrame(gameLoop);
         
         draw(); // Görseli hemen güncelle
         setTimeout(() => { hasShield = false; }, 3000);
@@ -2868,18 +2992,47 @@ function drawFrostVignette() {
     ctx.fillStyle = grd;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     
-    // Rastgele Kristal Parıltıları
-    ctx.fillStyle = "rgba(255, 255, 255, 0.6)";
-    for(let i=0; i<15; i++) {
-        let x = Math.random() * canvas.width;
-        let y = Math.random() * canvas.height;
-        // Sadece kenarlara kristal yerleştir
-        if (x < 100 || x > canvas.width - 100 || y < 100 || y > canvas.height - 100) {
-            ctx.beginPath();
-            ctx.arc(x, y, Math.random() * 2, 0, Math.PI * 2);
-            ctx.fill();
-        }
-    }
+    // --- v1.97.0.5: Elite Breathing Crystals (Baş Dönmesi Engelleyici) ---
+    const pulse = 0.5 + Math.sin(performance.now() / 1500) * 0.5;
+    ctx.fillStyle = `rgba(255, 255, 255, ${0.1 + pulse * 0.3})`; // Yumuşak nefes alma efekti
+    
+    // Sabit, rastgele olmayan kristal noktaları (Daha huzurlu)
+    const crystalPoints = [
+        {x: 50, y: 50}, {x: canvas.width-50, y: 50}, 
+        {x: 50, y: canvas.height-50}, {x: canvas.width-50, y: canvas.height-50},
+        {x: 120, y: 150}, {x: canvas.width-120, y: 150}
+    ];
+
+    crystalPoints.forEach(p => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 1.5, 0, Math.PI * 2);
+        ctx.fill();
+    });
     
     ctx.restore();
+}
+// v1.97.0.1: LAVA ELITE ATMOSPHERICS
+function drawLavaGlow() {
+    ctx.save();
+    const flicker = 0.3 + Math.random() * 0.15;
+    const grad = ctx.createRadialGradient(canvas.width/2, canvas.height/2, canvas.width*0.2, canvas.width/2, canvas.height/2, canvas.width*0.8);
+    grad.addColorStop(0, "transparent");
+    grad.addColorStop(1, `rgba(255, 69, 0, ${flicker})`);
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.restore();
+}
+
+function drawHeatHaze() {
+    // v1.97.0.1: Heat distortion (simulated via slight periodic canvas translation displacement)
+    const intensity = 0.4; // v1.97.1.9: Titreşim minimuma indirildi (0.8 -> 0.4)
+    const dx = Math.sin(performance.now() / 150) * intensity;
+    const dy = Math.cos(performance.now() / 150) * intensity;
+    ctx.save();
+    ctx.translate(dx, dy);
+}
+
+// v1.97.0.1: Finalize Draw Loop wrap for Haze
+function endHeatHaze() {
+    if(currentLevel === 5) ctx.restore();
 }

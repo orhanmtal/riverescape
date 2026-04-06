@@ -1,4 +1,4 @@
-// River Escape - Ses Motoru (Audio Engine) - v1.96.9.5 (FINAL L4)
+// River Escape - Ses Motoru (Audio Engine) - v1.97.0.1 (LAVA ELITE)
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 let audioCtx;
 
@@ -210,20 +210,83 @@ function initWindGenerator() {
     windSource.start();
 }
 
+// --- v1.97.0.1: PROCEDURAL LAVA BUBBLING (LAVA RIVER) ---
+let lavaSource, lavaGain, lavaFilter, lavaRumble;
+function initLavaGenerator() {
+    if(!audioCtx || lavaSource) return;
+    
+    // 1. Deep Rumble (Low Frequency Noise)
+    const rumbleSize = 2 * audioCtx.sampleRate;
+    const rumbleBuffer = audioCtx.createBuffer(1, rumbleSize, audioCtx.sampleRate);
+    const rumbleData = rumbleBuffer.getChannelData(0);
+    for (let i = 0; i < rumbleSize; i++) { rumbleData[i] = Math.random() * 2 - 1; }
+    
+    lavaRumble = audioCtx.createBufferSource();
+    lavaRumble.buffer = rumbleBuffer;
+    lavaRumble.loop = true;
+    
+    lavaFilter = audioCtx.createBiquadFilter();
+    lavaFilter.type = 'lowpass';
+    lavaFilter.frequency.value = 100; // Çok derin uğultu
+    
+    lavaGain = audioCtx.createGain();
+    lavaGain.gain.value = 0;
+    
+    lavaRumble.connect(lavaFilter);
+    lavaFilter.connect(lavaGain);
+    lavaGain.connect(audioCtx.destination);
+    lavaRumble.start();
+}
+
+function updateAmbientLava(level, isPlaying) {
+    if(!audioCtx) return;
+    if(!lavaRumble) initLavaGenerator();
+    
+    const targetGain = (level === 5 && isPlaying) ? (0.25 * isSFXVolume) : 0;
+    const now = audioCtx.currentTime;
+    
+    lavaGain.gain.setTargetAtTime(targetGain, now, 0.5);
+    
+    if (level === 5 && isPlaying) {
+        // Rastgele Lav Fokurtusu (Random Pops)
+        if (Math.random() < 0.05) {
+            const osc = audioCtx.createOscillator();
+            const g = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(50 + Math.random()*100, now);
+            osc.frequency.exponentialRampToValueAtTime(10, now + 0.3);
+            g.gain.setValueAtTime(0.1 * isSFXVolume, now);
+            g.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+            osc.connect(g); g.connect(audioCtx.destination);
+            osc.start(); osc.stop(now + 0.3);
+        }
+    }
+}
+
+// --- v1.96.8.4: PROCEDURAL WIND UPDATE (DONDURUCU VADİ) ---
 function updateAmbientWind(level, isPlaying) {
     if(!audioCtx) return;
     if(!windSource) initWindGenerator();
     
-    // v1.96.9.2: Oyun durunca rüzgar da DURUR.
     const targetGain = (level === 4 && isPlaying) ? (0.15 * isSFXVolume) : 0;
     const now = audioCtx.currentTime;
     
-    // Yumuşak geçiş (Fade In/Out)
-    windGain.gain.setTargetAtTime(targetGain, now, 0.5);
+    if(windGain) {
+        windGain.gain.setTargetAtTime(targetGain, now, 1.0); // Yavaşça yükselir/alçalır
+    }
     
-    if (level === 4 && isPlaying) {
-        // Rüzgar uğultu dalgalanması (Modulation)
-        const howl = 400 + Math.sin(now * 0.5) * 200 + Math.random() * 100;
-        windFilter.frequency.setTargetAtTime(howl, now, 0.2);
+    if(level === 4 && isPlaying && windFilter) {
+        // Rüzgarın uğultusu (Filtre frekansını hafifçe oynat)
+        const fMod = 350 + Math.sin(now) * 150;
+        windFilter.frequency.setTargetAtTime(fMod, now, 0.5);
     }
 }
+// --- v1.96.9.5: ARKA PLAN SES GÜVENLİĞİ (Elite Safe) ---
+document.addEventListener('visibilitychange', () => {
+    if(!audioCtx) return;
+    if (document.visibilityState === 'hidden') {
+        audioCtx.suspend();
+    } else {
+        audioCtx.resume();
+    }
+});

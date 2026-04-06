@@ -91,13 +91,16 @@ button, .switch, .toggle-slider, #gameCanvas {
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
-    background: rgba(0, 0, 0, 0.75);
+    background: rgba(0, 0, 0, 0.92); /* v1.97.0.3: Increased Opacity for readability */
+    backdrop-filter: blur(15px); /* v1.97.0.3: Premium Glass UI */
+    -webkit-backdrop-filter: blur(15px);
     padding: 30px;
-    border-radius: 15px;
+    border: 2px solid rgba(255, 215, 0, 0.3); /* Soft Gold border */
+    border-radius: 20px;
     color: white;
-    width: 80%;
-    max-width: 320px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    width: 85%;
+    max-width: 340px;
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.8);
     pointer-events: auto; /* Ekran tuşlarına basılabilsin */
     transition: opacity 0.3s;
 }

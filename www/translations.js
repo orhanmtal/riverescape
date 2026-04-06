@@ -1,4 +1,4 @@
-// River Escape - Dil Paketleri (TR/EN) - v145 Milestone
+// River Escape - Dil Paketleri (TR/EN) - v1.97.2.3 (ORGANIC SPAWN)
 const translations = {
     tr: {
         startDesc: "Sağa/sola kaydır. Zıplamak (Dash) için Çift Tıkla veya Yukarı Ok'a bas.",

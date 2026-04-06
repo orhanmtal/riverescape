@@ -64,7 +64,7 @@ let bgImgYaz = loadBg('yaz', 'assets/ArkaPlan_Yaz.png');
 let bgImgSonbahar = loadBg('sonbahar', 'assets/ArkaPlan_Sonbahar.png');
 let bgImgKis = loadBg('kis', 'assets/ArkaPlan_Kis.png');
 let bgImgLava = loadBg('lava', 'assets/ArkaPlan_Lav.png');
-let bgImgVoid = loadBg('void', 'assets/ArkaPlan_Void.png');
+let bgImgVoid = loadBg('void', 'assets/ArkaPlan_Lav.png'); // v1.97.2.3: ArkaPlan_Void eksik olduğu için Lav ofsetli kullanıldı.
 
 const players = { ilkbahar: null, yaz: null, sonbahar: null, kis: null, lava: null, void: null };
 
@@ -130,9 +130,9 @@ function loadIndividualTiles(key, rockSrc, logSrc, crocSrc, hippoSrc) {
 }
 
 // Level-Specific Assets (Elite Individual System)
-loadIndividualTiles('ilkbahar', '', 'assets/Kutuk.png', 'assets/Timsah.png', 'assets/Hippo.png');
-loadIndividualTiles('yaz', '', 'assets/Kutuk.png', 'assets/Timsah.png', 'assets/Hippo.png');
-loadIndividualTiles('sonbahar', '', 'assets/Kutuk.png', 'assets/Timsah.png', 'assets/Hippo.png');
+loadIndividualTiles('ilkbahar', 'assets/rock_elite_spring.png', 'assets/Kutuk.png', 'assets/Timsah.png', 'assets/Hippo.png');
+loadIndividualTiles('yaz', 'assets/rock_elite_summer.png', 'assets/Kutuk.png', 'assets/Timsah.png', 'assets/Hippo.png');
+loadIndividualTiles('sonbahar', 'assets/rock_elite_autumn.png', 'assets/Kutuk.png', 'assets/Timsah.png', 'assets/Hippo.png');
 
 loadIndividualTiles('kis', '', 'assets/Kutuk.png', 'assets/Timsah.png', 'assets/Hippo.png');
 loadIndividualTiles('lava', '', 'assets/Kutuk.png', 'assets/Timsah.png', 'assets/Hippo.png');

@@ -1,0 +1,14 @@
+PROJECT: River Escape Elite
+VERSION: 1.97.2.3
+BUILD_CODE: 19723
+RELEASE_DATE: 2026-04-07
+STATUS: FINAL PRODUCTION READY (AAB)
+
+CHANGELOG (v1.97.2.3):
+- Elite Lane Justice: Prevented vertical obstacle stacking.
+- Organic Spawn: Added Y-axis jitter to break horizontal walls.
+- Level 5 Elite Control: Manual steering optimized for Lava River.
+- Bugfix: 404 on Void background resolved with fallback.
+- Bugfix: Missing rock asset references in assets.js resolved.
+- Version Sync: build.gradle, package.json, index.html, game_v3.js synchronized.
+- Deployment: npx cap sync android completed.
