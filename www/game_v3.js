@@ -1,4 +1,4 @@
-// RİVER ESCAPE ELİTE - v1.96.8.1 (WINTER ICEBERG FIX)
+// RİVER ESCAPE ELİTE - v1.96.9.0 (WINTER ELITE RELEASE)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -637,7 +637,7 @@ const levelAssets = [
     { threshold: 0,    bgKey: 'ilkbahar', speed: 90,  spawn: 2.50, titleEN: translations.en.l1Title, titleTR: translations.tr.l1Title, color: "#64dd17", pKey: "ilkbahar", margin: 0.38 },
     { threshold: 1000,  bgKey: 'yaz',      speed: 160, spawn: 1.55, titleEN: translations.en.l2Title, titleTR: translations.tr.l2Title, color: "#ffd600", pKey: "ilkbahar", margin: 0.30 },
     { threshold: 2500, bgKey: 'sonbahar', speed: 220, spawn: 1.15, titleEN: translations.en.l3Title, titleTR: translations.tr.l3Title, color: "#ff6d00", pKey: "ilkbahar", margin: 0.35 },
-    { threshold: 4500, bgKey: 'kis',      speed: 260, spawn: 1.00, titleEN: translations.en.l4Title, titleTR: translations.tr.l4Title, color: "#00e5ff", pKey: "kis",      margin: 0.30 },
+    { threshold: 4500, bgKey: 'kis',      speed: 260, spawn: 1.00, titleEN: translations.en.l4Title, titleTR: translations.tr.l4Title, color: "#00e5ff", pKey: "ilkbahar", margin: 0.39 },
     { threshold: 7000, bgKey: 'lava',     speed: 380, spawn: 0.60, titleEN: translations.en.lavaRiver, titleTR: translations.tr.lavaRiver, color: "#ff4500", pKey: "lava", margin: 0.38 },
     { threshold: 10000, bgKey: 'void',     speed: 550, spawn: 0.35, titleEN: translations.en.voidLevel, titleTR: translations.tr.voidLevel, color: "#9b59b6", pKey: "void", margin: 0.40 },
     { threshold: 14000, bgKey: 'ilkbahar', speed: 120, spawn: 2.10, titleEN: "NEW CYCLE", titleTR: "YENİ TUR", color: "#64dd17", pKey: "ilkbahar", margin: 0.38 }
@@ -951,8 +951,10 @@ function fillGoldBag() {
 }
 
 function spawnPowerup() {
-    const riverLeft = canvas.width * 0.35;
-    const riverRight = canvas.width * 0.65 - 30;
+    const currentAsset = levelAssets[currentLevel - 1];
+    const sMargin = currentAsset ? currentAsset.margin : 0.35;
+    const riverLeft = canvas.width * sMargin;
+    const riverRight = canvas.width * (1 - sMargin) - 40;
     
     let type = 'magnet';
     // v1.97: Mıknatıs oranını %30'a çekerek kalkanı daha değerli yapıyoruz
@@ -1005,7 +1007,7 @@ function spawnObstacle() {
         if (score >= 900 && score <= 1000) allowedSpecialTypes.push('croc'); 
     } else {
         // Seviye Bazlı Baz Engeller
-        if (currentLevel === 4) allowedSpecialTypes = ['hippo', 'rock', 'iceBerg', 'whirlpool'];
+        if (currentLevel === 4) allowedSpecialTypes = ['hippo', 'rock', 'iceBerg', 'slidingIce', 'whirlpool'];
         else if (currentLevel === 3) allowedSpecialTypes = ['hippo', 'croc', 'rock', 'leafTornado'];
         else if (currentLevel === 5) allowedSpecialTypes = ['rock', 'fireball'];
         else allowedSpecialTypes = ['hippo', 'croc', 'rock'];
@@ -1023,7 +1025,8 @@ function spawnObstacle() {
     if (typeof window.lastObsX === 'undefined') window.lastObsX = spawnX;
     
     // Tester şikayeti üzerine tüm levellarda UMUT PAYI aktif edildi ve aralığı çok genişletildi
-    let gap = player.width + 70; // Eskiden 40'tı, çok daha geniş ferah bir "nefes" boşluğu
+    // v1.96.8.7: GELİŞMİŞ UMUT PAYI (Genişlik Odaklı)
+    let gap = player.width + 80; // Sadece merkezler değil, geçiş koridoru garantisi
     if (Math.abs(spawnX - window.lastObsX) < gap) {
         // Çarpışmayı önlemek için zıt kıyıya fırlat veya güvenli mesafeye it
         if (window.lastObsX < (riverLeft + riverRight) / 2) {
@@ -1060,14 +1063,16 @@ function spawnObstacle() {
                 zigzagOffset: Math.random() * Math.PI * 2 // Rastgele faz
             });
         } else if (selectedType === 'whirlpool') {
-            const size = 80 + Math.random() * 40;
+            // v1.96.8.7: Level 4'te Dar Kanal İçin Daha Küçük Girdaplar (60-90)
+            const isL4 = currentLevel === 4;
+            const size = isL4 ? (60 + Math.random() * 30) : (80 + Math.random() * 40);
             obstacles.push({
                 type: 'whirlpool',
                 x: spawnX,
                 y: -150, width: size, height: size,
                 speedY: bgScrollSpeed, speedX: 0,
                 rotation: 0,
-                pullStrength: 120 // Çekim gücü
+                pullStrength: isL4 ? 100 : 120 // Biraz daha az çeksin
             });
         } else if (selectedType === 'rock' || selectedType === 'iceBerg') {
             let isIce = selectedType === 'iceBerg';
@@ -1077,6 +1082,18 @@ function spawnObstacle() {
                 x: spawnX,
                 y: -100, width: rockSize, height: rockSize * 0.8,
                 speedY: bgScrollSpeed, speedX: 0
+            });
+        } else if (selectedType === 'slidingIce') {
+            // v1.96.8.7: DAHA KÜÇÜK VE DENGELİ ŞARAPNEL (35-55)
+            let size = 35 + Math.random() * 20;
+            obstacles.push({
+                type: 'slidingIce',
+                x: spawnX,
+                y: -100, width: size, height: size,
+                speedY: baseSpeed * 0.8, 
+                speedX: (Math.random() < 0.5 ? 1 : -1) * (70 + Math.random() * 60), // Daha yavaş
+                rotation: Math.random() * Math.PI,
+                rotSpeed: (Math.random() - 0.5) * 3
             });
         } else if (selectedType === 'fireball') {
             obstacles.push({
@@ -1218,7 +1235,7 @@ function togglePause() {
 function startGame() {
     initAudio(); 
     isPlaying = true; isGameOver = false; isPaused = false;
-    score = 4490; goldCount = 0; // v1.96.8.0 DEBUG: START NEAR LEVEL 4 (4490)
+    score = 0; goldCount = 0; // PRODUCTION START
     lives = 3; 
     totalLoops = 0; 
     
@@ -1389,7 +1406,10 @@ function update(dt) {
     const dFill = document.getElementById('dash-energy-fill');
     if(dFill) dFill.style.width = (dashEnergy / MAX_DASH_ENERGY * 100) + '%';
 
-    score += dt * 5; 
+    if (isPlaying) {
+        score += dt * 5; 
+        if(typeof updateAmbientWind === 'function') updateAmbientWind(currentLevel, true);
+    }
     
     // v1.68 SCORE & GOLD TICKER (Yumuşak Geçiş)
     if (displayScore < Math.floor(score)) displayScore += Math.ceil((score - displayScore) * 0.1);
@@ -1455,10 +1475,14 @@ function update(dt) {
         score = Math.max(0, score - (Math.abs(dy) * player.speed * dt * 0.1));
     }
 
-    // X Ekseni Sınırları (Nehir Kanalı) - v1.73.2 Dinamik Lockdown Fix
+    // X Ekseni Sınırları (Nehir Kanalı) - v1.96.8.2: Dinamik Sınır Sistemi
     const pMargin = (currentLAsset && typeof currentLAsset.margin === 'number') ? currentLAsset.margin : 0.38;
     const playRiverLeft = canvas.width * pMargin;
     const playRiverRight = canvas.width * (1 - pMargin) - player.width;
+    
+    // PLAYER X CLAMP: Karaya çıkışı fiziksel olarak da engelle!
+    if (player.x < playRiverLeft) player.x = playRiverLeft;
+    if (player.x > playRiverRight) player.x = playRiverRight;
     
     // KIYIYA SÜRTMÜ KONTROLÜ (Ölüm Yok, Sadece YAVAŞLATMA ve SARSINTI)
     let moveDt = dt; 
@@ -1507,6 +1531,11 @@ function update(dt) {
         particles.push(new Particle(px, py, currentLevel === 4 ? "rgba(200, 230, 255, 0.7)" : "rgba(255, 255, 255, 0.6)"));
     }
     // Parçacıkları güncelle ve ömrü biteni sil
+    // --- KAR YAĞIŞI (SNOWFALL) v1.96.8.3 ---
+    if (currentLevel === 4 && Math.random() < 0.1) {
+        particles.push(new Particle(Math.random() * canvas.width, -50, "rgba(255, 255, 255, 0.8)"));
+    }
+
     particles.forEach((p, index) => {
         p.update(dt);
         if (p.life <= 0) particles.splice(index, 1);
@@ -1746,6 +1775,20 @@ function update(dt) {
 
         obs.y += obs.speedY * dt;
         obs.x += obs.speedX * dt;
+
+        // v1.96.8.6: YATAY KAYAN BUZLAR İÇİN KENARLARDAN SEKME (BOUNCE)
+        if (obs.type === 'slidingIce') {
+            const sMargin = currentLAsset ? currentLAsset.margin : 0.39;
+            const bLeft = canvas.width * sMargin;
+            const bRight = canvas.width * (1 - sMargin) - obs.width;
+            
+            if (obs.x < bLeft || obs.x > bRight) {
+                obs.speedX *= -1; // Sekme!
+                if(obs.x < bLeft) obs.x = bLeft;
+                if(obs.x > bRight) obs.x = bRight;
+            }
+            if (obs.rotSpeed) obs.rotation += obs.rotSpeed * dt;
+        }
 
         // Elite varlıkların kenarlarında şeffaf boşluklar (padding) olabileceği için
         // Hitbox'u P oyuncu standartlarında çok daha affedici (küçük) hale getiriyoruz!
@@ -2202,6 +2245,31 @@ function draw(dt) {
                 
                 ctx.restore();
                 drawSuccess = true;
+            } else if (obs.type === 'slidingIce') {
+                // v1.96.8.6: CRYSTALLINE SLIDING SHARD (Geometric & Neon)
+                ctx.save();
+                ctx.translate(obs.x + obs.width / 2, obs.y + obs.height / 2);
+                ctx.rotate(obs.rotation || 0);
+                
+                // Neon Glow
+                ctx.shadowColor = "#00e5ff";
+                ctx.shadowBlur = 15;
+                
+                // Body (Sharp geometric crystal)
+                ctx.fillStyle = "rgba(178, 235, 242, 0.9)";
+                ctx.strokeStyle = "#fff";
+                ctx.lineWidth = 2;
+                
+                ctx.beginPath();
+                ctx.moveTo(0, -obs.height/2);
+                ctx.lineTo(obs.width/2, 0);
+                ctx.lineTo(0, obs.height/2);
+                ctx.lineTo(-obs.width/2, 0);
+                ctx.closePath();
+                ctx.fill(); ctx.stroke();
+                
+                ctx.restore();
+                drawSuccess = true;
             } else {
                 ctx.fillStyle = "#795548"; // Standart Kaya
                 ctx.beginPath(); ctx.arc(obs.x + obs.width/2, obs.y + obs.height/2, obs.width/2, 0, Math.PI*2); ctx.fill();
@@ -2332,6 +2400,11 @@ function draw(dt) {
         ctx.fillText("☠️", canvas.width - 100, 55); 
         
         ctx.restore();
+    }
+
+    // v1.96.8.4: DONDURUCU VADİ - FROST VIGNETTE (Elite Atmosfer)
+    if (currentLevel === 4) {
+        drawFrostVignette();
     }
 
     // Güzelleştirme: Gölgeyi resetle
@@ -2770,3 +2843,37 @@ if(vibToggle) {
 
 loadGame();
 
+// --- v1.96.8.4 DONDURUCU VADİ GÖRSEL EFEKT SİSTEMİ ---
+function drawFrostVignette() {
+    ctx.save();
+    ctx.setTransform(1, 0, 0, 1, 0, 0); 
+    
+    // Köşelerde Buzlanma (Frosty Corners)
+    const grd = ctx.createRadialGradient(
+        canvas.width/2, canvas.height/2, canvas.height/4,
+        canvas.width/2, canvas.height/2, canvas.width
+    );
+    
+    // v1.96.8.4: Kristalize Mavi/Beyaz Geçiş
+    grd.addColorStop(0, "transparent");
+    grd.addColorStop(0.7, "rgba(224, 247, 250, 0.1)"); // Hafif sis
+    grd.addColorStop(1, "rgba(255, 255, 255, 0.35)"); // Köşelerde yoğun buzlanma
+    
+    ctx.fillStyle = grd;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    // Rastgele Kristal Parıltıları
+    ctx.fillStyle = "rgba(255, 255, 255, 0.6)";
+    for(let i=0; i<15; i++) {
+        let x = Math.random() * canvas.width;
+        let y = Math.random() * canvas.height;
+        // Sadece kenarlara kristal yerleştir
+        if (x < 100 || x > canvas.width - 100 || y < 100 || y > canvas.height - 100) {
+            ctx.beginPath();
+            ctx.arc(x, y, Math.random() * 2, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    }
+    
+    ctx.restore();
+}

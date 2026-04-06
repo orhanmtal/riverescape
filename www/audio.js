@@ -1,4 +1,4 @@
-// River Escape - Ses Motoru (Audio Engine) - v1.96.5.0 (LEVEL FLOW)
+// River Escape - Ses Motoru (Audio Engine) - v1.96.8.4 (DONDURUCU VADİ)
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 let audioCtx;
 
@@ -180,5 +180,50 @@ function playVictoryFanfare() {
 function triggerVibration(pattern) {
     if (isVibrationEnabled && navigator.vibrate) {
         navigator.vibrate(pattern);
+    }
+}
+// --- PROCEDURAL WIND GENERATOR (DONDURUCU VADİ) v1.96.8.4 ---
+let windSource, windGain, windFilter;
+function initWindGenerator() {
+    if(!audioCtx || windSource) return;
+    
+    // White Noise Buffer
+    const bufferSize = 2 * audioCtx.sampleRate;
+    const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+    const output = noiseBuffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) { output[i] = Math.random() * 2 - 1; }
+
+    windSource = audioCtx.createBufferSource();
+    windSource.buffer = noiseBuffer;
+    windSource.loop = true;
+
+    windFilter = audioCtx.createBiquadFilter();
+    windFilter.type = 'lowpass';
+    windFilter.frequency.value = 400;
+
+    windGain = audioCtx.createGain();
+    windGain.gain.value = 0; // Kapalı başlar
+
+    windSource.connect(windFilter);
+    windFilter.connect(windGain);
+    windGain.connect(audioCtx.destination);
+    windSource.start();
+}
+
+function updateAmbientWind(level, isPlaying) {
+    if(!audioCtx) return;
+    if(!windSource) initWindGenerator();
+    
+    // Sadece Level 4 ve oyun oynanırken rüzgar eser
+    const targetGain = (level === 4 && isPlaying) ? (0.15 * isSFXVolume) : 0;
+    const now = audioCtx.currentTime;
+    
+    // Yumuşak geçiş (Fade In/Out)
+    windGain.gain.setTargetAtTime(targetGain, now, 0.5);
+    
+    if (level === 4 && isPlaying) {
+        // Rüzgar uğultu dalgalanması (Modulation)
+        const howl = 400 + Math.sin(now * 0.5) * 200 + Math.random() * 100;
+        windFilter.frequency.setTargetAtTime(howl, now, 0.2);
     }
 }
