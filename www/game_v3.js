@@ -1,4 +1,4 @@
-// RİVER ESCAPE ELİTE - v1.96.3.1 (GİRDAP YAYILIMI)
+// RİVER ESCAPE ELİTE - v1.96.3.2 (START SCORE 1890)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -1188,7 +1188,7 @@ function togglePause() {
 function startGame() {
     initAudio(); 
     isPlaying = true; isGameOver = false; isPaused = false;
-    score = 0; goldCount = 0; // PRODUCTION RELEASE: OYUN SIFIRDAN BAŞLAR
+    score = 1890; goldCount = 0; // DEBUG: START FROM LEVEL 2 (1890)
     lives = 3; 
     totalLoops = 0; 
     
