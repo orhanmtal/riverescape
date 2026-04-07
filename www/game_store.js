@@ -1,7 +1,7 @@
 /**
  * RİVER ESCAPE ELİTE - game_store.js
  * Google Play Satın Alma (In-App Purchases - IAP) Modülü
- * v1.99.2.5
+ * v1.99.2.6
  */
 
 const GameStore = {
