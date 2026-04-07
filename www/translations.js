@@ -67,7 +67,14 @@ const translations = {
         gameCompleted: "ŞAMPİYON! YENİ TUR BAŞLIYOR...",
         dashReady: "ZIPLAMA HAZIR!",
         adNotReady: "⚠️ Reklam henüz hazır değil, lütfen daha sonra tekrar deneyin.",
-        deathValley: "ÖLÜM VADİSİ"
+        deathValley: "ÖLÜM VADİSİ",
+        armorName: "Gemi Zırhı",
+        armorDesc: "Sadece Lvl6 ve Üstü.\n(2.000 Altın)",
+        armorAmmoName: "Zırh Şarjı",
+        armorAmmoDesc: "Level 6+ Zırhı.\nŞarj Et:",
+        armorActivated: "ZIRH JENERATÖRÜ AKTİF! 🛡️",
+        armorReloaded: "+3 ZIRH ŞARJI MÜHİMMATI",
+        armorEmpty: "ZIRH TÜKENDİ!"
     },
     en: {
         startDesc: "Move left/right. Double Tap or Up Arrow to Dash.",
@@ -136,6 +143,13 @@ const translations = {
         gameCompleted: "CHAMPION! NEW LOOP STARTING...",
         dashReady: "DASH READY!",
         adNotReady: "⚠️ Ad is not ready yet, please try again later.",
-        deathValley: "DEATH VALLEY"
+        deathValley: "DEATH VALLEY",
+        armorName: "Void Armor",
+        armorDesc: "Lvl6+ Only.\n(2,000 Gold)",
+        armorAmmoName: "Armor Battery",
+        armorAmmoDesc: "Lvl6+ Armor.\nRecharge:",
+        armorActivated: "ARMOR GENERATOR ACTIVE! 🛡️",
+        armorReloaded: "+3 ARMOR CHARGES ADDED",
+        armorEmpty: "ARMOR DEPLETED!"
     }
 };

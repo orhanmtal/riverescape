@@ -647,7 +647,7 @@ const levelAssets = [
     { threshold: 2500, bgKey: 'sonbahar', speed: 220, spawn: 1.15, titleEN: translations.en.l3Title, titleTR: translations.tr.l3Title, color: "#ff6d00", pKey: "ilkbahar", margin: 0.35 },
     { threshold: 4500, bgKey: 'kis',      speed: 260, spawn: 1.00, titleEN: translations.en.l4Title, titleTR: translations.tr.l4Title, color: "#00e5ff", pKey: "ilkbahar", margin: 0.39 },
     { threshold: 7000, bgKey: 'lava',     speed: 162, spawn: 1.80, titleEN: translations.en.lavaRiver, titleTR: translations.tr.lavaRiver, color: "#ff4500", pKey: "lava", margin: 0.43 },
-    { threshold: 10000, bgKey: 'void',     speed: 550, spawn: 0.35, titleEN: translations.en.voidLevel, titleTR: translations.tr.voidLevel, color: "#9b59b6", pKey: "void", margin: 0.40 },
+    { threshold: 10000, bgKey: 'void',     speed: 190, spawn: 1.40, titleEN: translations.en.voidLevel, titleTR: translations.tr.voidLevel, color: "#9b59b6", pKey: "void", margin: 0.32 }, // v1.98.x: Genişletildi!
     { threshold: 14000, bgKey: 'ilkbahar', speed: 120, spawn: 2.10, titleEN: "NEW CYCLE", titleTR: "YENİ TUR", color: "#64dd17", pKey: "ilkbahar", margin: 0.38 }
 ];
 
@@ -688,6 +688,8 @@ let shieldLevel = 0;
 let bombCount = 0; // v1.68: BOMBA STOKU
 let powerupTimer = 0;
 let hasShield = false;
+let ownsArmorLicense = false;
+let armorCharge = 0;
 let hasWeapon = false; // BU ARTIK SADECE "VARMİ" DEGİL "AKTİF Mİ" DURUMU
 let lastShotTime = 0;
 let bullets = [];
@@ -701,10 +703,26 @@ function saveGame() {
         sfxVol: isSFXVolume,
         vib: isVibrationEnabled,
         weapon: hasWeapon,
-        bombs: bombCount
+        bombs: bombCount,
+        armorLicense: ownsArmorLicense,
+        armorCharge: armorCharge
     };
     localStorage.setItem('riverEscapeSave', JSON.stringify(data));
     updateShopUI();
+}
+
+function updateArmorUI() {
+    let aBadge = document.getElementById('armor-badge');
+    let aIndi = document.getElementById('armor-ui-indicator');
+    if(aBadge) aBadge.innerText = armorCharge;
+    if(aIndi) {
+        if(ownsArmorLicense) {
+            aIndi.style.display = 'flex';
+            aIndi.style.filter = (armorCharge <= 0) ? "grayscale(100%) opacity(0.6)" : "none";
+        } else {
+            aIndi.style.display = 'none';
+        }
+    }
 }
 
 function updateShopUI() {
@@ -741,9 +759,35 @@ function updateShopUI() {
             wb.innerHTML = `${t.buyBtn}<br>1.000`;
         }
     }
+    let ab = document.getElementById('buy-armor-btn');
+    if(ab) {
+        if(ownsArmorLicense) {
+            if(document.getElementById('shop-arm-title')) document.getElementById('shop-arm-title').innerText = t.armorAmmoName;
+            if(document.getElementById('shop-arm-desc')) document.getElementById('shop-arm-desc').innerText = `${t.armorAmmoDesc} ${armorCharge}`;
+            ab.innerHTML = `${t.buyBtn}<br>100`;
+            ab.style.opacity = (totalGold >= 100) ? "1" : "0.5";
+        } else {
+            if(document.getElementById('shop-arm-title')) document.getElementById('shop-arm-title').innerText = t.armorName;
+            if(document.getElementById('shop-arm-desc')) document.getElementById('shop-arm-desc').innerText = t.armorDesc;
+            ab.innerHTML = `${t.buyBtn}<br>2.000`;
+            ab.style.opacity = (totalGold >= 2000) ? "1" : "0.5";
+        }
+    }
+
     // BOMBA BUTONU SAYAÇ GÜNCELLEMESİ v1.68
     let bBadge = document.getElementById('bomb-badge');
     if(bBadge) bBadge.innerText = bombCount;
+
+    let bBtn = document.getElementById('bomb-action-btn');
+    if(bBtn) {
+        if(hasWeapon) {
+            bBtn.style.display = 'flex';
+            bBtn.style.filter = (bombCount <= 0) ? "grayscale(100%) opacity(0.6)" : "none";
+        } else {
+            bBtn.style.display = 'none';
+        }
+    }
+    updateArmorUI();
     
     updateWheelForWeapon(); // Lisanslıysa çarkı güncelle
 }
@@ -816,6 +860,20 @@ if(closeShopBtn) closeShopBtn.addEventListener('click', () => {
     document.getElementById('shop-screen').style.zIndex = '100'; // Normale dön
 });
 
+const armorIndicator = document.getElementById('armor-ui-indicator');
+if(armorIndicator) armorIndicator.addEventListener('click', () => {
+    // Tıklandığında oyunu durdur (Pause)
+    if (!isPaused && isPlaying && !isGameOver) {
+        togglePause();
+    }
+    // Mağazayı otomatik aç
+    document.getElementById('shop-screen').classList.remove('hidden');
+    document.getElementById('shop-screen').classList.add('active');
+    document.getElementById('shop-screen').style.display = 'flex';
+    document.getElementById('shop-screen').style.opacity = '1';
+    document.getElementById('shop-screen').style.zIndex = '6000';
+});
+
 const btnMag = document.getElementById('buy-magnet-btn');
 if(btnMag) btnMag.addEventListener('click', () => {
     let cost = 1000 + magnetLevel * 500;
@@ -841,6 +899,39 @@ if(btnShd) btnShd.addEventListener('click', () => {
         shakeTimer = 0.4; 
         if(typeof playHaptic === 'function') playHaptic('light');
         showToast(translations[currentLang].noGold, false);
+    }
+});
+
+const buyArmorBtn = document.getElementById('buy-armor-btn');
+if(buyArmorBtn) buyArmorBtn.addEventListener('click', () => {
+    const t = translations[currentLang];
+    if (!ownsArmorLicense) {
+        if (totalGold >= 2000) {
+            totalGold -= 2000;
+            ownsArmorLicense = true;
+            armorCharge += 3;
+            saveGame();
+            for(let i=0; i<8; i++) setTimeout(playCoinSound, i*100);
+            showToast(t.armorActivated, true);
+            updateShopUI();
+        } else {
+            shakeTimer = 0.4;
+            if(typeof playHaptic === 'function') playHaptic('light');
+            showToast(t.noGold, false);
+        }
+    } else {
+        if (totalGold >= 100) {
+            totalGold -= 100;
+            armorCharge += 3;
+            saveGame();
+            for(let i=0; i<3; i++) setTimeout(playCoinSound, i*100);
+            showToast(t.armorReloaded, true);
+            updateShopUI();
+        } else {
+            shakeTimer = 0.4;
+            if(typeof playHaptic === 'function') playHaptic('light');
+            showToast(t.noGold, false);
+        }
     }
 });
 
@@ -879,7 +970,26 @@ if(buyWeaponBtn) buyWeaponBtn.addEventListener('click', () => {
 });
 
 function fireBomb() {
-    if (!isPlaying || isPaused || isGameOver || bombCount <= 0) return;
+    if (!isPlaying || isPaused || isGameOver) return;
+    
+    if (bombCount <= 0) {
+        if (hasWeapon) {
+            // Tıklandığında oyunu durdur (Pause)
+            if (!isPaused) {
+                togglePause();
+            }
+            // Mağazayı otomatik aç
+            const shop = document.getElementById('shop-screen');
+            if(shop) {
+                shop.classList.remove('hidden');
+                shop.classList.add('active');
+                shop.style.display = 'flex';
+                shop.style.opacity = '1';
+                shop.style.zIndex = '6000';
+            }
+        }
+        return;
+    }
     
     bombCount--;
     bullets.push({
@@ -1026,6 +1136,7 @@ function spawnObstacle() {
         if (currentLevel === 4) allowedSpecialTypes = ['hippo', 'rock', 'iceBerg', 'slidingIce', 'whirlpool'];
         else if (currentLevel === 3) allowedSpecialTypes = ['hippo', 'croc', 'rock', 'leafTornado'];
         else if (currentLevel === 5) allowedSpecialTypes = ['rock', 'whirlpool', 'fireball'];
+        else if (currentLevel === 6) allowedSpecialTypes = ['asteroid', 'comet'];
         else allowedSpecialTypes = ['hippo', 'croc', 'rock'];
 
         // Girdap Kuralı: İlkbahar ve Sonbahar hariç her yerde olabilir (L3'te hortum var)
@@ -1134,14 +1245,24 @@ function spawnObstacle() {
                 speedX: (currentLevel === 5 ? 0 : (Math.random() - 0.5) * 50) // Level 5'te SABİT (Daha elite kontrol)
             });
         } else if (selectedType === 'asteroid') {
-            const astSize = 70 + Math.random() * 30;
+            const astSize = 50 + Math.random() * 30; // Daha affedici boyut (50-80)
             obstacles.push({
                 type: 'asteroid',
                 x: spawnX,
                 relativeX: spawnX - riverShift, // v1.97.0.3: Elite Drift Support
                 y: spawnY, width: astSize, height: astSize,
-                speedY: baseSpeed + 200, // IŞIK HIZINDA!
-                speedX: (Math.random() - 0.5) * 100 // Daha fazla savrulma
+                speedY: baseSpeed * 1.25, // Orantısız ışık hızı yerine adil ivmelenme
+                speedX: (Math.random() - 0.5) * 20 // Yatay savrulma minimumda (oyuncuyu köşe sıkıştırmasın)
+            });
+        } else if (selectedType === 'comet') {
+            const cometSize = 30 + Math.random() * 10;
+            obstacles.push({
+                type: 'comet',
+                x: spawnX,
+                relativeX: spawnX - riverShift,
+                y: spawnY, width: cometSize, height: cometSize,
+                speedY: baseSpeed * 1.4, 
+                speedX: (Math.random() < 0.5 ? 1 : -1) * (40 + Math.random() * 50) // Çapraz ama daha takip edilebilir
             });
         } else if (selectedType === 'leafTornado') {
             const size = 100 + Math.random() * 50;
@@ -1281,7 +1402,7 @@ function togglePause() {
 function startGame() {
     initAudio(); 
     isPlaying = true; isGameOver = false; isPaused = false;
-    score = 0; goldCount = 0; // v1.97.2.3: FRESH START
+    score = 10005; goldCount = 0; // v1.98 Level 6 Test Mode
     lives = 3; 
     totalLoops = 0; 
     
@@ -1297,18 +1418,19 @@ function startGame() {
     
     // Satın alınan Kalkan aktivasyonu
     hasShield = false; 
+    updateArmorUI();
     
     isDoubleGoldActive = startingDoubleGold;
     startingDoubleGold = false; 
     
     spawnTimer = 0; goldTimer = 0;
-    spawnInterval = levelAssets[0].spawn; 
-    currentLevel = 1; 
+    currentLevel = 6; 
+    spawnInterval = levelAssets[5].spawn; 
 
     // v1.73.6: Ultra-Elite Background Sync
-    bgImg = bgImgs[levelAssets[0].bgKey]; 
-    playerImg = players.ilkbahar; // v1.97.2.2: Standard Release Sprite
-    bgScrollSpeed = levelAssets[0].speed;
+    bgImg = bgImgs[levelAssets[5].bgKey]; 
+    playerImg = players.ilkbahar; // Standard Release Sprite
+    bgScrollSpeed = levelAssets[5].speed;
     lastTime = performance.now();
     
     startScreen.classList.remove('active'); startScreen.classList.add('hidden');
@@ -1320,6 +1442,7 @@ function startGame() {
         pauseBtn.innerText = isPaused ? "▶" : "⏸"; 
     }
     if(bombActionBtn && hasWeapon) bombActionBtn.style.display = 'flex';
+    updateShopUI();
     
     // Revive butonlarını UI üzerinde sıfırla
     if(reviveBtn) {
@@ -1641,8 +1764,8 @@ function update(dt) {
     }
 
     // DİNAMİK 4 MEVSİM SEVİYE GÜNCELLEMESİ v128 (SEVİYE GERİ DÜŞMESİ ENGELLENDİ)
-    // 10.000 ŞAMPİYONLUK MÜHRÜ (TEK SEFERLİK BÜYÜK KUTLAMA)
-    if (score >= 10000 && totalLoops === 0) {
+    // 14.000 ŞAMPİYONLUK MÜHRÜ (TEK SEFERLİK BÜYÜK KUTLAMA) - v1.98 (Level 6 eklendiği için sona itildi)
+    if (score >= 14000 && totalLoops === 0) {
         totalLoops = 1; // Artık sonsuz devam edeceğiz ama şov bir kez olsun
         isTransitioningLevel = true;
         transitionTimer = 5.0; 
@@ -1650,7 +1773,7 @@ function update(dt) {
         
         // Şampiyonluk Ekranı (v158: Level 7'ye Bağladık)
         const lTitle = translations[currentLang].gameCompleted;
-        console.log("CEZA: Büyük Şampiyonluk Ekranı (10K) Açılıyor...");
+        console.log("CEZA: Büyük Şampiyonluk Ekranı (14K) Açılıyor...");
         
         levelUpOverlay.innerHTML = `
             <div style="text-align: center; animation: proLevelPop 1.5s forwards;">
@@ -1919,7 +2042,16 @@ function update(dt) {
             // Eğer su aygırı henüz yüzeye çıkmamışsa (su altındaysa) çarpma/sek!
             if (obs.type === 'hippo' && obs.isSubmerged) continue;
             
-            if (hasShield) {
+            // Zırh sadece kalkan Level 6 ve üstündeyse hasar bloklar, yoksa sadece roket çarpar! (v1.98 Level 6 Restriction)
+            if (armorCharge > 0 && currentLevel >= 6) {
+                playCrashSound();
+                armorCharge--;
+                updateArmorUI();
+                obstacles.splice(i, 1);
+                // Patlama Efekti
+                for(let p=0; p<15; p++) particles.push(new Particle(player.x+player.width/2, player.y+player.height/2, "#9b59b6"));
+                if (armorCharge <= 0) showToast(translations[currentLang].armorEmpty, false);
+            } else if (hasShield) {
                 // Kalkan varken kırılır ve kütüğü/düşmanı imha eder
                 playCrashSound();
                 hasShield = false; 
@@ -2065,6 +2197,10 @@ function draw(dt) {
     if (currentLevel === 5 && (!currentBgTex || currentBgTex.width <= 0)) {
         currentBgTex = null; 
     }
+    // LEVEL 6 tamamen procedural çizilecek, resme gerek yok!
+    if (currentLevel === 6) {
+        currentBgTex = null; 
+    }
 
     if(currentBgTex) {
         let H = Math.ceil(canvas.height) * 2;
@@ -2090,45 +2226,46 @@ function draw(dt) {
                 ctx.fill();
             }
         } else if (currentLevel === 6) {
-            ctx.fillStyle = "#0a0a2a"; // Derin Uzay Siyahı
+            ctx.fillStyle = "#000000"; // Tam Siyah Uzay
             ctx.fillRect(0,0, canvas.width, canvas.height);
             
-            // Uzay Tozu ve Uzak Yıldızlar
-            ctx.fillStyle = "rgba(255, 255, 255, 0.3)";
-            for(let i=0; i<30; i++) {
-                let sx = (Math.sin(performance.now()/5000 + i) * 100 + (i*100)) % canvas.width;
-                let sy = (performance.now()/4 + i*150) % canvas.height;
-                ctx.fillRect(sx, sy, 2, 2); 
+            // v1.98.x: PROCEDURAL VOID STARFIELD
+            ctx.shadowBlur = 0; 
+            for (let i = 0; i < 45; i++) {
+                let seed = (i * 997) % 1000;
+                let sy = (performance.now() / 5 + seed) % canvas.height;
+                let sx = (seed * 123) % canvas.width;
+                let size = 1 + (i % 3);
+                let alpha = 0.2 + Math.sin(performance.now() / 200 + i) * 0.3;
+                
+                ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+                ctx.fillRect(sx, sy, size, size);
             }
             
-            ctx.fillStyle = "rgba(155, 89, 182, 0.1)";
+            // Nebula Glow Parıldaması
+            const nebulaPulse = 0.05 + Math.sin(performance.now() / 2000) * 0.02;
+            ctx.fillStyle = `rgba(155, 89, 182, ${nebulaPulse})`; 
             ctx.beginPath();
-            ctx.arc(canvas.width/2, canvas.height/2, 200, 0, Math.PI*2);
+            ctx.arc(canvas.width/2, canvas.height/2, 350, 0, Math.PI * 2);
             ctx.fill();
 
             // --- v154: VOID KANAL SINIRLARINI BELİRGİNLEŞTİR (LAZER RAYLARI) ---
-            const voidMargin = canvas.width * 0.40;
+            const voidMargin = canvas.width * 0.32; // LevelAssets margin ile aynı uyarlandı
             const laserPulse = (Math.sin(performance.now() / 200) * 0.2 + 0.5);
             
             ctx.lineWidth = 4;
             ctx.strokeStyle = `rgba(155, 89, 182, ${laserPulse})`;
-            // v158: GEMİ ETRAFINDAKİ BEYAZLIK ŞÜPHESİNİ SİLMEK İÇİN GÖLGEYİ (SHADOW) KAPAT
-            ctx.shadowBlur = (currentLevel >= 5) ? 0 : 15;
-            ctx.shadowColor = (currentLevel === 5) ? "#ff4500" : "#fb8c00"; 
             
-            // Sol Lazer
+            // Sol ve Sağ Lazer Koridor
             ctx.beginPath();
-            ctx.moveTo(voidMargin, 0);
-            ctx.lineTo(voidMargin, canvas.height);
+            ctx.moveTo(voidMargin, 0); ctx.lineTo(voidMargin, canvas.height);
             ctx.stroke();
             
-            // Sağ Lazer
             ctx.beginPath();
-            ctx.moveTo(canvas.width - voidMargin, 0);
-            ctx.lineTo(canvas.width - voidMargin, canvas.height);
+            ctx.moveTo(canvas.width - voidMargin, 0); ctx.lineTo(canvas.width - voidMargin, canvas.height);
             ctx.stroke();
             
-            // Kanal içi hafif ızgara (Grid) efekti
+            // Kanal içi hafif hız/akış ızgarası
             ctx.strokeStyle = "rgba(155, 89, 182, 0.05)";
             ctx.lineWidth = 1;
             for(let gy=0; gy<canvas.height; gy+=50) {
@@ -2138,6 +2275,7 @@ function draw(dt) {
                 ctx.lineTo(canvas.width-voidMargin, gy+off);
                 ctx.stroke();
             }
+
             
             ctx.shadowBlur = 0; // Reset
         } else {
@@ -2461,6 +2599,31 @@ function draw(dt) {
             
             ctx.restore();
             drawSuccess = true;
+        } else if (obs.type === 'comet') {
+            ctx.save();
+            ctx.translate(obs.x + obs.width/2, obs.y + obs.height/2);
+            
+            // Kuyruk efekti
+            ctx.shadowBlur = 25;
+            ctx.shadowColor = "#00e5ff"; // Cyan glow
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            let tailX = -obs.speedX * 0.4;
+            let tailY = -obs.speedY * 0.3;
+            ctx.lineTo(tailX, tailY);
+            ctx.lineWidth = obs.width * 0.9;
+            ctx.strokeStyle = "rgba(0, 229, 255, 0.4)";
+            ctx.lineCap = "round";
+            ctx.stroke();
+
+            // Çekirdek
+            ctx.fillStyle = "#ffffff";
+            ctx.beginPath();
+            ctx.arc(0, 0, obs.width/2.5, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.restore();
+            drawSuccess = true;
         }
     }
 });
@@ -2469,7 +2632,35 @@ function draw(dt) {
     particles.forEach(p => p.draw());
 
     // Kalkan Aurası Çizimi
-    if (hasShield) {
+    if (armorCharge > 0 && currentLevel >= 6) {
+        ctx.save();
+        let cx = player.x + player.width/2;
+        let pulse = Math.sin(performance.now() / 150) * 3; // İleri-geri motor nefes efekti
+        
+        // Daha küçük, kayığı saran aerodinamik kalkan
+        ctx.beginPath();
+        ctx.moveTo(cx, player.y - 15 - pulse); // Burun sadece biraz önde
+        ctx.lineTo(cx + player.width/2 + 8, player.y + 25 - pulse/2); // Sağ kanat
+        ctx.lineTo(cx, player.y + 5 - pulse/2); // İç boşluk kayığın tam burnunda
+        ctx.lineTo(cx - player.width/2 - 8, player.y + 25 - pulse/2); // Sol kanat
+        ctx.closePath();
+        
+        ctx.fillStyle = "rgba(155, 89, 182, 0.4)"; 
+        ctx.fill();
+        ctx.lineWidth = 3; ctx.strokeStyle = "#e056fd"; 
+        ctx.shadowBlur = 15; ctx.shadowColor = "#e056fd";
+        ctx.stroke();
+
+        // Buruna ekstra küçük sıcak enerji çizgisi
+        ctx.beginPath();
+        ctx.moveTo(cx - 8, player.y - 5 - pulse);
+        ctx.lineTo(cx + 8, player.y - 5 - pulse);
+        ctx.lineWidth = 2; ctx.strokeStyle = "#fff";
+        ctx.shadowBlur = 8; ctx.shadowColor = "#fff";
+        ctx.stroke();
+
+        ctx.restore();
+    } else if (hasShield) {
         ctx.beginPath();
         // player sprite is 60x100
         ctx.arc(player.x + player.width/2, player.y + player.height/2, Math.max(player.width, player.height)/2 + 10, 0, Math.PI * 2);
@@ -2480,6 +2671,32 @@ function draw(dt) {
     // Mıknatıs halkası v1.98 Visual Cleanup - Halkasız modern görünüm
     if (powerupTimer > 0) {
         // Mıknatıs aktif, görsel halka kaldırıldı.
+    }
+
+    // --- v1.98.x: PROCEDURAL VOID AURA ---
+    if (currentLevel === 6) {
+        ctx.save();
+        ctx.shadowColor = "#9b59b6";
+        // Parlama ve halka kalınlığını iyice düşürdük
+        ctx.shadowBlur = 10 + Math.sin(performance.now() / 150) * 5;
+        ctx.strokeStyle = "rgba(155, 89, 182, 0.3)";
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        // Halkanın çapı çok daha dar, kayığın hemen altından fışkırıyor
+        ctx.ellipse(player.x + player.width/2, player.y + player.height/2, player.width/2.2, player.height/2.2, 0, 0, Math.PI * 2);
+        ctx.stroke();
+        
+        ctx.fillStyle = "rgba(155, 89, 182, 0.6)";
+        for (let i = 0; i < 4; i++) {
+            let angle = (performance.now() / 200) + (i * Math.PI / 2);
+            // Dönen noktaları iyice kayığa yanaştırdık
+            let px = player.x + player.width/2 + Math.cos(angle) * (player.width/1.8);
+            let py = player.y + player.height/2 + Math.sin(angle) * (player.height/1.8);
+            ctx.beginPath();
+            ctx.arc(px, py, 2, 0, Math.PI * 2); // Noktalar da ufaldı
+            ctx.fill();
+        }
+        ctx.restore();
     }
 
     if (playerImg) {
@@ -2919,6 +3136,8 @@ function loadGame() {
         isSFXVolume = (data.sfxVol !== undefined) ? data.sfxVol : 1.0;
         isVibrationEnabled = (data.vib !== undefined) ? data.vib : true;
         hasWeapon = data.weapon || false;
+        ownsArmorLicense = data.armorLicense || false;
+        armorCharge = data.armorCharge || 0;
         bombCount = data.bombs || 0;
         
         // UI'yı güncelle

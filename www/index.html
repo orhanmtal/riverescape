@@ -150,6 +150,14 @@
                     <button id="buy-weapon-btn" class="shop-upgrade-btn">Satın Al<br><span id="weapon-price">1000</span></button>
                 </div>
 
+                <div class="shop-item">
+                    <div class="shop-item-info">
+                        <div class="shop-item-title" id="shop-arm-title">Gemi Zırhı</div>
+                        <div class="shop-item-desc" id="shop-arm-desc">Zırh Jeneratörü.<br>(2.000 Altın)</div>
+                    </div>
+                    <button id="buy-armor-btn" class="shop-upgrade-btn" style="background: linear-gradient(135deg, #8e44ad, #9b59b6);">Satın Al<br><span id="armor-price">2000</span></button>
+                </div>
+
                 <div class="buttons" style="width: 90%; margin-top: 10px;">
                     <button id="ad-gold-btn" style="background: linear-gradient(to right, #00C9FF, #92FE9D); color: #000; margin-bottom: 12px; font-size: 11px;">+100 ALTIN (AD)</button>
                     <button id="shop-close-btn" style="background: #f12711; font-size: 12px;">Kapat</button>
@@ -270,6 +278,31 @@
                         font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 900;
                         padding: 3px 8px; border-radius: 12px;
                         box-shadow: 0 4px 10px rgba(241, 39, 17, 0.5);
+                        border: 2px solid #fff; min-width: 15px; text-align: center;
+                    ">0</div>
+                </div>
+
+            </div>
+
+            <!-- CONTROLS LEFT -->
+            <div id="left-controls-ui" style="position: absolute; bottom: 20px; left: 20px; display: flex; flex-direction: column; gap: 15px; z-index: 1000; pointer-events: none;">
+                <!-- ARMOR BADGE (PASSIVE/CLICKABLE) -->
+                <div id="armor-ui-indicator" style="
+                    display: none; position: relative; width: 60px; height: 60px;
+                    background: radial-gradient(circle, rgba(155, 89, 182, 0.2) 0%, rgba(0,0,0,0.8) 100%);
+                    border-radius: 12px; border: 2px solid #9b59b6;
+                    align-items: center; justify-content: center;
+                    box-shadow: 0 0 15px rgba(155, 89, 182, 0.4);
+                    cursor: pointer; pointer-events: auto; transition: all 0.2s;
+                " onmousedown="this.style.transform='scale(0.9)';" onmouseup="this.style.transform='scale(1)';">
+                    <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="#e056fd" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    </svg>
+                    <div id="armor-badge" style="
+                        position: absolute; top: -5px; right: -5px;
+                        background: #9b59b6; color: white;
+                        font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 900;
+                        padding: 3px 8px; border-radius: 12px;
                         border: 2px solid #fff; min-width: 15px; text-align: center;
                     ">0</div>
                 </div>
