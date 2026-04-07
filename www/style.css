@@ -363,15 +363,17 @@ p {
 }
 
 .gold-market-btn {
-    background: rgba(255, 255, 255, 0.03) !important;
-    border: 1px solid rgba(255, 215, 0, 0.3) !important;
+    background: rgba(255, 255, 255, 0.04) !important;
+    border: 1px solid rgba(255, 215, 0, 0.2) !important;
     color: #fff !important;
-    padding: 12px !important;
-    border-radius: 14px !important;
-    font-size: 10px !important;
+    padding: 14px 10px !important;
+    border-radius: 16px !important;
+    font-family: 'Outfit', sans-serif !important;
+    font-size: 11px !important;
     font-weight: 800 !important;
-    transition: all 0.3s ease !important;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
     box-shadow: 0 4px 15px rgba(0,0,0,0.2) !important;
+    cursor: pointer;
 }
 
 .gold-market-btn:hover {

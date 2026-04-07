@@ -1,16 +1,17 @@
 /**
  * RİVER ESCAPE ELİTE - game_store.js
  * Google Play Satın Alma (In-App Purchases - IAP) Modülü
- * v1.99.3.6
+ * v1.99.3.9
  */
 
 const GameStore = {
     // Ürün Tanımları (Google Play Console ID'leri buraya gelecek)
+    // Fiyatlandırma: 0.99$ - 3.99$ - 6.99$ - 14.99$
     PRODUCTS: [
         { id: 'gold_1000', title: 'Small Pouch', amount: 1000, type: 'consumable' },
         { id: 'gold_5000', title: 'Large Chest', amount: 5000, type: 'consumable' },
         { id: 'gold_10000', title: 'Grand Sack', amount: 10000, type: 'consumable' },
-        { id: 'gold_20000', title: 'Elite Vault', amount: 20000, type: 'consumable' }
+        { id: 'gold_25000', title: 'Elite Whale', amount: 25000, type: 'consumable' }
     ],
 
     init() {
