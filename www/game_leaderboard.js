@@ -1,7 +1,7 @@
 /**
  * RİVER ESCAPE ELİTE - game_leaderboard.js
  * Firebase Firestore Global Sıralama ve Profil Sistemi
- * v1.99.3.2
+ * v1.99.3.5
  */
 
 const Leaderboard = {
@@ -38,6 +38,34 @@ const Leaderboard = {
             console.warn("⚠️ Firebase values are missing in game_leaderboard.js. Using MOCK MODE.");
         }
 
+        // v1.99.3.5: CUSTOM NAME MODAL LISTENER
+        const saveNameBtn = document.getElementById('save-name-btn');
+        if (saveNameBtn) {
+            saveNameBtn.addEventListener('click', () => {
+                const input = document.getElementById('player-name-input');
+                let newRes = input.value.trim();
+                if (newRes.length > 0) {
+                    newRes = newRes.substring(0, 12);
+                    this.playerName = newRes;
+                    localStorage.setItem('riverEscapeName', newRes);
+                    this.updateUI();
+                    
+                    // Modal'ı Kapat
+                    const modal = document.getElementById('name-modal-overlay');
+                    if (modal) {
+                        modal.classList.remove('active');
+                        modal.classList.add('hidden');
+                        modal.style.display = 'none';
+                    }
+
+                    if (this.db) this.submitProgress(window.score || 0, window.currentLevel || 1);
+                    if (typeof showToast === 'function') showToast("İSİM GÜNCELLENDİ! 🏆", true);
+                } else {
+                    if (typeof showToast === 'function') showToast("GEÇERLİ BİR İSİM GİRİN!", false);
+                }
+            });
+        }
+
         // Benzersiz Cihaz ID'si oluştur (Yoksa)
         if (!this.playerID) {
             this.playerID = 'RE-' + Math.random().toString(36).substr(2, 9).toUpperCase();
@@ -65,16 +93,14 @@ const Leaderboard = {
     },
 
     promptName() {
-        const msg = (typeof currentLang !== 'undefined' && currentLang === 'tr') ? 'Adını gir (Maks 12 karakter):' : 'Enter your name (Max 12 chars):';
-        let newName = prompt(msg, this.playerName);
-        if (newName && newName.trim().length > 0) {
-            newName = newName.trim().substring(0, 12);
-            this.playerName = newName;
-            localStorage.setItem('riverEscapeName', newName);
-            this.updateUI();
-            
-            // Eğer internet varsa ve bağlantı yüklendiyse bilgileri güncelle
-            if (this.db) this.submitProgress(window.score || 0, window.currentLevel || 1);
+        const modal = document.getElementById('name-modal-overlay');
+        const input = document.getElementById('player-name-input');
+        if (modal && input) {
+            input.value = this.playerName === "ELITE PLAYER" ? "" : this.playerName;
+            modal.classList.remove('hidden');
+            modal.classList.add('active');
+            modal.style.display = 'flex';
+            input.focus();
         }
     },
 
