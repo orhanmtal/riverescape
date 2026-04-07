@@ -1,4 +1,4 @@
-// RİVER ESCAPE ELİTE - v1.99.3.0 (STABLE RELEASE)
+// RİVER ESCAPE ELİTE - v1.99.3.1 (STABLE RELEASE)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -736,9 +736,9 @@ function updateArmorUI() {
     let aIndi = document.getElementById('armor-ui-indicator');
     if(aBadge) aBadge.innerText = armorCharge;
     if(aIndi) {
-        if(ownsArmorLicense) {
+        if(ownsArmorLicense && armorCharge > 0) {
             aIndi.style.display = 'flex';
-            aIndi.style.filter = (armorCharge <= 0) ? "grayscale(100%) opacity(0.6)" : "none";
+            aIndi.style.filter = "none";
         } else {
             aIndi.style.display = 'none';
         }
