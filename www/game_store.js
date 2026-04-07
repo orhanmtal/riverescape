@@ -8,10 +8,10 @@ const GameStore = {
     // Ürün Tanımları (Google Play Console ID'leri buraya gelecek)
     // Fiyatlandırma: 0.99$ - 3.99$ - 6.99$ - 14.99$
     PRODUCTS: [
-        { id: 'gold_1000', title: 'Small Pouch', amount: 1000, type: 'consumable' },
-        { id: 'gold_5000', title: 'Large Chest', amount: 5000, type: 'consumable' },
-        { id: 'gold_10000', title: 'Grand Sack', amount: 10000, type: 'consumable' },
-        { id: 'gold_25000', title: 'Elite Whale', amount: 25000, type: 'consumable' }
+        { id: 'gold_25000', title: 'A Handful of Gold', amount: 25000, type: 'consumable' },
+        { id: 'gold_125000', title: 'Golden Chest', amount: 125000, type: 'consumable' },
+        { id: 'gold_250000', title: 'Treasure Bag', amount: 250000, type: 'consumable' },
+        { id: 'gold_750000', title: 'Elite Fortune', amount: 750000, type: 'consumable' }
     ],
 
     init() {

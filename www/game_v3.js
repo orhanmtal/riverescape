@@ -3074,7 +3074,7 @@ if(reviveBtn) reviveBtn.addEventListener('click', () => {
         isGameOver = false;
         isPlaying = true;
         isPaused = false;
-        lives = 3; 
+        lives = 1; 
         hasShield = true;
         
         // UI'yi zorla kapat (Hem class hem style)
@@ -3274,10 +3274,10 @@ const adGoldBtn = document.getElementById('ad-gold-btn');
 if(adGoldBtn) {
     adGoldBtn.addEventListener('click', () => {
         showRewardedAd(adGoldBtn, translations[currentLang].adGoldBtn, () => {
-            totalGold += 100; 
+            totalGold += 250; 
             saveGame();
             updateShopUI();
-            showToast(`${translations[currentLang].rewardPrefix} 100 GOLD! 💰`, true);
+            showToast(`${translations[currentLang].rewardPrefix} 250 GOLD! 💰`, true);
             for(let i=0; i<4; i++) setTimeout(playCoinSound, i*100);
         });
     });
