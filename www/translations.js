@@ -1,4 +1,4 @@
-// River Escape - Dil Paketleri (TR/EN) - v1.99.2.1 (ELITE SHOP RELEASE)
+// River Escape - Dil Paketleri (TR/EN) - v1.99.2.3 (ELITE SHOP RELEASE)
 const translations = {
     tr: {
         startDesc: "Sağa/sola kaydır. Zıplamak (Dash) için Çift Tıkla veya Yukarı Ok'a bas.",
