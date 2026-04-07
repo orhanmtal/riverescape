@@ -98,8 +98,8 @@ button, .switch, .toggle-slider, #gameCanvas {
     border-radius: 24px;
     color: white;
     font-family: 'Outfit', sans-serif !important;
-    width: 90%;
-    max-width: 400px;
+    width: 95%;
+    max-width: 440px;
     max-height: 90vh;
     overflow-y: auto;
     box-shadow: 0 20px 60px rgba(0,0,0,0.8), inset 0 0 20px rgba(255,215,0,0.05);
@@ -186,8 +186,9 @@ p {
     font-family: 'Outfit', sans-serif !important;
     font-weight: 800;
     font-size: 16px;
-    letter-spacing: 1.5px;
+    letter-spacing: 1px;
     text-transform: uppercase;
+    white-space: nowrap;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     backdrop-filter: blur(8px);
@@ -198,6 +199,7 @@ p {
     color: #fff;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
     overflow: hidden;
+    font-family: 'Outfit', sans-serif !important;
 }
 
 .elite-btn::after {
