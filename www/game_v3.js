@@ -1429,7 +1429,7 @@ function togglePause() {
 function startGame() {
     initAudio(); 
     isPlaying = true; isGameOver = false; isPaused = false;
-    score = 13800; goldCount = 0; // v1.98 Level 6 TRANSITION TEST Mode
+    score = 0; goldCount = 0; 
     lives = 3; 
     totalLoops = 0; 
     
@@ -1451,13 +1451,13 @@ function startGame() {
     startingDoubleGold = false; 
     
     spawnTimer = 0; goldTimer = 0;
-    currentLevel = 6; 
-    spawnInterval = levelAssets[5].spawn; 
+    currentLevel = 1; 
+    spawnInterval = levelAssets[0].spawn; 
 
     // v1.73.6: Ultra-Elite Background Sync
-    bgImg = bgImgs[levelAssets[5].bgKey]; 
+    bgImg = bgImgs[levelAssets[0].bgKey]; 
     playerImg = players.ilkbahar; // Standard Release Sprite
-    bgScrollSpeed = levelAssets[5].speed;
+    bgScrollSpeed = levelAssets[0].speed;
     lastTime = performance.now();
     
     startScreen.classList.remove('active'); startScreen.classList.add('hidden');
