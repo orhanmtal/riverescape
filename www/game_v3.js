@@ -1,4 +1,4 @@
-// RİVER ESCAPE ELİTE - v1.99.2.6 (STABLE RELEASE)
+// RİVER ESCAPE ELİTE - v1.99.3.0 (STABLE RELEASE)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -809,10 +809,15 @@ function updateShopUI() {
         } else {
             ab.style.background = "linear-gradient(135deg, #8e44ad, #9b59b6)";
             if(ownsArmorLicense) {
+                // LİSANS SAHİBİ: VOID LEVEL'DA ZIRH OTOMATİK AKTİF VE BEDAVA!
+                if (armorCharge <= 0) armorCharge = 3; // Otomatik tazele (Hak kaybı yok!)
+                
                 if(document.getElementById('shop-arm-title')) document.getElementById('shop-arm-title').innerText = t.armorAmmoName;
-                if(document.getElementById('shop-arm-desc')) document.getElementById('shop-arm-desc').innerText = `${t.armorAmmoDesc} ${armorCharge}`;
-                ab.innerHTML = `${t.buyBtn}<br>100`;
-                ab.disabled = (totalGold < 100);
+                if(document.getElementById('shop-arm-desc')) document.getElementById('shop-arm-desc').innerText = `Elite Lisans Aktif! %100 Hazır.`;
+                ab.innerHTML = `HAZIR`;
+                ab.disabled = true;
+                ab.style.opacity = "0.8";
+                ab.style.background = "linear-gradient(135deg, #4CAF50, #2E7D32)"; 
             } else {
                 if(document.getElementById('shop-arm-title')) document.getElementById('shop-arm-title').innerText = t.armorName;
                 if(document.getElementById('shop-arm-desc')) document.getElementById('shop-arm-desc').innerText = t.armorDesc;
@@ -1845,9 +1850,8 @@ function update(dt) {
         
         // v1.98.x: Void Zırhı Kısıtlaması (Sadece Level 6 ve katlarında geçerli)
         let isVoidLevel = (currentLevel % 6 === 0);
-        if (!isVoidLevel && (armorCharge > 0 || ownsArmorLicense)) {
+        if (!isVoidLevel && armorCharge > 0) {
             armorCharge = 0;
-            ownsArmorLicense = false;
             saveGame();
             updateArmorUI();
             updateShopUI();

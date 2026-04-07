@@ -1,7 +1,7 @@
 /**
  * RİVER ESCAPE ELİTE - game_leaderboard.js
  * Firebase Firestore Global Sıralama ve Profil Sistemi
- * v1.99.2.6
+ * v1.99.3.0
  */
 
 const Leaderboard = {
