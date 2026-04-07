@@ -1,4 +1,4 @@
-// RİVER ESCAPE ELİTE - v1.99.3.6 (STABLE RELEASE)
+// RİVER ESCAPE ELİTE - v1.99.3.8 (ELITE REVIVAL RELEASE)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -17,6 +17,7 @@ const finalGoldElem = document.getElementById('finalGoldValue');
 
 const levelUpOverlay = document.getElementById('level-up-overlay');
 const reviveBtn = document.getElementById('revive-btn');
+const reviveGoldBtn = document.getElementById('revive-gold-btn');
 
 // --- v1.98.1.4 OPTIMIZATION: DOM CACHE ---
 const cachedHud = {
@@ -997,7 +998,7 @@ if(buyWeaponBtn) buyWeaponBtn.addEventListener('click', () => {
             bombCount += 10;
             saveGame();
             for(let i=0; i<8; i++) setTimeout(playCoinSound, i*100);
-            showToast("LICENSE UNLOCKED! +10 BOMBS 💥", true);
+            showToast(t.weaponPurchased || "Silah Lisansı Alındı!", true);
             updateShopUI();
         } else {
             shakeTimer = 0.4;
@@ -1005,19 +1006,45 @@ if(buyWeaponBtn) buyWeaponBtn.addEventListener('click', () => {
             showToast(t.noGold, false);
         }
     } else {
-        // MÜHİMMAT TAZELEME (1.000)
         if (totalGold >= 1000) {
             totalGold -= 1000;
             bombCount += 10;
             saveGame();
-            for(let i=0; i<3; i++) setTimeout(playCoinSound, i*150);
-            showToast("+10 BOMBS REFILLED! 💣", true);
+            for(let i=0; i<3; i++) setTimeout(playCoinSound, i*100);
+            showToast(t.ammoPurchased || "Mühimmat Alındı!", true);
             updateShopUI();
         } else {
             shakeTimer = 0.4;
             if(typeof playHaptic === 'function') playHaptic('light');
             showToast(t.noGold, false);
         }
+    }
+});
+
+// v1.99.3.8: ALTINLA CANLANMA (REVİVE WİTH GOLD)
+if(reviveGoldBtn) reviveGoldBtn.addEventListener('click', () => {
+    const t = translations[currentLang];
+    const cost = 500;
+    if(totalGold >= cost) {
+        totalGold -= cost;
+        lives = 3;
+        saveGame();
+        for(let i=0; i<5; i++) setTimeout(playCoinSound, i*100);
+        
+        // Oyuna Devam Et
+        isGameOver = false;
+        gameOverScreen.classList.remove('active');
+        gameOverScreen.classList.add('hidden');
+        gameOverScreen.style.display = 'none';
+        
+        isPlaying = true;
+        isPaused = false;
+        
+        showToast(t.revived || "Canlandın!", true);
+    } else {
+        shakeTimer = 0.4;
+        if(typeof playHaptic === 'function') playHaptic('light');
+        showToast(t.noGold, false);
     }
 });
 
