@@ -1463,6 +1463,7 @@ function startGame() {
     startScreen.classList.remove('active'); startScreen.classList.add('hidden');
     gameOverScreen.classList.remove('active'); gameOverScreen.classList.add('hidden');
     if(pauseScreen) { pauseScreen.classList.remove('active'); pauseScreen.classList.add('hidden'); pauseScreen.style.display = ''; }
+    updateShopUI(); // Sync weapon icon visibility
     if(pauseBtn) { 
         pauseBtn.style.display = 'block'; 
         pauseBtn.style.opacity = '0.5'; 
@@ -2134,7 +2135,7 @@ function draw(dt) {
     
     // --- CAMERA ZOOM SYSTEM v1.72 (Ghost Buster NaN Protection) ---
     // v1.97.0.3: DYNAMIC ELITE ZOOM (1.25 -> 1.76 Closer perspective)
-    let zoom = 1.76; 
+    let zoom = (currentLevel === 1) ? 1.58 : 1.76; 
     const centerX = canvas.width / 2;
     // v1.72 FIX: player.y NaN ise merkezi 0'a daya (Siyah ekran engellendi)
     const pY = (player && typeof player.y === 'number' && !isNaN(player.y)) ? player.y : (canvas.height / 2);
