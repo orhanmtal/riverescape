@@ -1,4 +1,4 @@
-// RİVER ESCAPE ELİTE - v1.99.1.3 (STABLE RELEASE)
+// RİVER ESCAPE ELİTE - v1.99.1.5 (STABLE RELEASE)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -2073,14 +2073,6 @@ function update(dt) {
                 obs.speedX *= -1;
                 if(obs.x < bLeft) obs.x = bLeft;
                 if(obs.x > bRight) obs.x = bRight;
-                
-                // v2.04: BOUNCE PARTICLES (Splash)
-                for(let p=0; p<5; p++) {
-                    let splash = new Particle(obs.x + (obs.speedX > 0 ? 0 : obs.width), obs.y + obs.height/2, "rgba(255,255,255,0.7)");
-                    splash.speedX = (Math.random() - 0.5) * 5; splash.speedY = (Math.random() - 0.5) * 5;
-                    particles.push(splash);
-                }
-                if(typeof playJumpSound === 'function') playJumpSound(); 
             }
             
             // Kaya ile çarpışınca sekme (Obs vs Obs)
