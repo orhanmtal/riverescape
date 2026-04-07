@@ -1,4 +1,4 @@
-// RİVER ESCAPE ELİTE - v1.99.3.8 (ELITE REVIVAL RELEASE)
+// RİVER ESCAPE ELİTE - v1.99.3.9 (SILENT ENGINE RELEASE)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -2125,7 +2125,7 @@ function update(dt) {
                             splinter.speedX = (Math.random() - 0.5) * 8; splinter.speedY = (Math.random() - 0.5) * 8;
                             particles.push(splinter);
                         }
-                        if(typeof playCrashSound === 'function') playCrashSound(); 
+                        // if(typeof playCrashSound === 'function') playCrashSound(); 
                         break;
                     }
                 }
@@ -2154,7 +2154,7 @@ function update(dt) {
             
             // Zırh sadece kalkan Level 6 ve üstündeyse hasar bloklar, yoksa sadece roket çarpar! (v1.98 Level 6 Restriction)
             if (armorCharge > 0 && currentLevel >= 6) {
-                playCrashSound();
+                // playCrashSound();
                 armorCharge--;
                 updateArmorUI();
                 obstacles.splice(i, 1);
@@ -2163,7 +2163,7 @@ function update(dt) {
                 if (armorCharge <= 0) showToast(translations[currentLang].armorEmpty, false);
             } else if (hasShield) {
                 // Kalkan varken kırılır ve kütüğü/düşmanı imha eder
-                playCrashSound();
+                // playCrashSound();
                 hasShield = false; 
                 obstacles.splice(i, 1);
             } else {
@@ -2205,7 +2205,7 @@ function update(dt) {
                 b.y < obs.y + obs.height && b.y > obs.y) {
                 
                 // PARÇALAMA!
-                playCrashSound();
+                // playCrashSound();
                 triggerVibration(40);
                 
                 // Patlama efekt parçacıkları
