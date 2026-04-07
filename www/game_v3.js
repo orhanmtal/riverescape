@@ -3058,6 +3058,10 @@ if(resetYes) resetYes.addEventListener('click', () => {
     shieldLevel = 0;
     deathCountForX2 = 0;
     startingDoubleGold = false;
+    hasWeapon = false;
+    bombCount = 0;
+    ownsArmorLicense = false;
+    armorCharge = 0;
     
     localStorage.removeItem('riverEscapeSave');
     saveGame();
