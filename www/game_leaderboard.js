@@ -1,7 +1,7 @@
 /**
  * RİVER ESCAPE ELİTE - game_leaderboard.js
  * Firebase Firestore Global Sıralama ve Profil Senkronizasyon Sistemi
- * v1.99.3.11
+ * v1.99.3.15
  */
 
 const Leaderboard = {
@@ -30,7 +30,44 @@ const Leaderboard = {
                     firebase.initializeApp(this.firebaseConfig);
                 }
                 this.db = firebase.firestore();
-                console.log("🔥 Firebase Firestore Connected!");
+                this.auth = firebase.auth();
+                console.log("🔥 Firebase Firestore & Auth Connected!");
+
+                // v1.99.3.15: AUTH STATE LISTENER
+                this.auth.onAuthStateChanged(user => {
+                    if (user) {
+                        console.log("👤 Google User Detected:", user.displayName);
+                        this.playerID = user.uid;
+                        this.playerName = user.displayName;
+                        localStorage.setItem('riverEscapeName', this.playerName);
+                        
+                        // UI Güncelle
+                        const statusText = document.getElementById('auth-status-text');
+                        if (statusText) {
+                            statusText.innerText = "ELİTE HESAP 🏛️";
+                            statusText.style.color = "#4caf50";
+                        }
+                        const loginBtn = document.getElementById('google-login-btn');
+                        if (loginBtn) loginBtn.style.display = 'none';
+
+                        const welcomeMsg = document.getElementById('auth-welcome-msg');
+                        if (welcomeMsg) {
+                            welcomeMsg.innerText = `HOŞ GELDİN, ${user.displayName.toUpperCase()}! 🏛️`;
+                            welcomeMsg.classList.remove('hidden');
+                        }
+
+                        // Buluttan Verileri Çek
+                        this.restoreFromCloud();
+                        this.updateUI();
+                    } else {
+                        console.log("👤 Guest Mode (No Gmail)");
+                        this.playerID = localStorage.getItem('riverEscapeID');
+                        if (!this.playerID) {
+                            this.playerID = 'RE-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+                            localStorage.setItem('riverEscapeID', this.playerID);
+                        }
+                    }
+                });
             } catch (e) {
                 console.error("Firebase connection error:", e);
             }
@@ -38,7 +75,17 @@ const Leaderboard = {
             console.warn("⚠️ Firebase values are missing in game_leaderboard.js. Using MOCK MODE.");
         }
 
-        // v1.99.3.5: CUSTOM NAME MODAL LISTENER
+        // v1.99.3.15: GOOGLE LOGIN LISTENER
+        const loginBtn = document.getElementById('google-login-btn');
+        if (loginBtn) {
+            loginBtn.addEventListener('click', () => this.loginWithGoogle());
+        }
+
+        const recoverBtn = document.getElementById('google-recover-btn');
+        if (recoverBtn) {
+            recoverBtn.addEventListener('click', () => this.loginWithGoogle());
+        }
+
         const saveNameBtn = document.getElementById('save-name-btn');
         if (saveNameBtn) {
             saveNameBtn.addEventListener('click', () => {
@@ -50,13 +97,8 @@ const Leaderboard = {
                     localStorage.setItem('riverEscapeName', newRes);
                     this.updateUI();
                     
-                    // Modal'ı Kapat
                     const modal = document.getElementById('name-modal-overlay');
-                    if (modal) {
-                        modal.classList.remove('active');
-                        modal.classList.add('hidden');
-                        modal.style.display = 'none';
-                    }
+                    if (modal) modal.style.display = 'none';
 
                     if (this.db) this.submitProgress(window.score || 0, window.currentLevel || 1);
                     if (typeof showToast === 'function') showToast("İSİM GÜNCELLENDİ! 🏆", true);
@@ -66,7 +108,6 @@ const Leaderboard = {
             });
         }
 
-        // Benzersiz Cihaz ID'si oluştur (Yoksa)
         if (!this.playerID) {
             this.playerID = 'RE-' + Math.random().toString(36).substr(2, 9).toUpperCase();
             localStorage.setItem('riverEscapeID', this.playerID);
@@ -228,8 +269,28 @@ const Leaderboard = {
             console.error("Cloud recovery failed:", e);
             if (callback) callback(false);
         }
-    } // Closes restoreFromCloud
-}; // Closes Leaderboard
+    },
+
+    // v1.99.3.15: GMAIL ILE GIRIŞ YAP (Elite Security)
+    async loginWithGoogle() {
+        if (!this.auth) {
+            if (typeof showToast === 'function') showToast("FIREBASE BAĞLANTISI YOK!", false);
+            return;
+        }
+
+        const provider = new firebase.auth.GoogleAuthProvider();
+        try {
+            await this.auth.signInWithPopup(provider);
+            if (typeof showToast === 'function') showToast("GMAIL BAĞLANDI! 🏛️", true);
+            
+            const modal = document.getElementById('name-modal-overlay');
+            if(modal) modal.style.display = 'none';
+        } catch (e) {
+            console.error("Google Login Error:", e);
+            if (typeof showToast === 'function') showToast("GMAIL BAĞLANTI HATASI!", false);
+        }
+    }
+};
 
 // Başlat
 Leaderboard.init();

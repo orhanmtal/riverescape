@@ -76,17 +76,33 @@
                     filter: drop-shadow(0 6px 15px rgba(0,0,0,0.4));
                     letter-spacing: -1px;
                 ">River Escape</h1>
-                <div style="color: rgba(255,255,255,0.4); font-family: 'Outfit', sans-serif; font-size: 12px; font-weight: 800; margin-bottom: 25px; letter-spacing: 3px; text-transform: uppercase;">ELITE v1.99.3.11</div>
+                <div style="color: rgba(255,255,255,0.4); font-family: 'Outfit', sans-serif; font-size: 12px; font-weight: 800; margin-bottom: 25px; letter-spacing: 3px; text-transform: uppercase;">ELITE v1.99.3.15</div>
                 
-                <!-- PLAYER NAME / IDENTITY v1.99.3.11 -->
+                <!-- PLAYER NAME / IDENTITY v1.99.3.15 -->
                 <div id="player-profile-btn" style="
-                    display: flex; align-items: center; gap: 10px; margin-bottom: 30px; cursor: pointer; pointer-events: auto;
-                    background: rgba(255,255,255,0.08); padding: 10px 20px; border-radius: 60px; border: 1px solid rgba(255,255,255,0.15);
+                    display: flex; align-items: center; gap: 10px; margin-bottom: 25px; cursor: pointer; pointer-events: auto;
+                    background: rgba(255,255,255,0.08); padding: 12px 20px; border-radius: 60px; border: 1px solid rgba(255,255,255,0.15);
                     transition: all 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.2);
                 " onclick="Leaderboard.promptName()">
                     <span id="player-flag-main" style="font-size: 18px;">🌍</span>
-                    <span id="player-name-main" style="color: #fff; font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 800; letter-spacing: 1px;">ELITE PLAYER</span>
-                    <span style="color: #FFD700; font-size: 12px; margin-left: 5px;">✎</span>
+                    <div style="text-align: left;">
+                        <span id="player-name-main" style="color: #fff; font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 900; letter-spacing: 1px;">ELITE PLAYER</span><br>
+                        <span id="auth-status-text" style="font-size: 9px; color: #ffd700; font-weight: bold; text-transform: uppercase; opacity: 0.8;">MISAFIR HESAP</span>
+                    </div>
+                </div>
+
+                <!-- ELITE GOOGLE LOGIN BUTTON -->
+                <div id="google-login-container" style="width: 100%; margin-bottom: 25px;">
+                    <button id="google-login-btn" style="
+                        width: 100%; display: flex; align-items: center; justify-content: center; gap: 12px;
+                        background: #fff; color: #000; border: none; padding: 14px; border-radius: 12px;
+                        font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 14px;
+                        cursor: pointer; box-shadow: 0 4px 15px rgba(255,255,255,0.15); transition: all 0.3s ease;
+                    ">
+                        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" style="width: 18px; height: 18px;">
+                        GOOGLE İLE BAĞLAN
+                    </button>
+                    <p id="auth-welcome-msg" class="hidden" style="color: #ffd700; font-size: 11px; font-weight: bold; margin-top: 8px; text-align: center;"></p>
                 </div>
 
                 <div class="buttons" style="display:flex; flex-direction:column; gap:14px; align-items:center; width: 100%;">
@@ -250,7 +266,20 @@
                     <button id="save-name-btn" style="
                         width: 100%; padding: 15px; border-radius: 12px; border: none; background: linear-gradient(135deg, #FFD700, #ff8c00);
                         color: #000; font-family: 'Outfit', sans-serif; font-weight: 900; font-size: 16px; cursor: pointer; box-shadow: 0 5px 15px rgba(255,140,0,0.4);
+                        margin-bottom: 15px;
                     ">KAYDET & DEVAM ET</button>
+
+                    <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
+                        <p style="color: rgba(255,255,255,0.6); font-size: 11px; margin-bottom: 12px; font-weight: bold;">HESABIN MI VAR?</p>
+                        <button id="google-recover-btn" style="
+                            width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px;
+                            background: rgba(255,255,255,0.1); color: #fff; border: 1px solid rgba(255,255,255,0.2); padding: 12px; border-radius: 12px;
+                            font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 14px; cursor: pointer;
+                        ">
+                            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" style="width: 16px; height: 16px;">
+                            BULUTTAN KURTAR (GMAIL)
+                        </button>
+                    </div>
                     <p style="color: rgba(255,255,255,0.4); font-size: 9px; margin-top: 15px;">Maksimum 12 karakter.</p>
                 </div>
             </div>
@@ -412,8 +441,9 @@
 
     <style>@keyframes rotateRing { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }</style>
 
-    <!-- Firebase SDKs (v9 Compat Mode) v1.99.1.3 -->
+    <!-- Firebase SDKs (v9 Compat Mode) v1.99.3.15 -->
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
 
     <!-- Scriptleri Yükle -->
