@@ -1,4 +1,4 @@
-// RİVER ESCAPE ELİTE - v1.99.3.1 (STABLE RELEASE)
+// RİVER ESCAPE ELİTE - v1.99.3.2 (STABLE RELEASE)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');

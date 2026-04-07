@@ -63,13 +63,13 @@
                 </div>
             </div>
 
-            <!-- VERSION TAG v1.99.3.1 -->
-            <div id="version-tag" style="position: absolute; bottom: 8px; right: 12px; color: rgba(255,255,255,0.7); font-size: 11px; z-index: 50; font-family: 'Outfit', sans-serif; font-weight: bold; pointer-events: none; text-shadow: 0 0 5px rgba(0,0,0,0.5);">v1.99.3.1</div>
+            <!-- VERSION TAG v1.99.3.2 -->
+            <div id="version-tag" style="position: absolute; bottom: 8px; right: 12px; color: rgba(255,255,255,0.7); font-size: 11px; z-index: 50; font-family: 'Outfit', sans-serif; font-weight: bold; pointer-events: none; text-shadow: 0 0 5px rgba(0,0,0,0.5);">v1.99.3.2</div>
 
             <div id="start-screen" class="screen active">
                 <h1 style="margin-bottom: 5px;">River Escape</h1>
-                <div style="color: #00e5ff; font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: bold; margin-bottom: 20px; letter-spacing: 2px; text-shadow: 0 0 10px rgba(0,229,255,0.4);">v1.99.3.1</div>
-                <!-- PLAYER NAME / IDENTITY v1.99.3.1 -->
+                <div style="color: #00e5ff; font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: bold; margin-bottom: 20px; letter-spacing: 2px; text-shadow: 0 0 10px rgba(0,229,255,0.4);">v1.99.3.2</div>
+                <!-- PLAYER NAME / IDENTITY v1.99.3.2 -->
                 <div id="player-profile-btn" style="
                     display: flex; align-items: center; gap: 8px; margin-top: 10px; cursor: pointer; pointer-events: auto;
                     background: rgba(255,255,255,0.05); padding: 8px 15px; border-radius: 50px; border: 1px solid rgba(255,255,255,0.1);
@@ -91,7 +91,7 @@
 
             <div id="game-over-screen" class="screen hidden" style="background: rgba(0,0,0,0.85);">
                 <h2 id="gameover-title" style="margin-bottom: 5px;">Oyun Bitti!</h2>
-                <div style="color: rgba(255,255,255,0.4); font-size: 10px; margin-bottom: 15px;">River Escape Elite v1.99.3.1</div>
+                <div style="color: rgba(255,255,255,0.4); font-size: 10px; margin-bottom: 15px;">River Escape Elite v1.99.3.2</div>
                 <p id="score-title-final">Skorun: <span id="finalScoreValue">0</span></p>
                 <p id="gold-title-final" style="color: gold; margin-top: -10px; font-weight: bold;">Toplanan Altın: <span id="finalGoldValue">0</span></p>
                 <div class="buttons" style="display:flex; flex-direction:column; gap:10px; width: 85%; margin: 0 auto;">
@@ -135,8 +135,8 @@
 
             <!-- MAĞAZA EKRANI -->
             <div id="shop-screen" class="screen hidden" style="background: rgba(0,0,0,0.95); z-index: 100; max-width: 360px; width: 90%;">
-                <h2 id="shop-title-main" style="color: gold; font-family: 'Press Start 2P', cursive; font-size: 20px; margin-bottom: 10px;">MAĞAZA</h2>
-                <div id="shop-balance-text" style="color: #fff; font-size: 10px; margin-bottom: 25px; font-family: 'Press Start 2P', cursive;">BAKİYE: <span id="totalGoldValue" style="color: #FFD700;">0</span> GOLD</div>
+                <h2 id="shop-title-main" style="color: gold; font-family: 'Press Start 2P', cursive; font-size: 16px; margin-bottom: 8px;">MAĞAZA</h2>
+                <div id="shop-balance-text" style="color: #fff; font-size: 9px; margin-bottom: 12px; font-family: 'Press Start 2P', cursive;">BAKİYE: <span id="totalGoldValue" style="color: #FFD700;">0</span> GOLD</div>
                 
                 <!-- Mıknatıs -->
                 <div class="shop-item">
@@ -177,13 +177,13 @@
                     </div>
                     <button id="buy-armor-btn" class="shop-upgrade-btn" style="background: linear-gradient(135deg, #8e44ad, #9b59b6);">KİLİTLİ</button>
                 </div>
-                <div style="width: 100%; margin-top: 25px; display: flex; justify-content: center;">
-                    <button id="ad-gold-btn" class="elite-ad-btn" style="width: 100%;">+100 ALTIN (AD)</button>
+                <div style="width: 100%; margin-top: 15px; display: flex; justify-content: center;">
+                    <button id="ad-gold-btn" class="elite-ad-btn" style="width: 100%; padding: 10px;">+100 ALTIN (AD)</button>
                 </div>
 
-                <!-- GOLD MARKET (IAP v1.99.2.3) -->
-                <div style="width: 100%; margin-top: 25px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
-                    <div style="color: #FFD700; font-family: 'Press Start 2P', cursive; font-size: 10px; margin-bottom: 15px; text-align: center; letter-spacing: 2px;">GOLD MARKET</div>
+                <!-- GOLD MARKET (IAP) -->
+                <div style="width: 100%; margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 12px;">
+                    <div style="color: #FFD700; font-family: 'Press Start 2P', cursive; font-size: 9px; margin-bottom: 10px; text-align: center; letter-spacing: 2px;">GOLD MARKET</div>
                     <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">
                         <button onclick="GameStore.buy('gold_1000')" class="gold-market-btn">💰 1.000<br>GOLD</button>
                         <button onclick="GameStore.buy('gold_5000')" class="gold-market-btn">💰 5.000<br>GOLD</button>
@@ -193,8 +193,8 @@
                 </div>
 
                 <!-- CLOSE BUTTON -->
-                <div class="buttons" style="margin-top: 25px;">
-                    <button id="shop-close-btn" style="background: #f12711;">Kapat</button>
+                <div class="buttons" style="margin-top: 15px;">
+                    <button id="shop-close-btn" style="background: #f12711; padding: 10px 20px;">Kapat</button>
                 </div>
             </div>
 
