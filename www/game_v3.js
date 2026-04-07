@@ -1,4 +1,4 @@
-// RİVER ESCAPE ELİTE - v1.98.2.0 (VOID MASTERY RELEASE)
+// RİVER ESCAPE ELİTE - v1.99.1.3 (STABLE RELEASE)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -725,6 +725,12 @@ function saveGame() {
         armorCharge: armorCharge
     };
     localStorage.setItem('riverEscapeSave', JSON.stringify(data));
+    
+    // v1.99.1.0: Cloud Sync on Save
+    if (typeof Leaderboard !== 'undefined' && isPlaying) {
+        Leaderboard.submitProgress(score, currentLevel);
+    }
+    
     updateShopUI();
 }
 
@@ -1182,6 +1188,9 @@ function spawnObstacle() {
     let isBlocked = true;
     let spawnGap = player.width + 75; // Kayıktan biraz daha geniş "güvenli şerit"
 
+    const leftLimitRel = (canvas.width * spawnMargin) + 10;
+    const rightLimitRel = (canvas.width * (1 - spawnMargin)) - 55;
+
     while (isBlocked && maxAttempts > 0) {
         isBlocked = false;
         maxAttempts--;
@@ -1189,15 +1198,14 @@ function spawnObstacle() {
             // Sadece ekranın üst yarısındaki (y < 450) engellerin şeritlerini kontrol et
             if (obs.y < 450 && Math.abs(relSpawnX - (obs.relativeX || (obs.x - getRiverShift(obs.y)))) < spawnGap) {
                 isBlocked = true;
-                // Engeli yan şeride fırlat (Zıplama mesafesi: 90-130px)
-                const jumpDir = (relSpawnX < 0) ? 1 : -1; 
-                relSpawnX += jumpDir * (90 + Math.random() * 40);
+                // Engeli yan şeride fırlat (Zıplama mesafesi nehre göre uyarlandı)
+                const riverCenterRel = (leftLimitRel + rightLimitRel) / 2;
+                const jumpDir = (relSpawnX < riverCenterRel) ? 1 : -1; 
+                relSpawnX += jumpDir * (70 + Math.random() * 40); // v2.03: Daha yumuşak sıçrama
                 break;
             }
         }
-        // Nehir Sınırlarını Koru (Relative bazda)
-        const leftLimitRel = (canvas.width * spawnMargin) - riverShift + 10;
-        const rightLimitRel = (canvas.width * (1 - spawnMargin)) - riverShift - 55;
+        // Nehir Sınırlarını Koru (Relative bazda) v1.99.1.2 FIX (Obstacle Outside River)
         if (relSpawnX < leftLimitRel) relSpawnX = leftLimitRel;
         if (relSpawnX > rightLimitRel) relSpawnX = rightLimitRel;
     }
@@ -1315,6 +1323,20 @@ function spawnObstacle() {
     if (currentLevel === 5 || currentLevel === 6) return; 
 
     // Bütün Kütükler Dikey (Vertical) Gelsin
+    let logSpeedX = 0;
+    let logRot = 0;
+    let logRotSpeed = 0;
+    
+    // v2.04: Level 1 için Özel Çapraz Akış (Diagonal Flow) - Sadece bazıları (%50 şans)
+    if (currentLevel === 1 && Math.random() < 0.5) {
+        // Hem sola hem sağa, farklı hızlarda akış (40-100px/s)
+        logSpeedX = (Math.random() < 0.5 ? -1 : 1) * (40 + Math.random() * 60);
+        // Doğduğu açıyı da rastgele yapıyoruz (Daha organik görünüm için)
+        logRot = Math.random() * Math.PI * 2;
+        // Dönme hızı (Saniyede 0.5 ile 1.5 radyan arası rastgele)
+        logRotSpeed = (Math.random() < 0.5 ? -1 : 1) * (0.5 + Math.random() * 1.0);
+    }
+
     obstacles.push({
         type: 'vertical',
         x: spawnX,
@@ -1323,7 +1345,9 @@ function spawnObstacle() {
         width: 40,  // İnce
         height: 55, // Boyu bir daha kırpıldı (toplamda 100'den 55'e)
         speedY: baseSpeed,
-        speedX: 0
+        speedX: logSpeedX,
+        rotation: logRot,
+        rotSpeed: logRotSpeed
     });
 }
 
@@ -1543,6 +1567,11 @@ function gameOver() {
         gameOverScreen.style.zIndex = '5000';
         if(pauseBtn) pauseBtn.style.display = 'none';
         if(bombActionBtn) bombActionBtn.style.display = 'none';
+
+        // v1.99.1.0: Oyun bittiğinde skoru buluta gönder
+        if (typeof Leaderboard !== 'undefined') {
+            Leaderboard.submitProgress(score, currentLevel);
+        }
         
         let rb = document.getElementById('revive-btn');
         if(rb) {
@@ -2024,7 +2053,6 @@ function update(dt) {
             if (obs.x < bLeft || obs.x > bRight) {
                 obs.speedX *= -1;
                 if (currentLevel === 5) {
-                    // Update relativeX to stay inside after bounce
                     obs.relativeX = obs.x - riverShift;
                 } else {
                     if(obs.x < bLeft) obs.x = bLeft;
@@ -2032,6 +2060,51 @@ function update(dt) {
                 }
             }
             if (obs.rotSpeed) obs.rotation += obs.rotSpeed * dt;
+        }
+
+        // v2.04: Level 1 Kütük Zıplama (Diagonal Bouncing)
+        if (currentLevel === 1 && obs.type === 'vertical') {
+            const sMargin = currentLAsset ? currentLAsset.margin : 0.34;
+            const bLeft = (canvas.width * sMargin);
+            const bRight = (canvas.width * (1 - sMargin)) - obs.width;
+            
+            // Kenardan Sekme
+            if (obs.x < bLeft || obs.x > bRight) {
+                obs.speedX *= -1;
+                if(obs.x < bLeft) obs.x = bLeft;
+                if(obs.x > bRight) obs.x = bRight;
+                
+                // v2.04: BOUNCE PARTICLES (Splash)
+                for(let p=0; p<5; p++) {
+                    let splash = new Particle(obs.x + (obs.speedX > 0 ? 0 : obs.width), obs.y + obs.height/2, "rgba(255,255,255,0.7)");
+                    splash.speedX = (Math.random() - 0.5) * 5; splash.speedY = (Math.random() - 0.5) * 5;
+                    particles.push(splash);
+                }
+                if(typeof playJumpSound === 'function') playJumpSound(); 
+            }
+            
+            // Kaya ile çarpışınca sekme (Obs vs Obs)
+            for (let jObs = 0; jObs < obstacles.length; jObs++) {
+                let other = obstacles[jObs];
+                if (other === obs) continue;
+                if (other.type === 'rock') {
+                    if (obs.x < other.x + other.width && obs.x + obs.width > other.x &&
+                        obs.y < other.y + other.height && obs.y + obs.height > other.y) {
+                        obs.speedX *= -1;
+                        obs.x += obs.speedX * dt * 2;
+                        
+                        // v2.04: ROCK BOUNCE PARTICLES (Splinters)
+                        for(let p=0; p<8; p++) {
+                            let splinter = new Particle(obs.x + obs.width/2, obs.y + obs.height/2, "#8b4513"); // Wood Brown
+                            splinter.speedX = (Math.random() - 0.5) * 8; splinter.speedY = (Math.random() - 0.5) * 8;
+                            particles.push(splinter);
+                        }
+                        if(typeof playCrashSound === 'function') playCrashSound(); 
+                        break;
+                    }
+                }
+            }
+            if (obs.rotSpeed) (obs.rotation = (obs.rotation || 0) + obs.rotSpeed * dt);
         }
 
         // Elite varlıkların kenarlarında şeffaf boşluklar (padding) olabileceği için
@@ -2351,7 +2424,7 @@ function draw(dt) {
                     if (obs.type === 'vertical') {
                         ctx.save();
                         ctx.translate(obs.x + obs.width / 2, obs.y + obs.height / 2);
-                        ctx.rotate(Math.PI / 2); // Kütüğü DİKEY hale getir
+                        ctx.rotate(Math.PI / 2 + (obs.rotation || 0)); // v2.04: Rotation Support
                         ctx.drawImage(img, -obs.height / 2, -obs.width / 2, obs.height, obs.width);
                         ctx.restore();
                     } else if (obs.type === 'croc') {
@@ -2387,7 +2460,7 @@ function draw(dt) {
                 if (obs.type === 'vertical') {
                     ctx.save();
                     ctx.translate(obs.x + obs.width / 2, obs.y + obs.height / 2);
-                    ctx.rotate(Math.PI / 2);
+                    ctx.rotate(Math.PI / 2 + (obs.rotation || 0)); // v2.04: Rotation Support
                     ctx.drawImage(tile, sx + margin, sy + margin, sw - margin * 2, sh - margin * 2, -obs.height / 2, -obs.width / 2, obs.height, obs.width);
                     ctx.restore();
                 } else {
@@ -3038,6 +3111,59 @@ if(hardResetBtnUI) hardResetBtnUI.addEventListener('click', () => {
         resetOverlay.classList.remove('hidden');
         resetOverlay.classList.add('active');
         resetOverlay.style.display = 'flex';
+    }
+});
+
+// GLOBAL LEADERBOARD MODAL LOGIC v1.99
+const lbOpenBtn = document.getElementById('leaderboard-open-btn');
+const lbCloseBtn = document.getElementById('leaderboard-close-btn');
+const lbScreen = document.getElementById('leaderboard-screen');
+
+if(lbOpenBtn) lbOpenBtn.addEventListener('click', () => {
+    if(lbScreen) {
+        lbScreen.classList.remove('hidden');
+        lbScreen.classList.add('active');
+        lbScreen.style.display = 'flex';
+        
+        // Verileri Çek
+        if (typeof Leaderboard !== 'undefined') {
+            Leaderboard.getGlobalRankings((top10, myRank) => {
+                const listEl = document.getElementById('leaderboard-list');
+                const myRankEl = document.getElementById('leaderboard-my-rank');
+                
+                if(listEl) {
+                    listEl.innerHTML = top10.map(p => `
+                        <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.05); padding:10px 15px; border-radius:10px; border:1px solid rgba(255,255,255,0.05);">
+                            <div style="display:flex; align-items:center; gap:12px;">
+                                <span style="font-family:'Press Start 2P',cursive; font-size:10px; color:${p.rank<=3 ? '#FFD700':'#aaa'}">#${p.rank}</span>
+                                <span style="font-size:18px;">${p.flag}</span>
+                                <span style="font-weight:bold; color:#fff; font-size:14px;">${p.name}</span>
+                            </div>
+                            <span style="font-family:'Outfit',sans-serif; font-weight:900; color:#00e5ff;">${p.score.toLocaleString()}</span>
+                        </div>
+                    `).join('');
+                }
+                
+                if(myRankEl && myRank) {
+                    myRankEl.innerHTML = `
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <span style="font-family:'Press Start 2P',cursive; font-size:10px; color:#fff;">#${myRank.rank}</span>
+                            <span style="font-size:18px;">${myRank.flag}</span>
+                            <span style="font-weight:bold; color:#fff; font-size:14px;">(YOU) ${myRank.name}</span>
+                        </div>
+                        <span style="font-family:'Outfit',sans-serif; font-weight:900; color:#fff;">${myRank.score.toLocaleString()}</span>
+                    `;
+                }
+            });
+        }
+    }
+});
+
+if(lbCloseBtn) lbCloseBtn.addEventListener('click', () => {
+    if(lbScreen) {
+        lbScreen.classList.remove('active');
+        lbScreen.classList.add('hidden');
+        lbScreen.style.display = 'none';
     }
 });
 
