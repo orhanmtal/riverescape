@@ -56,10 +56,10 @@
 
             <!-- PAUSE EKRANI -->
             <div id="pause-screen" class="screen hidden" style="background: rgba(0,0,0,0.85); flex-direction: column; align-items: center; justify-content: center; z-index: 100;">
-                <div class="buttons" style="display:flex; flex-direction:column; gap:15px; align-items:center; width: 100%;">
-                    <button id="resume-btn" style="background: linear-gradient(to right, #00b09b, #96c93d); color: white; border: none; padding: 15px 40px; font-weight: bold; font-family: 'Press Start 2P', cursive; border-radius: 8px; font-size: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); outline: none;">Resume</button>
-                    <button id="settings-open-btn-pause" style="background: #444; color: #FFD700; border: 2px solid #FFD700; padding: 10px 40px; font-weight: bold; font-family: 'Outfit', sans-serif; border-radius: 8px; font-size: 14px; outline: none;">⚙️ AYARLAR</button>
-                    <button id="quit-btn" style="background-color: #f12711; font-family: 'Press Start 2P', cursive; text-shadow: none; font-size: 14px; font-weight:bold; padding: 15px; border-radius: 8px; color: #fff; border: none; outline:none;">Main Menu</button>
+                <div class="buttons" style="display:flex; flex-direction:column; gap:16px; align-items:center; width: 100%;">
+                    <button id="resume-btn" class="elite-btn elite-btn-green" style="padding: 18px 50px;">RESUME</button>
+                    <button id="settings-open-btn-pause" class="elite-btn elite-btn-gray" style="padding: 12px 40px; font-size: 14px !important;">⚙️ AYARLAR</button>
+                    <button id="quit-btn" class="elite-btn elite-btn-red" style="padding: 12px 30px; font-size: 12px !important; opacity: 0.8;">MAIN MENU</button>
                 </div>
             </div>
 
@@ -101,17 +101,22 @@
                 <div style="color: rgba(255,255,255,0.4); font-size: 10px; margin-bottom: 15px;">River Escape Elite v1.99.3.9</div>
                 <p id="score-title-final">Skorun: <span id="finalScoreValue">0</span></p>
                 <p id="gold-title-final" style="color: gold; margin-top: -10px; font-weight: bold;">Toplanan Altın: <span id="finalGoldValue">0</span></p>
-                <div class="buttons" style="display:flex; flex-direction:column; gap:12px; width: 100%; margin: 0 auto; padding-top: 10px;">
-                    <button id="revive-btn" class="elite-btn elite-btn-red" style="font-size: 14px !important;">CANLAN (AD)</button>
-                    <button id="revive-gold-btn" class="elite-btn elite-btn-orange" style="font-size: 14px !important;">CANLAN (500G)</button>
-                    <button id="restart-btn" class="elite-btn elite-btn-green pulse-button" style="font-size: 16px !important; padding: 18px !important;">YENİ OYUN</button>
-                    <button id="quit-btn-gameover" onclick="location.reload()" class="elite-btn elite-btn-gray" style="font-size: 11px !important; padding: 8px !important;">ANA MENÜ</button>
+                <div class="buttons" id="game-over-revive-group" style="display:flex; flex-direction:column; gap:16px; width: 100%; margin: 20px auto 0;">
+                    <!-- PRIMARY ACTIONS: REVIVE -->
+                    <button id="revive-btn" class="elite-btn elite-btn-red" style="font-size: 16px !important; padding: 20px !important; font-weight: 900;">3 HAK AL <span style="font-size: 22px; margin-left: 10px;">📺</span></button>
+                    <button id="revive-gold-btn" class="elite-btn elite-btn-orange" style="font-size: 16px !important; padding: 20px !important; font-weight: 900;">3 HAK AL <span style="font-size: 12px; opacity: 0.8; margin-left:8px;">(500 ALTIN)</span> <span style="font-size: 20px; margin-left: 5px;">💰</span></button>
+                    
+                    <div style="height: 1px; background: rgba(255,255,255,0.1); margin: 12px 0;"></div>
+
+                    <!-- SECONDARY ACTIONS: RESTART/QUIT -->
+                    <button id="restart-btn" class="elite-btn elite-btn-green" style="font-size: 14px !important; padding: 14px !important; opacity: 0.9; font-weight: 700;">YENİ OYUN 🔄</button>
+                    <button id="quit-btn-gameover" onclick="location.reload()" class="elite-btn elite-btn-gray" style="font-size: 12px !important; padding: 10px !important;">ANA MENÜ</button>
                 </div>
             </div>
 
             <!-- YENİ AYARLAR EKRANI -->
             <div id="settings-screen" class="screen hidden" style="z-index: 2000;">
-                <h2 style="color: #FFD700; font-family: 'Press Start 2P', cursive; margin-bottom: 25px; font-size: 18px;">AYARLAR</h2>
+                <h2 style="color: #FFD700; font-family: 'Outfit', sans-serif; font-weight: 900; margin-bottom: 25px; font-size: 24px; letter-spacing: 2px;">AYARLAR</h2>
                 
                 <div class="settings-item-col">
                     <div class="settings-label-row">

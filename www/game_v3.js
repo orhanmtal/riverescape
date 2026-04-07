@@ -1613,6 +1613,16 @@ function gameOver() {
             rb.classList.add('pulse-button');
             rb.innerText = translations[currentLang].reviveBtn;
         }
+
+        let rgb = document.getElementById('revive-gold-btn');
+        if(rgb) {
+            rgb.innerText = translations[currentLang].reviveGoldBtn;
+        }
+
+        let resb = document.getElementById('restart-btn');
+        if(resb) {
+            resb.innerText = translations[currentLang].hardResetBtn;
+        }
         
         saveGame(); // Ayarlar vs. kaydedilsin
     } catch (e) {

@@ -1,4 +1,4 @@
-// River Escape - Dil Paketleri (TR/EN) - v1.99.3.6 (ELITE SHOP RELEASE)
+// River Escape - Dil Paketleri (TR/EN) - v1.99.3.9 (ELITE RE-BRAND RELEASE)
 const translations = {
     tr: {
         startDesc: "Sağa/sola kaydır. Zıplamak (Dash) için Çift Tıkla veya Yukarı Ok'a bas.",
@@ -11,8 +11,9 @@ const translations = {
         gameOver: "Oyun Bitti!",
         scoreTitle: "Skorun:",
         goldTitle: "Toplanan Altın:",
-        reviveBtn: "CANLAN (AD)",
-        hardResetBtn: "VAZGEÇ / SIFIRLA",
+        reviveBtn: "3 HAK AL (REKLAM 📺)",
+        reviveGoldBtn: "3 HAK AL (500 ALTIN 💰)",
+        hardResetBtn: "SIFIRLA / VAZGEÇ",
         shopTitle: "MAĞAZA",
         balance: "BAKİYE:",
         magnetName: "Mıknatıs",
@@ -87,8 +88,9 @@ const translations = {
         gameOver: "Game Over!",
         scoreTitle: "Your Score:",
         goldTitle: "Collected Gold:",
-        reviveBtn: "REVIVE (AD)",
-        hardResetBtn: "GIVE UP / RESET",
+        reviveBtn: "GET 3 LIVES (AD 📺)",
+        reviveGoldBtn: "GET 3 LIVES (500 GOLD 💰)",
+        hardResetBtn: "RESTART / RESET",
         shopTitle: "SHOP",
         balance: "BALANCE:",
         magnetName: "Magnet",
