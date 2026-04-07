@@ -759,7 +759,7 @@ function updateShopUI() {
     let mmBtn = document.getElementById('buy-magnet-btn');
     if(mmBtn) {
         if(document.getElementById('shop-mag-title')) document.getElementById('shop-mag-title').innerText = t.magnetName;
-        let price = magnetLevel < 5 ? (1000 + magnetLevel * 500) : "MAX";
+        let price = magnetLevel < 5 ? (2000 + magnetLevel * 1000) : "MAX";
         document.getElementById('magnet-lvl').innerText = magnetLevel;
         const sUnit = currentLang === 'tr' ? 'sn' : 's';
         document.getElementById('magnet-duration').innerText = magnetLevel > 0 ? (3 + magnetLevel * 2) + sUnit : '0' + sUnit;
@@ -771,7 +771,7 @@ function updateShopUI() {
     let msBtn = document.getElementById('buy-shield-btn');
     if(msBtn) {
         if(document.getElementById('shop-shd-title')) document.getElementById('shop-shd-title').innerText = t.shieldName;
-        let price = shieldLevel < 5 ? (1500 + shieldLevel * 750) : "MAX";
+        let price = shieldLevel < 5 ? (3500 + shieldLevel * 1500) : "MAX";
         document.getElementById('shield-lvl').innerText = shieldLevel;
         document.getElementById('shield-chance').innerText = '%' + (shieldLevel * 5);
         msBtn.innerHTML = shieldLevel < 5 ? `${t.buyBtn}<br>${price}` : "MAX";
@@ -782,11 +782,11 @@ function updateShopUI() {
     let wb = document.getElementById('buy-weapon-btn');
     if(wb) {
         if(!hasWeapon) {
-            // LİSANS ALMAMIŞ
+            // LİSANS ALMAMIŞ (ELİTE v1.99.3.7: 1.500G)
             if(document.getElementById('shop-wpn-title')) document.getElementById('shop-wpn-title').innerText = t.weaponName;
             if(document.getElementById('shop-wpn-desc')) document.getElementById('shop-wpn-desc').innerText = t.weaponDesc;
-            wb.innerHTML = `${t.buyBtn}<br>10`;
-            wb.disabled = (totalGold < 10);
+            wb.innerHTML = `${t.buyBtn}<br>1.500`;
+            wb.disabled = (totalGold < 1500);
         } else {
             // LİSANSLI, MÜHİMMAT ALABİLİR
             if(document.getElementById('shop-wpn-title')) document.getElementById('shop-wpn-title').innerText = t.ammoName;
@@ -821,8 +821,8 @@ function updateShopUI() {
             } else {
                 if(document.getElementById('shop-arm-title')) document.getElementById('shop-arm-title').innerText = t.armorName;
                 if(document.getElementById('shop-arm-desc')) document.getElementById('shop-arm-desc').innerText = t.armorDesc;
-                ab.innerHTML = `${t.buyBtn}<br>2.000`;
-                ab.disabled = (totalGold < 2000);
+                ab.innerHTML = `${t.buyBtn}<br>5.000`;
+                ab.disabled = (totalGold < 5000);
             }
         }
     }
@@ -929,7 +929,7 @@ if(armorIndicator) armorIndicator.addEventListener('click', () => {
 
 const btnMag = document.getElementById('buy-magnet-btn');
 if(btnMag) btnMag.addEventListener('click', () => {
-    let cost = 1000 + magnetLevel * 500;
+    let cost = 2000 + magnetLevel * 1000;
     if(totalGold >= cost && magnetLevel < 5) {
         totalGold -= cost; magnetLevel++; saveGame();
         for(let i=0; i<3; i++) setTimeout(playCoinSound, i*150);
@@ -943,7 +943,7 @@ if(btnMag) btnMag.addEventListener('click', () => {
 
 const btnShd = document.getElementById('buy-shield-btn');
 if(btnShd) btnShd.addEventListener('click', () => {
-    let cost = 1500 + shieldLevel * 750;
+    let cost = 3500 + shieldLevel * 1500;
     if(totalGold >= cost && shieldLevel < 5) {
         totalGold -= cost; shieldLevel++; saveGame();
         for(let i=0; i<3; i++) setTimeout(playCoinSound, i*150);
@@ -959,8 +959,8 @@ const buyArmorBtn = document.getElementById('buy-armor-btn');
 if(buyArmorBtn) buyArmorBtn.addEventListener('click', () => {
     const t = translations[currentLang];
     if (!ownsArmorLicense) {
-        if (totalGold >= 2000) {
-            totalGold -= 2000;
+        if (totalGold >= 5000) {
+            totalGold -= 5000;
             ownsArmorLicense = true;
             armorCharge += 3;
             saveGame();
@@ -973,8 +973,8 @@ if(buyArmorBtn) buyArmorBtn.addEventListener('click', () => {
             showToast(t.noGold, false);
         }
     } else {
-        if (totalGold >= 100) {
-            totalGold -= 100;
+        if (totalGold >= 500) {
+            totalGold -= 500;
             armorCharge += 3;
             saveGame();
             for(let i=0; i<3; i++) setTimeout(playCoinSound, i*100);
@@ -991,9 +991,8 @@ if(buyArmorBtn) buyArmorBtn.addEventListener('click', () => {
 if(buyWeaponBtn) buyWeaponBtn.addEventListener('click', () => {
     const t = translations[currentLang];
     if (!hasWeapon) {
-        // LİSANS SATIN ALMA (TEST: 10)
-        if (totalGold >= 10) {
-            totalGold -= 10;
+        if (totalGold >= 1500) {
+            totalGold -= 1500;
             hasWeapon = true;
             bombCount += 10;
             saveGame();
@@ -1107,7 +1106,7 @@ canvas.addEventListener('mousedown', initAudio); // PC için güvenlik kırma
 // SPAWNERLAR (Artık Yatay ve Dikey var)
 let obstacles = [], golds = [], powerups = [];
 let spawnInterval = 3.0, spawnTimer = 0; // v2.03: Başlangıçta kayaların arasını çok açtık
-let goldSpawnInterval = 5.0, goldTimer = 0; // 100 saniyede tam 20 altın akması için 5 sn
+let goldSpawnInterval = 8.0, goldTimer = 0; // v1.99.3.7: Kıtlık ve Hardcore Ekonomi
 
 let goldBag = [];
 function fillGoldBag() {
