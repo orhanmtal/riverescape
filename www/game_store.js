@@ -1,7 +1,7 @@
 /**
  * RİVER ESCAPE ELİTE - game_store.js
  * Google Play Satın Alma (In-App Purchases - IAP) Modülü
- * v1.99.2.3
+ * v1.99.2.4
  */
 
 const GameStore = {
@@ -9,8 +9,7 @@ const GameStore = {
     PRODUCTS: [
         { id: 'gold_1000', title: 'Small Pouch', amount: 1000, type: 'consumable' },
         { id: 'gold_5000', title: 'Large Chest', amount: 5000, type: 'consumable' },
-        { id: 'gold_15000', title: 'Elite Vault', amount: 15000, type: 'consumable' },
-        { id: 'premium_no_ads', title: 'Premium Upgrade', amount: 0, type: 'non-consumable' }
+        { id: 'gold_15000', title: 'Elite Vault', amount: 15000, type: 'consumable' }
     ],
 
     init() {
@@ -68,11 +67,6 @@ const GameStore = {
             if (typeof saveGame === 'function') saveGame();
             if (typeof updateShopUI === 'function') updateShopUI();
             if (typeof showToast === 'function') showToast(`CONSULATED: +${product.amount} GOLD! 💰`, true);
-        } else if (product.id === 'premium_no_ads') {
-            // Reklam Kaldırma Mantığı (Global Flag)
-            window.isPremium = true; 
-            localStorage.setItem('riverEscapePremium', 'true');
-            if (typeof showToast === 'function') showToast(`PREMIUM ACTIVATED! ✨`, true);
         }
         
         // Ses Efekti
