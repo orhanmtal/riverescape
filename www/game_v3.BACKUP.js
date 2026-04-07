@@ -1,4 +1,4 @@
-// RİVER ESCAPE ELİTE - v1.98.2.0 (VOID MASTERY RELEASE)
+// RİVER ESCAPE ELİTE - v1.98.1.4 (VOID MASTERY RELEASE)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');

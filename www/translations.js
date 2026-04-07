@@ -1,4 +1,4 @@
-// River Escape - Dil Paketleri (TR/EN) - v1.97.2.3 (ORGANIC SPAWN)
+// River Escape - Dil Paketleri (TR/EN) - v1.98.1.4 (VOID MASTERY RELEASE)
 const translations = {
     tr: {
         startDesc: "Sağa/sola kaydır. Zıplamak (Dash) için Çift Tıkla veya Yukarı Ok'a bas.",
@@ -74,7 +74,8 @@ const translations = {
         armorAmmoDesc: "Level 6+ Zırhı.\nŞarj Et:",
         armorActivated: "ZIRH JENERATÖRÜ AKTİF! 🛡️",
         armorReloaded: "+3 ZIRH ŞARJI MÜHİMMATI",
-        armorEmpty: "ZIRH TÜKENDİ!"
+        armorEmpty: "ZIRH TÜKENDİ!",
+        armorDeactivated: "VOID ZIRHI DEVRE DIŞI!"
     },
     en: {
         startDesc: "Move left/right. Double Tap or Up Arrow to Dash.",
@@ -150,6 +151,7 @@ const translations = {
         armorAmmoDesc: "Lvl6+ Armor.\nRecharge:",
         armorActivated: "ARMOR GENERATOR ACTIVE! 🛡️",
         armorReloaded: "+3 ARMOR CHARGES ADDED",
-        armorEmpty: "ARMOR DEPLETED!"
+        armorEmpty: "ARMOR DEPLETED!",
+        armorDeactivated: "VOID ARMOR DEACTIVATED!"
     }
 };
