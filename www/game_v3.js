@@ -1,4 +1,4 @@
-// RİVER ESCAPE ELİTE - v1.99.3.11 (SILENT ENGINE RELEASE)
+// RİVER ESCAPE ELİTE - v1.99.3.12 (SILENT ENGINE RELEASE)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
