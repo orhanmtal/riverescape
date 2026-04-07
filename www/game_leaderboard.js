@@ -1,7 +1,7 @@
 /**
  * RİVER ESCAPE ELİTE - game_leaderboard.js
- * Firebase Firestore Global Sıralama ve Profil Sistemi
- * v1.99.3.6
+ * Firebase Firestore Global Sıralama ve Profil Senkronizasyon Sistemi
+ * v1.99.3.11
  */
 
 const Leaderboard = {
@@ -142,6 +142,14 @@ const Leaderboard = {
             level: level || 1,
             country: this.playerCountry,
             flag: this.playerFlag,
+            // --- ELITE CLOUD SYNC DATA ---
+            totalGold: window.totalGold || 0,
+            magnetLevel: window.magnetLevel || 0,
+            shieldLevel: window.shieldLevel || 0,
+            bombCount: window.bombCount || 0,
+            ownsArmorLicense: window.ownsArmorLicense || false,
+            armorCharge: window.armorCharge || 0,
+            hasWeapon: window.hasWeapon || false,
             lastSeen: firebase.firestore.FieldValue.serverTimestamp()
         };
 
@@ -184,18 +192,44 @@ const Leaderboard = {
                 callback([], null);
             }
         } else {
-            // MOCK DATA (Firebase henüz bağlanmadıysa test amaçlı)
-            const mockData = [
-                { rank: 1, name: "StormRider", score: 85400, flag: "🇺🇸" },
-                { rank: 2, name: "RiverKing", score: 72100, flag: "🇹🇷" },
-                { rank: 3, name: "AquaDash", score: 68900, flag: "🇩🇪" },
-                { rank: 4, name: "VoidWalker", score: 55000, flag: "🇯🇵" },
-                { rank: 5, name: "EliteMaster", score: 48200, flag: "🇬🇧" }
-            ];
-            callback(mockData, { rank: '-', name: this.playerName, score: 0, flag: this.playerFlag });
+            callback([], { rank: '-', name: this.playerName, score: 0, flag: this.playerFlag });
         }
-    }
-};
+    },
+
+    // v1.99.3.11: TÜM VERİLERİ ZORLA EŞİTLE (Cloud Backup)
+    async forceSync() {
+        if (!this.db || !navigator.onLine) return;
+        const s = typeof window.score !== 'undefined' ? window.score : 0;
+        const l = typeof window.currentLevel !== 'undefined' ? window.currentLevel : 1;
+        await this.submitProgress(s, l);
+    },
+
+    // v1.99.3.11: BULUTTAN VERİLERİ KURTAR (Restore Assets)
+    async restoreFromCloud(callback) {
+        if (!this.db || !navigator.onLine || !this.playerID) return;
+        try {
+            const doc = await this.db.collection('leaderboard').doc(this.playerID).get();
+            if (doc.exists) {
+                const cloudData = doc.data();
+                if (cloudData.totalGold !== undefined) {
+                    window.totalGold = Math.max(window.totalGold || 0, cloudData.totalGold);
+                    window.magnetLevel = Math.max(window.magnetLevel || 0, cloudData.magnetLevel || 0);
+                    window.shieldLevel = Math.max(window.shieldLevel || 0, cloudData.shieldLevel || 0);
+                    window.bombCount = Math.max(window.bombCount || 0, cloudData.bombCount || 0);
+                    if (cloudData.ownsArmorLicense) window.ownsArmorLicense = true;
+                    if (cloudData.hasWeapon) window.hasWeapon = true;
+                    if (cloudData.armorCharge > (window.armorCharge || 0)) window.armorCharge = cloudData.armorCharge;
+                    if (typeof window.saveGame === 'function') window.saveGame();
+                    if (typeof window.updateShopUI === 'function') window.updateShopUI();
+                    if (callback) callback(true);
+                }
+            } else if (callback) callback(false);
+        } catch (e) {
+            console.error("Cloud recovery failed:", e);
+            if (callback) callback(false);
+        }
+    } // Closes restoreFromCloud
+}; // Closes Leaderboard
 
 // Başlat
 Leaderboard.init();

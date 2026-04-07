@@ -724,9 +724,9 @@ function saveGame() {
     };
     localStorage.setItem('riverEscapeSave', JSON.stringify(data));
     
-    // v1.99.1.0: Cloud Sync on Save
-    if (typeof Leaderboard !== 'undefined' && isPlaying) {
-        Leaderboard.submitProgress(score, currentLevel);
+    // v1.99.3.11: Elite Cloud Sync (Full Asset Backup)
+    if (typeof Leaderboard !== 'undefined') {
+        Leaderboard.forceSync(); 
     }
     
     updateShopUI();
@@ -3308,6 +3308,11 @@ function loadGame() {
         if(mSli) { mSli.value = isMusicVolume * 100; document.getElementById('music-vol-txt').innerText = (isMusicVolume*100) + '%'; }
         if(sSli) { sSli.value = isSFXVolume * 100; document.getElementById('sfx-vol-txt').innerText = (isSFXVolume*100) + '%'; }
         if(vTog) vTog.checked = isVibrationEnabled;
+
+        // v1.99.3.11: Buluttan Serveti Geri Yükle (Recovery)
+        if (typeof Leaderboard !== 'undefined') {
+            Leaderboard.restoreFromCloud();
+        }
 
         updateShopUI();
     }
