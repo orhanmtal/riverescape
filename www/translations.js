@@ -1,4 +1,4 @@
-// River Escape - Dil Paketleri (TR/EN) - v1.98.1.4 (VOID MASTERY RELEASE)
+// River Escape - Dil Paketleri (TR/EN) - v1.99.2.1 (ELITE SHOP RELEASE)
 const translations = {
     tr: {
         startDesc: "Sağa/sola kaydır. Zıplamak (Dash) için Çift Tıkla veya Yukarı Ok'a bas.",
@@ -12,7 +12,6 @@ const translations = {
         scoreTitle: "Skorun:",
         goldTitle: "Toplanan Altın:",
         reviveBtn: "CANLAN (AD)",
-        x2GoldBtn: "x2 ALTIN (AD)",
         hardResetBtn: "VAZGEÇ / SIFIRLA",
         shopTitle: "MAĞAZA",
         balance: "BAKİYE:",
@@ -89,7 +88,6 @@ const translations = {
         scoreTitle: "Your Score:",
         goldTitle: "Collected Gold:",
         reviveBtn: "REVIVE (AD)",
-        x2GoldBtn: "x2 GOLD (AD)",
         hardResetBtn: "GIVE UP / RESET",
         shopTitle: "SHOP",
         balance: "BALANCE:",

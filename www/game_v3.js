@@ -1,4 +1,4 @@
-// RİVER ESCAPE ELİTE - v1.99.1.5 (STABLE RELEASE)
+// RİVER ESCAPE ELİTE - v1.99.2.1 (STABLE RELEASE)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -17,7 +17,6 @@ const finalGoldElem = document.getElementById('finalGoldValue');
 
 const levelUpOverlay = document.getElementById('level-up-overlay');
 const reviveBtn = document.getElementById('revive-btn');
-const x2GoldBtn = document.getElementById('x2-gold-start-btn');
 
 // --- v1.98.1.4 OPTIMIZATION: DOM CACHE ---
 const cachedHud = {
@@ -46,7 +45,7 @@ const spinBtnMain = document.getElementById('spin-btn-main');
 const buyWeaponBtn = document.getElementById('buy-weapon-btn');
 const bombActionBtn = document.getElementById('bomb-action-btn');
 
-let deathCountForX2 = 0;
+
 let lives = 3; // v98: 3 Can Sistemi
 
 // --- DASH (ANI ZIPLAMA) MEKANİĞİ v147 ---
@@ -171,7 +170,6 @@ function updateLanguageUI() {
     if(document.getElementById('gold-title-final')) document.getElementById('gold-title-final').innerHTML = `${t.goldTitle} <span id="finalGoldValue">0</span>`;
     
     setText('revive-btn', t.reviveBtn);
-    setText('x2-gold-start-btn', t.x2GoldBtn);
     setText('gameover-shop-btn', t.shopBtn);
     setText('restart-btn', t.hardResetBtn);
     setText('spin-open-btn', t.spinWheelTitle);
@@ -236,8 +234,7 @@ function updateSpinButtonText() {
 
 document.addEventListener('DOMContentLoaded', initLanguage);
 
-let startingDoubleGold = false;
-let isDoubleGoldActive = false;
+
 
 function showToast(msg, isReward = false) {
     const toast = document.getElementById('game-toast');
@@ -753,56 +750,74 @@ function updateShopUI() {
     const tg = document.getElementById('totalGoldValue');
     if(tg) tg.innerText = totalGold;
     
-    let ml = document.getElementById('magnet-lvl');
-    if(ml) {
-        ml.innerText = magnetLevel;
+    // Ana Başlıklar
+    if(document.getElementById('shop-title-main')) document.getElementById('shop-title-main').innerText = t.shopTitle;
+    const balanceEl = document.getElementById('shop-balance-text');
+    if(balanceEl) balanceEl.innerHTML = `${t.balance} <span id="totalGoldValue" style="color: #FFD700;">${totalGold}</span> GOLD`;
+
+    // Mıknatıs Geliştirme Kontrolü
+    let mmBtn = document.getElementById('buy-magnet-btn');
+    if(mmBtn) {
+        if(document.getElementById('shop-mag-title')) document.getElementById('shop-mag-title').innerText = t.magnetName;
+        let price = magnetLevel < 5 ? (1000 + magnetLevel * 500) : "MAX";
+        document.getElementById('magnet-lvl').innerText = magnetLevel;
         const sUnit = currentLang === 'tr' ? 'sn' : 's';
         document.getElementById('magnet-duration').innerText = magnetLevel > 0 ? (3 + magnetLevel * 2) + sUnit : '0' + sUnit;
-        document.getElementById('magnet-price').innerText = magnetLevel < 5 ? (1000 + magnetLevel * 500) : "MAX";
+        mmBtn.innerHTML = magnetLevel < 5 ? `${t.buyBtn}<br>${price}` : "MAX";
+        mmBtn.disabled = (magnetLevel >= 5 || totalGold < price);
     }
     
-    let sl = document.getElementById('shield-lvl');
-    if(sl) {
-        sl.innerText = shieldLevel;
+    // Kalkan Geliştirme Kontrolü
+    let msBtn = document.getElementById('buy-shield-btn');
+    if(msBtn) {
+        if(document.getElementById('shop-shd-title')) document.getElementById('shop-shd-title').innerText = t.shieldName;
+        let price = shieldLevel < 5 ? (1500 + shieldLevel * 750) : "MAX";
+        document.getElementById('shield-lvl').innerText = shieldLevel;
         document.getElementById('shield-chance').innerText = '%' + (shieldLevel * 5);
-        document.getElementById('shield-price').innerText = shieldLevel < 5 ? (1500 + shieldLevel * 750) : "MAX";
+        msBtn.innerHTML = shieldLevel < 5 ? `${t.buyBtn}<br>${price}` : "MAX";
+        msBtn.disabled = (shieldLevel >= 5 || totalGold < price);
     }
 
+    // Nehir Topu Kontrolü
     let wb = document.getElementById('buy-weapon-btn');
     if(wb) {
         if(!hasWeapon) {
             // LİSANS ALMAMIŞ
             if(document.getElementById('shop-wpn-title')) document.getElementById('shop-wpn-title').innerText = t.weaponName;
             if(document.getElementById('shop-wpn-desc')) document.getElementById('shop-wpn-desc').innerText = t.weaponDesc;
-            if(wb) wb.innerHTML = `${t.buyBtn}<br>10`;
+            wb.innerHTML = `${t.buyBtn}<br>10`;
+            wb.disabled = (totalGold < 10);
         } else {
             // LİSANSLI, MÜHİMMAT ALABİLİR
             if(document.getElementById('shop-wpn-title')) document.getElementById('shop-wpn-title').innerText = t.ammoName;
             if(document.getElementById('shop-wpn-desc')) document.getElementById('shop-wpn-desc').innerText = t.ammoDesc + ` (Mevcut: ${bombCount})`;
             wb.innerHTML = `${t.buyBtn}<br>1.000`;
+            wb.disabled = (totalGold < 1000);
         }
     }
+
+    // Gemi Zırhı Kontrolü
     let ab = document.getElementById('buy-armor-btn');
     if(ab) {
         let isVoidLevel = (currentLevel % 6 === 0);
         if(!isVoidLevel) {
             if(document.getElementById('shop-arm-title')) document.getElementById('shop-arm-title').innerText = t.armorName;
             if(document.getElementById('shop-arm-desc')) document.getElementById('shop-arm-desc').innerText = "Sadece Lvl 6, 12, 18...";
-            ab.innerHTML = `KİLİTLİ`;
-            ab.style.opacity = "0.3";
-            ab.style.pointerEvents = "none";
+            ab.innerText = `KİLİTLİ`;
+            ab.disabled = true;
+            ab.style.background = "#444";
         } else {
-            ab.style.pointerEvents = "auto";
+            ab.style.background = "linear-gradient(135deg, #8e44ad, #9b59b6)";
             if(ownsArmorLicense) {
                 if(document.getElementById('shop-arm-title')) document.getElementById('shop-arm-title').innerText = t.armorAmmoName;
                 if(document.getElementById('shop-arm-desc')) document.getElementById('shop-arm-desc').innerText = `${t.armorAmmoDesc} ${armorCharge}`;
                 ab.innerHTML = `${t.buyBtn}<br>100`;
-                ab.style.opacity = (totalGold >= 100) ? "1" : "0.5";
+                ab.disabled = (totalGold < 100);
             } else {
                 if(document.getElementById('shop-arm-title')) document.getElementById('shop-arm-title').innerText = t.armorName;
                 if(document.getElementById('shop-arm-desc')) document.getElementById('shop-arm-desc').innerText = t.armorDesc;
                 ab.innerHTML = `${t.buyBtn}<br>2.000`;
-                ab.style.opacity = (totalGold >= 2000) ? "1" : "0.5";
+                ab.disabled = (totalGold < 2000);
             }
         }
     }
@@ -1471,8 +1486,6 @@ function startGame() {
     hasShield = false; 
     updateArmorUI();
     
-    isDoubleGoldActive = startingDoubleGold;
-    startingDoubleGold = false; 
     
     spawnTimer = 0; goldTimer = 0;
     currentLevel = 1; 
@@ -1501,12 +1514,6 @@ function startGame() {
         reviveBtn.disabled = false;
         reviveBtn.innerText = translations[currentLang].reviveBtn;
         reviveBtn.style.opacity = '1';
-    }
-    if(x2GoldBtn) {
-        x2GoldBtn.disabled = false;
-        x2GoldBtn.innerText = translations[currentLang].x2GoldBtn;
-        x2GoldBtn.style.opacity = '1';
-        x2GoldBtn.style.display = deathCountForX2 >= 3 ? 'block' : 'none';
     }
     
     // Arka Plan Müziğini Başlat
@@ -1544,7 +1551,6 @@ function gameOver() {
     syncEliteHUD();
     
     playDeathSound(); 
-    deathCountForX2++;
     
     try {
         triggerVibration([100, 50, 100]); // Oyuncu öldüğünde belirgin titreşim
@@ -1557,8 +1563,6 @@ function gameOver() {
         
         if (fsElem) fsElem.innerText = Math.floor(score);
         if (fgElem) fgElem.innerText = goldCount;
-        
-        if (x2GoldBtn) x2GoldBtn.style.display = (deathCountForX2 >= 3) ? 'flex' : 'none';
         
         gameOverScreen.classList.remove('hidden'); 
         gameOverScreen.classList.add('active');
@@ -1960,7 +1964,7 @@ function update(dt) {
             playCoinSound(); 
             triggerVibration(15); // Altın aldığında kısa titreşim
             let collected = (g.value || 1);
-            goldCount += isDoubleGoldActive ? collected * 2 : collected;
+            goldCount += collected;
             golds.splice(i, 1);
             continue;
         }
@@ -3175,8 +3179,6 @@ if(resetYes) resetYes.addEventListener('click', () => {
     totalGold = 0;
     magnetLevel = 0;
     shieldLevel = 0;
-    deathCountForX2 = 0;
-    startingDoubleGold = false;
     hasWeapon = false;
     bombCount = 0;
     ownsArmorLicense = false;
@@ -3227,21 +3229,6 @@ if(resetNo) resetNo.addEventListener('click', () => {
 });
 
 
-if(x2GoldBtn) {
-    x2GoldBtn.addEventListener('click', () => {
-        showRewardedAd(x2GoldBtn, translations[currentLang].x2GoldBtn, () => {
-            startingDoubleGold = true; 
-            deathCountForX2 = 0; // Teklif değerlendirildi
-            
-            // Satın Alma Başarılı Jinglesi
-            for(let i=0; i<3; i++) setTimeout(playCoinSound, i*200);
-            
-            // Ses sistemi uyandırılıp oyun otomatik başlatılır!
-            if(audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
-            startGame();
-        });
-    });
-}
 
 const adGoldBtn = document.getElementById('ad-gold-btn');
 if(adGoldBtn) {
