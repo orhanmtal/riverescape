@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "542497054139",
+    "project_id": "riverescapeglobal",
+    "storage_bucket": "riverescapeglobal.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:542497054139:android:c06feada5d7adbdf87789e",
+        "android_client_info": {
+          "package_name": "com.gemini.riverescape"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "542497054139-419micb60ji3ocd61b1nnl1ukv1idm1b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBOHiwRiMBQL6_cOhQf2I7MqoC2knx3Uo0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "542497054139-419micb60ji3ocd61b1nnl1ukv1idm1b.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
