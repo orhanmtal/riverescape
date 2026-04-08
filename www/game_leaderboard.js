@@ -23,107 +23,121 @@ const Leaderboard = {
     playerFlag: "🌍",
 
     init() {
-        // Firebase Başlat (Eğer SDK yüklendiyse ve bilgiler girildiyse)
-        if (typeof firebase !== 'undefined' && this.firebaseConfig.apiKey !== "YOUR_API_KEY") {
-            try {
+        console.log("🚀 [ELITE INIT] Starting Social & Cloud Infrastructure...");
+        
+        try {
+            // Firebase Başlat (Eğer SDK yüklendiyse)
+            if (typeof firebase !== 'undefined') {
                 if (!firebase.apps.length) {
                     firebase.initializeApp(this.firebaseConfig);
+                    console.log("✅ [ELITE INIT] Firebase Instance Initialized.");
                 }
                 this.db = firebase.firestore();
                 this.auth = firebase.auth();
-                console.log("🔥 Firebase Firestore & Auth Connected!");
+                console.log("🔥 [ELITE INIT] Firestore & Auth Connected.");
 
-                // v1.99.3.15: AUTH STATE LISTENER
+                // AUTH STATE LISTENER (Safe Wrapper)
                 this.auth.onAuthStateChanged(user => {
-                    if (user) {
-                        console.log("👤 Google User Detected:", user.displayName);
-                        this.playerID = user.uid;
-                        this.playerName = user.displayName;
-                        localStorage.setItem('riverEscapeName', this.playerName);
-                        
-                        // UI Güncelle
-                        const statusText = document.getElementById('auth-status-text');
-                        if (statusText) {
-                            statusText.innerText = "ELİTE HESAP 🏛️";
-                            statusText.style.color = "#4caf50";
+                    try {
+                        if (user) {
+                            console.log("👤 [ELITE AUTH] Google User Detected:", user.displayName);
+                            this.playerID = user.uid;
+                            this.playerName = user.displayName;
+                            localStorage.setItem('riverEscapeName', this.playerName);
+                            
+                            this.updateAuthUI(true, user.displayName);
+                            this.restoreFromCloud();
+                        } else {
+                            console.log("👤 [ELITE AUTH] Guest Mode Activated.");
+                            this.handleGuestMode();
                         }
-                        const loginBtn = document.getElementById('google-login-btn');
-                        if (loginBtn) loginBtn.style.display = 'none';
-
-                        const welcomeMsg = document.getElementById('auth-welcome-msg');
-                        if (welcomeMsg) {
-                            welcomeMsg.innerText = `HOŞ GELDİN, ${user.displayName.toUpperCase()}! 🏛️`;
-                            welcomeMsg.classList.remove('hidden');
-                        }
-
-                        // Buluttan Verileri Çek
-                        this.restoreFromCloud();
-                        this.updateUI();
-                    } else {
-                        console.log("👤 Guest Mode (No Gmail)");
-                        this.playerID = localStorage.getItem('riverEscapeID');
-                        if (!this.playerID) {
-                            this.playerID = 'RE-' + Math.random().toString(36).substr(2, 9).toUpperCase();
-                            localStorage.setItem('riverEscapeID', this.playerID);
-                        }
+                    } catch (authErr) {
+                        console.error("❌ [ELITE AUTH] Error in State Change:", authErr);
                     }
                 });
-            } catch (e) {
-                console.error("Firebase connection error:", e);
+            } else {
+                console.warn("⚠️ [ELITE INIT] Firebase SDK NOT FOUND. Using Offline Mode.");
+                this.handleGuestMode();
             }
+        } catch (e) {
+            console.error("❌ [ELITE INIT] Critical Error during Firebase Setup:", e);
+            this.handleGuestMode();
+        }
+
+        // Event Listener'ları Güvenli Bağla
+        this.bindEvents();
+
+        // Ülke tespiti (Arka planda, açılışı engellemeden)
+        if (this.playerCountry === "??") {
+            setTimeout(() => this.detectCountry(), 1000);
         } else {
-            console.warn("⚠️ Firebase values are missing in game_leaderboard.js. Using MOCK MODE.");
+            this.playerFlag = this.getFlagEmoji(this.playerCountry);
+            this.updateUI();
         }
 
-        // v1.99.3.15: GOOGLE LOGIN LISTENER
-        const loginBtn = document.getElementById('google-login-btn');
-        if (loginBtn) {
-            loginBtn.addEventListener('click', () => this.loginWithGoogle());
-        }
+        console.log("🏁 [ELITE INIT] Initialization Finished. Player:", this.playerName);
+    },
 
-        const recoverBtn = document.getElementById('google-recover-btn');
-        if (recoverBtn) {
-            recoverBtn.addEventListener('click', () => this.loginWithGoogle());
-        }
-
-        const saveNameBtn = document.getElementById('save-name-btn');
-        if (saveNameBtn) {
-            saveNameBtn.addEventListener('click', () => {
-                const input = document.getElementById('player-name-input');
-                let newRes = input.value.trim();
-                if (newRes.length > 0) {
-                    newRes = newRes.substring(0, 12);
-                    this.playerName = newRes;
-                    localStorage.setItem('riverEscapeName', newRes);
-                    this.updateUI();
-                    
-                    const modal = document.getElementById('name-modal-overlay');
-                    if (modal) modal.style.display = 'none';
-
-                    if (this.db) this.submitProgress(window.score || 0, window.currentLevel || 1);
-                    if (typeof showToast === 'function') showToast("İSİM GÜNCELLENDİ! 🏆", true);
-                } else {
-                    if (typeof showToast === 'function') showToast("GEÇERLİ BİR İSİM GİRİN!", false);
-                }
-            });
-        }
-
+    handleGuestMode() {
+        this.playerID = localStorage.getItem('riverEscapeID');
         if (!this.playerID) {
             this.playerID = 'RE-' + Math.random().toString(36).substr(2, 9).toUpperCase();
             localStorage.setItem('riverEscapeID', this.playerID);
         }
-        
-        // Ülke bayrağını hazırla
-        this.playerFlag = this.getFlagEmoji(this.playerCountry);
-        
-        // Ülke tespiti (Sadece bir kez yap)
-        if (this.playerCountry === "??") {
-            this.detectCountry();
-        } else {
-            this.updateUI();
-        }
+        this.updateUI();
+    },
 
-        console.log("Leaderboard Ready:", this.playerID, this.playerName);
+    updateAuthUI(isLoggedIn, displayName) {
+        try {
+            const statusText = document.getElementById('auth-status-text');
+            if (statusText) {
+                statusText.innerText = isLoggedIn ? "ELİTE HESAP 🏛️" : "MİSAFİR HESAP";
+                statusText.style.color = isLoggedIn ? "#4caf50" : "#ffd700";
+            }
+            const loginBtn = document.getElementById('google-login-btn');
+            if (loginBtn) loginBtn.style.display = isLoggedIn ? 'none' : 'flex';
+
+            const welcomeMsg = document.getElementById('auth-welcome-msg');
+            if (welcomeMsg && isLoggedIn) {
+                welcomeMsg.innerText = `HOŞ GELDİN, ${displayName.toUpperCase()}! 🏛️`;
+                welcomeMsg.classList.remove('hidden');
+            }
+        } catch (e) { console.warn("UI Update missing elements - skipping."); }
+    },
+
+    bindEvents() {
+        const elements = {
+            'google-login-btn': () => this.loginWithGoogle(),
+            'google-recover-btn': () => this.loginWithGoogle(),
+            'save-name-btn': () => this.handleManualNameSave()
+        };
+        for (let id in elements) {
+            const el = document.getElementById(id);
+            if (el) el.addEventListener('click', elements[id]);
+        }
+    },
+
+    handleManualNameSave() {
+        const input = document.getElementById('player-name-input');
+        if (!input) return;
+        let newRes = input.value.trim();
+        if (newRes.length > 0) {
+            newRes = newRes.substring(0, 12);
+            this.playerName = newRes;
+            localStorage.setItem('riverEscapeName', newRes);
+            this.updateUI();
+            
+            const modal = document.getElementById('name-modal-overlay');
+            if (modal) {
+                modal.style.display = 'none';
+                modal.classList.remove('active');
+            }
+
+            if (this.db) this.submitProgress(window.score || 0, window.currentLevel || 1);
+            if (typeof showToast === 'function') showToast("İSİM GÜNCELLENDİ! 🏆", true);
+        } else {
+            if (typeof showToast === 'function') showToast("GEÇERLİ BİR İSİM GİRİN!", false);
+        }
     },
 
     updateUI() {
