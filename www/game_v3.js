@@ -3457,3 +3457,5 @@ function drawHeatHaze() {
 function endHeatHaze() {
     if(currentLevel === 5) ctx.restore();
 }
+
+// --- ELITE AUDIO ENGINE v3.31.0 ---
