@@ -4,15 +4,17 @@
  * v1.99.3.30
  */
 
+const IAP_PACKS = [
+    { id: 'gold_pack_1', amount: 5000, price: '$0.99', label: '5.000 GOLD' },
+    { id: 'gold_pack_2', amount: 10000, price: '$1.49', label: '10.000 GOLD' },
+    { id: 'gold_pack_3', amount: 25000, price: '$2.99', label: '25.000 GOLD' },
+    { id: 'gold_pack_4', amount: 50000, price: '$4.99', label: '50.000 GOLD' }
+];
+
 const GameStore = {
     // Ürün Tanımları (Google Play Console ID'leri buraya gelecek)
-    // Fiyatlandırma: 0.99$ - 3.99$ - 6.99$ - 14.99$
-    PRODUCTS: [
-        { id: 'gold_25000', title: 'A Handful of Gold', amount: 25000, type: 'consumable' },
-        { id: 'gold_125000', title: 'Golden Chest', amount: 125000, type: 'consumable' },
-        { id: 'gold_250000', title: 'Treasure Bag', amount: 250000, type: 'consumable' },
-        { id: 'gold_750000', title: 'Elite Fortune', amount: 750000, type: 'consumable' }
-    ],
+    // Fiyatlandırma: 0.99$ - 1.49$ - 2.99$ - 4.99$
+    PRODUCTS: IAP_PACKS.map(p => ({ id: p.id, title: p.label, amount: p.amount, type: 'consumable' })),
 
     init() {
         if (!window.CdvPurchase) {

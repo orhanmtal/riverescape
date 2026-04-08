@@ -1024,9 +1024,9 @@ if(buyWeaponBtn) buyWeaponBtn.addEventListener('click', () => {
 // v1.99.3.31.0: ALTINLA CANLANMA (REVİVE WİTH GOLD)
 if (reviveGoldBtn) reviveGoldBtn.addEventListener('click', reviveWithGold);
 function reviveWithGold() {
-    // v3.30 FINAL: HEM CAN VER HEM SESİ DÜZELT
+    // v3.31.0: ELITE BALANCED ECONOMY
     const t = translations[currentLang];
-    const cost = 500;
+    const cost = 100; // Artık 1 Reklam = 1 Canlanma bedeli (100 Altın)
     
     if (totalGold >= cost) {
         totalGold -= cost;
@@ -3311,10 +3311,10 @@ const adGoldBtn = document.getElementById('ad-gold-btn');
 if(adGoldBtn) {
     adGoldBtn.addEventListener('click', () => {
         showRewardedAd(adGoldBtn, translations[currentLang].adGoldBtn, () => {
-            totalGold += 250; 
+            totalGold += 100; // v3.31.0: 1 Ad = 1 Revive Cost Correlation
             saveGame();
             updateShopUI();
-            showToast(`${translations[currentLang].rewardPrefix} 250 GOLD! 💰`, true);
+            showToast(`${translations[currentLang].rewardPrefix} 100 GOLD! 💰`, true);
             for(let i=0; i<4; i++) setTimeout(playCoinSound, i*100);
         });
     });
