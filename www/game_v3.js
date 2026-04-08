@@ -1516,9 +1516,9 @@ function togglePause() {
     }
 }
 function startGame() {
-    // v1.99.3.30: DAHA GÜÇLÜ RESUME PROGRESS LOGIC
-    if (score > 10 || (isPlaying && !isGameOver)) {
-        console.log("Elite Resume: Progress Protected.");
+    // v1.99.3.30: ULTRA RESUME (Gold & Score Protection)
+    if ((score > 2 || goldCount > 0) || (isPlaying && !isGameOver)) {
+        console.log("Elite Resume: Gold & Score Protected!");
     } else {
         score = 0; goldCount = 0; 
         level = 1; currentLevel = 1; levelProgress = 0; bgY = 0;
@@ -2247,11 +2247,7 @@ function update(dt) {
                 triggerVibration(40);
                 
                 // Patlama efekt parçacıkları (v3.30: KÜTÜKLERDE EFEKT İPTAL)
-                if (!obs.type.includes('log')) {
-                    for(let k=0; k<10; k++) {
-                        particles.push(new Particle(obs.x + obs.width/2, obs.y + obs.height/2, "#607d8b"));
-                    }
-                }
+                // Bullet Particles Removed v3.30 Final
 
                 obstacles.splice(j, 1);
                 bullets.splice(i, 1);
@@ -3070,7 +3066,7 @@ if(resumeBtn) resumeBtn.addEventListener('click', togglePause);
 if(quitBtn) quitBtn.addEventListener('click', () => {
     // Collect loot when quitting v121
     totalGold += goldCount;
-    goldCount = 0;
+    // goldCount = 0; // v1.99.3.30: RESUME İÇİN SIFIRLAMAYI KALDIRDIK
     saveGame();
     
     isPaused = false;
@@ -3095,7 +3091,7 @@ const qbg = document.getElementById('quit-btn-gameover');
 if(qbg) qbg.addEventListener('click', () => {
     // Oyuncu gerçekten çıkıyor, altınları kasaya aktar
     totalGold += goldCount;
-    goldCount = 0;
+    // goldCount = 0; // v1.99.3.30: RESUME İÇİN SIFIRLAMAYI KALDIRDIK
     saveGame();
     
     isGameOver = false;
@@ -3247,7 +3243,7 @@ if(lbCloseBtn) lbCloseBtn.addEventListener('click', () => {
 // v122: Restart - Altınları kasaya aktar ve yeni oyun başla
 if(restartBtn) restartBtn.addEventListener('click', () => { 
     totalGold += goldCount;
-    goldCount = 0;
+    // goldCount = 0; // v1.99.3.30: RESUME İÇİN SIFIRLAMAYI KALDIRDIK
     saveGame();
     startGame();
 });
