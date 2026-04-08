@@ -1,4 +1,4 @@
-// RİVER ESCAPE ELİTE - v1.99.3.30 (SILENT ENGINE RELEASE)
+// RİVER ESCAPE ELİTE - v1.99.3.31.0 (SILENT ENGINE RELEASE)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -724,7 +724,7 @@ function saveGame() {
     };
     localStorage.setItem('riverEscapeSave', JSON.stringify(data));
     
-    // v1.99.3.30: Elite Cloud Sync (Full Asset Backup)
+    // v1.99.3.31.0: Elite Cloud Sync (Full Asset Backup)
     if (typeof Leaderboard !== 'undefined') {
         Leaderboard.forceSync(); 
     }
@@ -783,7 +783,7 @@ function updateShopUI() {
     let wb = document.getElementById('buy-weapon-btn');
     if(wb) {
         if(!hasWeapon) {
-            // LİSANS ALMAMIŞ (ELİTE v1.99.3.30: 1.500G)
+            // LİSANS ALMAMIŞ (ELİTE v1.99.3.31.0: 1.500G)
             if(document.getElementById('shop-wpn-title')) document.getElementById('shop-wpn-title').innerText = t.weaponName;
             if(document.getElementById('shop-wpn-desc')) document.getElementById('shop-wpn-desc').innerText = t.weaponDesc;
             wb.innerHTML = `${t.buyBtn}<br>1.500`;
@@ -1021,7 +1021,7 @@ if(buyWeaponBtn) buyWeaponBtn.addEventListener('click', () => {
     }
 });
 
-// v1.99.3.30: ALTINLA CANLANMA (REVİVE WİTH GOLD)
+// v1.99.3.31.0: ALTINLA CANLANMA (REVİVE WİTH GOLD)
 if (reviveGoldBtn) reviveGoldBtn.addEventListener('click', reviveWithGold);
 function reviveWithGold() {
     // v3.30 FINAL: HEM CAN VER HEM SESİ DÜZELT
@@ -1152,7 +1152,7 @@ canvas.addEventListener('mousedown', initAudio); // PC için güvenlik kırma
 // SPAWNERLAR (Artık Yatay ve Dikey var)
 let obstacles = [], golds = [], powerups = [];
 let spawnInterval = 3.0, spawnTimer = 0; // v2.03: Başlangıçta kayaların arasını çok açtık
-let goldSpawnInterval = 8.0, goldTimer = 0; // v1.99.3.30: Kıtlık ve Hardcore Ekonomi
+let goldSpawnInterval = 8.0, goldTimer = 0; // v1.99.3.31.0: Kıtlık ve Hardcore Ekonomi
 
 let goldBag = [];
 function fillGoldBag() {
@@ -1516,7 +1516,7 @@ function togglePause() {
     }
 }
 function startGame() {
-    // v1.99.3.30: ULTRA RESUME (Gold & Score Protection)
+    // v1.99.3.31.0: ULTRA RESUME (Gold & Score Protection)
     if ((score > 2 || goldCount > 0) || (isPlaying && !isGameOver)) {
         console.log("Elite Resume: Gold & Score Protected!");
     } else {
@@ -1666,7 +1666,7 @@ function syncEliteHUD() {
         
         if(cachedHud.lives) {
             let hearts = "";
-            // v1.99.3.30: DİNAMİK KALP SİSTEMİ (Can sayısına göre kalp göster)
+            // v1.99.3.31.0: DİNAMİK KALP SİSTEMİ (Can sayısına göre kalp göster)
             for(let i=0; i < Math.max(3, lives); i++) {
                 hearts += (i < lives) ? "❤️" : "🖤";
             }
@@ -3066,7 +3066,7 @@ if(resumeBtn) resumeBtn.addEventListener('click', togglePause);
 if(quitBtn) quitBtn.addEventListener('click', () => {
     // Collect loot when quitting v121
     totalGold += goldCount;
-    // goldCount = 0; // v1.99.3.30: RESUME İÇİN SIFIRLAMAYI KALDIRDIK
+    // goldCount = 0; // v1.99.3.31.0: RESUME İÇİN SIFIRLAMAYI KALDIRDIK
     saveGame();
     
     isPaused = false;
@@ -3091,7 +3091,7 @@ const qbg = document.getElementById('quit-btn-gameover');
 if(qbg) qbg.addEventListener('click', () => {
     // Oyuncu gerçekten çıkıyor, altınları kasaya aktar
     totalGold += goldCount;
-    // goldCount = 0; // v1.99.3.30: RESUME İÇİN SIFIRLAMAYI KALDIRDIK
+    // goldCount = 0; // v1.99.3.31.0: RESUME İÇİN SIFIRLAMAYI KALDIRDIK
     saveGame();
     
     isGameOver = false;
@@ -3243,7 +3243,7 @@ if(lbCloseBtn) lbCloseBtn.addEventListener('click', () => {
 // v122: Restart - Altınları kasaya aktar ve yeni oyun başla
 if(restartBtn) restartBtn.addEventListener('click', () => { 
     totalGold += goldCount;
-    // goldCount = 0; // v1.99.3.30: RESUME İÇİN SIFIRLAMAYI KALDIRDIK
+    // goldCount = 0; // v1.99.3.31.0: RESUME İÇİN SIFIRLAMAYI KALDIRDIK
     saveGame();
     startGame();
 });
@@ -3346,7 +3346,7 @@ function loadGame() {
         if(sSli) { sSli.value = isSFXVolume * 100; document.getElementById('sfx-vol-txt').innerText = (isSFXVolume*100) + '%'; }
         if(vTog) vTog.checked = isVibrationEnabled;
 
-        // v1.99.3.30: Buluttan Serveti Geri Yükle (Recovery)
+        // v1.99.3.31.0: Buluttan Serveti Geri Yükle (Recovery)
         if (typeof Leaderboard !== 'undefined') {
             Leaderboard.restoreFromCloud();
         }
