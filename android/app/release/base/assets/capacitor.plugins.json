@@ -1,0 +1,14 @@
+[
+	{
+		"pkg": "@capacitor-community/admob",
+		"classpath": "com.getcapacitor.community.admob.AdMob"
+	},
+	{
+		"pkg": "@capacitor-firebase/authentication",
+		"classpath": "io.capawesome.capacitorjs.plugins.firebase.authentication.FirebaseAuthenticationPlugin"
+	},
+	{
+		"pkg": "@capacitor/haptics",
+		"classpath": "com.capacitorjs.plugins.haptics.HapticsPlugin"
+	}
+]

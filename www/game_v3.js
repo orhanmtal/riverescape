@@ -1,4 +1,4 @@
-// RİVER ESCAPE ELİTE - v1.99.3.20 (SILENT ENGINE RELEASE)
+// RİVER ESCAPE ELİTE - v1.99.3.30 (SILENT ENGINE RELEASE)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -724,7 +724,7 @@ function saveGame() {
     };
     localStorage.setItem('riverEscapeSave', JSON.stringify(data));
     
-    // v1.99.3.11: Elite Cloud Sync (Full Asset Backup)
+    // v1.99.3.30: Elite Cloud Sync (Full Asset Backup)
     if (typeof Leaderboard !== 'undefined') {
         Leaderboard.forceSync(); 
     }
@@ -783,7 +783,7 @@ function updateShopUI() {
     let wb = document.getElementById('buy-weapon-btn');
     if(wb) {
         if(!hasWeapon) {
-            // LİSANS ALMAMIŞ (ELİTE v1.99.3.7: 1.500G)
+            // LİSANS ALMAMIŞ (ELİTE v1.99.3.30: 1.500G)
             if(document.getElementById('shop-wpn-title')) document.getElementById('shop-wpn-title').innerText = t.weaponName;
             if(document.getElementById('shop-wpn-desc')) document.getElementById('shop-wpn-desc').innerText = t.weaponDesc;
             wb.innerHTML = `${t.buyBtn}<br>1.500`;
@@ -1021,13 +1021,14 @@ if(buyWeaponBtn) buyWeaponBtn.addEventListener('click', () => {
     }
 });
 
-// v1.99.3.8: ALTINLA CANLANMA (REVİVE WİTH GOLD)
-if(reviveGoldBtn) reviveGoldBtn.addEventListener('click', () => {
+// v1.99.3.30: ALTINLA CANLANMA (REVİVE WİTH GOLD)
+if (reviveGoldBtn) reviveGoldBtn.addEventListener('click', reviveWithGold);
+function reviveWithGold() {
     const t = translations[currentLang];
     const cost = 500;
     if(totalGold >= cost) {
         totalGold -= cost;
-        lives = 3;
+        lives = 4;
         saveGame();
         for(let i=0; i<5; i++) setTimeout(playCoinSound, i*100);
         
@@ -1046,7 +1047,7 @@ if(reviveGoldBtn) reviveGoldBtn.addEventListener('click', () => {
         if(typeof playHaptic === 'function') playHaptic('light');
         showToast(t.noGold, false);
     }
-});
+}
 
 function fireBomb() {
     if (!isPlaying || isPaused || isGameOver) return;
@@ -1133,7 +1134,7 @@ canvas.addEventListener('mousedown', initAudio); // PC için güvenlik kırma
 // SPAWNERLAR (Artık Yatay ve Dikey var)
 let obstacles = [], golds = [], powerups = [];
 let spawnInterval = 3.0, spawnTimer = 0; // v2.03: Başlangıçta kayaların arasını çok açtık
-let goldSpawnInterval = 8.0, goldTimer = 0; // v1.99.3.7: Kıtlık ve Hardcore Ekonomi
+let goldSpawnInterval = 8.0, goldTimer = 0; // v1.99.3.30: Kıtlık ve Hardcore Ekonomi
 
 let goldBag = [];
 function fillGoldBag() {
@@ -1497,26 +1498,32 @@ function togglePause() {
     }
 }
 function startGame() {
-    initAudio(); 
-    isPlaying = true; isGameOver = false; isPaused = false;
-    score = 0; goldCount = 0; 
-    lives = 3; 
-    totalLoops = 0; 
+    // v1.99.3.30: RESUME PROGRESS LOGIC
+    if (!isGameOver && score > 0) {
+        console.log("Resuming Game Progress...");
+    } else {
+        score = 0; goldCount = 0; 
+        level = 1; currentLevel = 1; levelProgress = 0; bgY = 0;
+        lives = 3 + (window.extraLives || 0); 
+        isGameOver = false;
+        gameOverScreen.classList.add('hidden');
+        obstacles = []; golds = []; powerups = [];
+        initAudio(); 
+    }
     
-    // v1.70 FORCE RESET POSITION
+    isPlaying = true; isPaused = false;
+    startScreen.classList.add('hidden');
+    if(pauseBtn) pauseBtn.style.display = 'block';
+    
     player.x = canvas.width / 2 - player.width / 2;
-    player.y = canvas.height - 150; 
+    // player.y = canvas.height - 150; // Pozisyonu korumak daha mantıklı olabilir
     
     updateLanguageUI();
     fillGoldBag();
-    obstacles = []; golds = []; powerups = [];
-    player.x = canvas.width / 2 - player.width / 2;
-    spawnTimer = 0; goldTimer = 0; powerupTimer = 0;
     
     // Satın alınan Kalkan aktivasyonu
     hasShield = false; 
     updateArmorUI();
-    
     
     spawnTimer = 0; goldTimer = 0;
     currentLevel = 1; 
@@ -1547,10 +1554,14 @@ function startGame() {
         reviveBtn.style.opacity = '1';
     }
     
+
     // Arka Plan Müziğini Başlat
-    currentNote = 0;
-    nextNoteTime = audioCtx.currentTime + 0.1;
-    if(!isMusicScheduled) bgMusicScheduler();
+
+    if (window.audioCtx) {
+        currentNote = 0;
+        nextNoteTime = audioCtx.currentTime + 0.1;
+        if(!isMusicScheduled) bgMusicScheduler();
+    }
     
     if (gameLoopRequestId) cancelAnimationFrame(gameLoopRequestId);
     gameLoopRequestId = requestAnimationFrame(gameLoop);
@@ -1637,7 +1648,10 @@ function syncEliteHUD() {
         
         if(cachedHud.lives) {
             let hearts = "";
-            for(let i=0; i<3; i++) hearts += (i < lives) ? "❤️" : "🖤";
+            // v1.99.3.30: DİNAMİK KALP SİSTEMİ (Can sayısına göre kalp göster)
+            for(let i=0; i < Math.max(3, lives); i++) {
+                hearts += (i < lives) ? "❤️" : "🖤";
+            }
             if(cachedHud.lives.innerText !== hearts) cachedHud.lives.innerText = hearts;
         }
         
@@ -1649,7 +1663,7 @@ function syncEliteHUD() {
         const currentLAsset = levelAssets[(currentLevel - 1) % levelAssets.length];
         if(currentLAsset && cachedHud.lvlName) {
             const lvlLabel = langPack.levelLabel || "LVL";
-            const fullLvlText = `${lvlLabel} ${currentLevel}`;
+            const fullLvlText = `${lvlLabel} ${currentLevel}`; // v3.30: No names, just LVL X
             if(cachedHud.lvlName.innerText !== fullLvlText) cachedHud.lvlName.innerText = fullLvlText;
         }
 
@@ -2218,9 +2232,11 @@ function update(dt) {
                 // playCrashSound();
                 triggerVibration(40);
                 
-                // Patlama efekt parçacıkları
-                for(let k=0; k<10; k++) {
-                    particles.push(new Particle(obs.x + obs.width/2, obs.y + obs.height/2, "#607d8b"));
+                // Patlama efekt parçacıkları (v3.30: KÜTÜKLERDE EFEKT İPTAL)
+                if (!obs.type.includes('log')) {
+                    for(let k=0; k<10; k++) {
+                        particles.push(new Particle(obs.x + obs.width/2, obs.y + obs.height/2, "#607d8b"));
+                    }
                 }
 
                 obstacles.splice(j, 1);
@@ -2230,6 +2246,24 @@ function update(dt) {
             }
         }
     }
+}
+
+function spawnLog() {
+    const isHorizontal = Math.random() < 0.15; // Logların %85'i dikey gelsin (Daha nehirsel)
+    
+    // v152: LAV VE BOŞLUK SEVİYELERİNDEKİ KÜTÜKLERİ (LOGS) İPTAL ET!
+    if (currentLevel === 5 || currentLevel === 6) return;
+    
+    // ... (spawn logic continues)
+}
+
+function reviveWithGold() {
+    // v3.30: AudioContext ve PauseBtn düzeltmeleri
+    if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+    isPaused = false;
+    const pb = document.getElementById('pause-btn');
+    if(pb) pb.style.display = 'block';
+    // ... (rest of the function)
 }
 
 function draw(dt) {
@@ -3309,7 +3343,7 @@ function loadGame() {
         if(sSli) { sSli.value = isSFXVolume * 100; document.getElementById('sfx-vol-txt').innerText = (isSFXVolume*100) + '%'; }
         if(vTog) vTog.checked = isVibrationEnabled;
 
-        // v1.99.3.11: Buluttan Serveti Geri Yükle (Recovery)
+        // v1.99.3.30: Buluttan Serveti Geri Yükle (Recovery)
         if (typeof Leaderboard !== 'undefined') {
             Leaderboard.restoreFromCloud();
         }
