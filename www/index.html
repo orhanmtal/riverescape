@@ -7,6 +7,18 @@
     <link rel="stylesheet" href="style.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Outfit:wght@700&display=swap" rel="stylesheet">
+    <!-- EMERGENCY ON-SCREEN DEBUGGER v1.99.3.20B -->
+    <script>
+        window.onerror = function(msg, url, line) {
+            var div = document.createElement('div');
+            div.id = 'emergency-debug';
+            div.style.cssText = 'position:fixed;top:0;left:0;width:100%;z-index:999999;background:rgba(255,0,0,0.9);color:white;padding:15px;font-size:12px;font-family:monospace;word-break:break-all;pointer-events:auto;';
+            div.innerHTML = '🚩 ELITE ERROR DETECTED:<br>' + msg + '<br><br>URL: ' + url + '<br>LINE: ' + line + '<br><button onclick="this.parentElement.remove()" style="margin-top:10px;padding:5px 10px;background:#fff;color:#000;border:none;border-radius:5px;font-weight:bold;">KAPAT</button>';
+            document.body.appendChild(div);
+            return false;
+        };
+        console.log("🛠️ Emergency Debugger Active.");
+    </script>
     <!-- Capacitor/Cordova Bridge -->
     <script>
         if (window.location.protocol === 'file:' || window.Capacitor) {
