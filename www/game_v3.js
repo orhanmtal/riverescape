@@ -1024,24 +1024,42 @@ if(buyWeaponBtn) buyWeaponBtn.addEventListener('click', () => {
 // v1.99.3.30: ALTINLA CANLANMA (REVİVE WİTH GOLD)
 if (reviveGoldBtn) reviveGoldBtn.addEventListener('click', reviveWithGold);
 function reviveWithGold() {
+    // v3.30 FINAL: HEM CAN VER HEM SESİ DÜZELT
     const t = translations[currentLang];
     const cost = 500;
-    if(totalGold >= cost) {
+    
+    if (totalGold >= cost) {
         totalGold -= cost;
-        lives = 4;
-        saveGame();
-        for(let i=0; i<5; i++) setTimeout(playCoinSound, i*100);
+        lives = 3 + (window.extraLives || 0);
+        hasShield = true; // Dokunulmazlık Ver
+        shieldTimer = 3.0; // 3 Saniye Koruma
         
-        // Oyuna Devam Et
+        // Oyuncuyu biraz yukarı kaydır ki engelin içinde kalmasın
+        player.y -= 100; 
+        
+        saveGame();
+        updateArmorUI();
+        
+        // Ses Motorunu Canlandır
+        if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+        
+        // Arayüzü Temizle
         isGameOver = false;
+        isPlaying = true;
+        isPaused = false;
+        
         gameOverScreen.classList.remove('active');
         gameOverScreen.classList.add('hidden');
         gameOverScreen.style.display = 'none';
         
-        isPlaying = true;
-        isPaused = false;
+        const pb = document.getElementById('pause-btn');
+        if(pb) pb.style.display = 'block';
         
-        showToast(t.revived || "Canlandın!", true);
+        for(let i=0; i<5; i++) setTimeout(playCoinSound, i*100);
+        showToast(t.revived || "CANLANDIN! 🏛️", true);
+        
+        // Oyunu Tekrar Döngüye Sok
+        requestAnimationFrame(gameLoop);
     } else {
         shakeTimer = 0.4;
         if(typeof playHaptic === 'function') playHaptic('light');
@@ -1498,9 +1516,9 @@ function togglePause() {
     }
 }
 function startGame() {
-    // v1.99.3.30: RESUME PROGRESS LOGIC
-    if (!isGameOver && score > 0) {
-        console.log("Resuming Game Progress...");
+    // v1.99.3.30: DAHA GÜÇLÜ RESUME PROGRESS LOGIC
+    if (score > 10 || (isPlaying && !isGameOver)) {
+        console.log("Elite Resume: Progress Protected.");
     } else {
         score = 0; goldCount = 0; 
         level = 1; currentLevel = 1; levelProgress = 0; bgY = 0;
@@ -2144,11 +2162,7 @@ function update(dt) {
                         obs.x += obs.speedX * dt * 2;
                         
                         // v2.04: ROCK BOUNCE PARTICLES (Splinters)
-                        for(let p=0; p<8; p++) {
-                            let splinter = new Particle(obs.x + obs.width/2, obs.y + obs.height/2, "#8b4513"); // Wood Brown
-                            splinter.speedX = (Math.random() - 0.5) * 8; splinter.speedY = (Math.random() - 0.5) * 8;
-                            particles.push(splinter);
-                        }
+                        // Splinters Removed v3.30 Final
                         // if(typeof playCrashSound === 'function') playCrashSound(); 
                         break;
                     }
@@ -2257,14 +2271,7 @@ function spawnLog() {
     // ... (spawn logic continues)
 }
 
-function reviveWithGold() {
-    // v3.30: AudioContext ve PauseBtn düzeltmeleri
-    if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
-    isPaused = false;
-    const pb = document.getElementById('pause-btn');
-    if(pb) pb.style.display = 'block';
-    // ... (rest of the function)
-}
+
 
 function draw(dt) {
     // v1.74 FIX: FULL CANVAS CLEAR (Reset Transform safe)
