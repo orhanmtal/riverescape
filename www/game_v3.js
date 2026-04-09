@@ -1,4 +1,4 @@
-// RİVER ESCAPE ELİTE - v1.99.4.1.0 (MANDATORY AUTH & TREASURY STABLE)
+// RİVER ESCAPE ELİTE - v1.99.4.1.1 (CLEAN UI SHIFT)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -162,7 +162,8 @@ function updateLanguageUI() {
     setText('start-btn', t.startBtn);
     setText('shop-open-btn', t.shopBtn);
     setText('settings-open-btn', t.settingsBtn);
-    if(document.querySelector('#start-screen p')) document.querySelector('#start-screen p').innerText = t.startDesc;
+    // v1.99.4.1.1: Start Description Removed for Clean UI
+    // if(document.querySelector('#start-screen p')) document.querySelector('#start-screen p').innerText = t.startDesc;
     
     setText('resume-btn', t.resumeBtn);
     setText('quit-btn', t.quitBtn);

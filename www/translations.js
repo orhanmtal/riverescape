@@ -1,7 +1,7 @@
 // River Escape - Dil Paketleri (TR/EN) - v1.99.3.30 (ELITE RE-BRAND RELEASE)
 const translations = {
     tr: {
-        startDesc: "Sağa/sola kaydır. Zıplamak (Dash) için Çift Tıkla veya Yukarı Ok'a bas.",
+        startDesc: "",
         startBtn: "Oyna",
         shopBtn: "Mağaza",
         settingsBtn: "AYARLAR",
@@ -80,7 +80,7 @@ const translations = {
         armorDeactivated: "VOID ZIRHI DEVRE DIŞI!"
     },
     en: {
-        startDesc: "Move left/right. Double Tap or Up Arrow to Dash.",
+        startDesc: "",
         startBtn: "Play",
         shopBtn: "Shop",
         settingsBtn: "SETTINGS",
