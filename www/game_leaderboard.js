@@ -1,5 +1,5 @@
 /**
- * RİVER ESCAPE ELİTE - v1.99.4.1.4 (ELITE INTEGRITY STABLE)
+ * RİVER ESCAPE ELİTE - v1.99.4.1.5 (SMART SYNC HUB)
  * Firebase Firestore Global Sıralama ve Profil Senkronizasyon Sistemi
  * v1.99.3.30
  */
@@ -101,34 +101,66 @@ const Leaderboard = {
         }
 
         console.log("🏁 [ELITE INIT] Initialization Finished. Player:", this.playerName);
+        
+        // v1.99.4.1.5: Açılışta bekleyen rekor varsa fırlat!
+        setTimeout(() => this.checkPendingSync(), 3000);
     },
 
     handleGuestMode() {
-        // v1.199.3.31.10.4: NO GUEST ALLOWED 🔏
-        this.updateAuthUI(false);
+        // v1.99.4.1.5: OFFLINE ELITE PROTECTION 📡
+        const cachedID = localStorage.getItem('riverEscapeID');
+        const cachedName = localStorage.getItem('riverEscapeName') || "ELITE PLAYER";
+        
+        if (cachedID) {
+            console.log("📡 [ELITE AUTH] Offline Elite Detected. Granting Access.");
+            this.playerID = cachedID;
+            this.playerName = cachedName;
+            this.updateAuthUI(true, cachedName, true); // True = Offline Mode
+            
+            // İnternet gelirse diye pusuda bekle
+            window.addEventListener('online', () => {
+                console.log("🌐 [ELITE SYNC] Connection restored! Triggering cloud sync...");
+                this.checkPendingSync();
+            });
+        } else {
+            console.log("🔏 [ELITE AUTH] No cached session. Mandatory login required.");
+            this.updateAuthUI(false);
+        }
     },
 
-    updateAuthUI(isLoggedIn, displayName) {
+    updateAuthUI(isLoggedIn, displayName, isOffline = false) {
         try {
             const statusText = document.getElementById('auth-status-text');
             if (statusText) {
-                statusText.innerText = isLoggedIn ? "ELİTE HESAP 🏛️" : "LÜTFEN GİRİŞ YAPIN 🔏";
-                statusText.style.color = isLoggedIn ? "#4caf50" : "#ff4444";
+                if (isLoggedIn) {
+                    statusText.innerText = isOffline ? "ELİTE OFFLINE 📡" : "ELİTE HESAP 🏛️";
+                    statusText.style.color = isOffline ? "#ffa500" : "#4caf50";
+                } else {
+                    statusText.innerText = "LÜTFEN GİRİŞ YAPIN 🔏";
+                    statusText.style.color = "#ff4444";
+                }
             }
             
             const loginBtn = document.getElementById('google-login-btn');
-            if (loginBtn) loginBtn.style.display = isLoggedIn ? 'none' : 'flex';
-
-            // ELITE BUTTONS - Sadece giriş yapıldıysa göster! 🏛️
+            if (loginBtn) {
+                loginBtn.style.display = isLoggedIn ? 'none' : 'flex';
+                // Eğer offline isek ve giriş yapılmamışsa login butonunu pasif/uyarıcı yapabiliriz
+                if (!navigator.onLine && !isLoggedIn) {
+                    loginBtn.style.opacity = "0.5";
+                    loginBtn.innerText = "İNTERNET GEREKLİ 🌐";
+                }
+            }
+ 
+            // ELITE BUTTONS - Sadece giriş yapıldıysa (veya offline elite ise) göster! 🏛️
             const eliteButtons = ['start-btn', 'spin-open-btn', 'shop-open-btn', 'leaderboard-open-btn', 'settings-open-btn'];
             eliteButtons.forEach(id => {
                 const btn = document.getElementById(id);
                 if (btn) btn.style.display = isLoggedIn ? '' : 'none';
             });
-
+ 
             const welcomeMsg = document.getElementById('auth-welcome-msg');
             if (welcomeMsg && isLoggedIn) {
-                welcomeMsg.innerText = `HOŞ GELDİN, ${displayName.toUpperCase()}! 🏛️`;
+                welcomeMsg.innerText = isOffline ? `MOD: ÇEVRİMDIŞI 📡` : `HOŞ GELDİN, ${displayName.toUpperCase()}! 🏛️`;
                 welcomeMsg.classList.remove('hidden');
             }
         } catch (e) { console.warn("UI Update missing elements - skipping."); }
@@ -228,9 +260,20 @@ const Leaderboard = {
 
     // Skoru ve İlerlemeyi Buluta Gönder (Firestore)
     async submitProgress(score, level) {
-        if (!navigator.onLine || !this.db) return;
-        
         const finalScore = Math.floor(score);
+        
+        // v1.99.4.1.5: OFFLINE SYNC - Check pending status
+        if (!navigator.onLine || !this.db) {
+            const localHS = parseInt(localStorage.getItem('riverEscapeHighScore')) || 0;
+            if (finalScore > localHS) {
+                console.log("📡 [ELITE OFFLINE] High Score cached for pending sync.");
+                localStorage.setItem('riverEscapePendingSync', 'true');
+                localStorage.setItem('riverEscapePendingScore', finalScore);
+                localStorage.setItem('riverEscapePendingLevel', level || 1);
+            }
+            return;
+        }
+        
         try {
             // 1. Mevcut skoru kontrol et (High Score Protection)
             const doc = await this.db.collection('leaderboard').doc(this.playerID).get();
@@ -360,6 +403,23 @@ const Leaderboard = {
         } catch (e) {
             console.error("Cloud recovery failed:", e);
             if (callback) callback(false);
+        }
+    },
+
+    async checkPendingSync() {
+        if (!navigator.onLine || !this.db || !this.playerID) return;
+        
+        const hasPending = localStorage.getItem('riverEscapePendingSync');
+        if (hasPending === 'true') {
+            console.log("🚀 [ELITE SYNC] Pending record found. Syncing to cloud...");
+            const pScore = parseInt(localStorage.getItem('riverEscapePendingScore')) || 0;
+            const pLevel = parseInt(localStorage.getItem('riverEscapePendingLevel')) || 1;
+            
+            await this.submitProgress(pScore, pLevel);
+            localStorage.removeItem('riverEscapePendingSync');
+            localStorage.removeItem('riverEscapePendingScore');
+            localStorage.removeItem('riverEscapePendingLevel');
+            console.log("✅ [ELITE SYNC] Pending record synced successfully!");
         }
     },
 
