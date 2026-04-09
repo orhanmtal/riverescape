@@ -1,4 +1,4 @@
-// RİVER ESCAPE ELİTE - v1.99.3.31.0 (SILENT ENGINE RELEASE)
+// RİVER ESCAPE ELİTE - v1.99.3.31.9.4 (ULTRA PERSISTENCE RELEASE)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -917,7 +917,7 @@ if(settingsOpenBtn) settingsOpenBtn.addEventListener('click', () => {
     settingsScreen.style.display = 'flex';
 });
 
-const shopBtnGameOver = document.getElementById('gameover-shop-btn');
+const shopBtnGameOver = document.getElementById('shop-open-btn-gameover');
 if(shopBtnGameOver) shopBtnGameOver.addEventListener('click', () => {
     document.getElementById('shop-screen').classList.remove('hidden');
     document.getElementById('shop-screen').classList.add('active');
@@ -925,6 +925,21 @@ if(shopBtnGameOver) shopBtnGameOver.addEventListener('click', () => {
     document.getElementById('shop-screen').style.opacity = '1';
     document.getElementById('shop-screen').style.zIndex = '6000';
 });
+
+// v1.99.3.31.9.4: ELITE QUIT PROTECTION
+const quitBtnGameOver = document.getElementById('quit-btn-gameover');
+if(quitBtnGameOver) {
+    quitBtnGameOver.removeAttribute('onclick'); // HTML'deki inline reload'u kaldır
+    quitBtnGameOver.onclick = () => {
+        if (score > 2000) {
+            const t = translations[currentLang];
+            const confirmQuit = confirm(t.confirmQuit || "Bu turdaki skorun SİLİNECEK! Çıkmak istediğine emin misin?");
+            if (confirmQuit) location.reload();
+        } else {
+            location.reload();
+        }
+    };
+}
 
 const closeShopBtn = document.getElementById('shop-close-btn');
 if(closeShopBtn) closeShopBtn.addEventListener('click', () => {
