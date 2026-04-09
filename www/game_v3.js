@@ -697,7 +697,7 @@ let transitionTimer = 0;
 // ----------------------------------------------------
 let isPlaying = false, isGameOver = false, isPaused = false;
 let score = 0, goldCount = 0, lastTime = 0; // v1.97.2.3 RELEASE
-let currentLevel = 2;
+let currentLevel = 1;
 let bgY = 0; let bgScrollSpeed = 100; 
 let screenFlash = 0; // Seviye geçişi parlaması v132
 let gameLoopRequestId = null; // v1.98.1.4: LOOP CONTROL
