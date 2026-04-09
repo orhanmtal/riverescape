@@ -104,23 +104,27 @@ const Leaderboard = {
     },
 
     handleGuestMode() {
-        this.playerID = localStorage.getItem('riverEscapeID');
-        if (!this.playerID) {
-            this.playerID = 'RE-' + Math.random().toString(36).substr(2, 9).toUpperCase();
-            localStorage.setItem('riverEscapeID', this.playerID);
-        }
-        this.updateUI();
+        // v1.199.3.31.10.4: NO GUEST ALLOWED 🔏
+        this.updateAuthUI(false);
     },
 
     updateAuthUI(isLoggedIn, displayName) {
         try {
             const statusText = document.getElementById('auth-status-text');
             if (statusText) {
-                statusText.innerText = isLoggedIn ? "ELİTE HESAP 🏛️" : "MİSAFİR HESAP";
-                statusText.style.color = isLoggedIn ? "#4caf50" : "#ffd700";
+                statusText.innerText = isLoggedIn ? "ELİTE HESAP 🏛️" : "LÜTFEN GİRİŞ YAPIN 🔏";
+                statusText.style.color = isLoggedIn ? "#4caf50" : "#ff4444";
             }
+            
             const loginBtn = document.getElementById('google-login-btn');
             if (loginBtn) loginBtn.style.display = isLoggedIn ? 'none' : 'flex';
+
+            // ELITE BUTTONS - Sadece giriş yapıldıysa göster! 🏛️
+            const eliteButtons = ['start-btn', 'spin-open-btn', 'shop-open-btn', 'leaderboard-open-btn'];
+            eliteButtons.forEach(id => {
+                const btn = document.getElementById(id);
+                if (btn) btn.style.display = isLoggedIn ? '' : 'none';
+            });
 
             const welcomeMsg = document.getElementById('auth-welcome-msg');
             if (welcomeMsg && isLoggedIn) {
