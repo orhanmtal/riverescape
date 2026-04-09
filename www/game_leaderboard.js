@@ -1,5 +1,5 @@
 /**
- * RİVER ESCAPE ELİTE - game_leaderboard.js
+ * RİVER ESCAPE ELİTE - v1.99.4.1.2 (CLOUD SYNC & UI SHIFT)
  * Firebase Firestore Global Sıralama ve Profil Senkronizasyon Sistemi
  * v1.99.3.30
  */
@@ -120,7 +120,7 @@ const Leaderboard = {
             if (loginBtn) loginBtn.style.display = isLoggedIn ? 'none' : 'flex';
 
             // ELITE BUTTONS - Sadece giriş yapıldıysa göster! 🏛️
-            const eliteButtons = ['start-btn', 'spin-open-btn', 'shop-open-btn', 'leaderboard-open-btn'];
+            const eliteButtons = ['start-btn', 'spin-open-btn', 'shop-open-btn', 'leaderboard-open-btn', 'settings-open-btn'];
             eliteButtons.forEach(id => {
                 const btn = document.getElementById(id);
                 if (btn) btn.style.display = isLoggedIn ? '' : 'none';
@@ -162,7 +162,13 @@ const Leaderboard = {
                 modal.classList.remove('active');
             }
 
-            if (this.db) this.submitProgress(window.score || 0, window.currentLevel || 1);
+            if (this.db) {
+                // v1.99.4.1.2: Skordan bağımsız isim sync!
+                this.db.collection('leaderboard').doc(this.playerID).set({
+                    name: this.playerName,
+                    lastSeen: firebase.firestore.FieldValue.serverTimestamp()
+                }, { merge: true });
+            }
             if (typeof showToast === 'function') showToast("İSİM GÜNCELLENDİ! 🏆", true);
         } else {
             if (typeof showToast === 'function') showToast("GEÇERLİ BİR İSİM GİRİN!", false);
