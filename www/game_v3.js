@@ -1,4 +1,4 @@
-// RİVER ESCAPE ELİTE - v1.199.3.31.10 (STABIL SON1 - Native Gmail & Revive Systems Fixed)
+// RİVER ESCAPE ELİTE - v1.199.3.31.10.3.3 (ELITE TREASURY RELEASE)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -926,17 +926,23 @@ if(shopBtnGameOver) shopBtnGameOver.addEventListener('click', () => {
     document.getElementById('shop-screen').style.zIndex = '6000';
 });
 
-// v1.99.3.31.9.4: ELITE QUIT PROTECTION
+// v1.199.3.31.10.2: ELITE QUIT PROTECTION (Gold Vault Guard)
 const quitBtnGameOver = document.getElementById('quit-btn-gameover');
 if(quitBtnGameOver) {
-    quitBtnGameOver.removeAttribute('onclick'); // HTML'deki inline reload'u kaldır
+    quitBtnGameOver.removeAttribute('onclick'); 
     quitBtnGameOver.onclick = () => {
+        const doQuit = () => {
+            // v1.199.3.31.10.3: ALTINLAR ZATEN ANLIK KASADA! Sadece mühürle ve çık. 🏦
+            saveGame();
+            location.reload();
+        };
+
         if (score > 2000) {
             const t = translations[currentLang];
             const confirmQuit = confirm(t.confirmQuit || "Bu turdaki skorun SİLİNECEK! Çıkmak istediğine emin misin?");
-            if (confirmQuit) location.reload();
+            if (confirmQuit) doQuit();
         } else {
-            location.reload();
+            doQuit();
         }
     };
 }
@@ -1740,7 +1746,7 @@ function syncEliteHUD() {
         if(cachedHud.sLabel) cachedHud.sLabel.innerText = langPack.scoreLabel || "SCORE:";
         if(cachedHud.gLabel) cachedHud.gLabel.innerText = langPack.goldLabel || "GOLD:";
         if(cachedHud.score) cachedHud.score.innerText = Math.max(0, Math.floor(score));
-        if(cachedHud.gold) cachedHud.gold.innerText = Math.max(0, goldCount);
+        if(cachedHud.gold) cachedHud.gold.innerText = Math.max(0, totalGold); // v1.199.3.31.10.3: BAKİYEYİ GÖSTER
 
         const currentLAsset = levelAssets[(currentLevel - 1) % levelAssets.length];
         if(currentLAsset && cachedHud.lvlName) {
@@ -2097,11 +2103,12 @@ function update(dt) {
         
         if (px < g.x + g.radius && px + pw > g.x - g.radius &&
             py < g.y + g.radius && py + ph > g.y - g.radius) {
-            playCoinSound(); 
             triggerVibration(15); // Altın aldığında kısa titreşim
             let collected = (g.value || 1);
             goldCount += collected;
+            totalGold += collected; // v1.199.3.31.10.3: ANLIK KASA (Progress Protection)
             golds.splice(i, 1);
+            saveGame(); // v1.199.3.31.10.3: Anlık kayıt 
             continue;
         }
     }
@@ -2574,7 +2581,7 @@ function draw(dt) {
                         ctx.drawImage(img, -obs.width / 2, -obs.height / 2, obs.width, obs.height);
                         ctx.restore();
                     } else {
-                        // Hippo ve Taşlar için doğal düz (dik) çizim
+                        // Hippo and Taşlar için doğal düz (dik) çizim
                         ctx.save();
                         ctx.translate(obs.x + obs.width / 2, obs.y + obs.height / 2);
                         ctx.drawImage(img, -obs.width / 2, -obs.height / 2, obs.width, obs.height);
@@ -3127,10 +3134,9 @@ if(startBtn) startBtn.addEventListener('click', startGame);
 if(pauseBtn) pauseBtn.addEventListener('click', togglePause);
 if(resumeBtn) resumeBtn.addEventListener('click', togglePause);
 
+// v1.199.3.31.10.3: Mükerrer çıkış dinleyicileri temizlendi. 🛡️
 if(quitBtn) quitBtn.addEventListener('click', () => {
-    // Collect loot when quitting v121
-    totalGold += goldCount;
-    // goldCount = 0; // v1.99.3.31.0: RESUME İÇİN SIFIRLAMAYI KALDIRDIK
+    // v1.199.3.31.10.3: Session protection (Instant Vault already saved)
     saveGame();
     
     isPaused = false;
