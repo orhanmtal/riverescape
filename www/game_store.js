@@ -67,10 +67,16 @@ const GameStore = {
         if (!product) return;
 
         if (product.id.includes('gold')) {
-            window.totalGold += product.amount; 
+            // v1.99.3.31.3: Doğrudan global değişkeni güncelle (Shared Scope)
+            totalGold += product.amount; 
             if (typeof saveGame === 'function') saveGame();
             if (typeof updateShopUI === 'function') updateShopUI();
-            if (typeof showToast === 'function') showToast(`CONSULATED: +${product.amount} GOLD! 💰`, true);
+            
+            const msg = (translations[currentLang] && translations[currentLang].purchaseSuccess) 
+                        ? `${translations[currentLang].purchaseSuccess} +${product.amount} GOLD! 💰`
+                        : `PURCHASE SUCCESSFUL! +${product.amount} GOLD! 💰`;
+                        
+            if (typeof showToast === 'function') showToast(msg, true);
         }
         
         // Ses Efekti

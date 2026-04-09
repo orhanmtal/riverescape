@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="style.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Outfit:wght@700&display=swap" rel="stylesheet">
-    <!-- EMERGENCY ON-SCREEN DEBUGGER v1.99.3.31.0 -->
+    <!-- EMERGENCY ON-SCREEN DEBUGGER v1.99.3.31.8 -->
     <script>
         window.onerror = function(msg, url, line) {
             var div = document.createElement('div');
@@ -34,14 +34,14 @@
         <canvas id="gameCanvas"></canvas>
         
         <!-- UI (Oyun Arayüzü) Katmanı -->
-            <!-- MODERN GLASS HUD v1.99.3.31.0 (Elite HD) -->
+            <!-- MODERN GLASS HUD v1.99.3.31.8 (Elite HD) -->
             <div id="modern-hud" style="
                 position: absolute; top: 15px; left: 15px; 
                 padding: 10px 18px; border-radius: 15px;
                 background: rgba(0, 30, 60, 0.4); 
                 backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-                border: 1px solid rgba(0, 229, 255, 0.3);
-                box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5), 0 0 15px rgba(0, 229, 255, 0.1);
+                border: 1px solid rgba(0, 229, 255, 0.4);
+                box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4), 0 0 15px rgba(0, 229, 255, 0.1);
                 display: flex; flex-direction: column; gap: 4px;
                 z-index: 1000; pointer-events: none; min-width: 110px;
             ">
@@ -55,8 +55,8 @@
                 </div>
                 <div style="margin-top: 4px; display: flex; flex-direction: column; gap: 2px;">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <span id="levelName-hud" style="color: rgba(255,255,255,0.6); font-family: 'Outfit', sans-serif; font-size: 9px; font-weight: bold; letter-spacing: 1px; text-transform: uppercase;">LEVEL 1: SPRING</span>
-                        <span id="lives-hud" style="font-size: 10px; filter: drop-shadow(0 0 5px rgba(255,82,82,0.5));">❤️❤️❤️</span>
+                        <span id="levelName-hud" style="color: rgba(255,255,255,0.8); font-family: 'Outfit', sans-serif; font-size: 9px; font-weight: bold; letter-spacing: 1px; text-transform: uppercase;">LEVEL 1: SPRING</span>
+                        <span id="lives-hud" style="font-size: 10px; filter: drop-shadow(0 0 5px rgba(255,82,82,0.4));">❤️❤️❤️</span>
                     </div>
                     <div id="progress-container-hud" style="width: 100%; height: 3px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden;">
                         <div id="progress-fill-hud" style="width: 30%; height: 100%; background: linear-gradient(to right, #00e5ff, #12c2e9); box-shadow: 0 0 8px #00e5ff;"></div>
@@ -64,7 +64,7 @@
                 </div>
             </div>
 
-            <button id="pause-btn" style="position: absolute; top: 20px; right: 20px; display: none; background: rgba(0,0,0,0.4); color: white; border: 1px solid rgba(255,229,255,0.3); padding: 8px; font-family: 'Outfit', sans-serif; font-size: 18px; z-index: 1001; border-radius: 50%; width: 45px; height: 45px; pointer-events: auto; cursor: pointer; backdrop-filter: blur(4px); line-height: 1;">⏸</button>
+            <button id="pause-btn" style="position: absolute; top: 20px; right: 20px; display: none; background: rgba(0,0,0,0.4); color: white; border: 1px solid rgba(255,229,255,0.4); padding: 8px; font-family: 'Outfit', sans-serif; font-size: 18px; z-index: 1001; border-radius: 50%; width: 45px; height: 45px; pointer-events: auto; cursor: pointer; backdrop-filter: blur(4px); line-height: 1;">⏸</button>
 
             <!-- PAUSE EKRANI -->
             <div id="pause-screen" class="screen hidden" style="background: rgba(0,0,0,0.85); flex-direction: column; align-items: center; justify-content: center; z-index: 100;">
@@ -75,8 +75,8 @@
                 </div>
             </div>
 
-            <!-- VERSION TAG v1.99.3.31.0 -->
-            <div id="version-tag" style="position: absolute; bottom: 8px; right: 12px; color: rgba(255,255,255,0.7); font-size: 11px; z-index: 50; font-family: 'Outfit', sans-serif; font-weight: bold; pointer-events: none; text-shadow: 0 0 5px rgba(0,0,0,0.5);">v1.99.3.31.0</div>
+            <!-- VERSION TAG v1.99.3.31.8 -->
+            <div id="version-tag" style="position: absolute; bottom: 8px; right: 12px; color: rgba(255,255,255,0.8); font-size: 11px; z-index: 50; font-family: 'Outfit', sans-serif; font-weight: bold; pointer-events: none; text-shadow: 0 0 5px rgba(0,0,0,0.4);">v1.99.3.31.8</div>
 
             <div id="start-screen" class="screen active" style="padding: 40px 30px;">
                 <h1 style="
@@ -88,13 +88,13 @@
                     filter: drop-shadow(0 6px 15px rgba(0,0,0,0.4));
                     letter-spacing: -1px;
                 ">River Escape</h1>
-                <div style="color: rgba(255,255,255,0.4); font-family: 'Outfit', sans-serif; font-size: 12px; font-weight: 800; margin-bottom: 25px; letter-spacing: 3px; text-transform: uppercase;">ELITE v1.99.3.31.0</div>
+                <div style="color: rgba(255,255,255,0.4); font-family: 'Outfit', sans-serif; font-size: 12px; font-weight: 800; margin-bottom: 25px; letter-spacing: 3px; text-transform: uppercase;">ELITE v1.99.3.31.8</div>
                 
-                <!-- PLAYER NAME / IDENTITY v1.99.3.31.0 -->
+                <!-- PLAYER NAME / IDENTITY v1.99.3.31.8 -->
                 <div id="player-profile-btn" style="
                     display: flex; align-items: center; gap: 10px; margin-bottom: 25px; cursor: pointer; pointer-events: auto;
                     background: rgba(255,255,255,0.08); padding: 12px 20px; border-radius: 60px; border: 1px solid rgba(255,255,255,0.15);
-                    transition: all 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+                    transition: all 0.4s; box-shadow: 0 4px 15px rgba(0,0,0,0.2);
                 " onclick="Leaderboard.promptName()">
                     <span id="player-flag-main" style="font-size: 18px;">🌍</span>
                     <div style="text-align: left;">
@@ -109,7 +109,7 @@
                         width: 100%; display: flex; align-items: center; justify-content: center; gap: 12px;
                         background: #fff; color: #000; border: none; padding: 14px; border-radius: 12px;
                         font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 14px;
-                        cursor: pointer; box-shadow: 0 4px 15px rgba(255,255,255,0.15); transition: all 0.3s ease;
+                        cursor: pointer; box-shadow: 0 4px 15px rgba(255,255,255,0.15); transition: all 0.4s ease;
                     ">
                         <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" style="width: 18px; height: 18px;">
                         GOOGLE İLE BAĞLAN
@@ -130,7 +130,7 @@
                 </div>
             </div>
 
-            <!-- MODERN ELITE GAME OVER SCREEN v3.31.0 -->
+            <!-- MODERN ELITE GAME OVER SCREEN v3.81.0 -->
             <div id="game-over-screen" class="screen hidden" style="
                 background: rgba(10, 10, 15, 0.95);
                 backdrop-filter: blur(20px);
@@ -148,7 +148,7 @@
                     text-transform: uppercase;
                     letter-spacing: 2px;
                 ">Oyun Bitti!</h2>
-                <div style="color: rgba(255,255,255,0.4); font-family: 'Outfit', sans-serif; font-size: 10px; font-weight: 600; margin-bottom: 25px;">River Escape Elite v1.99.3.31.0</div>
+                <div style="color: rgba(255,255,255,0.4); font-family: 'Outfit', sans-serif; font-size: 10px; font-weight: 600; margin-bottom: 25px;">River Escape Elite v1.99.3.31.8</div>
                 
                 <div style="background: rgba(255,255,255,0.05); border-radius: 20px; padding: 25px 20px; width: 100%; margin-bottom: 25px; border: 1px solid rgba(255,255,255,0.05); text-align: center;">
                     <p id="score-title-final" style="color: #fff; font-family: 'Outfit', sans-serif; font-size: 28px; font-weight: 900; margin: 0; letter-spacing: 1px;">SKOR: 0</p>
@@ -169,7 +169,7 @@
                     
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 10px;">
                         <button id="restart-btn" style="background: rgba(255,255,255,0.1); color: #fff; border: 1px solid rgba(255,255,255,0.2); border-radius: 16px; padding: 15px; font-family: 'Outfit', sans-serif; font-weight: 800; cursor: pointer;">TEKRAR 🔄</button>
-                        <button id="quit-btn-gameover" onclick="location.reload()" style="background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.6); border: none; border-radius: 16px; padding: 15px; font-family: 'Outfit', sans-serif; font-weight: 800; cursor: pointer;">MENÜ 🏠</button>
+                        <button id="quit-btn-gameover" onclick="location.reload()" style="background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.8); border: none; border-radius: 16px; padding: 15px; font-family: 'Outfit', sans-serif; font-weight: 800; cursor: pointer;">MENÜ 🏠</button>
                     </div>
                 </div>
             </div>
@@ -206,7 +206,7 @@
                 <button id="hard-reset-btn" style="background-color: #b71c1c; font-family: 'Outfit', sans-serif; font-size: 12px; font-weight:bold; padding: 12px; border-radius: 12px; width: 100%; box-sizing: border-box; align-self: stretch; color: #fff; border: none; outline:none; margin-top: 15px; cursor:pointer; opacity: 0.9; box-shadow: 0 4px #5c0000;">⚠️ RESET ALL PROGRESS</button>
             </div>
 
-            <!-- MODERN COMPACT SHOP IMAGE v3.31.0 (NO SCROLL) -->
+            <!-- MODERN COMPACT SHOP IMAGE v3.81.0 (NO SCROLL) -->
             <div id="shop-screen" class="screen hidden" style="background: rgba(10,12,18,0.98); z-index: 100; max-width: 350px; width: 92%; padding: 15px 20px; border: 1px solid rgba(255,215,0,0.2); border-radius: 28px;">
                 <h2 id="shop-title-main" style="color: gold; font-family: 'Press Start 2P', cursive; font-size: 14px; margin-bottom: 5px;">MAĞAZA</h2>
                 <div id="shop-balance-text" style="color: #fff; font-size: 8px; margin-bottom: 8px; font-family: 'Press Start 2P', cursive; opacity: 0.8;">BAKİYE: <span id="totalGoldValue" style="color: #FFD700;">0</span> GOLD</div>
@@ -233,13 +233,23 @@
                     </div>
 
                     <!-- Nehir Topu -->
-                    <div class="shop-item" style="padding: 8px 12px; margin-bottom: 0;">
+                    <div id="shop-weapon-row" class="shop-item" style="padding: 8px 12px; margin-bottom: 0;">
                         <div class="shop-icon-container" style="width: 32px; height: 32px; font-size: 16px;">💣</div>
                         <div class="shop-item-info">
-                            <div class="shop-item-title" style="font-size: 13px;">Nehir Topu</div>
-                            <div class="shop-item-desc" style="font-size: 9px;">Engelleri parçalar.</div>
+                            <div id="shop-wpn-title" class="shop-item-title" style="font-size: 13px;">Nehir Topu</div>
+                            <div id="shop-wpn-desc" class="shop-item-desc" style="font-size: 9px;">Engelleri parçalar.</div>
                         </div>
-                        <button id="buy-weapon-btn" class="shop-upgrade-btn" style="padding: 5px 10px; font-size: 10px;">Satın Al<br><span id="weapon-price">1000</span></button>
+                        <button id="buy-weapon-btn" class="shop-upgrade-btn" style="padding: 5px 10px; font-size: 10px;">Satın Al<br>5.000</button>
+                    </div>
+
+                    <!-- Elite Mühimmat (Sadece Silahı Olanlara) -->
+                    <div id="shop-ammo-row" class="shop-item" style="padding: 8px 12px; margin-bottom: 0; display: none; border: 1px solid rgba(255,215,0,0.3); background: rgba(255,215,0,0.05);">
+                        <div class="shop-icon-container" style="width: 32px; height: 32px; font-size: 16px;">🚀</div>
+                        <div class="shop-item-info">
+                            <div id="shop-ammo-title" class="shop-item-title" style="font-size: 13px; color: gold;">Mühimmat Paketi</div>
+                            <div id="shop-ammo-desc" class="shop-item-desc" style="font-size: 9px;">+10 Mermi sağlar.</div>
+                        </div>
+                        <button id="buy-ammo-btn" class="shop-upgrade-btn" style="padding: 5px 10px; font-size: 10px; background: linear-gradient(135deg, #FFD700, #ff8c00); color: #000;">Yükle<br>1.000</button>
                     </div>
 
                     <!-- Gemi Zırhı -->
@@ -285,22 +295,22 @@
             </div>
 
             <!-- LEVEL 2 GEÇİŞ EFEKT EKRANI -->
-            <div id="level-up-overlay" class="screen hidden" style="pointer-events: none; z-index: 50; background: transparent; backdrop-filter: none; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.5s;">
+            <div id="level-up-overlay" class="screen hidden" style="pointer-events: none; z-index: 50; background: transparent; backdrop-filter: none; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.4s;">
                 <div style="text-align: center;">
                     <h1 style="color: #4CAF50; font-size: 40px; font-family: 'Press Start 2P', cursive; text-shadow: 4px 4px 0 #000; margin: 0;">LEVEL 2</h1>
                     <h2 style="color: #8BC34A; font-size: 24px; font-family: 'Outfit', sans-serif; text-shadow: 3px 3px 0 #000; margin-top: 10px; font-weight: 900; letter-spacing: 5px;">🍃 SUMMER RIVER 🍃</h2>
                 </div>
             </div>
             
-            <!-- İSİM GİRİŞ EKRANI (PROMPT REPLACEMENT) v1.99.3.31.0 -->
+            <!-- İSİM GİRİŞ EKRANI (PROMPT REPLACEMENT) v1.99.3.31.8 -->
             <div id="name-modal-overlay" class="screen hidden" style="z-index: 9000; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px);">
                 <div style="background: linear-gradient(160deg, rgba(30,30,50,0.95), rgba(10,10,20,0.95)); border: 2px solid #FFD700; border-radius: 24px; padding: 30px; width: 300px; box-shadow: 0 0 30px rgba(255,215,0,0.2);">
                     <h2 style="color: #FFD700; font-family: 'Press Start 2P', cursive; font-size: 14px; margin-bottom: 20px;">OYUNCU ADI</h2>
                     <p style="color: #fff; font-size: 11px; margin-bottom: 20px; opacity: 0.8; font-family: 'Outfit', sans-serif;">Liderlik tablosunda görünecek ismini buraya yaz Şampiyon!</p>
                     <input type="text" id="player-name-input" maxlength="12" placeholder="İSİM GİR..." style="
-                        width: 100%; padding: 15px; border-radius: 12px; border: 1px solid rgba(255,215,0,0.3); background: rgba(255,255,255,0.05);
+                        width: 100%; padding: 15px; border-radius: 12px; border: 1px solid rgba(255,215,0,0.4); background: rgba(255,255,255,0.05);
                         color: #fff; font-family: 'Outfit', sans-serif; font-size: 18px; font-weight: bold; text-align: center; outline: none; margin-bottom: 20px;
-                        box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+                        box-shadow: inset 0 0 10px rgba(0,0,0,0.4);
                     ">
                     <button id="save-name-btn" style="
                         width: 100%; padding: 15px; border-radius: 12px; border: none; background: linear-gradient(135deg, #FFD700, #ff8c00);
@@ -309,7 +319,7 @@
                     ">KAYDET & DEVAM ET</button>
 
                     <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
-                        <p style="color: rgba(255,255,255,0.6); font-size: 11px; margin-bottom: 12px; font-weight: bold;">HESABIN MI VAR?</p>
+                        <p style="color: rgba(255,255,255,0.8); font-size: 11px; margin-bottom: 12px; font-weight: bold;">HESABIN MI VAR?</p>
                         <button id="google-recover-btn" style="
                             width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px;
                             background: rgba(255,255,255,0.1); color: #fff; border: 1px solid rgba(255,255,255,0.2); padding: 12px; border-radius: 12px;
@@ -331,7 +341,7 @@
                     background: linear-gradient(135deg,#f12711,#f5af19);
                     border-radius: 20px; padding: 30px 40px; text-align:center;
                     z-index: 9999; box-shadow: 0 0 60px rgba(255,200,0,0.8);
-                    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.35s;
+                    transition: transform 0.45s cubic-bezier(0.44, 1.86, 0.84, 1), opacity 0.45s;
                     opacity:0; pointer-events:none;
                 ">
                     <div id="spin-popup-emoji" style="font-size:52px; margin-bottom:8px;">🎉</div>
@@ -366,7 +376,7 @@
             <!-- SIFIRLAMA ONAY EKRANI (MOBİL DOSTU) v97 -->
             <div id="reset-confirm-overlay" class="screen hidden" style="z-index: 9000; background: rgba(0,0,0,0.95); display: flex; align-items: center; justify-content: center;">
                 <div style="text-align: center; width: 90%; background: #222; padding: 30px; border: 2px solid #f12711; border-radius: 15px; box-shadow: 0 0 30px rgba(241, 39, 17, 0.4);">
-                    <h3 style="color: #f12711; font-family: 'Press Start 2P', cursive; font-size: 16px; margin-bottom: 20px; line-height: 1.5;">DİKKAT!</h3>
+                    <h3 style="color: #f12711; font-family: 'Press Start 2P', cursive; font-size: 16px; margin-bottom: 20px; line-height: 1.8;">DİKKAT!</h3>
                     <p style="color: #ccc; margin-bottom: 30px; font-size: 14px;">Tüm altınların ve mağaza geliştirmelerin silinecek. En baştan başlamak istediğine emin misin?</p>
                     <div style="display: flex; gap: 10px; flex-direction: column;">
                         <button id="confirm-reset-yes" style="background: #f12711; color: white; padding: 15px; font-weight: bold; border-radius: 8px; border: none; font-family: 'Outfit', sans-serif; cursor: pointer;">EVET, SIFIRLA</button>
@@ -381,16 +391,16 @@
                 border: 2px solid #f2994a; color: white;
                 padding: 12px 20px; border-radius: 15px; z-index: 10000;
                 font-family: 'Outfit', sans-serif; font-size: 13px; text-align: center;
-                box-shadow: 0 10px 40px rgba(0,0,0,0.7); pointer-events: none;
-                transition: opacity 0.3s, transform 0.3s; width: 85%; max-width: 340px;
-                line-height: 1.4; font-weight: 600;
+                box-shadow: 0 10px 40px rgba(0,0,0,0.8); pointer-events: none;
+                transition: opacity 0.4s, transform 0.4s; width: 85%; max-width: 340px;
+                line-height: 1.8; font-weight: 600;
             ">
                 <span id="toast-text"></span>
             </div>
             
             <!-- GLOBAL LEADERBOARD MODAL v1.99.1.0 -->
             <div id="leaderboard-screen" class="screen hidden" style="background: rgba(0,0,0,0.92); z-index: 8500; font-family: 'Outfit', sans-serif;">
-                <div style="width: 90%; max-width: 400px; background: rgba(20, 20, 20, 0.6); backdrop-filter: blur(20px); border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); padding: 25px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); pointer-events: auto;">
+                <div style="width: 90%; max-width: 400px; background: rgba(20, 20, 20, 0.8); backdrop-filter: blur(20px); border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); padding: 25px; box-shadow: 0 20px 50px rgba(0,0,0,0.4); pointer-events: auto;">
                     <h2 style="color: #FFD700; font-family: 'Press Start 2P', cursive; font-size: 16px; margin-bottom: 20px; text-align: center;">TOP RIDERS</h2>
                     
                     <div id="leaderboard-list" style="display: flex; flex-direction: column; gap: 8px; max-height: 50vh; overflow-y: auto;">
@@ -408,15 +418,15 @@
             </div>
             
             <div id="controls-ui" style="position: absolute; bottom: 20px; right: 20px; display: flex; flex-direction: column; gap: 15px; z-index: 1000; pointer-events: none;">
-                <!-- DASH BUTTON v1.70 -->
+                <!-- DASH BUTTON v1.80 -->
                 <div id="dash-action-btn" style="
                     width: 60px; height: 60px; border-radius: 50%;
-                    background: rgba(0, 229, 255, 0.15); border: 2px solid rgba(0, 229, 255, 0.5);
+                    background: rgba(0, 229, 255, 0.15); border: 2px solid rgba(0, 229, 255, 0.4);
                     display: flex; align-items: center; justify-content: center;
                     cursor: pointer; pointer-events: auto; backdrop-filter: blur(4px);
                     box-shadow: 0 0 20px rgba(0, 229, 255, 0.2); transition: all 0.2s;
                 " onmousedown="this.style.transform='scale(0.9)'; this.style.background='rgba(0, 229, 255, 0.4)'" onmouseup="this.style.transform='scale(1)'; this.style.background='rgba(0, 229, 255, 0.15)'">
-                    <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="#00e5ff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="#00e5ff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
                         <polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polyline>
                     </svg>
                     <!-- Energy Bar Overlay -->
@@ -432,12 +442,12 @@
                     border-radius: 50%; border: 3px solid #333;
                     cursor: pointer; pointer-events: auto;
                     box-shadow: 0 0 25px rgba(0,0,0,0.8), inset 0 0 15px rgba(255,0,0,0.1);
-                    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
                 " onmousedown="this.style.transform='scale(0.9) rotate(-10deg)';" onmouseup="this.style.transform='scale(1) rotate(0deg)';" ontouchstart="this.style.transform='scale(0.9) rotate(-10deg)';" ontouchend="this.style.transform='scale(1) rotate(0deg)';">
                     <!-- Neon Ring -->
-                    <div style="position: absolute; inset: -4px; border: 2px solid #ff3d00; border-radius: 50%; opacity: 0.6; animation: rotateRing 4s linear infinite; filter: blur(1px);"></div>
+                    <div style="position: absolute; inset: -4px; border: 2px solid #ff3d00; border-radius: 50%; opacity: 0.8; animation: rotateRing 4s linear infinite; filter: blur(1px);"></div>
                     
-                    <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="#ff3d00" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="filter: drop-shadow(0 0 5px #ff3d00);">
+                    <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="#ff3d00" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" style="filter: drop-shadow(0 0 5px #ff3d00);">
                         <circle cx="12" cy="12" r="3"></circle>
                         <path d="M3 12h3m12 0h3M12 3v3m0 12v3"></path>
                     </svg>
@@ -446,7 +456,7 @@
                         background: #f12711; color: white;
                         font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 900;
                         padding: 3px 8px; border-radius: 12px;
-                        box-shadow: 0 4px 10px rgba(241, 39, 17, 0.5);
+                        box-shadow: 0 4px 10px rgba(241, 39, 17, 0.4);
                         border: 2px solid #fff; min-width: 15px; text-align: center;
                     ">0</div>
                 </div>
@@ -464,7 +474,7 @@
                     box-shadow: 0 0 15px rgba(155, 89, 182, 0.4);
                     cursor: pointer; pointer-events: auto; transition: all 0.2s;
                 " onmousedown="this.style.transform='scale(0.9)';" onmouseup="this.style.transform='scale(1)';">
-                    <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="#e056fd" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="#e056fd" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
                     </svg>
                     <div id="armor-badge" style="
@@ -480,17 +490,17 @@
 
     <style>@keyframes rotateRing { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }</style>
 
-    <!-- Firebase SDKs (v9 Compat Mode) v1.99.3.31.0 -->
+    <!-- Firebase SDKs (v9 Compat Mode) v1.99.3.31.8 -->
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
 
-    <!-- Scriptleri Yükle -->
-    <script src="translations.js"></script>
-    <script src="audio.js"></script>
-    <script src="assets.js"></script> 
-    <script src="game_leaderboard.js"></script>
-    <script src="game_store.js"></script>
-    <script src="game_v3.js"></script>
+    <!-- Scriptleri Yükle (v3.71.7 Cache Buster) -->
+    <script src="translations.js?v=1.99.3.31.7"></script>
+    <script src="audio.js?v=1.99.3.31.7"></script>
+    <script src="assets.js?v=1.99.3.31.7"></script> 
+    <script src="game_leaderboard.js?v=1.99.3.31.7"></script>
+    <script src="game_store.js?v=1.99.3.31.7"></script>
+    <script src="game_v3.js?v=1.99.3.31.7"></script>
 </body>
 </html>

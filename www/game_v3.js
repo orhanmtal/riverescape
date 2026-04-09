@@ -44,6 +44,8 @@ const spinScreen = document.getElementById('spin-screen');
 const spinCloseBtn = document.getElementById('spin-close-btn');
 const spinBtnMain = document.getElementById('spin-btn-main');
 const buyWeaponBtn = document.getElementById('buy-weapon-btn');
+const buyAmmoBtn = document.getElementById('buy-ammo-btn');
+const ammoRow = document.getElementById('shop-ammo-row');
 const bombActionBtn = document.getElementById('bomb-action-btn');
 
 
@@ -700,17 +702,15 @@ let bgY = 0; let bgScrollSpeed = 100;
 let screenFlash = 0; // Seviye geçişi parlaması v132
 let gameLoopRequestId = null; // v1.98.1.4: LOOP CONTROL
 
-// KALICI KAYIT VE MAĞAZA
-// KALICI KAYIT VE MAĞAZA
-let totalGold = 0;
-let magnetLevel = 0;
-let shieldLevel = 0;
-let bombCount = 0; // v1.68: BOMBA STOKU
-let powerupTimer = 0;
-let hasShield = false;
-let ownsArmorLicense = false;
-let armorCharge = 0;
-let hasWeapon = false; // BU ARTIK SADECE "VARMİ" DEGİL "AKTİF Mİ" DURUMU
+var totalGold = 0;
+var magnetLevel = 0;
+var shieldLevel = 0;
+var bombCount = 0;
+var powerupTimer = 0;
+var hasShield = false;
+var ownsArmorLicense = false;
+var armorCharge = 0;
+var hasWeapon = false;
 let lastShotTime = 0;
 let bullets = [];
 
@@ -784,21 +784,37 @@ function updateShopUI() {
         msBtn.disabled = (shieldLevel >= 5 || totalGold < price);
     }
 
-    // Nehir Topu Kontrolü
+    // Nehir Topu Kontrolü (v1.99.3.31.7: 5.000G & LOCKED AFTER OWNED)
     let wb = document.getElementById('buy-weapon-btn');
     if(wb) {
         if(!hasWeapon) {
-            // LİSANS ALMAMIŞ (ELİTE v1.99.3.31.0: 1.500G)
             if(document.getElementById('shop-wpn-title')) document.getElementById('shop-wpn-title').innerText = t.weaponName;
             if(document.getElementById('shop-wpn-desc')) document.getElementById('shop-wpn-desc').innerText = t.weaponDesc;
-            wb.innerHTML = `${t.buyBtn}<br>1.500`;
-            wb.disabled = (totalGold < 1500);
+            wb.innerHTML = `${t.buyBtn}<br>5.000`;
+            wb.disabled = (totalGold < 5000);
         } else {
-            // LİSANSLI, MÜHİMMAT ALABİLİR
-            if(document.getElementById('shop-wpn-title')) document.getElementById('shop-wpn-title').innerText = t.ammoName;
-            if(document.getElementById('shop-wpn-desc')) document.getElementById('shop-wpn-desc').innerText = t.ammoDesc + ` (Mevcut: ${bombCount})`;
-            wb.innerHTML = `${t.buyBtn}<br>1.000`;
-            wb.disabled = (totalGold < 1000);
+            // LİSANSLI VE ARTIK KİLİTLİ
+            if(document.getElementById('shop-wpn-title')) document.getElementById('shop-wpn-title').innerText = t.weaponName;
+            if(document.getElementById('shop-wpn-desc')) document.getElementById('shop-wpn-desc').innerText = `Elite Mühimmat: ${bombCount}`;
+            wb.innerHTML = t.owned || "ALINDI";
+            wb.disabled = true;
+            wb.style.opacity = "0.7";
+            wb.style.background = "rgba(255,215,0,0.1)";
+        }
+    }
+
+    // Elite Mühimmat Satırı Kontrolü (v1.99.3.31.8)
+    if(ammoRow) {
+        if(hasWeapon) {
+            ammoRow.style.display = 'flex';
+            if(buyAmmoBtn) {
+                buyAmmoBtn.disabled = (totalGold < 1000);
+                if(document.getElementById('shop-ammo-desc')) {
+                    document.getElementById('shop-ammo-desc').innerText = `+10 Mermi (Mevcut: ${bombCount})`;
+                }
+            }
+        } else {
+            ammoRow.style.display = 'none';
         }
     }
 
@@ -997,10 +1013,10 @@ if(buyArmorBtn) buyArmorBtn.addEventListener('click', () => {
 if(buyWeaponBtn) buyWeaponBtn.addEventListener('click', () => {
     const t = translations[currentLang];
     if (!hasWeapon) {
-        if (totalGold >= 1500) {
-            totalGold -= 1500;
+        if (totalGold >= 5000) {
+            totalGold -= 5000;
             hasWeapon = true;
-            bombCount += 10;
+            bombCount += 15; // 5000 altına 15 mermi elite bonus
             saveGame();
             for(let i=0; i<8; i++) setTimeout(playCoinSound, i*100);
             showToast(t.weaponPurchased || "Silah Lisansı Alındı!", true);
@@ -1011,18 +1027,24 @@ if(buyWeaponBtn) buyWeaponBtn.addEventListener('click', () => {
             showToast(t.noGold, false);
         }
     } else {
-        if (totalGold >= 1000) {
-            totalGold -= 1000;
-            bombCount += 10;
-            saveGame();
-            for(let i=0; i<3; i++) setTimeout(playCoinSound, i*100);
-            showToast(t.ammoPurchased || "Mühimmat Alındı!", true);
-            updateShopUI();
-        } else {
-            shakeTimer = 0.4;
-            if(typeof playHaptic === 'function') playHaptic('light');
-            showToast(t.noGold, false);
-        }
+        // Zaten hasWeapon true ise artık bu buton updateShopUI'da disable olacağı için buraya nadiren girer
+        showToast(t.owned || "ALINDI", true);
+    }
+});
+
+if(buyAmmoBtn) buyAmmoBtn.addEventListener('click', () => {
+    const t = translations[currentLang];
+    if (totalGold >= 1000) {
+        totalGold -= 1000;
+        bombCount += 10;
+        saveGame();
+        for(let i=0; i<3; i++) setTimeout(playCoinSound, i*100);
+        showToast(t.ammoPurchased || "Mühimmat Alındı! +10 💣", true);
+        updateShopUI();
+    } else {
+        shakeTimer = 0.4;
+        if(typeof playHaptic === 'function') playHaptic('light');
+        showToast(t.noGold, false);
     }
 });
 

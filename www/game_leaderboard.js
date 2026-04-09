@@ -320,7 +320,7 @@ const Leaderboard = {
         }
     },
 
-    // v1.99.4.0: NATIVE GOOGLE AUTH (Elite Production Çözümü - No Localhost Error)
+    // v1.99.3.31.5: NATIVE GOOGLE AUTH FORCED (Modern Modal - No Chrome)
     async loginWithGoogle() {
         if (!this.auth) {
             if (typeof showToast === 'function') showToast("FIREBASE BAĞLANTISI YOK!", false);
@@ -328,43 +328,36 @@ const Leaderboard = {
         }
 
         try {
-            console.log("🚀 [ELITE AUTH] Native Google Login Başlatılıyor...");
-            if (typeof showToast === 'function') showToast("GÜVENLİ GİRİŞ BAŞLATILDI...", true);
+            console.log("🚀 [ELITE AUTH] Native Modern Modal Başlatılıyor...");
+            if (typeof showToast === 'function') showToast("GÜVENLİ GİRİŞ AÇILIYOR...", true);
             
-            // 1. Capacitor Native Eklentisi Kontrolü
-            const FirebaseAuthPlugin = window.Capacitor && window.Capacitor.Plugins 
-                                        ? window.Capacitor.Plugins.FirebaseAuthentication 
-                                        : null;
+            // 1. Capacitor Native Eklentisine Öncelik Ver
+            const Haptics = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Haptics;
+            const AuthPlugin = window.Capacitor && window.Capacitor.Plugins ? window.Capacitor.Plugins.FirebaseAuthentication : null;
 
-            if (FirebaseAuthPlugin) {
-                console.log("📱 [ELITE AUTH] Cihaz İçi Native Login Kullanılıyor!");
-                // Tarayıcı veya WebView dışına çıkmadan Google ile bağlanır
-                const result = await FirebaseAuthPlugin.signInWithGoogle();
+            if (AuthPlugin) {
+                console.log("📱 [ELITE AUTH] Cihaz İçi Modern Pencere Kullanılıyor!");
+                // Tarayıcı açmadan direkt Google hesabını seçtirir
+                const result = await AuthPlugin.signInWithGoogle();
                 
-                // Gelen güvenlik token'ını alıp Firebase web kütüphanesine tanıtıyoruz
-                const credential = firebase.auth.GoogleAuthProvider.credential(result.credential.idToken);
-                const userCredential = await this.auth.signInWithCredential(credential);
-                
-                console.log("✅ [ELITE AUTH] Native Login Başarılı:", userCredential.user.displayName);
-                if (typeof showToast === 'function') showToast(`HOŞ GELDİN ${userCredential.user.displayName.toUpperCase()}! 🏛️`, true);
-            } else {
-                // Eklenti yoksa (Tarayıcıda deneniyorsa) standart Popup yapısına dön
-                console.log("💻 [ELITE AUTH] Web Ortamı, Popup Kullanılıyor...");
-                const provider = new firebase.auth.GoogleAuthProvider();
-                const result = await this.auth.signInWithPopup(provider);
-                if (result.user) {
-                    console.log("✅ [ELITE AUTH] Web Login Başarılı:", result.user.displayName);
-                    if (typeof showToast === 'function') showToast(`HOŞ GELDİN ${result.user.displayName.toUpperCase()}! 🏛️`, true);
+                // Gelen modern veriyi Firebase Web SDK'ya tanıt (Sessiz Köprü)
+                if (result.credential && result.credential.idToken) {
+                    const credential = firebase.auth.GoogleAuthProvider.credential(result.credential.idToken);
+                    const userCredential = await this.auth.signInWithCredential(credential);
+                    console.log("✅ [ELITE AUTH] Modern Giriş Başarılı:", userCredential.user.displayName);
                 }
+            } else {
+                // Sadece Bilgisayar/Tarayıcı ortamında Chrome açar
+                console.log("💻 [ELITE AUTH] Web Ortamı, Tarayıcı Penceresi Kullanılıyor...");
+                const provider = new firebase.auth.GoogleAuthProvider();
+                await this.auth.signInWithPopup(provider);
             }
         } catch (e) {
-            console.error("❌ [ELITE AUTH] Google Login Hatası:", e);
+            console.error("❌ [ELITE AUTH] Giriş Hatası:", e);
             if (e.code === 'auth/popup-blocked') {
                 if (typeof showToast === 'function') showToast("PENCERE ENGELLENDİ!", false);
-            } else if (e.code === 'auth/popup-closed-by-user' || e.message === 'SignIn cancelled') {
-                if (typeof showToast === 'function') showToast("GİRİŞ İPTAL EDİLDİ.", false);
             } else {
-                if (typeof showToast === 'function') showToast("Google Giriş Hatası!", false);
+                if (typeof showToast === 'function') showToast("Giriş Denemesi Durduruldu.", false);
             }
         }
     }
