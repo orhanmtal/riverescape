@@ -215,64 +215,74 @@ const Leaderboard = {
         if (!navigator.onLine || !this.db) return;
         
         const finalScore = Math.floor(score);
-        const payload = {
-            id: this.playerID,
-            name: this.playerName,
-            score: finalScore,
-            level: level || 1,
-            country: this.playerCountry,
-            flag: this.playerFlag,
-            // --- ELITE CLOUD SYNC DATA ---
-            totalGold: window.totalGold || 0,
-            magnetLevel: window.magnetLevel || 0,
-            shieldLevel: window.shieldLevel || 0,
-            bombCount: window.bombCount || 0,
-            ownsArmorLicense: window.ownsArmorLicense || false,
-            armorCharge: window.armorCharge || 0,
-            hasWeapon: window.hasWeapon || false,
-            lastSeen: firebase.firestore.FieldValue.serverTimestamp()
-        };
-
         try {
-            // Firestore 'leaderboard' koleksiyonuna kaydet (ID çakışmasını önlemek için PlayerID kullanıyoruz)
+            // 1. Mevcut skoru kontrol et (High Score Protection)
+            const doc = await this.db.collection('leaderboard').doc(this.playerID).get();
+            if (doc.exists) {
+                const existingData = doc.data();
+                if (existingData.score >= finalScore) {
+                    console.log(`ℹ️ [LEADERBOARD] Progress skipped. Existing high score (${existingData.score}) is better than current (${finalScore}).`);
+                    return;
+                }
+            }
+
+            console.log(`🚀 [LEADERBOARD] New High Score! Submitting: ${finalScore}`);
+            const payload = {
+                id: this.playerID,
+                name: this.playerName,
+                score: finalScore,
+                level: level || 1,
+                country: this.playerCountry,
+                flag: this.playerFlag,
+                lastSeen: firebase.firestore.FieldValue.serverTimestamp()
+            };
+
             await this.db.collection('leaderboard').doc(this.playerID).set(payload, { merge: true });
-            console.log("☁️ Global Score Updated!");
+            console.log("✅ [LEADERBOARD] Cloud High Score Updated!");
+            if (typeof showToast === 'function') showToast("YENİ REKOR! SIRALAMA GÜNCELLENDİ! 🏆", true);
         } catch (e) {
-            console.error("Firestore Upload Error:", e);
+            console.error("❌ [LEADERBOARD] Firestore Progress Error:", e);
         }
     },
 
     // En İyi 10 Oyuncuyu Firebase'den Çek
     async getGlobalRankings(callback) {
-        if (!navigator.onLine) {
-            alert("Internet connection required!");
+        if (!navigator.onLine || !this.db) {
+            console.warn("⚠️ [LEADERBOARD] Cannot fetch rankings: Offline or No DB.");
+            callback([], { rank: '-', name: this.playerName, score: 0, flag: this.playerFlag });
             return;
         }
 
-        if (this.db) {
-            try {
-                const snapshot = await this.db.collection('leaderboard')
-                    .orderBy('score', 'desc')
-                    .limit(10)
-                    .get();
+        console.log("🌐 [LEADERBOARD] Fetching Top 10 Riders...");
+        try {
+            const snapshot = await this.db.collection('leaderboard')
+                .orderBy('score', 'desc')
+                .limit(10)
+                .get();
 
-                const rankings = [];
-                let i = 1;
-                snapshot.forEach(doc => {
-                    rankings.push({ rank: i++, ...doc.data() });
-                });
-
-                // Kendi sıramızı bulmak için küçük bir ekleme
-                const myRank = rankings.find(r => r.id === this.playerID) || 
-                               { rank: '-', name: this.playerName, score: Math.floor(window.score || 0), flag: this.playerFlag };
-                
-                callback(rankings, myRank);
-            } catch (e) {
-                console.error("Firestore Download Error:", e);
-                callback([], null);
+            if (snapshot.empty) {
+                console.log("ℹ️ [LEADERBOARD] Ranking list is currently EMPTY.");
+                callback([], { rank: '-', name: this.playerName, score: 0, flag: this.playerFlag });
+                return;
             }
-        } else {
-            callback([], { rank: '-', name: this.playerName, score: 0, flag: this.playerFlag });
+
+            const rankings = [];
+            let i = 1;
+            snapshot.forEach(doc => {
+                rankings.push({ rank: i++, ...doc.data() });
+            });
+
+            console.log(`✅ [LEADERBOARD] Successfully fetched ${rankings.length} riders.`);
+            
+            // Kendi sıramızı bul
+            const myRank = rankings.find(r => r.id === this.playerID) || 
+                           { rank: '?', name: this.playerName, score: Math.floor(window.score || 0), flag: this.playerFlag };
+            
+            callback(rankings, myRank);
+        } catch (e) {
+            console.error("❌ [LEADERBOARD] Firestore Download Error:", e);
+            if (typeof showToast === 'function') showToast("SIRALAMA LİSTESİ ALINAMADI!", false);
+            callback([], null);
         }
     },
 

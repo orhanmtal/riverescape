@@ -1045,16 +1045,16 @@ function reviveWithGold() {
         saveGame();
         updateArmorUI();
         
-        // Ses Motorunu Canlandır
+        // Arayüzü Temizle ve Oyunu Başlat
+        isGameOver = false;
+        isPlaying = true;
+        isPaused = false;
+        
+        // Ses Motorunu Canlandır (Oyun başladıktan sonra!)
         if (typeof initAudio === 'function') initAudio();
         if (typeof bgMusicScheduler === 'function' && !isMusicScheduled) {
             bgMusicScheduler();
         }
-        
-        // Arayüzü Temizle
-        isGameOver = false;
-        isPlaying = true;
-        isPaused = false;
         
         gameOverScreen.classList.remove('active');
         gameOverScreen.classList.add('hidden');
@@ -1636,13 +1636,22 @@ function gameOver() {
         
         // v122: Altınlar GameOver ekranında gösterilir ama KASAya aktarım 
         // ancak kullanıcı Quit veya Restart dediğinde (ya da reklam izlemediğinde) kesinleşir.
-        // v3.31.2: Elite UI Update (New IDs)
-        const fsElem = document.getElementById('score-title-final');
-        const fgElem = document.getElementById('gold-title-final');
-        
-        const t = translations[currentLang];
-        if (fsElem) fsElem.innerHTML = `${t.scoreLabel || 'SKOR:'} <span style="color: #fff; font-size: 32px; font-weight: 900;">${Math.floor(score)}</span>`;
-        if (fgElem) fgElem.innerHTML = `${t.goldTitle || 'ALTIN:'} <span style="color: #FFD700; font-weight: 900;">${goldCount}</span>`;
+        // v3.31.2: Elite UI Update (Double Sync for Guaranteed Result)
+        const updateEndUI = () => {
+            const fsElem = document.getElementById('score-title-final');
+            const fgElem = document.getElementById('gold-title-final');
+            const t = translations[currentLang];
+            if (fsElem) {
+                fsElem.innerHTML = `${t.scoreLabel || 'SKOR:'} <span style="color: #fff; font-size: 32px; font-weight: 900;">${Math.floor(score)}</span>`;
+                console.log("Elite Score Finalized:", Math.floor(score));
+            }
+            if (fgElem) {
+                fgElem.innerHTML = `${t.goldTitle || 'ALTIN:'} <span style="color: #FFD700; font-weight: 900;">${goldCount}</span>`;
+            }
+        };
+
+        updateEndUI(); // İlk deneme
+        setTimeout(updateEndUI, 50); // 50ms sonra garanti deneme
         
         gameOverScreen.classList.remove('hidden'); 
         gameOverScreen.classList.add('active');
