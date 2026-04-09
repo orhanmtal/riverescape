@@ -1,5 +1,5 @@
 /**
- * RİVER ESCAPE ELİTE - v1.99.4.1.6 (ELITE FREEDOM UPDATE)
+ * RİVER ESCAPE ELİTE - v1.99.4.1.7 (DATA INTEGRITY SHIELD)
  * Firebase Firestore Global Sıralama ve Profil Senkronizasyon Sistemi
  * v1.99.3.30
  */
@@ -424,20 +424,27 @@ const Leaderboard = {
         }
     },
 
-    // v1.99.4.1.6: HESAPTAN ÇIKIŞ YAP (Sign Out)
+    // v1.99.4.1.7: TAM TEMİZLİK (Deep Wipe - No Inheritance)
     async logout() {
-        if (!confirm("Oturumu kapatmak istediğinize emin misiniz? Başka bir hesapla giriş yapmak için ana ekrana döneceksiniz.")) return;
+        if (!confirm("Oturumu kapatmak istediğinize emin misiniz? Tüm yerel veriler silinecek ve ana ekrana döneceksiniz.")) return;
         
         try {
             if (this.auth) await this.auth.signOut();
             
-            // Yerel Elite hafızasını temizle
-            localStorage.removeItem('riverEscapeID');
-            localStorage.removeItem('riverEscapeName');
-            localStorage.removeItem('riverEscapePendingSync');
+            // ELITE PURGE: Tüm oyun verilerini yerel hafızadan kazı! 🧼✨
+            const keysToRemove = [
+                'riverEscapeID', 'riverEscapeName', 'riverEscapeGold', 
+                'riverEscapeScore', 'riverEscapeHighScore', 'riverEscapeLevel',
+                'riverEscapeMagnetLevel', 'riverEscapeShieldLevel', 'riverEscapeBombCount',
+                'riverEscapeWeapon', 'riverEscapeArmorLicense', 'riverEscapeArmorCharge',
+                'riverEscapePendingSync', 'riverEscapePendingScore', 'riverEscapePendingLevel',
+                'riverEscapeCountry'
+            ];
             
-            console.log("🚪 [ELITE AUTH] Logout successful. Reloading...");
-            location.reload(); // En temiz sıfırlama
+            keysToRemove.forEach(key => localStorage.removeItem(key));
+            
+            console.log("🧼 [ELITE AUTH] Deep wipe successful. No leftovers. Reloading...");
+            location.reload(); 
         } catch (e) {
             console.error("Logout failed:", e);
             location.reload();
