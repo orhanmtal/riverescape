@@ -54,11 +54,19 @@ const GameStore = {
     buy(productId) {
         if (!window.CdvPurchase) {
             console.error("Store not ready.");
-            // Simülasyon
-            this.handleFinalizePurchase({ id: productId });
+            // Simülasyon (Sadece Test modunda/Browserda parayı ekle)
+            if (window.location.protocol === 'file:') this.handleFinalizePurchase({ id: productId });
             return;
         }
-        window.CdvPurchase.store.get(productId).order();
+        
+        const p = window.CdvPurchase.store.get(productId);
+        if (p) {
+            console.log("Ordering Product:", productId);
+            p.order();
+        } else {
+            console.error("Product not found in Store:", productId);
+            if (typeof showToast === 'function') showToast("Ürün Bulunamadı! Konsol ID Kontrol Et.", false);
+        }
     },
 
     // Satın Almayı Oyuna Uygula (Altın Ekleme vb.)
