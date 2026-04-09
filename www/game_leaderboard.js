@@ -1,5 +1,5 @@
 /**
- * RİVER ESCAPE ELİTE - v1.99.4.1.5 (SMART SYNC HUB)
+ * RİVER ESCAPE ELİTE - v1.99.4.1.6 (ELITE FREEDOM UPDATE)
  * Firebase Firestore Global Sıralama ve Profil Senkronizasyon Sistemi
  * v1.99.3.30
  */
@@ -170,7 +170,8 @@ const Leaderboard = {
         const elements = {
             'google-login-btn': () => this.loginWithGoogle(),
             'google-recover-btn': () => this.loginWithGoogle(),
-            'save-name-btn': () => this.handleManualNameSave()
+            'save-name-btn': () => this.handleManualNameSave(),
+            'logout-btn': () => this.logout()
         };
         for (let id in elements) {
             const el = document.getElementById(id);
@@ -420,6 +421,26 @@ const Leaderboard = {
             localStorage.removeItem('riverEscapePendingScore');
             localStorage.removeItem('riverEscapePendingLevel');
             console.log("✅ [ELITE SYNC] Pending record synced successfully!");
+        }
+    },
+
+    // v1.99.4.1.6: HESAPTAN ÇIKIŞ YAP (Sign Out)
+    async logout() {
+        if (!confirm("Oturumu kapatmak istediğinize emin misiniz? Başka bir hesapla giriş yapmak için ana ekrana döneceksiniz.")) return;
+        
+        try {
+            if (this.auth) await this.auth.signOut();
+            
+            // Yerel Elite hafızasını temizle
+            localStorage.removeItem('riverEscapeID');
+            localStorage.removeItem('riverEscapeName');
+            localStorage.removeItem('riverEscapePendingSync');
+            
+            console.log("🚪 [ELITE AUTH] Logout successful. Reloading...");
+            location.reload(); // En temiz sıfırlama
+        } catch (e) {
+            console.error("Logout failed:", e);
+            location.reload();
         }
     },
 
