@@ -1,4 +1,4 @@
-// RİVER ESCAPE ELİTE - v1.199.3.31.10.3.3 (ELITE TREASURY RELEASE)
+// RİVER ESCAPE ELİTE - v1.99.4.1.0 (MANDATORY AUTH & TREASURY STABLE)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -1595,7 +1595,7 @@ function startGame() {
     updateLanguageUI();
     fillGoldBag();
     
-    // Satın alınan Kalkan/Durum sıfırlama v1.199.3.31.10
+    // Satın alınan Kalkan/Durum sıfırlama v1.99.4.1.0
     hasShield = false; 
     isDashing = false;
     dashEnergy = MAX_DASH_ENERGY;
