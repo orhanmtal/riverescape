@@ -1,5 +1,5 @@
 /**
- * RİVER ESCAPE ELİTE - v1.99.4.1.3 (INFINITE CLOUD VAULT)
+ * RİVER ESCAPE ELİTE - v1.99.4.1.4 (ELITE INTEGRITY STABLE)
  * Firebase Firestore Global Sıralama ve Profil Senkronizasyon Sistemi
  * v1.99.3.30
  */
@@ -326,10 +326,11 @@ const Leaderboard = {
                 const data = doc.data();
                 console.log("📥 [ELITE CLOUD] All Assets Restored!");
                 
-                // v1.99.4.1.3: Full Asset Sync (Higher value wins)
+                // 💰 Kasa Senkronu
                 if (data.totalGold !== undefined) window.totalGold = Math.max(window.totalGold || 0, data.totalGold);
-                if (data.gold !== undefined) window.totalGold = Math.max(window.totalGold || 0, data.gold); // Legacy support
+                if (data.gold !== undefined) window.totalGold = Math.max(window.totalGold || 0, data.gold);
                 
+                // 🛠️ Envanter Senkronu
                 if (data.magnetLevel !== undefined) window.magnetLevel = Math.max(window.magnetLevel || 0, data.magnetLevel);
                 if (data.shieldLevel !== undefined) window.shieldLevel = Math.max(window.shieldLevel || 0, data.shieldLevel);
                 if (data.bombCount !== undefined) window.bombCount = Math.max(window.bombCount || 0, data.bombCount);
@@ -338,6 +339,13 @@ const Leaderboard = {
                 if (data.ownsArmorLicense) window.ownsArmorLicense = true;
                 if (data.hasWeapon) window.hasWeapon = true;
                 
+                // 🗺️ Level Senkronu
+                if (data.level !== undefined) {
+                    window.currentLevel = Math.max(window.currentLevel || 1, data.level);
+                    console.log(`🗺️ [ELITE CLOUD] Level Restored: Reached Level ${window.currentLevel}`);
+                }
+                
+                // 👤 İsim Senkronu
                 if (data.name && data.name !== "ELITE PLAYER") {
                     this.playerName = data.name;
                     localStorage.setItem('riverEscapeName', this.playerName);

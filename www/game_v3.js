@@ -1,4 +1,4 @@
-// RİVER ESCAPE ELİTE - v1.99.4.1.1 (CLEAN UI SHIFT)
+// RİVER ESCAPE ELİTE - v1.99.4.1.4 (ELITE INTEGRITY STABLE)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -229,6 +229,11 @@ document.addEventListener('visibilitychange', () => {
     if (audioCtx) {
         if (document.hidden) {
             audioCtx.suspend();
+            // v1.99.4.1.4: APP EXIT/MINIMIZE PROTECTION - Push data to Cloud! 🛰️🔒
+            if (typeof Leaderboard !== 'undefined' && Leaderboard.forceSync) {
+                console.log("🛰️ [ELITE SECURITY] App Backgrounded. Triple Syncing to Cloud...");
+                Leaderboard.forceSync();
+            }
         } else {
             audioCtx.resume();
         }
