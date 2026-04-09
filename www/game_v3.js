@@ -1,4 +1,4 @@
-// RİVER ESCAPE ELİTE - v1.99.3.31.9.4 (ULTRA PERSISTENCE RELEASE)
+// RİVER ESCAPE ELİTE - v1.99.3.31.9.5 (SURFACE & PHYSICS FIX)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -1593,8 +1593,10 @@ function startGame() {
     updateLanguageUI();
     fillGoldBag();
     
-    // Satın alınan Kalkan aktivasyonu
+    // Satın alınan Kalkan/Durum sıfırlama v1.99.3.31.9.5
     hasShield = false; 
+    isDashing = false;
+    dashEnergy = MAX_DASH_ENERGY;
     updateArmorUI();
     
     spawnTimer = 0; goldTimer = 0;

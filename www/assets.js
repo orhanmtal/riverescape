@@ -20,8 +20,8 @@ function makeWhiteTransparent(imageElement) {
 
         for (var i = 0; i < data.length; i += 4) {
             let r = data[i], g = data[i+1], b = data[i+2];
-            // ELITE v1.99.3.31.9: Daha agresif beyaz temizliği (230+)
-            if (r > 230 && g > 230 && b > 230) { 
+            // ELITE v1.99.3.31.9.5: Daha agresif beyaz temizliği (210+)
+            if (r > 210 && g > 210 && b > 210) { 
                 data[i+3] = 0; 
             }
         }
