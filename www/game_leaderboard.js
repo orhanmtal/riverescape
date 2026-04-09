@@ -1,5 +1,5 @@
 /**
- * RİVER ESCAPE ELİTE - v1.99.4.1.2 (CLOUD SYNC & UI SHIFT)
+ * RİVER ESCAPE ELİTE - v1.99.4.1.3 (INFINITE CLOUD VAULT)
  * Firebase Firestore Global Sıralama ve Profil Senkronizasyon Sistemi
  * v1.99.3.30
  */
@@ -161,11 +161,17 @@ const Leaderboard = {
                 modal.style.display = 'none';
                 modal.classList.remove('active');
             }
-
             if (this.db) {
-                // v1.99.4.1.2: Skordan bağımsız isim sync!
+                // v1.99.4.1.3: Tüm Varlıkları Buluta Mühürle! 🛰️💰
                 this.db.collection('leaderboard').doc(this.playerID).set({
                     name: this.playerName,
+                    totalGold: window.totalGold || 0,
+                    magnetLevel: window.magnetLevel || 0,
+                    shieldLevel: window.shieldLevel || 0,
+                    bombCount: window.bombCount || 0,
+                    ownsArmorLicense: window.ownsArmorLicense || false,
+                    hasWeapon: window.hasWeapon || false,
+                    armorCharge: window.armorCharge || 0,
                     lastSeen: firebase.firestore.FieldValue.serverTimestamp()
                 }, { merge: true });
             }
@@ -241,6 +247,13 @@ const Leaderboard = {
                 id: this.playerID,
                 name: this.playerName,
                 score: finalScore,
+                totalGold: window.totalGold || 0, // v1.99.4.1.3: Kalıcı Bakiye
+                magnetLevel: window.magnetLevel || 0,
+                shieldLevel: window.shieldLevel || 0,
+                bombCount: window.bombCount || 0,
+                ownsArmorLicense: window.ownsArmorLicense || false,
+                hasWeapon: window.hasWeapon || false,
+                armorCharge: window.armorCharge || 0,
                 level: level || 1,
                 country: this.playerCountry,
                 flag: this.playerFlag,
@@ -310,19 +323,31 @@ const Leaderboard = {
         try {
             const doc = await this.db.collection('leaderboard').doc(this.playerID).get();
             if (doc.exists) {
-                const cloudData = doc.data();
-                if (cloudData.totalGold !== undefined) {
-                    window.totalGold = Math.max(window.totalGold || 0, cloudData.totalGold);
-                    window.magnetLevel = Math.max(window.magnetLevel || 0, cloudData.magnetLevel || 0);
-                    window.shieldLevel = Math.max(window.shieldLevel || 0, cloudData.shieldLevel || 0);
-                    window.bombCount = Math.max(window.bombCount || 0, cloudData.bombCount || 0);
-                    if (cloudData.ownsArmorLicense) window.ownsArmorLicense = true;
-                    if (cloudData.hasWeapon) window.hasWeapon = true;
-                    if (cloudData.armorCharge > (window.armorCharge || 0)) window.armorCharge = cloudData.armorCharge;
-                    if (typeof window.saveGame === 'function') window.saveGame();
-                    if (typeof window.updateShopUI === 'function') window.updateShopUI();
-                    if (callback) callback(true);
+                const data = doc.data();
+                console.log("📥 [ELITE CLOUD] All Assets Restored!");
+                
+                // v1.99.4.1.3: Full Asset Sync (Higher value wins)
+                if (data.totalGold !== undefined) window.totalGold = Math.max(window.totalGold || 0, data.totalGold);
+                if (data.gold !== undefined) window.totalGold = Math.max(window.totalGold || 0, data.gold); // Legacy support
+                
+                if (data.magnetLevel !== undefined) window.magnetLevel = Math.max(window.magnetLevel || 0, data.magnetLevel);
+                if (data.shieldLevel !== undefined) window.shieldLevel = Math.max(window.shieldLevel || 0, data.shieldLevel);
+                if (data.bombCount !== undefined) window.bombCount = Math.max(window.bombCount || 0, data.bombCount);
+                if (data.armorCharge !== undefined) window.armorCharge = Math.max(window.armorCharge || 0, data.armorCharge);
+                
+                if (data.ownsArmorLicense) window.ownsArmorLicense = true;
+                if (data.hasWeapon) window.hasWeapon = true;
+                
+                if (data.name && data.name !== "ELITE PLAYER") {
+                    this.playerName = data.name;
+                    localStorage.setItem('riverEscapeName', this.playerName);
+                    this.updateUI();
                 }
+
+                // Force Local Save after sync
+                if (typeof window.saveGame === 'function') window.saveGame();
+                if (typeof window.updateShopUI === 'function') window.updateShopUI();
+                if (callback) callback(true);
             } else if (callback) callback(false);
         } catch (e) {
             console.error("Cloud recovery failed:", e);
