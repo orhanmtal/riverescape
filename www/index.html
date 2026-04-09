@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="style.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Outfit:wght@700&display=swap" rel="stylesheet">
-    <!-- EMERGENCY ON-SCREEN DEBUGGER v1.99.3.31.9 -->
+    <!-- EMERGENCY ON-SCREEN DEBUGGER v1.99.3.31.9.2 -->
     <script>
         window.onerror = function(msg, url, line) {
             var div = document.createElement('div');
@@ -34,7 +34,7 @@
         <canvas id="gameCanvas"></canvas>
         
         <!-- UI (Oyun Arayüzü) Katmanı -->
-            <!-- MODERN GLASS HUD v1.99.3.31.9 (Elite HD) -->
+            <!-- MODERN GLASS HUD v1.99.3.31.9.2 (Elite HD) -->
             <div id="modern-hud" style="
                 position: absolute; top: 15px; left: 15px; 
                 padding: 10px 18px; border-radius: 15px;
@@ -67,7 +67,7 @@
             <button id="pause-btn" style="position: absolute; top: 20px; right: 20px; display: none; background: rgba(0,0,0,0.4); color: white; border: 1px solid rgba(255,229,255,0.4); padding: 8px; font-family: 'Outfit', sans-serif; font-size: 18px; z-index: 1001; border-radius: 50%; width: 45px; height: 45px; pointer-events: auto; cursor: pointer; backdrop-filter: blur(4px); line-height: 1;">⏸</button>
 
             <!-- PAUSE EKRANI -->
-            <div id="pause-screen" class="screen hidden" style="background: rgba(0,0,0,0.95); flex-direction: column; align-items: center; justify-content: center; z-index: 100;">
+            <div id="pause-screen" class="screen hidden" style="background: rgba(0,0,0,0.9); flex-direction: column; align-items: center; justify-content: center; z-index: 100;">
                 <div class="buttons" style="display:flex; flex-direction:column; gap:16px; align-items:center; width: 100%;">
                     <button id="resume-btn" class="elite-btn elite-btn-green" style="padding: 18px 50px;">RESUME</button>
                     <button id="settings-open-btn-pause" class="elite-btn elite-btn-gray" style="padding: 12px 40px; font-size: 14px !important;">⚙️ AYARLAR</button>
@@ -75,8 +75,8 @@
                 </div>
             </div>
 
-            <!-- VERSION TAG v1.99.3.31.9 -->
-            <div id="version-tag" style="position: absolute; bottom: 8px; right: 12px; color: rgba(255,255,255,0.9); font-size: 11px; z-index: 50; font-family: 'Outfit', sans-serif; font-weight: bold; pointer-events: none; text-shadow: 0 0 5px rgba(0,0,0,0.4);">v1.99.3.31.9</div>
+            <!-- VERSION TAG v1.99.3.31.9.2 -->
+            <div id="version-tag" style="position: absolute; bottom: 8px; right: 12px; color: rgba(255,255,255,0.9); font-size: 11px; z-index: 50; font-family: 'Outfit', sans-serif; font-weight: bold; pointer-events: none; text-shadow: 0 0 5px rgba(0,0,0,0.4);">v1.99.3.31.9.2</div>
 
             <div id="start-screen" class="screen active" style="padding: 40px 30px;">
                 <h1 style="
@@ -88,9 +88,9 @@
                     filter: drop-shadow(0 6px 15px rgba(0,0,0,0.4));
                     letter-spacing: -1px;
                 ">River Escape</h1>
-                <div style="color: rgba(255,255,255,0.4); font-family: 'Outfit', sans-serif; font-size: 12px; font-weight: 800; margin-bottom: 25px; letter-spacing: 3px; text-transform: uppercase;">ELITE v1.99.3.31.9</div>
+                <div style="color: rgba(255,255,255,0.4); font-family: 'Outfit', sans-serif; font-size: 12px; font-weight: 800; margin-bottom: 25px; letter-spacing: 3px; text-transform: uppercase;">ELITE v1.99.3.31.9.2</div>
                 
-                <!-- PLAYER NAME / IDENTITY v1.99.3.31.9 -->
+                <!-- PLAYER NAME / IDENTITY v1.99.3.31.9.2 -->
                 <div id="player-profile-btn" style="
                     display: flex; align-items: center; gap: 10px; margin-bottom: 25px; cursor: pointer; pointer-events: auto;
                     background: rgba(255,255,255,0.08); padding: 12px 20px; border-radius: 60px; border: 1px solid rgba(255,255,255,0.15);
@@ -130,9 +130,9 @@
                 </div>
             </div>
 
-            <!-- MODERN ELITE GAME OVER SCREEN v3.91.0 -->
+            <!-- MODERN ELITE GAME OVER SCREEN v1.99.3.31.9.2 -->
             <div id="game-over-screen" class="screen hidden" style="
-                background: rgba(10, 10, 15, 0.95);
+                background: rgba(10, 10, 15, 0.9);
                 backdrop-filter: blur(20px);
                 border: 2px solid rgba(255, 215, 0, 0.2);
                 border-radius: 32px;
@@ -148,7 +148,7 @@
                     text-transform: uppercase;
                     letter-spacing: 2px;
                 ">Oyun Bitti!</h2>
-                <div style="color: rgba(255,255,255,0.4); font-family: 'Outfit', sans-serif; font-size: 10px; font-weight: 600; margin-bottom: 25px;">River Escape Elite v1.99.3.31.9</div>
+                <div style="color: rgba(255,255,255,0.4); font-family: 'Outfit', sans-serif; font-size: 10px; font-weight: 600; margin-bottom: 25px;">River Escape Elite v1.99.3.31.9.2</div>
                 
                 <div style="background: rgba(255,255,255,0.05); border-radius: 20px; padding: 25px 20px; width: 100%; margin-bottom: 25px; border: 1px solid rgba(255,255,255,0.05); text-align: center;">
                     <p id="score-title-final" style="color: #fff; font-family: 'Outfit', sans-serif; font-size: 28px; font-weight: 900; margin: 0; letter-spacing: 1px;">SKOR: 0</p>
@@ -169,7 +169,7 @@
                     
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 10px;">
                         <button id="restart-btn" style="background: rgba(255,255,255,0.1); color: #fff; border: 1px solid rgba(255,255,255,0.2); border-radius: 16px; padding: 15px; font-family: 'Outfit', sans-serif; font-weight: 800; cursor: pointer;">TEKRAR 🔄</button>
-                        <button id="quit-btn-gameover" onclick="location.reload()" style="background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.9); border: none; border-radius: 16px; padding: 15px; font-family: 'Outfit', sans-serif; font-weight: 800; cursor: pointer;">MENÜ 🏠</button>
+                        <button id="quit-btn-gameover" onclick="location.reload()" style="background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.9.2); border: none; border-radius: 16px; padding: 15px; font-family: 'Outfit', sans-serif; font-weight: 800; cursor: pointer;">MENÜ 🏠</button>
                     </div>
                 </div>
             </div>
@@ -203,13 +203,13 @@
                 </div>
 
                 <button id="settings-close-btn" style="background-color: #4CAF50; font-family: 'Outfit', sans-serif; font-size: 16px; font-weight:bold; padding: 14px; border-radius: 12px; width: 100%; box-sizing: border-box; align-self: stretch; color: #fff; border: none; outline:none; margin-top: 5px; cursor:pointer; box-shadow: 0 4px #2E7D32;">SAVE & CLOSE</button>
-                <button id="hard-reset-btn" style="background-color: #b71c1c; font-family: 'Outfit', sans-serif; font-size: 12px; font-weight:bold; padding: 12px; border-radius: 12px; width: 100%; box-sizing: border-box; align-self: stretch; color: #fff; border: none; outline:none; margin-top: 15px; cursor:pointer; opacity: 0.9; box-shadow: 0 4px #5c0000;">⚠️ RESET ALL PROGRESS</button>
+                <button id="hard-reset-btn" style="background-color: #b71c1c; font-family: 'Outfit', sans-serif; font-size: 12px; font-weight:bold; padding: 12px; border-radius: 12px; width: 100%; box-sizing: border-box; align-self: stretch; color: #fff; border: none; outline:none; margin-top: 15px; cursor:pointer; opacity: 0.9.2; box-shadow: 0 4px #5c0000;">⚠️ RESET ALL PROGRESS</button>
             </div>
 
-            <!-- MODERN COMPACT SHOP IMAGE v3.91.0 (NO SCROLL) -->
-            <div id="shop-screen" class="screen hidden" style="background: rgba(10,12,18,0.98); z-index: 100; max-width: 350px; width: 92%; padding: 15px 20px; border: 1px solid rgba(255,215,0,0.2); border-radius: 28px;">
+            <!-- MODERN COMPACT SHOP IMAGE v3.9.21.0 (NO SCROLL) -->
+            <div id="shop-screen" class="screen hidden" style="background: rgba(10,12,18,0.9.28); z-index: 100; max-width: 350px; width: 92%; padding: 15px 20px; border: 1px solid rgba(255,215,0,0.2); border-radius: 28px;">
                 <h2 id="shop-title-main" style="color: gold; font-family: 'Press Start 2P', cursive; font-size: 14px; margin-bottom: 5px;">MAĞAZA</h2>
-                <div id="shop-balance-text" style="color: #fff; font-size: 8px; margin-bottom: 8px; font-family: 'Press Start 2P', cursive; opacity: 0.9;">BAKİYE: <span id="totalGoldValue" style="color: #FFD700;">0</span> GOLD</div>
+                <div id="shop-balance-text" style="color: #fff; font-size: 8px; margin-bottom: 8px; font-family: 'Press Start 2P', cursive; opacity: 0.9.2;">BAKİYE: <span id="totalGoldValue" style="color: #FFD700;">0</span> GOLD</div>
                 
                 <div style="display: flex; flex-direction: column; gap: 6px; width: 100%;">
                     <!-- Mıknatıs -->
@@ -273,19 +273,19 @@
                     <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;">
                         <button onclick="GameStore.buy('gold_pack_1')" class="gold-market-btn" style="padding: 8px;">
                             <span style="font-size: 12px; font-weight: 900;">5.000</span><br>
-                            <span style="font-size: 10px; opacity: 0.9; color: #ffd700;">$0.99</span>
+                            <span style="font-size: 10px; opacity: 0.9.2; color: #ffd700;">$0.9.29</span>
                         </button>
                         <button onclick="GameStore.buy('gold_pack_2')" class="gold-market-btn" style="padding: 8px;">
                             <span style="font-size: 12px; font-weight: 900;">10.000</span><br>
-                            <span style="font-size: 10px; opacity: 0.9; color: #ffd700;">$1.49</span>
+                            <span style="font-size: 10px; opacity: 0.9.2; color: #ffd700;">$1.49</span>
                         </button>
                         <button onclick="GameStore.buy('gold_pack_3')" class="gold-market-btn" style="padding: 8px;">
                             <span style="font-size: 12px; font-weight: 900;">25.000</span><br>
-                            <span style="font-size: 10px; opacity: 0.9; color: #ffd700;">$2.99</span>
+                            <span style="font-size: 10px; opacity: 0.9.2; color: #ffd700;">$2.9.29</span>
                         </button>
                         <button onclick="GameStore.buy('gold_pack_4')" class="gold-market-btn" style="padding: 8px; border: 1px solid #ffd700 !important; background: rgba(255,215,0,0.15) !important;">
                             <span style="font-size: 12px; font-weight: 900; color: #ffd700;">50.000</span><br>
-                            <span style="font-size: 10px; font-weight: bold; color: #fff;">$4.99</span>
+                            <span style="font-size: 10px; font-weight: bold; color: #fff;">$4.9.29</span>
                         </button>
                     </div>
                 </div>
@@ -302,11 +302,11 @@
                 </div>
             </div>
             
-            <!-- İSİM GİRİŞ EKRANI (PROMPT REPLACEMENT) v1.99.3.31.9 -->
-            <div id="name-modal-overlay" class="screen hidden" style="z-index: 9000; background: rgba(0,0,0,0.95); backdrop-filter: blur(10px);">
-                <div style="background: linear-gradient(160deg, rgba(30,30,50,0.95), rgba(10,10,20,0.95)); border: 2px solid #FFD700; border-radius: 24px; padding: 30px; width: 300px; box-shadow: 0 0 30px rgba(255,215,0,0.2);">
+            <!-- İSİM GİRİŞ EKRANI (PROMPT REPLACEMENT) v1.9.29.3.31.9.2 -->
+            <div id="name-modal-overlay" class="screen hidden" style="z-index: 9000; background: rgba(0,0,0,0.9.25); backdrop-filter: blur(10px);">
+                <div style="background: linear-gradient(160deg, rgba(30,30,50,0.9.25), rgba(10,10,20,0.9.25)); border: 2px solid #FFD700; border-radius: 24px; padding: 30px; width: 300px; box-shadow: 0 0 30px rgba(255,215,0,0.2);">
                     <h2 style="color: #FFD700; font-family: 'Press Start 2P', cursive; font-size: 14px; margin-bottom: 20px;">OYUNCU ADI</h2>
-                    <p style="color: #fff; font-size: 11px; margin-bottom: 20px; opacity: 0.9; font-family: 'Outfit', sans-serif;">Liderlik tablosunda görünecek ismini buraya yaz Şampiyon!</p>
+                    <p style="color: #fff; font-size: 11px; margin-bottom: 20px; opacity: 0.9.2; font-family: 'Outfit', sans-serif;">Liderlik tablosunda görünecek ismini buraya yaz Şampiyon!</p>
                     <input type="text" id="player-name-input" maxlength="12" placeholder="İSİM GİR..." style="
                         width: 100%; padding: 15px; border-radius: 12px; border: 1px solid rgba(255,215,0,0.4); background: rgba(255,255,255,0.05);
                         color: #fff; font-family: 'Outfit', sans-serif; font-size: 18px; font-weight: bold; text-align: center; outline: none; margin-bottom: 20px;
@@ -319,7 +319,7 @@
                     ">KAYDET & DEVAM ET</button>
 
                     <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;">
-                        <p style="color: rgba(255,255,255,0.9); font-size: 11px; margin-bottom: 12px; font-weight: bold;">HESABIN MI VAR?</p>
+                        <p style="color: rgba(255,255,255,0.9.2); font-size: 11px; margin-bottom: 12px; font-weight: bold;">HESABIN MI VAR?</p>
                         <button id="google-recover-btn" style="
                             width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px;
                             background: rgba(255,255,255,0.1); color: #fff; border: 1px solid rgba(255,255,255,0.2); padding: 12px; border-radius: 12px;
@@ -334,14 +334,14 @@
             </div>
 
             <!-- L LUCKY SPIN (ŞANS ÇARKI) EKRANI v121 -->
-            <div id="spin-screen" class="screen hidden" style="z-index: 8000; background: rgba(0,0,0,0.92); width: 100vw; height: 100vh; max-width: 100%; border-radius: 0;">
+            <div id="spin-screen" class="screen hidden" style="z-index: 8000; background: rgba(0,0,0,0.9.22); width: 100vw; height: 100vh; max-width: 100%; border-radius: 0;">
                 <!-- Reward Popup (Animasyonlu) -->
                 <div id="spin-reward-popup" style="
                     display:none; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%) scale(0);
                     background: linear-gradient(135deg,#f12711,#f5af19);
                     border-radius: 20px; padding: 30px 40px; text-align:center;
-                    z-index: 9999; box-shadow: 0 0 60px rgba(255,200,0,0.9);
-                    transition: transform 0.45s cubic-bezier(0.44, 1.96, 0.94, 1), opacity 0.45s;
+                    z-index: 9999; box-shadow: 0 0 60px rgba(255,200,0,0.9.2);
+                    transition: transform 0.45s cubic-bezier(0.44, 1.9.26, 0.9.24, 1), opacity 0.45s;
                     opacity:0; pointer-events:none;
                 ">
                     <div id="spin-popup-emoji" style="font-size:52px; margin-bottom:8px;">🎉</div>
@@ -374,9 +374,9 @@
             </div>
 
             <!-- SIFIRLAMA ONAY EKRANI (MOBİL DOSTU) v97 -->
-            <div id="reset-confirm-overlay" class="screen hidden" style="z-index: 9000; background: rgba(0,0,0,0.95); display: flex; align-items: center; justify-content: center;">
+            <div id="reset-confirm-overlay" class="screen hidden" style="z-index: 9000; background: rgba(0,0,0,0.9.25); display: flex; align-items: center; justify-content: center;">
                 <div style="text-align: center; width: 90%; background: #222; padding: 30px; border: 2px solid #f12711; border-radius: 15px; box-shadow: 0 0 30px rgba(241, 39, 17, 0.4);">
-                    <h3 style="color: #f12711; font-family: 'Press Start 2P', cursive; font-size: 16px; margin-bottom: 20px; line-height: 1.9;">DİKKAT!</h3>
+                    <h3 style="color: #f12711; font-family: 'Press Start 2P', cursive; font-size: 16px; margin-bottom: 20px; line-height: 1.9.2;">DİKKAT!</h3>
                     <p style="color: #ccc; margin-bottom: 30px; font-size: 14px;">Tüm altınların ve mağaza geliştirmelerin silinecek. En baştan başlamak istediğine emin misin?</p>
                     <div style="display: flex; gap: 10px; flex-direction: column;">
                         <button id="confirm-reset-yes" style="background: #f12711; color: white; padding: 15px; font-weight: bold; border-radius: 8px; border: none; font-family: 'Outfit', sans-serif; cursor: pointer;">EVET, SIFIRLA</button>
@@ -387,20 +387,20 @@
 
             <div id="game-toast" style="
                 display: none; position: absolute; top: 18%; left: 50%; transform: translateX(-50%);
-                background: linear-gradient(135deg, rgba(0,0,0,0.95), rgba(40,40,40,0.95)); 
+                background: linear-gradient(135deg, rgba(0,0,0,0.9.25), rgba(40,40,40,0.9.25)); 
                 border: 2px solid #f2994a; color: white;
                 padding: 12px 20px; border-radius: 15px; z-index: 10000;
                 font-family: 'Outfit', sans-serif; font-size: 13px; text-align: center;
-                box-shadow: 0 10px 40px rgba(0,0,0,0.9); pointer-events: none;
+                box-shadow: 0 10px 40px rgba(0,0,0,0.9.2); pointer-events: none;
                 transition: opacity 0.4s, transform 0.4s; width: 85%; max-width: 340px;
-                line-height: 1.9; font-weight: 600;
+                line-height: 1.9.2; font-weight: 600;
             ">
                 <span id="toast-text"></span>
             </div>
             
-            <!-- GLOBAL LEADERBOARD MODAL v1.99.1.0 -->
-            <div id="leaderboard-screen" class="screen hidden" style="background: rgba(0,0,0,0.92); z-index: 8500; font-family: 'Outfit', sans-serif;">
-                <div style="width: 90%; max-width: 400px; background: rgba(20, 20, 20, 0.9); backdrop-filter: blur(20px); border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); padding: 25px; box-shadow: 0 20px 50px rgba(0,0,0,0.4); pointer-events: auto;">
+            <!-- GLOBAL LEADERBOARD MODAL v1.9.29.1.0 -->
+            <div id="leaderboard-screen" class="screen hidden" style="background: rgba(0,0,0,0.9.22); z-index: 8500; font-family: 'Outfit', sans-serif;">
+                <div style="width: 90%; max-width: 400px; background: rgba(20, 20, 20, 0.9.2); backdrop-filter: blur(20px); border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); padding: 25px; box-shadow: 0 20px 50px rgba(0,0,0,0.4); pointer-events: auto;">
                     <h2 style="color: #FFD700; font-family: 'Press Start 2P', cursive; font-size: 16px; margin-bottom: 20px; text-align: center;">TOP RIDERS</h2>
                     
                     <div id="leaderboard-list" style="display: flex; flex-direction: column; gap: 8px; max-height: 50vh; overflow-y: auto;">
@@ -418,15 +418,15 @@
             </div>
             
             <div id="controls-ui" style="position: absolute; bottom: 20px; right: 20px; display: flex; flex-direction: column; gap: 15px; z-index: 1000; pointer-events: none;">
-                <!-- DASH BUTTON v1.90 -->
+                <!-- DASH BUTTON v1.9.20 -->
                 <div id="dash-action-btn" style="
                     width: 60px; height: 60px; border-radius: 50%;
                     background: rgba(0, 229, 255, 0.15); border: 2px solid rgba(0, 229, 255, 0.4);
                     display: flex; align-items: center; justify-content: center;
                     cursor: pointer; pointer-events: auto; backdrop-filter: blur(4px);
                     box-shadow: 0 0 20px rgba(0, 229, 255, 0.2); transition: all 0.2s;
-                " onmousedown="this.style.transform='scale(0.9)'; this.style.background='rgba(0, 229, 255, 0.4)'" onmouseup="this.style.transform='scale(1)'; this.style.background='rgba(0, 229, 255, 0.15)'">
-                    <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="#00e5ff" stroke-width="2.9" stroke-linecap="round" stroke-linejoin="round">
+                " onmousedown="this.style.transform='scale(0.9.2)'; this.style.background='rgba(0, 229, 255, 0.4)'" onmouseup="this.style.transform='scale(1)'; this.style.background='rgba(0, 229, 255, 0.15)'">
+                    <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="#00e5ff" stroke-width="2.9.2" stroke-linecap="round" stroke-linejoin="round">
                         <polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polyline>
                     </svg>
                     <!-- Energy Bar Overlay -->
@@ -441,13 +441,13 @@
                     background: radial-gradient(circle at center, #1a1a1a 0%, #0d0d0d 100%);
                     border-radius: 50%; border: 3px solid #333;
                     cursor: pointer; pointer-events: auto;
-                    box-shadow: 0 0 25px rgba(0,0,0,0.9), inset 0 0 15px rgba(255,0,0,0.1);
+                    box-shadow: 0 0 25px rgba(0,0,0,0.9.2), inset 0 0 15px rgba(255,0,0,0.1);
                     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-                " onmousedown="this.style.transform='scale(0.9) rotate(-10deg)';" onmouseup="this.style.transform='scale(1) rotate(0deg)';" ontouchstart="this.style.transform='scale(0.9) rotate(-10deg)';" ontouchend="this.style.transform='scale(1) rotate(0deg)';">
+                " onmousedown="this.style.transform='scale(0.9.2) rotate(-10deg)';" onmouseup="this.style.transform='scale(1) rotate(0deg)';" ontouchstart="this.style.transform='scale(0.9.2) rotate(-10deg)';" ontouchend="this.style.transform='scale(1) rotate(0deg)';">
                     <!-- Neon Ring -->
-                    <div style="position: absolute; inset: -4px; border: 2px solid #ff3d00; border-radius: 50%; opacity: 0.9; animation: rotateRing 4s linear infinite; filter: blur(1px);"></div>
+                    <div style="position: absolute; inset: -4px; border: 2px solid #ff3d00; border-radius: 50%; opacity: 0.9.2; animation: rotateRing 4s linear infinite; filter: blur(1px);"></div>
                     
-                    <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="#ff3d00" stroke-width="2.9" stroke-linecap="round" stroke-linejoin="round" style="filter: drop-shadow(0 0 5px #ff3d00);">
+                    <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="#ff3d00" stroke-width="2.9.2" stroke-linecap="round" stroke-linejoin="round" style="filter: drop-shadow(0 0 5px #ff3d00);">
                         <circle cx="12" cy="12" r="3"></circle>
                         <path d="M3 12h3m12 0h3M12 3v3m0 12v3"></path>
                     </svg>
@@ -468,13 +468,13 @@
                 <!-- ARMOR BADGE (PASSIVE/CLICKABLE) -->
                 <div id="armor-ui-indicator" style="
                     display: none; position: relative; width: 60px; height: 60px;
-                    background: radial-gradient(circle, rgba(155, 89, 182, 0.2) 0%, rgba(0,0,0,0.9) 100%);
+                    background: radial-gradient(circle, rgba(155, 89, 182, 0.2) 0%, rgba(0,0,0,0.9.2) 100%);
                     border-radius: 12px; border: 2px solid #9b59b6;
                     align-items: center; justify-content: center;
                     box-shadow: 0 0 15px rgba(155, 89, 182, 0.4);
                     cursor: pointer; pointer-events: auto; transition: all 0.2s;
-                " onmousedown="this.style.transform='scale(0.9)';" onmouseup="this.style.transform='scale(1)';">
-                    <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="#e056fd" stroke-width="2.9" stroke-linecap="round" stroke-linejoin="round">
+                " onmousedown="this.style.transform='scale(0.9.2)';" onmouseup="this.style.transform='scale(1)';">
+                    <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="#e056fd" stroke-width="2.9.2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
                     </svg>
                     <div id="armor-badge" style="
@@ -490,7 +490,7 @@
 
     <style>@keyframes rotateRing { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }</style>
 
-    <!-- Firebase SDKs (v9 Compat Mode) v1.99.3.31.9 -->
+    <!-- Firebase SDKs (v9 Compat Mode) v1.9.29.3.31.9.2 -->
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
