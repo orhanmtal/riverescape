@@ -167,8 +167,13 @@ function updateLanguageUI() {
     if(document.getElementById('settings-open-btn-pause')) document.getElementById('settings-open-btn-pause').innerHTML = `⚙️ ${t.settingsBtn}`;
     
     setText('gameover-title', t.gameOver);
-    if(document.getElementById('score-title-final')) document.getElementById('score-title-final').innerHTML = `${t.scoreTitle} <span id="finalScoreValue">0</span>`;
-    if(document.getElementById('gold-title-final')) document.getElementById('gold-title-final').innerHTML = `${t.goldTitle} <span id="finalGoldValue">0</span>`;
+    // v3.31.2: Simplified Elite Score Display (RESTORED STYLES)
+    if(document.getElementById('score-title-final')) {
+        document.getElementById('score-title-final').innerHTML = `${t.scoreLabel || 'SKOR:'} <span style="color: #fff; font-size: 32px; font-weight: 900;">${Math.floor(score)}</span>`;
+    }
+    if(document.getElementById('gold-title-final')) {
+        document.getElementById('gold-title-final').innerHTML = `${t.goldTitle || 'ALTIN:'} <span style="color: #FFD700; font-weight: 900;">${goldCount}</span>`;
+    }
     
     setText('revive-btn', t.reviveBtn);
     setText('gameover-shop-btn', t.shopBtn);
@@ -1041,7 +1046,10 @@ function reviveWithGold() {
         updateArmorUI();
         
         // Ses Motorunu Canlandır
-        if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+        if (typeof initAudio === 'function') initAudio();
+        if (typeof bgMusicScheduler === 'function' && !isMusicScheduled) {
+            bgMusicScheduler();
+        }
         
         // Arayüzü Temizle
         isGameOver = false;
@@ -1516,6 +1524,15 @@ function togglePause() {
     }
 }
 function startGame() {
+    isPlaying = true; 
+    isPaused = false;
+    
+    // v3.31.2: ELITE AUDIO IGNITION (RESTORED)
+    if (typeof initAudio === 'function') initAudio();
+    if (typeof bgMusicScheduler === 'function' && !isMusicScheduled) {
+        bgMusicScheduler();
+    }
+
     // v1.99.3.31.0: ULTRA RESUME (Gold & Score Protection)
     if ((score > 2 || goldCount > 0) || (isPlaying && !isGameOver)) {
         console.log("Elite Resume: Gold & Score Protected!");
@@ -1613,16 +1630,19 @@ function gameOver() {
     playDeathSound(); 
     
     try {
+        // v3.31.2: Elite Score & Gold is already updated in showGameOver()
+        console.log("Elite Game Over UI Synced.");
         triggerVibration([100, 50, 100]); // Oyuncu öldüğünde belirgin titreşim
         
         // v122: Altınlar GameOver ekranında gösterilir ama KASAya aktarım 
         // ancak kullanıcı Quit veya Restart dediğinde (ya da reklam izlemediğinde) kesinleşir.
-        // v165 FIX: UI elemanlarını doğrudan DOM'dan çek (Cache null kalmış olabilir)
-        const fsElem = document.getElementById('finalScoreValue');
-        const fgElem = document.getElementById('finalGoldValue');
+        // v3.31.2: Elite UI Update (New IDs)
+        const fsElem = document.getElementById('score-title-final');
+        const fgElem = document.getElementById('gold-title-final');
         
-        if (fsElem) fsElem.innerText = Math.floor(score);
-        if (fgElem) fgElem.innerText = goldCount;
+        const t = translations[currentLang];
+        if (fsElem) fsElem.innerHTML = `${t.scoreLabel || 'SKOR:'} <span style="color: #fff; font-size: 32px; font-weight: 900;">${Math.floor(score)}</span>`;
+        if (fgElem) fgElem.innerHTML = `${t.goldTitle || 'ALTIN:'} <span style="color: #FFD700; font-weight: 900;">${goldCount}</span>`;
         
         gameOverScreen.classList.remove('hidden'); 
         gameOverScreen.classList.add('active');
