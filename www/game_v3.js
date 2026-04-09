@@ -1,4 +1,4 @@
-// RİVER ESCAPE ELİTE - v1.99.3.31.9.5 (SURFACE & PHYSICS FIX)
+// RİVER ESCAPE ELİTE - v1.99.3.31.9.6 (ENGINE HARD RESET STABLE)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -1570,18 +1570,14 @@ function startGame() {
         bgMusicScheduler();
     }
 
-    // v1.99.3.31.0: ULTRA RESUME (Gold & Score Protection)
-    if ((score > 2 || goldCount > 0) || (isPlaying && !isGameOver)) {
-        console.log("Elite Resume: Gold & Score Protected!");
-    } else {
-        score = 0; goldCount = 0; 
-        level = 1; currentLevel = 1; levelProgress = 0; bgY = 0;
-        lives = 3 + (window.extraLives || 0); 
-        isGameOver = false;
-        gameOverScreen.classList.add('hidden');
-        obstacles = []; golds = []; powerups = [];
-        initAudio(); 
-    }
+    // v1.99.3.31.9.6: HARD RESET (All systems GO!)
+    score = 0; goldCount = 0; 
+    level = 1; currentLevel = 1; levelProgress = 0; bgY = 0;
+    lives = 3 + (window.extraLives || 0); 
+    isGameOver = false;
+    gameOverScreen.classList.add('hidden');
+    obstacles = []; golds = []; powerups = []; bullets = []; // Her şeyi temizle!
+    initAudio(); 
     
     isPlaying = true; isPaused = false;
     startScreen.classList.add('hidden');
