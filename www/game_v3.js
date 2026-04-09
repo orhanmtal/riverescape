@@ -1,4 +1,4 @@
-// RİVER ESCAPE ELİTE - v1.99.3.31.9.6 (ENGINE HARD RESET STABLE)
+// RİVER ESCAPE ELİTE - v1.199.3.31.10 (STABIL SON1 - Native Gmail & Revive Systems Fixed)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -1589,7 +1589,7 @@ function startGame() {
     updateLanguageUI();
     fillGoldBag();
     
-    // Satın alınan Kalkan/Durum sıfırlama v1.99.3.31.9.5
+    // Satın alınan Kalkan/Durum sıfırlama v1.199.3.31.10
     hasShield = false; 
     isDashing = false;
     dashEnergy = MAX_DASH_ENERGY;
