@@ -1,5 +1,5 @@
 /**
- * RİVER ESCAPE ELİTE - v1.99.4.1.7 (DATA INTEGRITY SHIELD)
+ * RİVER ESCAPE ELİTE - v1.99.4.1.8 (SMART SYNC V2 - ECONOMY ARMOR)
  * Firebase Firestore Global Sıralama ve Profil Senkronizasyon Sistemi
  * v1.99.3.30
  */
@@ -263,15 +263,13 @@ const Leaderboard = {
     async submitProgress(score, level) {
         const finalScore = Math.floor(score);
         
-        // v1.99.4.1.5: OFFLINE SYNC - Check pending status
+        // v1.99.4.1.8: OFFLINE ECONOMY SYNC - Full Asset Protection
         if (!navigator.onLine || !this.db) {
-            const localHS = parseInt(localStorage.getItem('riverEscapeHighScore')) || 0;
-            if (finalScore > localHS) {
-                console.log("📡 [ELITE OFFLINE] High Score cached for pending sync.");
-                localStorage.setItem('riverEscapePendingSync', 'true');
-                localStorage.setItem('riverEscapePendingScore', finalScore);
-                localStorage.setItem('riverEscapePendingLevel', level || 1);
-            }
+            console.log("📡 [ELITE OFFLINE] Economy change cached for pending sync.");
+            localStorage.setItem('riverEscapePendingSync', 'true');
+            localStorage.setItem('riverEscapePendingScore', finalScore);
+            localStorage.setItem('riverEscapePendingLevel', level || 1);
+            localStorage.setItem('riverEscapePendingGold', window.totalGold || 0);
             return;
         }
         
@@ -413,13 +411,21 @@ const Leaderboard = {
         const hasPending = localStorage.getItem('riverEscapePendingSync');
         if (hasPending === 'true') {
             console.log("🚀 [ELITE SYNC] Pending record found. Syncing to cloud...");
+            
+            // Eğer offline iken altın veya level değiştiyse, en güncel hali push et
             const pScore = parseInt(localStorage.getItem('riverEscapePendingScore')) || 0;
             const pLevel = parseInt(localStorage.getItem('riverEscapePendingLevel')) || 1;
+            const pGold = parseInt(localStorage.getItem('riverEscapePendingGold')) || window.totalGold || 0;
+            
+            // Veri bütünlüğü için globali güncelle (eğer yereldeki daha yüksekse)
+            if (pGold > (window.totalGold || 0)) window.totalGold = pGold;
             
             await this.submitProgress(pScore, pLevel);
+            
             localStorage.removeItem('riverEscapePendingSync');
             localStorage.removeItem('riverEscapePendingScore');
             localStorage.removeItem('riverEscapePendingLevel');
+            localStorage.removeItem('riverEscapePendingGold');
             console.log("✅ [ELITE SYNC] Pending record synced successfully!");
         }
     },

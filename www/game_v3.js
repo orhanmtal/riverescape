@@ -1,4 +1,4 @@
-// RİVER ESCAPE ELİTE - v1.99.4.1.4 (ELITE INTEGRITY STABLE)
+// RİVER ESCAPE ELİTE - v1.99.4.1.8 (INSTANT ECONOMY SYNC)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -622,6 +622,8 @@ function giveReward() {
     
     if(reward.type === 'gold') {
         totalGold += reward.value;
+        triggerEliteEconomySync(); // v1.99.4.1.8: Çark ödülü anında buluta!
+        saveGame();
         rewardLabel = reward.value + ' ' + t.rewardGold;
         popupEmoji = '💰';
         popupLabel = t.rewardGold.toUpperCase();
@@ -981,6 +983,7 @@ if(btnMag) btnMag.addEventListener('click', () => {
     let cost = 2000 + magnetLevel * 1000;
     if(totalGold >= cost && magnetLevel < 5) {
         totalGold -= cost; magnetLevel++; saveGame();
+        triggerEliteEconomySync(); // v1.99.4.1.8: Harcama anında buluta!
         for(let i=0; i<3; i++) setTimeout(playCoinSound, i*150);
         updateShopUI();
     } else if (totalGold < cost) {
@@ -995,6 +998,7 @@ if(btnShd) btnShd.addEventListener('click', () => {
     let cost = 3500 + shieldLevel * 1500;
     if(totalGold >= cost && shieldLevel < 5) {
         totalGold -= cost; shieldLevel++; saveGame();
+        triggerEliteEconomySync(); // v1.99.4.1.8: Harcama anında buluta!
         for(let i=0; i<3; i++) setTimeout(playCoinSound, i*150);
         updateShopUI();
     } else if (totalGold < cost) {
@@ -1013,6 +1017,7 @@ if(buyArmorBtn) buyArmorBtn.addEventListener('click', () => {
             ownsArmorLicense = true;
             armorCharge += 3;
             saveGame();
+            triggerEliteEconomySync(); // v1.99.4.1.8: Harcama anında buluta!
             for(let i=0; i<8; i++) setTimeout(playCoinSound, i*100);
             showToast(t.armorActivated, true);
             updateShopUI();
@@ -1026,6 +1031,7 @@ if(buyArmorBtn) buyArmorBtn.addEventListener('click', () => {
             totalGold -= 500;
             armorCharge += 3;
             saveGame();
+            triggerEliteEconomySync(); // v1.99.4.1.8: Harcama anında buluta!
             for(let i=0; i<3; i++) setTimeout(playCoinSound, i*100);
             showToast(t.armorReloaded, true);
             updateShopUI();
@@ -1045,6 +1051,7 @@ if(buyWeaponBtn) buyWeaponBtn.addEventListener('click', () => {
             hasWeapon = true;
             bombCount += 15; // 5000 altına 15 mermi elite bonus
             saveGame();
+            triggerEliteEconomySync(); // v1.99.4.1.8: Harcama anında buluta!
             for(let i=0; i<8; i++) setTimeout(playCoinSound, i*100);
             showToast(t.weaponPurchased || "Silah Lisansı Alındı!", true);
             updateShopUI();
@@ -1065,6 +1072,7 @@ if(buyAmmoBtn) buyAmmoBtn.addEventListener('click', () => {
         totalGold -= 1000;
         bombCount += 10;
         saveGame();
+        triggerEliteEconomySync(); // v1.99.4.1.8: Harcama anında buluta!
         for(let i=0; i<3; i++) setTimeout(playCoinSound, i*100);
         showToast(t.ammoPurchased || "Mühimmat Alındı! +10 💣", true);
         updateShopUI();
@@ -1084,6 +1092,7 @@ function reviveWithGold() {
     
     if (totalGold >= cost) {
         totalGold -= cost;
+        triggerEliteEconomySync(); // v1.99.4.1.8: Harcama anında buluta!
         lives = 3 + (window.extraLives || 0);
         hasShield = true; // Dokunulmazlık Ver
         shieldTimer = 3.0; // 3 Saniye Koruma
@@ -1730,10 +1739,35 @@ function gameOver() {
         }
         
         saveGame(); // Ayarlar vs. kaydedilsin
+        triggerEliteEconomySync(); // v1.99.4.1.8: Oyun bitince kasayı buluta kilitle
     } catch (e) {
         console.error("GameOver hatası:", e);
     }
 }
+
+// v1.99.4.1.8: GLOBAL ELITE ECONOMY SYNC (Cloud + UI + Local)
+window.triggerEliteEconomySync = function() {
+    try {
+        console.log("💰 [ECONOMY] Triggering Elite Sync...");
+        saveGame(); // Yerel hafızaya mühürle
+        
+        // 🛰️ Bulut Mührü (Firestore ForceSync)
+        if (typeof Leaderboard !== 'undefined' && Leaderboard.forceSync) {
+            Leaderboard.forceSync();
+        }
+        
+        // ✨ Ekran Parlatma (UI Sync)
+        syncEliteHUD();
+        if (typeof updateShopUI === 'function') updateShopUI();
+        
+        // Ana Menüdeki Altın Yazısı (Start Screen)
+        const totalGoldValue = document.getElementById('totalGoldValue');
+        if (totalGoldValue) totalGoldValue.innerText = totalGold;
+        
+        const finalGoldValue = document.getElementById('finalGoldValue');
+        if (finalGoldValue) finalGoldValue.innerText = totalGold;
+    } catch(e) { console.warn("Economy Sync Error:", e); }
+};
 
 // v1.96.1: ELITE HUD SYNC (Global Function)
 function syncEliteHUD() {
@@ -2113,8 +2147,9 @@ function update(dt) {
             let collected = (g.value || 1);
             goldCount += collected;
             totalGold += collected; // v1.199.3.31.10.3: ANLIK KASA (Progress Protection)
+            triggerEliteEconomySync(); // v1.99.4.1.8: Nehirdeki altın anında buluta!
+            saveGame();
             golds.splice(i, 1);
-            saveGame(); // v1.199.3.31.10.3: Anlık kayıt 
             continue;
         }
     }
@@ -2339,7 +2374,7 @@ function spawnLog() {
     const isHorizontal = Math.random() < 0.15; // Logların %85'i dikey gelsin (Daha nehirsel)
     
     // v152: LAV VE BOŞLUK SEVİYELERİNDEKİ KÜTÜKLERİ (LOGS) İPTAL ET!
-    if (currentLevel === 5 || currentLevel === 6) return;
+    if (currentLevel === 5 || currentLevel === 6) return; 
     
     // ... (spawn logic continues)
 }
@@ -3388,6 +3423,7 @@ if(adGoldBtn) {
     adGoldBtn.addEventListener('click', () => {
         showRewardedAd(adGoldBtn, translations[currentLang].adGoldBtn, () => {
             totalGold += 100; // v3.31.0: 1 Ad = 1 Revive Cost Correlation
+            triggerEliteEconomySync(); // v1.99.4.1.8: Reklam altını anında buluta!
             saveGame();
             updateShopUI();
             showToast(`${translations[currentLang].rewardPrefix} 100 GOLD! 💰`, true);
