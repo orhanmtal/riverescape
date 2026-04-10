@@ -1,4 +1,4 @@
-// RİVER ESCAPE ELİTE - v1.99.4.1.10 (MASTER PERSISTENCE)
+// RİVER ESCAPE ELİTE - v1.99.5.0 (AUTO-PILOT REBIRTH)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -949,6 +949,27 @@ if(quitBtnGameOver) {
             location.reload();
         };
 
+   const shopBtn = document.getElementById('shop-open-btn');
+const shopScreen = document.getElementById('shop-screen');
+const closeShopBtn = document.getElementById('shop-close-btn-elite');
+
+if(shopBtn) {
+    shopBtn.addEventListener('click', () => {
+        updateShopUI();
+        shopScreen.classList.remove('hidden');
+        shopScreen.classList.add('active');
+        playPowerupSound();
+    });
+}
+
+if(closeShopBtn) {
+    closeShopBtn.addEventListener('click', () => {
+        shopScreen.classList.remove('active');
+        shopScreen.classList.add('hidden');
+        saveGame();
+    });
+}
+
         if (score > 2000) {
             const t = translations[currentLang];
             const confirmQuit = confirm(t.confirmQuit || "Bu turdaki skorun SİLİNECEK! Çıkmak istediğine emin misin?");
@@ -1065,7 +1086,92 @@ if(buyWeaponBtn) buyWeaponBtn.addEventListener('click', () => {
             showToast(t.noGold, false);
         }
     } else {
-        // Zaten hasWeapon true ise artık bu buton updateShopUI'da disable olacağı için buraya nadiren girer
+        // v1.99.5.1: ELITE SHOP BINDINGS (Magnet, Shield, Weapon, Armor)
+const btnMagElite = document.getElementById('buy-magnet-btn-elite');
+if(btnMagElite) {
+    btnMagElite.addEventListener('click', () => {
+        buyMagnet();
+    });
+}
+
+const btnShdElite = document.getElementById('buy-shield-btn-elite');
+if(btnShdElite) {
+    btnShdElite.addEventListener('click', () => {
+        buyShield();
+    });
+}
+
+const buyWeaponBtnElite = document.getElementById('buy-weapon-btn-elite');
+if(buyWeaponBtnElite) {
+    buyWeaponBtnElite.addEventListener('click', () => {
+        buyWeapon();
+    });
+}
+
+const adGoldBtnElite = document.getElementById('ad-gold-btn-elite');
+if(adGoldBtnElite) {
+    adGoldBtnElite.addEventListener('click', () => {
+        showAdForGold();
+    });
+}
+
+function updateShopUI() {
+    try {
+        // v1.99.5.1: Multiple Gold Displays
+        const tv = document.getElementById('totalGoldValue');
+        const tvShop = document.getElementById('totalGoldValue-shop');
+        if(tv) tv.innerText = totalGold;
+        if(tvShop) tvShop.innerText = totalGold;
+
+        const mPrice = (magnetLevel + 1) * 1000;
+        const sPrice = (shieldLevel + 1) * 1500;
+        
+        const mDur = document.getElementById('magnet-duration');
+        const sChn = document.getElementById('shield-chance');
+        const mLvl = document.getElementById('magnet-lvl');
+        const sLvl = document.getElementById('shield-lvl');
+        
+        if(mDur) mDur.innerText = (3 + magnetLevel * 2) + "s";
+        if(sChn) sChn.innerText = "%" + Math.min(60, (10 + shieldLevel * 5));
+        if(mLvl) mLvl.innerText = magnetLevel;
+        if(sLvl) sLvl.innerText = shieldLevel;
+
+        const mp = document.getElementById('magnet-price');
+        const sp = document.getElementById('shield-price');
+        const mBtn = document.getElementById('buy-magnet-btn-elite');
+        const sBtn = document.getElementById('buy-shield-btn-elite');
+
+        if(mp) mp.innerText = mPrice;
+        if(sp) sp.innerText = sPrice;
+
+        if(mBtn) mBtn.disabled = (totalGold < mPrice || magnetLevel >= 10);
+        if(sBtn) sBtn.disabled = (totalGold < sPrice || shieldLevel >= 10);
+
+        // Weapon Toggle
+        const weaponRow = document.getElementById('shop-weapon-row-elite');
+        const buyWBtn = document.getElementById('buy-weapon-btn-elite');
+        if(buyWBtn) {
+            if(hasWeapon) {
+                buyWBtn.innerText = "SAHİPSİN";
+                buyWBtn.disabled = true;
+            } else {
+                buyWBtn.disabled = (totalGold < 5000);
+            }
+        }
+
+        // Armor Toggle (Elite logic)
+        const buyABtn = document.getElementById('buy-armor-btn-elite');
+        if(buyABtn) {
+            if(ownsArmorLicense) {
+                buyABtn.innerText = `AKTİF (${armorCharge})`;
+                buyABtn.disabled = (armorCharge >= 5); // v1.95: Max 5 charge
+            } else {
+                buyABtn.innerText = "LİSANS AL\n5000 G";
+                buyABtn.disabled = (totalGold < 5000);
+            }
+        }
+    } catch(e) { console.warn("Shop UI Error:", e); }
+}
         showToast(t.owned || "ALINDI", true);
     }
 });
@@ -1782,10 +1888,40 @@ window.triggerEliteEconomySync = function() {
         const totalGoldValue = document.getElementById('totalGoldValue');
         if (totalGoldValue) totalGoldValue.innerText = totalGold;
         
+        const totalGoldValueShop = document.getElementById('totalGoldValue-shop');
+        if (totalGoldValueShop) totalGoldValueShop.innerText = totalGold;
+
+        // v1.99.5.1: KARAKTER ÖNİZLEME GÜNCELLEME (Start Screen)
+        const currentLAsset = levelAssets[(currentLevel - 1) % levelAssets.length];
+        const charImg = document.getElementById('char-preview-img');
+        const charName = document.getElementById('char-preview-name');
+        if (charImg && currentLAsset) {
+            charImg.src = `assets/${currentLAsset.pKey}_player.png`;
+            if (charName) charName.innerText = currentLang === 'tr' ? currentLAsset.titleTR : currentLAsset.titleEN;
+        }
+
         const finalGoldValue = document.getElementById('finalGoldValue');
         if (finalGoldValue) finalGoldValue.innerText = totalGold;
     } catch(e) { console.warn("Economy Sync Error:", e); }
 };
+
+// v1.99.5.1: ELITE THEME SYSTEM (Dark / Light)
+function setTheme(theme) {
+    const root = document.documentElement;
+    if (theme === 'light') {
+        root.style.setProperty('--bg-overlay', 'rgba(240, 240, 240, 0.95)');
+        root.style.setProperty('--text-main', '#111');
+        document.body.style.backgroundColor = "#eee";
+        // Diğer UI elemanlarını da aydınlat...
+        showToast("Aydınlık Mod Aktif ☀️", false);
+    } else {
+        root.style.setProperty('--bg-overlay', 'rgba(0, 0, 0, 0.9)');
+        root.style.setProperty('--text-main', '#fff');
+        document.body.style.backgroundColor = "#111";
+        showToast("Karanlık Mod Aktif 🌙", false);
+    }
+    localStorage.setItem('riverEscapeTheme', theme);
+}
 
 // v1.96.1: ELITE HUD SYNC (Global Function)
 function syncEliteHUD() {
@@ -1846,6 +1982,14 @@ function update(dt) {
 
     if (isPlaying) {
         score += dt * 5; 
+        
+        // v1.99.5.0: AUTO-FORWARD MOVEMENT 🚀
+        // Karakter nehirde kendi kendine ilerler (Otomatik Pilot)
+        const autoSpeed = 15; // Sabit akış hızı
+        player.y -= autoSpeed * dt;
+        // Alt sınır kontrolü (Ekranın çok dışına çıkmasın)
+        if (player.y < 100) player.y = 100;
+        
         if(typeof updateAmbientWind === 'function') updateAmbientWind(currentLevel, true);
         if(typeof updateAmbientLava === 'function') updateAmbientLava(currentLevel, true);
     } else {
@@ -1881,7 +2025,8 @@ function update(dt) {
 
     // SADECE ileri-geri (Y ekseni) hareket edildiğinde skordan düş (0'ın altına inmez)
     if (dy !== 0) {
-        score = Math.max(0, score - (Math.abs(dy) * player.speed * dt * 0.1));
+        // v1.99.5.0: SCORE PENALTY REMOVED (No reset on forward move) 📈
+        // score = Math.max(0, score - (Math.abs(dy) * player.speed * dt * 0.1)); 🚫
     }
 
     // X Ekseni Sınırları (Nehir Kanalı) - v1.97.0.3: Dinamik Büklüm Sistemi
@@ -2233,7 +2378,11 @@ function update(dt) {
             }
         }
 
-        obs.y += obs.speedY * dt;
+        // v1.99.5.0: STRAIGHT MOVEMENT PROTOCOL (No edge drifting for logs/rocks) 🛣️
+        let isStraightObject = (obs.type === 'vertical' || obs.type === 'horizontal' || obs.type === 'rock');
+        if (isStraightObject) obs.speedX = 0; 
+        
+        obs.y += obs.speed * dt;
         
         // v1.97.0.3: ELITE DRIFT - Nesnelerin nehir kıvrımını takip etmesi
         if (currentLevel === 5) {
@@ -3487,6 +3636,12 @@ function loadGame() {
         }
 
         updateShopUI();
+        
+        // v1.99.5.1: Tema Tercihini Uygula
+        const savedTheme = localStorage.getItem('riverEscapeTheme') || 'dark';
+        setTheme(savedTheme);
+        const tTog = document.getElementById('theme-toggle');
+        if(tTog) tTog.checked = (savedTheme === 'dark');
     }
 }
 

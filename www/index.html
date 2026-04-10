@@ -78,56 +78,68 @@
             <!-- VERSION TAG REMOVED FOR CLEAN HUD -->
 
 
-            <div id="start-screen" class="screen active" style="padding: 40px 30px;">
-                <h1 style="
-                    margin-bottom: 2px; font-family: 'Outfit', sans-serif; font-weight: 900; font-size: 38px;
-                    background: linear-gradient(135deg, #FFD700, #FFA500); 
-                    -webkit-background-clip: text; 
-                    background-clip: text;
-                    -webkit-text-fill-color: transparent;
-                    filter: drop-shadow(0 6px 15px rgba(0,0,0,0.4));
-                    letter-spacing: -1px;
-                ">River Escape</h1>
-                <div style="color: rgba(255,255,255,0.4); font-family: 'Outfit', sans-serif; font-size: 12px; font-weight: 800; margin-bottom: 25px; letter-spacing: 3px; text-transform: uppercase;">ELITE v1.99.4.1.4</div>
-                
-                <!-- PLAYER NAME / IDENTITY v1.99.4.1.4 -->
-                <div id="player-profile-btn" style="
-                    display: flex; align-items: center; gap: 10px; margin-bottom: 25px; cursor: pointer; pointer-events: auto;
-                    background: rgba(255,255,255,0.08); padding: 12px 20px; border-radius: 60px; border: 1px solid rgba(255,255,255,0.15);
-                    transition: all 0.4s; box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-                " onclick="Leaderboard.promptName()">
-                    <span id="player-flag-main" style="font-size: 18px;">🌍</span>
-                    <div style="text-align: left;">
-                        <span id="player-name-main" style="color: #fff; font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 900; letter-spacing: 1px;">ELITE PLAYER</span><br>
-                        <span id="auth-status-text" style="font-size: 9px; color: #ff4444; font-weight: bold; text-transform: uppercase; opacity: 0.9;">GİRİŞ GEREKLİ 🔏</span>
+            <div id="start-screen" class="screen active" style="background: rgba(0,0,0,0.4); backdrop-filter: blur(5px);">
+                <!-- TOP LEFT: PROFILE & ACCOUNT -->
+                <div class="profile-top-left">
+                    <div id="player-profile-btn" style="
+                        display: flex; align-items: center; gap: 12px; cursor: pointer; pointer-events: auto;
+                        background: rgba(0, 30, 60, 0.6); padding: 10px 15px; border-radius: 40px; border: 1px solid rgba(0, 229, 255, 0.3);
+                        box-shadow: 0 4px 15px rgba(0,0,0,0.3); backdrop-filter: blur(10px);
+                    " onclick="Leaderboard.promptName()">
+                        <span id="player-flag-main" style="font-size: 20px;">🌍</span>
+                        <div style="text-align: left;">
+                            <span id="player-name-main" style="color: #fff; font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 900; letter-spacing: 0.5px;">ELITE PLAYER</span><br>
+                            <span id="auth-status-text" style="font-size: 8px; color: #ff4444; font-weight: bold; text-transform: uppercase;">GİRİŞ GEREKLİ 🔏</span>
+                        </div>
                     </div>
-                </div>
-
-                <!-- ELITE GOOGLE LOGIN BUTTON -->
-                <div id="google-login-container" style="width: 100%; margin-bottom: 25px; display: flex; justify-content: center;">
-                    <button id="google-login-btn" style="
-                        width: auto; padding: 12px 25px; display: flex; align-items: center; gap: 12px;
-                        background: rgba(255,255,255,0.1); color: #fff; border: 1px solid rgba(255,255,255,0.3);
-                        border-radius: 50px; font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 13px;
-                        cursor: pointer; backdrop-filter: blur(10px); transition: all 0.4s ease;
-                        letter-spacing: 1px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-                    ">
-                        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" style="width: 20px; height: 20px;">
-                        OTURUM AÇ
-                    </button>
-                    <p id="auth-welcome-msg" class="hidden" style="color: #ffd700; font-size: 11px; font-weight: bold; margin-top: 8px; text-align: center;"></p>
-                </div>
-
-                <div class="buttons" style="display:flex; flex-direction:column; gap:14px; align-items:center; width: 100%;">
-                    <button id="start-btn" class="elite-btn elite-btn-green pulse-button" style="font-size: 18px !important;">OYNA 🌊</button>
                     
-                    <div style="display: flex; gap: 12px; width: 100%;">
-                        <button id="spin-open-btn" class="elite-btn elite-btn-orange" style="padding: 15px 10px !important; font-size: 12px !important;">ÇARK 🎡</button>
-                        <button id="shop-open-btn" class="elite-btn elite-btn-purple" style="padding: 15px 10px !important; font-size: 12px !important;">MAĞAZA 🛒</button>
-                    </div>
+                    <!-- Login Trigger (Hidden if already logged in) -->
+                    <button id="google-login-btn" style="
+                        margin-top: 10px; padding: 8px 15px; display: flex; align-items: center; gap: 8px;
+                        background: rgba(255,255,255,0.1); color: #fff; border: 1px solid rgba(255,255,255,0.2);
+                        border-radius: 30px; font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 10px;
+                        cursor: pointer;
+                    ">
+                        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" style="width: 14px; height: 14px;">
+                        HESABA BAĞLAN
+                    </button>
+                    <p id="auth-welcome-msg" class="hidden" style="color: #ffd700; font-size: 11px; font-weight: bold; margin-top: 5px;"></p>
+                </div>
 
-                    <button id="leaderboard-open-btn" class="elite-btn elite-btn-blue" style="padding: 15px !important; font-size: 14px !important;">🏆 GLOBAL SIRALAMA</button>
-                    <button id="settings-open-btn" class="elite-btn elite-btn-gray" style="padding: 10px !important; font-size: 11px !important; opacity: 0.9; border-color: rgba(255,255,255,0.2);">AYARLAR ⚙️</button>
+                <!-- TOP CENTER: LOGO -->
+                <div style="position: absolute; top: 30px; width: 100%; text-align: center; pointer-events: none;">
+                    <h1 style="
+                        margin: 0; font-family: 'Outfit', sans-serif; font-weight: 900; font-size: 42px;
+                        background: linear-gradient(135deg, #FFD700, #FFA500); -webkit-background-clip: text; background-clip: text;
+                        -webkit-text-fill-color: transparent; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.5));
+                    ">River Escape</h1>
+                    <div style="color: rgba(255,255,255,0.5); font-size: 10px; font-weight: 800; letter-spacing: 4px; text-transform: uppercase;">ELITE v1.99.5.1</div>
+                </div>
+
+                <!-- RIGHT SIDE: CHARACTER PREVIEW -->
+                <div class="character-preview-box">
+                    <img id="char-preview-img" src="assets/spring_player.png" alt="Player Preview">
+                    <div id="char-preview-name" style="
+                        margin-top: 15px; color: #fff; font-family: 'Press Start 2P', cursive; font-size: 10px;
+                        background: rgba(0,0,0,0.5); padding: 8px 15px; border-radius: 20px; border: 1px solid rgba(255,215,0,0.3);
+                    ">İLKBAHAR</div>
+                </div>
+
+                <!-- BOTTOM RIGHT: PLAY BUTTON -->
+                <div class="bottom-right-anchor" style="text-align: right;">
+                    <button id="start-btn" class="elite-btn elite-btn-green pulse-button" style="padding: 25px 50px !important; font-size: 24px !important; width: auto !important; border-radius: 40px !important;">OYNA 🌊</button>
+                </div>
+
+                <!-- MIDDLE RIGHT: SETTINGS -->
+                <div class="middle-right-anchor">
+                    <button id="settings-open-btn" class="elite-btn elite-btn-gray" style="width: 50px !important; height: 50px !important; padding: 0 !important; border-radius: 50% !important; border-color: rgba(255,255,255,0.4);">⚙️</button>
+                </div>
+
+                <!-- BOTTOM LEFT: SHOP / GLOBAL / SPIN CLUSTER -->
+                <div class="bottom-left-cluster">
+                    <button id="shop-open-btn" class="elite-btn elite-btn-purple" style="width: 60px !important; height: 60px !important; padding: 0 !important; font-size: 24px !important; border-radius: 18px !important;">🛒</button>
+                    <button id="leaderboard-open-btn" class="elite-btn elite-btn-blue" style="width: 60px !important; height: 60px !important; padding: 0 !important; font-size: 24px !important; border-radius: 18px !important;">🏆</button>
+                    <button id="spin-open-btn" class="elite-btn elite-btn-orange" style="width: 60px !important; height: 60px !important; padding: 0 !important; font-size: 24px !important; border-radius: 18px !important;">🎡</button>
                 </div>
             </div>
 
@@ -211,88 +223,55 @@
                     </label>
                 </div>
 
+                <!-- v1.99.5.1: LIGHT/DARK MODE TOGGLE -->
+                <div class="settings-item">
+                    <span class="settings-label" id="theme-label-text">🌓 Karanlık Mod</span>
+                    <label class="switch">
+                        <input type="checkbox" id="theme-toggle" checked onchange="setTheme(this.checked ? 'dark' : 'light')">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
                 <button id="settings-close-btn" style="background-color: #4CAF50; font-family: 'Outfit', sans-serif; font-size: 16px; font-weight:bold; padding: 14px; border-radius: 12px; width: 100%; box-sizing: border-box; align-self: stretch; color: #fff; border: none; outline:none; margin-top: 5px; cursor:pointer; box-shadow: 0 4px #2E7D32;">SAVE & CLOSE</button>
                 <button id="logout-btn" style="background-color: #333; font-family: 'Outfit', sans-serif; font-size: 12px; font-weight:bold; padding: 12px; border-radius: 12px; width: 100%; box-sizing: border-box; align-self: stretch; color: #fff; border: 1px solid #555; outline:none; margin-top: 15px; cursor:pointer; box-shadow: 0 4px #111;">🚪 OTURUMU KAPAT / HESAP DEĞİŞTİR</button>
                 <button id="hard-reset-btn" style="background-color: #b71c1c; font-family: 'Outfit', sans-serif; font-size: 12px; font-weight:bold; padding: 12px; border-radius: 12px; width: 100%; box-sizing: border-box; align-self: stretch; color: #fff; border: none; outline:none; margin-top: 15px; cursor:pointer; opacity: 0.9; box-shadow: 0 4px #5c0000;">⚠️ RESET ALL PROGRESS</button>
             </div>
 
-            <!-- MODERN COMPACT SHOP IMAGE v3.9.31.0 (NO SCROLL) -->
-            <div id="shop-screen" class="screen hidden" style="background: rgba(10,12,18,0.98); z-index: 100; max-width: 350px; width: 92%; padding: 15px 20px; border: 1px solid rgba(255,215,0,0.2); border-radius: 28px;">
-                <h2 id="shop-title-main" style="color: gold; font-family: 'Press Start 2P', cursive; font-size: 14px; margin-bottom: 5px;">MAĞAZA</h2>
-                <div id="shop-balance-text" style="color: #fff; font-size: 8px; margin-bottom: 8px; font-family: 'Press Start 2P', cursive; opacity: 0.9;">BAKİYE: <span id="totalGoldValue" style="color: #FFD700;">0</span> GOLD</div>
+            <div id="shop-screen" class="screen hidden" style="background: rgba(10,12,18,0.98); z-index: 9000; padding: 30px; border: none; border-radius: 0;">
+                <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 25px; border-bottom: 2px solid rgba(255,215,0,0.3); padding-bottom: 15px;">
+                    <h2 id="shop-title-main" style="color: gold; font-family: 'Press Start 2P', cursive; font-size: 20px; margin: 0;">ELITE MAĞAZA</h2>
+                    <div id="shop-balance-text" style="color: #fff; font-size: 11px; font-family: 'Press Start 2P', cursive; background: rgba(255,255,255,0.1); padding: 8px 15px; border-radius: 12px;">BAKİYE: <span id="totalGoldValue-shop" style="color: #FFD700;">0</span> 💰</div>
+                </div>
                 
-                <div style="display: flex; flex-direction: column; gap: 6px; width: 100%;">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; width: 100%; max-height: 55vh; overflow-y: auto; padding-right: 5px; margin-bottom: 25px;">
                     <!-- Mıknatıs -->
-                    <div class="shop-item" style="padding: 8px 12px; margin-bottom: 0;">
-                        <div class="shop-icon-container" style="width: 32px; height: 32px; font-size: 16px;">🧲</div>
+                    <div class="shop-item">
+                        <div class="shop-icon-container">🧲</div>
                         <div class="shop-item-info">
-                            <div class="shop-item-title" style="font-size: 13px;">Mıknatıs</div>
-                            <div class="shop-item-desc" style="font-size: 9px;">Süre: <span id="magnet-duration" style="color:#00e5ff;">0sn</span> (LVL <span id="magnet-lvl">0</span>)</div>
+                            <div class="shop-item-title">MIKNATIS</div>
+                            <div class="shop-item-desc">Süre: <span id="magnet-duration" style="color:#00e5ff;">0sn</span> (LVL <span id="magnet-lvl">0</span>)</div>
                         </div>
-                        <button id="buy-magnet-btn" class="shop-upgrade-btn" style="padding: 5px 10px; font-size: 10px;">Geliştir<br><span id="magnet-price">0</span></button>
+                        <button id="buy-magnet-btn-elite" onclick="buyMagnet()" class="shop-upgrade-btn">GELİŞTİR<br><span id="magnet-price">0</span> G</button>
                     </div>
-
                     <!-- Kalkan -->
-                    <div class="shop-item" style="padding: 8px 12px; margin-bottom: 0;">
-                        <div class="shop-icon-container" style="width: 32px; height: 32px; font-size: 16px;">🛡️</div>
+                    <div class="shop-item">
+                        <div class="shop-icon-container">🛡️</div>
                         <div class="shop-item-info">
-                            <div class="shop-item-title" style="font-size: 13px;">Kalkan</div>
-                            <div class="shop-item-desc" style="font-size: 9px;">Çıkma: <span id="shield-chance" style="color:#64dd17;">%0</span> (LVL <span id="shield-lvl">0</span>)</div>
+                            <div class="shop-item-title">KALKAN</div>
+                            <div class="shop-item-desc">Şans: <span id="shield-chance" style="color:#64dd17;">%0</span> (LVL <span id="shield-lvl">0</span>)</div>
                         </div>
-                        <button id="buy-shield-btn" class="shop-upgrade-btn" style="padding: 5px 10px; font-size: 10px;">Geliştir<br><span id="shield-price">0</span></button>
+                        <button id="buy-shield-btn-elite" onclick="buyShield()" class="shop-upgrade-btn">GELİŞTİR<br><span id="shield-price">0</span> G</button>
                     </div>
-
-                    <!-- Nehir Topu -->
-                    <div id="shop-weapon-row" class="shop-item" style="padding: 8px 12px; margin-bottom: 0;">
-                        <div class="shop-icon-container" style="width: 32px; height: 32px; font-size: 16px;">💣</div>
+                    <!-- Silah -->
+                    <div id="shop-weapon-row-elite" class="shop-item">
+                        <div class="shop-icon-container">💣</div>
                         <div class="shop-item-info">
-                            <div id="shop-wpn-title" class="shop-item-title" style="font-size: 13px;">Nehir Topu</div>
-                            <div id="shop-wpn-desc" class="shop-item-desc" style="font-size: 9px;">Engelleri parçalar.</div>
+                            <div class="shop-item-title">NEHİR TOPU</div>
+                            <div class="shop-item-desc">Engelleri yok eder.</div>
                         </div>
-                        <button id="buy-weapon-btn" class="shop-upgrade-btn" style="padding: 5px 10px; font-size: 10px;">Satın Al<br>5.000</button>
+                        <button id="buy-weapon-btn-elite" onclick="buyWeapon()" class="shop-upgrade-btn">AL<br>5.000 G</button>
                     </div>
-
-                    <!-- Elite Mühimmat (Sadece Silahı Olanlara) -->
-                    <div id="shop-ammo-row" class="shop-item" style="padding: 8px 12px; margin-bottom: 0; display: none; border: 1px solid rgba(255,215,0,0.3); background: rgba(255,215,0,0.05);">
-                        <div class="shop-icon-container" style="width: 32px; height: 32px; font-size: 16px;">🚀</div>
-                        <div class="shop-item-info">
-                            <div id="shop-ammo-title" class="shop-item-title" style="font-size: 13px; color: gold;">Mühimmat Paketi</div>
-                            <div id="shop-ammo-desc" class="shop-item-desc" style="font-size: 9px;">+10 Mermi sağlar.</div>
-                        </div>
-                        <button id="buy-ammo-btn" class="shop-upgrade-btn" style="padding: 5px 10px; font-size: 10px; background: linear-gradient(135deg, #FFD700, #ff8c00); color: #000;">Yükle<br>1.000</button>
-                    </div>
-
                     <!-- Gemi Zırhı -->
-                    <div class="shop-item" style="padding: 8px 12px; margin-bottom: 0;">
-                        <div class="shop-icon-container" style="width: 32px; height: 32px; font-size: 16px;">💎</div>
-                        <div class="shop-item-info">
-                            <div class="shop-item-title" style="font-size: 13px;">Gemi Zırhı</div>
-                            <div class="shop-item-desc" style="font-size: 9px;">SADECE LVL 6, 12...</div>
-                        </div>
-                        <button id="buy-armor-btn" class="shop-upgrade-btn" style="padding: 5px 10px; font-size: 10px; background: linear-gradient(135deg, #8e44ad, #9b59b6);">KİLİTLİ</button>
-                    </div>
-                </div>
-
-                <div style="width: 100%; margin: 10px 0;">
-                    <button id="ad-gold-btn" class="elite-ad-btn" style="width: 100%; padding: 10px; font-weight: 800; font-size: 12px;">+100 ALTIN (AD)</button>
-                </div>
-
-                <!-- GOLD MARKET (IAP) -->
-                <div style="width: 100%; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px;">
-                    <div style="color: #FFD700; font-family: 'Outfit', sans-serif; font-weight: 900; font-size: 12px; margin-bottom: 8px; text-align: center; letter-spacing: 1px;">ALTIN MARKET 💰</div>
-                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;">
-                        <button onclick="GameStore.buy('gold_pack_1')" class="gold-market-btn" style="padding: 8px;">
-                            <span style="font-size: 12px; font-weight: 900;">5.000</span><br>
-                            <span style="font-size: 10px; opacity: 0.9; color: #ffd700;">$0.99</span>
-                        </button>
-                        <button onclick="GameStore.buy('gold_pack_2')" class="gold-market-btn" style="padding: 8px;">
-                            <span style="font-size: 12px; font-weight: 900;">10.000</span><br>
-                            <span style="font-size: 10px; opacity: 0.9; color: #ffd700;">$1.49</span>
-                        </button>
-                        <button onclick="GameStore.buy('gold_pack_3')" class="gold-market-btn" style="padding: 8px;">
-                            <span style="font-size: 12px; font-weight: 900;">25.000</span><br>
-                            <span style="font-size: 10px; opacity: 0.9; color: #ffd700;">$2.99</span>
-                        </button>
                         <button onclick="GameStore.buy('gold_pack_4')" class="gold-market-btn" style="padding: 8px; border: 1px solid #ffd700 !important; background: rgba(255,215,0,0.15) !important;">
                             <span style="font-size: 12px; font-weight: 900; color: #ffd700;">50.000</span><br>
                             <span style="font-size: 10px; font-weight: bold; color: #fff;">$4.99</span>
