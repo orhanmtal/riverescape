@@ -1,6 +1,10 @@
 # River Escape - Versiyon Günlükleri (CHANGELOG)
 Bu dosya, oyun motorunun ve özelliklerin versiyon versiyon nasıl geliştiğini mühürleyip saklamak için Antigravity tarafından oluşturulmuştur.
 
+## [v1.99.5.71] - 2026-04-10 - "ELITE PLAYER RESTORATION"
+- **Invisible Boat Fixed:** Replaced null-initialization with raw Image fallback to prevent sprites disappearing during fast launches.
+- **Draw Logic Buffed:** Added activePlayerImg fallback in game_v3.js for triple stability.
+
 ## [v1.99.5.70] - 2026-04-10 - "ELITE SPRITE RESTORATION"
 - **Boat visibility:** Fixed playerImg null/undefined issues, boat now dynamic per level skin.
 - **Masterpiece Flow:** Finalized v1.99.5.70 stable baseline for production.
