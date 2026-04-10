@@ -1,4 +1,5 @@
-// River Escape - Görsel ve Sahne Motoru (Assets & Scene) - v109
+// River Escape - Görsel ve Sahne Motoru (Assets & Scene) - v1.99.5.76
+const players = { ilkbahar: null, yaz: null, sonbahar: null, kis: null, lava: null, void: null };
 
 // GÖRSELLERİ ŞEFFAFLAŞTIRAN SİHİRLİ FONKSİYON - v110 (Yüksek Çözünürlük & Local Mühür)
 function makeWhiteTransparent(imageElement) {
@@ -102,7 +103,7 @@ let iPI = safeLoad('Kayik_Spring', 'assets/Kayik.png', (img) => {
     if (typeof currentLevel !== 'undefined' && currentLevel===1) playerImg = players.ilkbahar; 
 });
 
-const players = { ilkbahar: iPI, yaz: iPI, sonbahar: iPI, kis: iPI, lava: iPI, void: iPI };
+// players object already defined at top for safety v76
 let iPY = safeLoad('Kayik_Yaz', 'assets/Kayik_Yaz.png', (img) => { players.yaz = makeWhiteTransparent(img); });
 let iPS = safeLoad('Kayik_Sonbahar', 'assets/Kayik_Sonbahar.png', (img) => { players.sonbahar = makeWhiteTransparent(img); });
 let iPK = safeLoad('Kayik_Kis', 'assets/Kayik_Kis.png', (img) => { players.kis = makeWhiteTransparent(img); });

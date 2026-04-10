@@ -1,6 +1,10 @@
 # River Escape - Versiyon Günlükleri (CHANGELOG)
 Bu dosya, oyun motorunun ve özelliklerin versiyon versiyon nasıl geliştiğini mühürleyip saklamak için Antigravity tarafından oluşturulmuştur.
 
+## [v1.99.5.76] - 2026-04-10 - "ELITE PLAYER VISIBILITY" Final
+- **Global Players Object:** Defined at the very top of assets.js to prevent loading race conditions and ReferenceErrors.
+- **Initialization Buff:** Ensured safeLoad callbacks have immediate access to the players object.
+
 ## [v1.99.5.75] - 2026-04-10 - "THE PERFECT BOAT" Restoration
 - **Elite Asset Swap:** Officially replaced all placeholder boats with the user's perfect pixel-art character rowing asset (assets/Kayik.png).
 - **Masterpiece Finality:** Standardized L1-L6 assets for a cohesive sympathetic feel across all levels.
