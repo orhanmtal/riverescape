@@ -1,8 +1,4 @@
-<<<<<<< Updated upstream
-// RİVER ESCAPE ELİTE - v1.99.5.0 (AUTO-PILOT REBIRTH)
-=======
 // RİVER ESCAPE ELİTE - v1.99.5.65 (MASTERPIECE FINAL)
->>>>>>> Stashed changes
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -2119,16 +2115,8 @@ function update(dt) {
         dy = 0; 
     }
 
-<<<<<<< Updated upstream
-    // SADECE ileri-geri (Y ekseni) hareket edildiğinde skordan düş (0'ın altına inmez)
-    if (dy !== 0) {
-        // v1.99.5.0: SCORE PENALTY REMOVED (No reset on forward move) 📈
-        // score = Math.max(0, score - (Math.abs(dy) * player.speed * dt * 0.1)); 🚫
-    }
-=======
     // v1.99.4.1.11: Manuel hareket cezası kaldırıldı!
     // Skor artık sadece süreye bağlı olarak artacak, geri gitmeyecek.
->>>>>>> Stashed changes
 
     // X Ekseni Sınırları (Nehir Kanalı) - v1.97.0.3: Dinamik Büklüm Sistemi
     const pMargin = (currentLAsset && typeof currentLAsset.margin === 'number') ? currentLAsset.margin : 0.32;
