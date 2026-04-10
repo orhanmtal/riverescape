@@ -467,10 +467,8 @@ const Leaderboard = {
                 totalSpentUSD: increment,
                 lastPurchaseDate: firebase.firestore.FieldValue.serverTimestamp()
             }, { merge: true });
-            
-            console.log(`📊 [REVENUE] Reported purchase of $${amountUSD}. Cloud Updated.`);
         } catch (e) {
-            console.error("Revenue report failed:", e);
+            // Sessiz hata yönetimi
         }
     },
 
