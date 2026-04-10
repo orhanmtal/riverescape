@@ -97,12 +97,12 @@ let bgImgKis = loadBg('kis', 'assets/ArkaPlan_Kis.png');
 let bgImgLava = loadBg('lava', 'assets/ArkaPlan_Lav.png');
 let bgImgVoid = loadBg('void', 'assets/ArkaPlan_Lav.png'); // v1.97.2.3: ArkaPlan_Void eksik olduğu için Lav ofsetli kullanıldı.
 
-const players = { ilkbahar: iPI, yaz: iPI, sonbahar: iPI, kis: iPI, lava: iPI, void: iPI };
-
 let iPI = safeLoad('Kayik_Spring', 'assets/Kayik.png', (img) => { 
     players.ilkbahar = makeWhiteTransparent(img); 
     if (typeof currentLevel !== 'undefined' && currentLevel===1) playerImg = players.ilkbahar; 
 });
+
+const players = { ilkbahar: iPI, yaz: iPI, sonbahar: iPI, kis: iPI, lava: iPI, void: iPI };
 let iPY = safeLoad('Kayik_Yaz', 'assets/Kayik_Yaz.png', (img) => { players.yaz = makeWhiteTransparent(img); });
 let iPS = safeLoad('Kayik_Sonbahar', 'assets/Kayik_Sonbahar.png', (img) => { players.sonbahar = makeWhiteTransparent(img); });
 let iPK = safeLoad('Kayik_Kis', 'assets/Kayik_Kis.png', (img) => { players.kis = makeWhiteTransparent(img); });

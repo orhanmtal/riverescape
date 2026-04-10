@@ -1,6 +1,10 @@
 # River Escape - Versiyon Günlükleri (CHANGELOG)
 Bu dosya, oyun motorunun ve özelliklerin versiyon versiyon nasıl geliştiğini mühürleyip saklamak için Antigravity tarafından oluşturulmuştur.
 
+## [v1.99.5.72] - 2026-04-10 - "ELITE INIT FIX" Stability
+- **ReferenceError Resolved:** Corrected iPI initialization order in assets.js to prevent "Cannot access before initialization" error.
+- **Global Stability:** Boat is officially drawing on all systems now.
+
 ## [v1.99.5.71] - 2026-04-10 - "ELITE PLAYER RESTORATION"
 - **Invisible Boat Fixed:** Replaced null-initialization with raw Image fallback to prevent sprites disappearing during fast launches.
 - **Draw Logic Buffed:** Added activePlayerImg fallback in game_v3.js for triple stability.
