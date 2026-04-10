@@ -1,4 +1,4 @@
-// RİVER ESCAPE ELİTE - v1.99.5.65 (MASTERPIECE FINAL)
+// RİVER ESCAPE ELİTE - v1.99.5.70 (MASTERPIECE FINAL)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -1854,7 +1854,8 @@ function startGame() {
     // Sync Assets & UI
     const currentAsset = levelAssets[(currentLevel - 1) % levelAssets.length];
     bgImg = bgImgs[currentAsset.bgKey]; 
-    playerImg = players.ilkbahar; 
+    // v1.99.5.70: Dinamik Kayık Sistemi (Skin Fallback) ⛵
+    playerImg = players[currentAsset.skin] || players.ilkbahar; 
     bgScrollSpeed = currentAsset.speed;
     lastTime = performance.now();
     

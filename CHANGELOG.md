@@ -1,6 +1,10 @@
 # River Escape - Versiyon Günlükleri (CHANGELOG)
 Bu dosya, oyun motorunun ve özelliklerin versiyon versiyon nasıl geliştiğini mühürleyip saklamak için Antigravity tarafından oluşturulmuştur.
 
+## [v1.99.5.70] - 2026-04-10 - "ELITE SPRITE RESTORATION"
+- **Boat visibility:** Fixed playerImg null/undefined issues, boat now dynamic per level skin.
+- **Masterpiece Flow:** Finalized v1.99.5.70 stable baseline for production.
+
 ## [v1.99.5.69] - 2026-04-10 - "ELITE LAUNCH FIX" Stability
 - **ReferenceError Resolved:** Restored 'currentAsset' variable in startGame() for a smooth game start.
 - **Sound/Video Sync:** Ensured visuals load properly before audio starts, preventing background noise issues.
