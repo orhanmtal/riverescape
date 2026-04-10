@@ -1,6 +1,10 @@
 # River Escape - Versiyon Günlükleri (CHANGELOG)
 Bu dosya, oyun motorunun ve özelliklerin versiyon versiyon nasıl geliştiğini mühürleyip saklamak için Antigravity tarafından oluşturulmuştur.
 
+## [v1.99.5.77] - 2026-04-10 - "THE UNSTOPPABLE BOAT"
+- **Visibility Emergency:** Added an elliptical fallback silhouette for the boat in drawPlayer to ensure visibility even when assets fail to load.
+- **Improved Fallback:** Reinforced assets.js and game_v3.js with multi-layer loading checks.
+
 ## [v1.99.5.76] - 2026-04-10 - "ELITE PLAYER VISIBILITY" Final
 - **Global Players Object:** Defined at the very top of assets.js to prevent loading race conditions and ReferenceErrors.
 - **Initialization Buff:** Ensured safeLoad callbacks have immediate access to the players object.

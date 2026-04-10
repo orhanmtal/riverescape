@@ -1,4 +1,4 @@
-// RİVER ESCAPE ELİTE - v1.99.5.76 (MASTERPIECE FINAL)
+// RİVER ESCAPE ELİTE - v1.99.5.77 (MASTERPIECE FINAL)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -3240,27 +3240,34 @@ function draw(dt) {
         ctx.restore();
     }
 
-    // v1.99.5.71: MULTI-SAFE SPRITE ENGINE ⛵
+    // v1.99.5.77: UNSTOPPABLE SPRITE ENGINE ⛵
     let activePlayerImg = playerImg || iPI;
-    if (activePlayerImg) {
-        if (activePlayerImg.tagName === 'CANVAS' || activePlayerImg.complete) {
-            ctx.save();
-            if (isDashing) {
-                // ZIPLAMA EFEKTİ: Kayığı büyüt ve merkeze göre ölçeklendir
-                let scale = 1.2 + Math.sin((dashTimer / DASH_DURATION) * Math.PI) * 0.3;
-                ctx.translate(player.x + player.width/2, player.y + player.height/2);
-                ctx.scale(scale, scale);
-                ctx.drawImage(activePlayerImg, -player.width/2, -player.height/2, player.width, player.height);
-                
-                // DASH İZİ (GHOSTING)
-                ctx.globalAlpha = 0.3;
-                ctx.drawImage(activePlayerImg, -player.width/2, -player.height/2 + 20, player.width, player.height);
-            } else {
-                ctx.drawImage(activePlayerImg, player.x, player.y, player.width, player.height);
-            }
-            ctx.restore();
+    let isImgReady = activePlayerImg && (activePlayerImg.tagName === 'CANVAS' || activePlayerImg.complete);
+
+    ctx.save();
+    if (isImgReady) {
+        if (isDashing) {
+            let scale = 1.2 + Math.sin((dashTimer / DASH_DURATION) * Math.PI) * 0.3;
+            ctx.translate(player.x + player.width/2, player.y + player.height/2);
+            ctx.scale(scale, scale);
+            ctx.drawImage(activePlayerImg, -player.width/2, -player.height/2, player.width, player.height);
+            ctx.globalAlpha = 0.3;
+            ctx.drawImage(activePlayerImg, -player.width/2, -player.height/2 + 20, player.width, player.height);
+        } else {
+            ctx.drawImage(activePlayerImg, player.x, player.y, player.width, player.height);
         }
+    } else {
+        // EMERGENCY FALLBACK: Draw a brown boat silhouette if image is missing
+        ctx.fillStyle = "#8B4513";
+        ctx.beginPath();
+        ctx.ellipse(player.x + player.width/2, player.y + player.height/2, player.width/2, player.height/2, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = "#5D2E0C";
+        ctx.lineWidth = 2;
+        ctx.stroke();
     }
+    ctx.restore();
+
     
     // v1.97.0.2: Haze wrap-up
     if(typeof endHeatHaze === 'function') endHeatHaze();
