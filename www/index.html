@@ -36,14 +36,14 @@
         <!-- UI (Oyun Arayüzü) Katmanı -->
             <!-- MODERN GLASS HUD v1.99.4.1.4 (Elite HD) -->
             <div id="modern-hud" class="hidden" style="
-                position: absolute; top: 15px; left: 15px; 
+                position: absolute; top: 10px; left: 10px; 
                 padding: 10px 18px; border-radius: 15px;
                 background: rgba(0, 30, 60, 0.4); 
                 backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
                 border: 1px solid rgba(0, 229, 255, 0.4);
                 box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4), 0 0 15px rgba(0, 229, 255, 0.1);
                 display: flex; flex-direction: column; gap: 4px;
-                z-index: 1000; pointer-events: none; min-width: 110px;
+                z-index: 9000; pointer-events: none; min-width: 110px;
             ">
                 <div style="display: flex; align-items: center; gap: 8px;">
                     <span id="scoreLabel-hud" style="color: #00e5ff; font-family: 'Press Start 2P', cursive; font-size: 8px; text-shadow: 0 0 5px #00e5ff;">SCORE:</span>
@@ -108,22 +108,24 @@
                     <p id="auth-welcome-msg" class="hidden" style="color: #ffd700; font-size: 11px; font-weight: bold; margin-top: 5px;"></p>
                 </div>
 
-                <!-- TOP CENTER: LOGO -->
-                <div style="position: absolute; top: 20px; width: 100%; text-align: center; pointer-events: none; z-index: 50;">
+                <!-- TOP CENTER: LOGO v1.99.5.5 -->
+                <div style="position: absolute; top: 80px; width: 100%; text-align: center; pointer-events: none; z-index: 50;">
                     <h1 style="
-                        margin: 0; font-family: 'Outfit', sans-serif; font-weight: 900; font-size: 32px;
+                        margin: 0; font-family: 'Outfit', sans-serif; font-weight: 900; font-size: 28px;
                         background: linear-gradient(135deg, #FFD700, #FFA500); -webkit-background-clip: text; background-clip: text;
                         -webkit-text-fill-color: transparent; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.5));
+                        letter-spacing: -1px;
                     ">River Escape</h1>
-                    <div style="color: rgba(255,255,255,0.5); font-size: 8px; font-weight: 800; letter-spacing: 3px; text-transform: uppercase;">ELITE v1.99.5.2</div>
+                    <div style="color: rgba(255,255,255,0.4); font-size: 7px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; margin-top: -5px;">ELITE v1.99.5.5</div>
                 </div>
 
                 <!-- RIGHT SIDE: CHARACTER PREVIEW -->
-                <div class="character-preview-box" style="z-index: 100;">
-                    <img id="char-preview-img" src="assets/Kayik.png" alt="Player" style="width: 100px; height: 160px; filter: drop-shadow(0 0 20px #00e5ff);">
+                <div class="character-preview-box" style="z-index: 100; right: 15px; top: 55%;">
+                    <img id="char-preview-img" src="assets/Kayik.png" alt="Player" style="width: 90px; height: 140px; filter: drop-shadow(0 0 15px rgba(0,229,255,0.5));">
                     <div id="char-preview-name" style="
-                        margin-top: 10px; color: #fff; font-family: 'Press Start 2P', cursive; font-size: 8px;
-                        background: rgba(0,0,0,0.6); padding: 5px 12px; border-radius: 20px; border: 1px solid rgba(255,215,0,0.3);
+                        margin-top: 15px; color: #fff; font-family: 'Press Start 2P', cursive; font-size: 7px;
+                        background: rgba(0,0,0,0.7); padding: 6px 14px; border-radius: 20px; border: 1px solid rgba(255,215,0,0.4);
+                        box-shadow: 0 5px 15px rgba(0,0,0,0.5);
                     ">İLKBAHAR</div>
                 </div>
 
@@ -138,10 +140,19 @@
                 </div>
 
                 <!-- BOTTOM LEFT: SHOP / GLOBAL / SPIN CLUSTER -->
-                <div class="bottom-left-cluster" style="z-index: 200; gap: 8px;">
-                    <button id="shop-open-btn" class="elite-btn elite-btn-purple" style="width: 45px !important; height: 45px !important; padding: 0 !important; font-size: 18px !important; border-radius: 12px !important;">🛒</button>
-                    <button id="leaderboard-open-btn" class="elite-btn elite-btn-blue" style="width: 45px !important; height: 45px !important; padding: 0 !important; font-size: 18px !important; border-radius: 12px !important;">🏆</button>
-                    <button id="spin-open-btn" class="elite-btn elite-btn-orange" style="width: 45px !important; height: 45px !important; padding: 0 !important; font-size: 18px !important; border-radius: 12px !important;">🎡</button>
+                <div class="bottom-left-cluster" style="z-index: 200; gap: 12px; bottom: 25px; left: 20px;">
+                    <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+                        <button id="shop-open-btn" class="elite-btn elite-btn-purple" style="width: 48px !important; height: 48px !important; padding: 0 !important; font-size: 20px !important; border-radius: 12px !important; margin: 0 !important;">🛒</button>
+                        <span style="color: #fff; font-size: 6px; font-weight: 900; opacity: 0.7; font-family: 'Press Start 2P';">SHOP</span>
+                    </div>
+                    <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+                        <button id="leaderboard-open-btn" class="elite-btn elite-btn-blue" style="width: 48px !important; height: 48px !important; padding: 0 !important; font-size: 20px !important; border-radius: 12px !important; margin: 0 !important;">🏆</button>
+                        <span style="color: #fff; font-size: 6px; font-weight: 900; opacity: 0.7; font-family: 'Press Start 2P';">TOP</span>
+                    </div>
+                    <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+                        <button id="spin-open-btn" class="elite-btn elite-btn-orange" style="width: 48px !important; height: 48px !important; padding: 0 !important; font-size: 20px !important; border-radius: 12px !important; margin: 0 !important;">🎡</button>
+                        <span style="color: #fff; font-size: 6px; font-weight: 900; opacity: 0.7; font-family: 'Press Start 2P';">SPIN</span>
+                    </div>
                 </div>
             </div>
 
