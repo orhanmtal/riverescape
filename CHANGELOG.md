@@ -1,6 +1,10 @@
 # River Escape - Versiyon Günlükleri (CHANGELOG)
 Bu dosya, oyun motorunun ve özelliklerin versiyon versiyon nasıl geliştiğini mühürleyip saklamak için Antigravity tarafından oluşturulmuştur.
 
+## [v1.99.5.74] - 2026-04-10 - "ELITE CUTE BOAT RESTORATION"
+- **Asset Restoration:** Replaced generic 3D rowboat with the original 'Cute Pixel-Art' rowing character for a sympathetic feel.
+- **Spring Asset Fix:** Pointed Level 1 (Spring) to use the high-quality pixel-art boat asset (assets/Kayik_Yaz.png).
+
 ## [v1.99.5.72] - 2026-04-10 - "ELITE INIT FIX" Stability
 - **ReferenceError Resolved:** Corrected iPI initialization order in assets.js to prevent "Cannot access before initialization" error.
 - **Global Stability:** Boat is officially drawing on all systems now.

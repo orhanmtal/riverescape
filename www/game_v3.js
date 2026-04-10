@@ -1,4 +1,4 @@
-// RİVER ESCAPE ELİTE - v1.99.5.71 (MASTERPIECE FINAL)
+// RİVER ESCAPE ELİTE - v1.99.5.74 (MASTERPIECE FINAL)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
