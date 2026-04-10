@@ -5,16 +5,16 @@
  */
 
 const IAP_PACKS = [
-    { id: 'gold_pack_1', amount: 5000, price: '$0.99', label: '5.000 GOLD' },
-    { id: 'gold_pack_2', amount: 10000, price: '$1.49', label: '10.000 GOLD' },
-    { id: 'gold_pack_3', amount: 25000, price: '$2.99', label: '25.000 GOLD' },
-    { id: 'gold_pack_4', amount: 50000, price: '$4.99', label: '50.000 GOLD' }
+    { id: 'gold_pack_1', amount: 5000, price: '$0.99', priceVal: 0.99, label: '5.000 GOLD' },
+    { id: 'gold_pack_2', amount: 10000, price: '$1.49', priceVal: 1.49, label: '10.000 GOLD' },
+    { id: 'gold_pack_3', amount: 25000, price: '$2.99', priceVal: 2.99, label: '25.000 GOLD' },
+    { id: 'gold_pack_4', amount: 50000, price: '$4.99', priceVal: 4.99, label: '50.000 GOLD' }
 ];
 
 const GameStore = {
     // Ürün Tanımları (Google Play Console ID'leri buraya gelecek)
     // Fiyatlandırma: 0.99$ - 1.49$ - 2.99$ - 4.99$
-    PRODUCTS: IAP_PACKS.map(p => ({ id: p.id, title: p.label, amount: p.amount, type: 'consumable' })),
+    PRODUCTS: IAP_PACKS.map(p => ({ id: p.id, title: p.label, amount: p.amount, priceVal: p.priceVal, type: 'consumable' })),
 
     init() {
         if (!window.CdvPurchase) {
@@ -78,7 +78,13 @@ const GameStore = {
             // v1.99.3.31.3: Doğrudan global değişkeni güncelle (Shared Scope)
             totalGold += product.amount; 
             if (typeof saveGame === 'function') saveGame();
-            if (typeof updateShopUI === 'function') updateShopUI();
+            
+            // v1.99.4.1.10: Harcamayı Firebase'e Raporla (Revenue Tracking) 🏦📊
+            if (typeof Leaderboard !== 'undefined' && Leaderboard.reportPurchase) {
+                Leaderboard.reportPurchase(product.priceVal || 0);
+            }
+            
+            if (typeof triggerEliteEconomySync === 'function') triggerEliteEconomySync();
             
             const msg = (translations[currentLang] && translations[currentLang].purchaseSuccess) 
                         ? `${translations[currentLang].purchaseSuccess} +${product.amount} GOLD! 💰`

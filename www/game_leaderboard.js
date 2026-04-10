@@ -1,5 +1,5 @@
 /**
- * RİVER ESCAPE ELİTE - v1.99.4.1.8 (SMART SYNC V2 - ECONOMY ARMOR)
+ * RİVER ESCAPE ELİTE - v1.99.4.1.10 (REVENUE INTEL HUB)
  * Firebase Firestore Global Sıralama ve Profil Senkronizasyon Sistemi
  * v1.99.3.30
  */
@@ -449,11 +449,28 @@ const Leaderboard = {
             
             keysToRemove.forEach(key => localStorage.removeItem(key));
             
-            console.log("🧼 [ELITE AUTH] Deep wipe successful. No leftovers. Reloading...");
+            console.log("🚪 [ELITE AUTH] Logout successful. Reloading...");
             location.reload(); 
         } catch (e) {
             console.error("Logout failed:", e);
             location.reload();
+        }
+    },
+
+    // v1.99.4.1.10: GELİR TAKİBİ (Revenue Tracker) 💰🏦
+    async reportPurchase(amountUSD) {
+        if (!this.db || !this.playerID) return;
+        
+        try {
+            const increment = firebase.firestore.FieldValue.increment(amountUSD);
+            await this.db.collection('leaderboard').doc(this.playerID).set({
+                totalSpentUSD: increment,
+                lastPurchaseDate: firebase.firestore.FieldValue.serverTimestamp()
+            }, { merge: true });
+            
+            console.log(`📊 [REVENUE] Reported purchase of $${amountUSD}. Cloud Updated.`);
+        } catch (e) {
+            console.error("Revenue report failed:", e);
         }
     },
 
