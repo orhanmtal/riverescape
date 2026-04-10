@@ -1,4 +1,4 @@
-// RİVER ESCAPE ELİTE - v1.99.4.1.8 (INSTANT ECONOMY SYNC)
+// RİVER ESCAPE ELİTE - v1.99.4.1.9 (FULL SESSION PERSISTENCE)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -727,13 +727,17 @@ function saveGame() {
         gold: totalGold,
         magnet: magnetLevel,
         shield: shieldLevel,
-         musicVol: isMusicVolume,
+        musicVol: isMusicVolume,
         sfxVol: isSFXVolume,
         vib: isVibrationEnabled,
         weapon: hasWeapon,
         bombs: bombCount,
         armorLicense: ownsArmorLicense,
-        armorCharge: armorCharge
+        armorCharge: armorCharge,
+        // v1.99.4.1.9: Elite Persistence (Session Restore) 💾
+        sessionScore: Math.floor(score || 0),
+        sessionLives: lives || 3,
+        sessionLevel: currentLevel || 1
     };
     localStorage.setItem('riverEscapeSave', JSON.stringify(data));
     
@@ -1600,7 +1604,15 @@ function startGame() {
     obstacles = []; golds = []; powerups = []; bullets = []; // Her şeyi temizle!
     initAudio(); 
     
-    isPlaying = true; isPaused = false;
+    // v1.99.4.1.9: RESUME LOGIC 🛶
+    score = window.resumeScore || 0;
+    lives = window.resumeLives || 3;
+    currentLevel = window.resumeLevel || 1;
+    
+    // Level bazlı başlangıç ayarları
+    const currentAsset = levelAssets[(currentLevel - 1) % levelAssets.length];
+    spawnInterval = currentAsset.spawn; 
+    bgScrollSpeed = currentAsset.speed; isPaused = false;
     startScreen.classList.add('hidden');
     if(pauseBtn) pauseBtn.style.display = 'block';
     
@@ -1684,6 +1696,12 @@ function gameOver() {
     syncEliteHUD();
     
     playDeathSound(); 
+    
+    // v1.99.4.1.9: OTURUM SIFIRLAMA (Gerçek GameOver anında can ve skor uçar ama Level kalır!) 🧼
+    window.resumeScore = 0;
+    window.resumeLives = 3;
+    // Not: resumeLevel'i ELLEmiyoruz çünkü oyuncu ulaştığı levelden devam etmeli! 🏛️
+    saveGame(); 
     
     try {
         // v3.31.2: Elite Score & Gold is already updated in showGameOver()
@@ -3448,6 +3466,11 @@ function loadGame() {
         ownsArmorLicense = data.armorLicense || false;
         armorCharge = data.armorCharge || 0;
         bombCount = data.bombs || 0;
+        
+        // v1.99.4.1.9: Devam Etme Bilgileri
+        window.resumeScore = data.sessionScore || 0;
+        window.resumeLives = data.sessionLives || 3;
+        window.resumeLevel = data.sessionLevel || 1;
         
         // UI'yı güncelle
         const mSli = document.getElementById('music-slider');
