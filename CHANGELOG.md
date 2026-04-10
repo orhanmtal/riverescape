@@ -1,6 +1,17 @@
 # River Escape - Versiyon Günlükleri (CHANGELOG)
 Bu dosya, oyun motorunun ve özelliklerin versiyon versiyon nasıl geliştiğini mühürleyip saklamak için Antigravity tarafından oluşturulmuştur.
 
+## [v1.99.5.5] - 2026-04-10 - "ELITE MASTERPIECE" Güncellemesi
+- **Görsel Devrim:** Ana menü tamamen baştan tasarlandı; neon parlamalı yüzer logo ve dinamik "Ripple" (dalga) efektli "OYNA" butonu eklendi.
+- **Glassmorphism:** HUD ve arayüz elemanları modern buzlu cam estetiğiyle güncellendi.
+- **Performans Senkronu:** Android ve Web sürümleri v1.99.5.5 standardında tam olarak eşitlendi.
+
+## [v1.99.4.1.10] - 2026-04-10 - "ELITE REDIRECT & SYNC" Güncellemesi
+- **Google Auth:** `signInWithPopup` yerine `signInWithRedirect` mekanizmasına geçildi. Bu sayede Android/iOS tarayıcılarındaki "Pencere Engellendi" sorunu kökten çözüldü.
+- **Dinamik Veri Akışı:** `getRedirectResult` işleyicisi güçlendirildi; yönlendirme sonrası kullanıcı adı ve ID senkronizasyonu milisaniyeler içinde gerçekleşecek şekilde optimize edildi.
+- **Versiyon Mühürleme:** `package.json`, `index.html`, `translations.js` ve motor dosyaları `v1.99.4.1.10` standardına 1:1 eşitlendi.
+- **Hata Yönetimi:** Auth hata kodları (network, internal, storage) kullanıcı dostu toast mesajlarına bağlandı.
+
 ## [v151] - 2026-03-31 - "LAVA RIVER & FIREBALL" Güncellemesi
 - **Yeni Seviye:** "LAVA RIVER" aşaması (4000-6000 puan) eklendi.
 - **Yeni Engel:** 5. Seviye için "Fireball" (Ateş Topu) iblis canavarı tanıtıldı.

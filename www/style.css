@@ -9,9 +9,22 @@ body, html {
     width: 100%;
     height: 100%;
     overflow: hidden; /* Scroll'u engelle */
-    background-color: #111; /* Oyun arkası karanlık dursun */
     font-family: 'Outfit', sans-serif;
-    touch-action: none; /* Dokunmatik kaydırmaları engelle (Sonsuz Koşu için kritik) */
+    background: radial-gradient(circle at 50% 50%, #0a192f 0%, #020617 100%);
+    color: #fff;
+    touch-action: none;
+    overflow: hidden;
+    position: relative;
+}
+
+body::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: url('https://www.transparenttextures.com/patterns/dark-matter.png');
+    opacity: 0.15;
+    pointer-events: none;
+}
     cursor: default;
     /* Puruzsuz HD Goruntu Muhuru */
     image-rendering: auto; 
@@ -35,10 +48,14 @@ button, .switch, .toggle-slider, #gameCanvas {
     border: 2px solid #FFD700 !important;
 }
 
-@keyframes proLevelPop {
-    0% { transform: scale(0.5); opacity: 0; filter: blur(5px); }
-    30% { transform: scale(1.1); opacity: 1; filter: blur(0); }
-    100% { transform: scale(1.0); opacity: 1; }
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+@keyframes neonPulse {
+    0%, 100% { text-shadow: 0 0 10px rgba(0,229,255,0.4), 0 0 20px rgba(0,229,255,0.2); }
+    50% { text-shadow: 0 0 25px rgba(0,229,255,0.8), 0 0 50px rgba(0,229,255,0.4); }
 }
 
 /* Oyun Konteyneri - Tamamen Ortala */
@@ -81,6 +98,11 @@ button, .switch, .toggle-slider, #gameCanvas {
     font-family: 'Press Start 2P', cursive;
     font-size: 16px;
     text-shadow: 2px 2px 0px #000;
+    z-index: 10;
+}
+
+/* HUD visibility control restored to original v1.99.4.1.10 */
+#score-display {
     z-index: 10;
 }
 
@@ -183,16 +205,132 @@ h1 {
     color: #4CAF50;
 }
 
+/* STABLE UI ROLLBACK v1.99.4.1.10 */
+#start-screen {
+    z-index: 10000;
+}
+
+/* Sol Üst: Hesap Bilgisi */
+.account-info-elite {
+    position: absolute !important;
+    top: 25px !important;
+    left: 20px !important;
+    background: rgba(10, 20, 30, 0.8) !important;
+    backdrop-filter: blur(10px);
+    padding: 10px 18px !important;
+    border-radius: 16px !important;
+    border: 1px solid rgba(0, 229, 255, 0.3) !important;
+    color: white !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    pointer-events: auto !important;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5) !important;
+}
+
+/* Sağ Taraf: Karakter Önizleme */
+.character-preview-container {
+    position: absolute !important;
+    right: 50px !important;
+    top: 45% !important;
+    transform: translateY(-50%) !important;
+    width: 220px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    pointer-events: none !important;
+}
+
+#menu-character-img {
+    width: 160px !important;
+    height: auto !important;
+    filter: drop-shadow(0 0 20px rgba(0, 229, 255, 0.6)) !important;
+    animation: boatFloat 2.5s ease-in-out infinite !important;
+}
+
+/* Buton Grupları (Absolute Cornering) */
+.bottom-left-group {
+    position: absolute !important;
+    bottom: 30px !important;
+    left: 30px !important;
+    display: flex !important;
+    gap: 15px !important;
+    pointer-events: auto !important;
+    z-index: 10000 !important;
+}
+
+.bottom-right-group {
+    position: absolute !important;
+    bottom: 30px !important;
+    right: 30px !important;
+    pointer-events: auto !important;
+    z-index: 10000 !important;
+}
+
+.right-middle-group {
+    position: absolute !important;
+    right: 30px !important;
+    top: 160px !important; 
+    pointer-events: auto !important;
+    z-index: 10000 !important;
+}
+
+/* --- ELITE FULL-SCREEN COMPONENT SYSTEM v1.99.4.1.10 --- */
+.elite-btn-square {
+    width: 15vmin;
+    height: 15vmin;
+    border-radius: 20%;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    color: white;
+    font-size: 7vmin;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s;
+}
+
+.elite-btn-square:active { transform: scale(0.9); }
+
+.elite-btn-large {
+    width: 100%;
+    padding: 4vmin;
+    border-radius: 18px;
+    border: none;
+    color: white;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 900;
+    font-size: 4.5vmin;
+    cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.elite-btn-large:active { transform: scale(0.96); }
+
+.elite-btn-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s;
+}
+
+.elite-btn-icon:active { transform: rotate(15deg) scale(0.9); }
+
 h2 {
     font-size: 28px;
-    color: #F44336;
+    color: #fff;
     margin-bottom: 10px;
+    text-align: center;
 }
 
 p {
     font-size: 14px;
     margin-bottom: 20px;
     color: #ddd;
+    text-align: center;
 }
 
 .buttons {
@@ -806,3 +944,63 @@ input:checked + .toggle-slider:before {
     background: rgba(255,255,255,0.14) !important;
     color: #fff !important;
 }
+
+/* --- ELITE MASTERPIECE v1.99.5.5 ADDITIONS --- */
+@keyframes floatingLogo {
+    0%, 100% { transform: translateY(0) scale(1.0); filter: drop-shadow(0 15px 30px rgba(0,229,255,0.4)); }
+    50% { transform: translateY(-15px) scale(1.02); filter: drop-shadow(0 25px 50px rgba(0,229,255,0.6)); }
+}
+
+.floating-logo {
+    animation: floatingLogo 4s ease-in-out infinite;
+}
+
+.master-play-btn {
+    position: relative;
+    width: 32vmin !important;
+    height: 32vmin !important;
+    border-radius: 50% !important;
+    background: linear-gradient(135deg, #00e5ff 0%, #004d40 100%) !important;
+    border: 1.5vmin solid #fff !important;
+    color: white !important;
+    font-family: 'Outfit', sans-serif !important;
+    font-weight: 900 !important;
+    font-size: 7vmin !important;
+    cursor: pointer !important;
+    letter-spacing: -1px !important;
+    box-shadow: 0 20px 60px rgba(0,229,255,0.6), inset 0 0 20px rgba(255,255,255,0.4) !important;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    z-index: 10 !important;
+    text-shadow: 0 4px 10px rgba(0,0,0,0.3) !important;
+    pointer-events: auto !important;
+}
+
+.master-play-btn:hover {
+    transform: scale(1.08) rotate(2deg) !important;
+    box-shadow: 0 30px 80px rgba(0,229,255,0.8), inset 0 0 30px rgba(255,255,255,0.6) !important;
+}
+
+.master-play-btn:active {
+    transform: scale(0.92) !important;
+}
+
+@keyframes pulseRing {
+    0% { transform: scale(0.8) translate(-62%, -62%); opacity: 0.8; }
+    100% { transform: scale(1.4) translate(-36%, -36%); opacity: 0; }
+}
+
+.pulse-ring {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 32vmin; height: 32vmin;
+    border-radius: 50%;
+    border: 3px solid #00e5ff;
+    animation: pulseRing 2s ease-out infinite;
+    z-index: 5;
+    pointer-events: none;
+}
+

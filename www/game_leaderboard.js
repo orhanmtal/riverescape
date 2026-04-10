@@ -41,24 +41,34 @@ const Leaderboard = {
                     .then(() => console.log("🔐 [ELITE AUTH] Persistence set to LOCAL"))
                     .catch(e => console.warn("🔐 [ELITE AUTH] Persistence Error:", e));
 
-                // v1.99.3.30: [REDIRECT HANDLER] Yönlendirme dönüşünü daha akıllıca yakala
+                // v1.99.4.1.11: [ELITE REDIRECT] Gelişmiş yönlendirme yakalayıcı (Fast-Sync)
                 try {
                     this.auth.getRedirectResult().then(result => {
-                        if (result.user) {
+                        if (result && result.user) {
                             console.log("🚀 [ELITE AUTH] Redirect Girişi Başarılı:", result.user.displayName);
-                            if (typeof showToast === 'function') showToast(`HOŞ GELDİN ${result.user.displayName.toUpperCase()}! 🏛️`, true);
+                            this.playerID = result.user.uid;
+                            this.playerName = result.user.displayName;
+                            localStorage.setItem('riverEscapeName', this.playerName);
+                            localStorage.setItem('riverEscapeID', this.playerID);
+                            
+                            this.updateAuthUI(true, this.playerName);
+                            this.restoreFromCloud();
+
+                            if (typeof showToast === 'function') showToast(`HOŞ GELDİN ${this.playerName.toUpperCase()}! 🏛️`, true);
                         }
                     }).catch(err => {
                         console.error("❌ [ELITE AUTH] Redirect Hatası Yakalandı:", err);
-                        // "localhost bağlamayı reddetti" gibi durumlar için detaylı log
-                        if (err.code === 'auth/internal-error') {
-                            console.error("⚠️ [ELITE AUTH] Olası Origin Uyuşmazlığı! Origin:", window.location.origin);
-                        }
-                        if (err.code === 'auth/network-request-failed') {
-                            if (typeof showToast === 'function') showToast("İNTERNET BAĞLANTINI KONTROL ET!", false);
+                        // v1.99.4.1.11: Hata kodlarını kullanıcı için anlaşılır kıl
+                        const errorMap = {
+                            'auth/internal-error': "DAHİLİ BAĞLANTI HATASI! 🌐",
+                            'auth/network-request-failed': "İNTERNET BAĞLANTINI KONTROL ET! 📶",
+                            'auth/web-storage-unsupported': "TARAYICI DEPOLAMA DESTEKLENMİYOR! 💾"
+                        };
+                        if (errorMap[err.code]) {
+                            if (typeof showToast === 'function') showToast(errorMap[err.code], false);
                         }
                     });
-                } catch(reDirErr) { console.warn("Redirect check failed, skipping."); }
+                } catch(reDirErr) { console.warn("Redirect handler initialization failed."); }
 
                 // AUTH STATE LISTENER (Safe Wrapper)
                 this.auth.onAuthStateChanged(user => {
@@ -152,7 +162,7 @@ const Leaderboard = {
             }
  
             // ELITE BUTTONS - Sadece giriş yapıldıysa (veya offline elite ise) göster! 🏛️
-            const eliteButtons = ['start-btn', 'spin-open-btn', 'shop-open-btn', 'leaderboard-open-btn', 'settings-open-btn'];
+            const eliteButtons = ['start-btn', 'spin-btn', 'open-shop-btn', 'leaderboard-btn', 'open-settings-btn'];
             eliteButtons.forEach(id => {
                 const btn = document.getElementById(id);
                 if (btn) btn.style.display = isLoggedIn ? '' : 'none';
@@ -499,15 +509,21 @@ const Leaderboard = {
                     console.log("✅ [ELITE AUTH] Modern Giriş Başarılı:", userCredential.user.displayName);
                 }
             } else {
-                // Sadece Bilgisayar/Tarayıcı ortamında Chrome açar
-                console.log("💻 [ELITE AUTH] Web Ortamı, Tarayıcı Penceresi Kullanılıyor...");
+                // v1.99.4.1.11: FORCED REDIRECT FLOW (Mobile & Web Parity)
+                console.log("💻 [ELITE AUTH] Web/Mobile Browser, Redirect Flow Triggered...");
                 const provider = new firebase.auth.GoogleAuthProvider();
-                await this.auth.signInWithPopup(provider);
+                
+                // Add custom parameters to ensure account selection
+                provider.setCustomParameters({ prompt: 'select_account' });
+                
+                await this.auth.signInWithRedirect(provider);
             }
         } catch (e) {
             console.error("❌ [ELITE AUTH] Giriş Hatası:", e);
             if (e.code === 'auth/popup-blocked') {
                 if (typeof showToast === 'function') showToast("PENCERE ENGELLENDİ!", false);
+            } else if (e.code === 'auth/operation-not-supported-in-this-environment') {
+                if (typeof showToast === 'function') showToast("KİMLİK DOĞRULAMA DESTEKLENMİYOR!", false);
             } else {
                 if (typeof showToast === 'function') showToast("Giriş Denemesi Durduruldu.", false);
             }

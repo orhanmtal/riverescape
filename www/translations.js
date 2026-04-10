@@ -1,8 +1,8 @@
-// River Escape - Dil Paketleri (TR/EN) - v1.99.3.30 (ELITE RE-BRAND RELEASE)
+// River Escape - Dil Paketleri (TR/EN) - v1.99.5.5 (ELITE MASTERPIECE)
 const translations = {
     tr: {
         startDesc: "",
-        startBtn: "Oyna",
+        startBtn: "OYNA 🌊",
         shopBtn: "Mağaza",
         settingsBtn: "AYARLAR",
         pauseTitle: "DURDUR",

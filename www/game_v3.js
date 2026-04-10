@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
 // RİVER ESCAPE ELİTE - v1.99.5.0 (AUTO-PILOT REBIRTH)
+=======
+// RİVER ESCAPE ELİTE - v1.99.5.65 (MASTERPIECE FINAL)
+>>>>>>> Stashed changes
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -37,9 +41,9 @@ const cachedHud = {
 let hudUpdateTimer = 0;
 const HUD_UPDATE_INTERVAL = 0.1; // 100ms (10 FPS update for UI is plenty)
 const settingsScreen = document.getElementById('settings-screen');
-const settingsOpenBtn = document.getElementById('settings-open-btn');
+const settingsOpenBtn = document.getElementById('open-settings-btn');
 const settingsCloseBtn = document.getElementById('settings-close-btn');
-const spinOpenBtn = document.getElementById('spin-open-btn');
+const spinOpenBtn = document.getElementById('spin-btn');
 const spinScreen = document.getElementById('spin-screen');
 const spinCloseBtn = document.getElementById('spin-close-btn');
 const spinBtnMain = document.getElementById('spin-btn-main');
@@ -145,13 +149,8 @@ function getRiverShift(y) {
 }
 
 function initLanguage() {
-    // Tarayıcı veya cihaz dilini al
     const lang = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
-    
-    // Eğer dil Türkçe ise 'tr' yap, değilse (diğer tüm dünya) 'en' yap
     currentLang = lang.startsWith('tr') ? 'tr' : 'en'; 
-    
-    console.log("Cihaz Dili:", lang, "Seçilen Oyun Dili:", currentLang);
     updateLanguageUI();
 }
 
@@ -160,14 +159,15 @@ function updateLanguageUI() {
     const setText = (id, text) => { const el = document.getElementById(id); if(el) el.innerText = text; };
 
     setText('start-btn', t.startBtn);
-    setText('shop-open-btn', t.shopBtn);
-    setText('settings-open-btn', t.settingsBtn);
+    // v1.99.5.5: CLEAN START SCREEN - Icons only for sub-buttons
+    // setText('open-shop-btn', t.shopBtn);
+    // setText('open-settings-btn', t.settingsBtn);
     // v1.99.4.1.1: Start Description Removed for Clean UI
     // if(document.querySelector('#start-screen p')) document.querySelector('#start-screen p').innerText = t.startDesc;
     
     setText('resume-btn', t.resumeBtn);
     setText('quit-btn', t.quitBtn);
-    if(document.getElementById('settings-open-btn-pause')) document.getElementById('settings-open-btn-pause').innerHTML = `⚙️ ${t.settingsBtn}`;
+    if(document.getElementById('open-settings-btn-pause')) document.getElementById('open-settings-btn-pause').innerHTML = `⚙️ ${t.settingsBtn}`;
     
     setText('gameover-title', t.gameOver);
     // v3.31.2: Simplified Elite Score Display (RESTORED STYLES)
@@ -181,7 +181,7 @@ function updateLanguageUI() {
     setText('revive-btn', t.reviveBtn);
     setText('gameover-shop-btn', t.shopBtn);
     setText('restart-btn', t.hardResetBtn);
-    setText('spin-open-btn', t.spinWheelTitle);
+    // setText('spin-btn', t.spinWheelTitle); 🎡 İkonu korunsun v1.99.5.5
     
     if(document.getElementById('shop-title-main')) document.getElementById('shop-title-main').innerText = t.shopTitle;
     if(document.getElementById('shop-balance-text')) document.getElementById('shop-balance-text').innerHTML = `${t.balance} <span id="totalGoldValue" style="color: #FFD700;">0</span> GOLD`;
@@ -229,9 +229,7 @@ document.addEventListener('visibilitychange', () => {
     if (audioCtx) {
         if (document.hidden) {
             audioCtx.suspend();
-            // v1.99.4.1.4: APP EXIT/MINIMIZE PROTECTION - Push data to Cloud! 🛰️🔒
             if (typeof Leaderboard !== 'undefined' && Leaderboard.forceSync) {
-                console.log("🛰️ [ELITE SECURITY] App Backgrounded. Triple Syncing to Cloud...");
                 Leaderboard.forceSync();
             }
         } else {
@@ -769,18 +767,26 @@ function updateShopUI() {
     if(tg) tg.innerText = totalGold;
     
     // Ana Başlıklar
-    if(document.getElementById('shop-title-main')) document.getElementById('shop-title-main').innerText = t.shopTitle;
-    const balanceEl = document.getElementById('shop-balance-text');
-    if(balanceEl) balanceEl.innerHTML = `${t.balance} <span id="totalGoldValue" style="color: #FFD700;">${totalGold}</span> GOLD`;
+    const titleMain = document.getElementById('shop-title-main');
+    if(titleMain) titleMain.innerText = t.shopTitle || "MAĞAZA";
 
+    const balanceEl = document.getElementById('shop-balance-text');
+    if(balanceEl) {
+        // Translation zaten ":" içeriyor, manuel eklemeyi kaldırıyoruz.
+        balanceEl.innerHTML = `${t.balance || "BAKİYE"} <span class="gold-val-elite" style="color: #FFD700;">${totalGold}</span> GOLD`;
+    }
     // Mıknatıs Geliştirme Kontrolü
     let mmBtn = document.getElementById('buy-magnet-btn');
     if(mmBtn) {
-        if(document.getElementById('shop-mag-title')) document.getElementById('shop-mag-title').innerText = t.magnetName;
         let price = magnetLevel < 5 ? (2000 + magnetLevel * 1000) : "MAX";
-        document.getElementById('magnet-lvl').innerText = magnetLevel;
-        const sUnit = currentLang === 'tr' ? 'sn' : 's';
-        document.getElementById('magnet-duration').innerText = magnetLevel > 0 ? (3 + magnetLevel * 2) + sUnit : '0' + sUnit;
+        const lvlEl = document.getElementById('magnet-lvl');
+        if(lvlEl) lvlEl.innerText = `(LVL ${magnetLevel})`;
+        const durEl = document.getElementById('magnet-duration');
+        if(durEl) {
+            const sUnit = currentLang === 'tr' ? 'sn' : 's';
+            // t.magnetDesc zaten ":" içeriyor
+            durEl.innerText = `${t.magnetDesc || "Süre:"} ${magnetLevel > 0 ? (3 + magnetLevel * 2) + sUnit : '0' + sUnit}`;
+        }
         mmBtn.innerHTML = magnetLevel < 5 ? `${t.buyBtn}<br>${price}` : "MAX";
         mmBtn.disabled = (magnetLevel >= 5 || totalGold < price);
     }
@@ -790,8 +796,13 @@ function updateShopUI() {
     if(msBtn) {
         if(document.getElementById('shop-shd-title')) document.getElementById('shop-shd-title').innerText = t.shieldName;
         let price = shieldLevel < 5 ? (3500 + shieldLevel * 1500) : "MAX";
-        document.getElementById('shield-lvl').innerText = shieldLevel;
-        document.getElementById('shield-chance').innerText = '%' + (shieldLevel * 5);
+        const slvlEl = document.getElementById('shield-lvl');
+        if(slvlEl) slvlEl.innerText = `(LVL ${shieldLevel})`;
+        const schanceEl = document.getElementById('shield-chance');
+        if(schanceEl) {
+            // t.shieldDesc zaten ":" içeriyor
+            schanceEl.innerText = `${t.shieldDesc || "Çıkma:"} %${(shieldLevel * 5)}`;
+        }
         msBtn.innerHTML = shieldLevel < 5 ? `${t.buyBtn}<br>${price}` : "MAX";
         msBtn.disabled = (shieldLevel >= 5 || totalGold < price);
     }
@@ -815,59 +826,60 @@ function updateShopUI() {
         }
     }
 
-    // Elite Mühimmat Satırı Kontrolü (v1.99.3.31.8)
-    if(ammoRow) {
+    // Elite Mühimmat Satırı Kontrolü (v1.99.4.1.11 Safety Check)
+    const ammoRowElite = document.getElementById('shop-ammo-row');
+    if(ammoRowElite) {
         if(hasWeapon) {
-            ammoRow.style.display = 'flex';
-            if(buyAmmoBtn) {
-                buyAmmoBtn.disabled = (totalGold < 1000);
-                if(document.getElementById('shop-ammo-desc')) {
-                    document.getElementById('shop-ammo-desc').innerText = `+10 Mermi (Mevcut: ${bombCount})`;
-                }
+            ammoRowElite.style.display = 'flex';
+            const bAmmoBtn = document.getElementById('buy-ammo-btn');
+            if(bAmmoBtn) {
+                bAmmoBtn.disabled = (totalGold < 1000);
+                const aDesc = document.getElementById('shop-ammo-desc');
+                if(aDesc) aDesc.innerText = `+10 Mermi (Mevcut: ${bombCount})`;
             }
         } else {
-            ammoRow.style.display = 'none';
+            ammoRowElite.style.display = 'none';
         }
     }
 
-    // Gemi Zırhı Kontrolü
+    // Gemi Zırhı Kontrolü (v1.99.4.1.11 Safety Sweep)
     let ab = document.getElementById('buy-armor-btn');
     if(ab) {
         let isVoidLevel = (currentLevel % 6 === 0);
+        const titleEl = document.getElementById('shop-arm-title');
+        const descEl = document.getElementById('shop-arm-desc');
         if(!isVoidLevel) {
-            if(document.getElementById('shop-arm-title')) document.getElementById('shop-arm-title').innerText = t.armorName;
-            if(document.getElementById('shop-arm-desc')) document.getElementById('shop-arm-desc').innerText = "Sadece Lvl 6, 12, 18...";
+            if(titleEl) titleEl.innerText = t.armorName || "Zırh";
+            if(descEl) descEl.innerText = "Sadece Lvl 6, 12, 18...";
             ab.innerText = `KİLİTLİ`;
             ab.disabled = true;
             ab.style.background = "#444";
         } else {
             ab.style.background = "linear-gradient(135deg, #8e44ad, #9b59b6)";
-            if(ownsArmorLicense) {
-                // LİSANS SAHİBİ: VOID LEVEL'DA ZIRH OTOMATİK AKTİF VE BEDAVA!
-                if (armorCharge <= 0) armorCharge = 3; // Otomatik tazele (Hak kaybı yok!)
-                
-                if(document.getElementById('shop-arm-title')) document.getElementById('shop-arm-title').innerText = t.armorAmmoName;
-                if(document.getElementById('shop-arm-desc')) document.getElementById('shop-arm-desc').innerText = `Elite Lisans Aktif! %100 Hazır.`;
+            if(window.ownsArmorLicense) {
+                if (window.armorCharge <= 0) window.armorCharge = 3;
+                if(titleEl) titleEl.innerText = t.armorAmmoName || "Zırh Aktif";
+                if(descEl) descEl.innerText = `Elite Lisans Aktif! %100 Hazır.`;
                 ab.innerHTML = `HAZIR`;
                 ab.disabled = true;
                 ab.style.opacity = "0.8";
                 ab.style.background = "linear-gradient(135deg, #4CAF50, #2E7D32)"; 
             } else {
-                if(document.getElementById('shop-arm-title')) document.getElementById('shop-arm-title').innerText = t.armorName;
-                if(document.getElementById('shop-arm-desc')) document.getElementById('shop-arm-desc').innerText = t.armorDesc;
+                if(titleEl) titleEl.innerText = t.armorName || "Zırh";
+                if(descEl) descEl.innerText = t.armorDesc || "Zırh Paketi";
                 ab.innerHTML = `${t.buyBtn}<br>5.000`;
                 ab.disabled = (totalGold < 5000);
             }
         }
     }
 
-    // BOMBA BUTONU SAYAÇ GÜNCELLEMESİ v1.68
+    // BOMBA BUTONU SAYAÇ GÜNCELLEMESİ
     let bBadge = document.getElementById('bomb-badge');
     if(bBadge) bBadge.innerText = bombCount;
 
     let bBtn = document.getElementById('bomb-action-btn');
     if(bBtn) {
-        if(hasWeapon) {
+        if(window.hasWeapon) {
             bBtn.style.display = 'flex';
             bBtn.style.filter = (bombCount <= 0) ? "grayscale(100%) opacity(0.6)" : "none";
         } else {
@@ -875,8 +887,7 @@ function updateShopUI() {
         }
     }
     updateArmorUI();
-    
-    updateWheelForWeapon(); // Lisanslıysa çarkı güncelle
+    if(typeof updateWheelForWeapon === 'function') updateWheelForWeapon(); 
 }
 setTimeout(updateShopUI, 100);
 
@@ -902,32 +913,64 @@ window.addEventListener('keydown', (e) => {
     // --- TEMPORARY TEST MAGIC: LEVEL SKIP (Press 'L') ---
     if (e.key === 'l' || e.key === 'L') {
         score += 1000;
-        console.log("Debug Skip: Current Score = " + score);
     }
 });
 
-// MAĞAZA BUTONLARI HİLELERİ
-const shopBtn = document.getElementById('shop-open-btn');
+// v1.99.4.1.11: MAĞAZA VE AYARLAR YENİ BUTONLAR
+const shopBtn = document.getElementById('open-shop-btn');
 if(shopBtn) shopBtn.addEventListener('click', () => {
-    document.getElementById('shop-screen').classList.remove('hidden');
-    document.getElementById('shop-screen').classList.add('active');
-    document.getElementById('shop-screen').style.display = 'flex';
-    document.getElementById('shop-screen').style.opacity = '1';
-    document.getElementById('shop-screen').style.zIndex = '6000'; // EN ÜST KATA ÇIK
+    const shopScr = document.getElementById('shop-screen');
+    const menuScr = document.getElementById('start-screen');
+    shopScr.classList.remove('hidden');
+    shopScr.classList.add('active');
+    if(menuScr) menuScr.classList.add('hidden'); // Menüyü gizle
+    shopScr.style.display = 'flex';
+    shopScr.style.opacity = '1';
+    shopScr.style.zIndex = '9999';
+    updateShopUI(); // Verileri yenile
+});
+
+// v1.99.4.1.11: SIRALAMA VE ÇARK BAĞLANTILARI
+const globalBtn = document.getElementById('leaderboard-btn');
+if(globalBtn) globalBtn.addEventListener('click', () => {
+    if(window.Leaderboard && typeof Leaderboard.show === 'function') {
+        Leaderboard.show();
+    }
+});
+
+const spinBtnMenu = document.getElementById('spin-btn');
+if(spinBtnMenu) spinBtnMenu.addEventListener('click', () => {
+    const sScr = document.getElementById('spin-screen');
+    const menuScr = document.getElementById('start-screen');
+    if(sScr) {
+        sScr.classList.remove('hidden');
+        sScr.classList.add('active');
+        if(menuScr) menuScr.classList.add('hidden'); // Menüyü gizle
+        sScr.style.display = 'flex';
+        sScr.style.zIndex = '110000';
+    }
+});
+
+const settingsOpenBtnElite = document.getElementById('open-settings-btn');
+if(settingsOpenBtnElite) settingsOpenBtnElite.addEventListener('click', () => {
+    const menuScr = document.getElementById('start-screen');
+    settingsScreen.classList.remove('hidden');
+    settingsScreen.classList.add('active');
+    if(menuScr) menuScr.classList.add('hidden'); // Menüyü gizle
+    settingsScreen.style.display = 'flex';
+    settingsScreen.style.zIndex = '110000'; // En üstte
+});
+
+const settingsCloseBtnElite = document.getElementById('settings-close-btn');
+if(settingsCloseBtnElite) settingsCloseBtnElite.addEventListener('click', () => {
+    settingsScreen.classList.remove('active');
+    settingsScreen.classList.add('hidden');
+    settingsScreen.style.display = 'none';
+    const menuScr = document.getElementById('start-screen');
+    if(!isPlaying && menuScr) menuScr.classList.remove('hidden'); // Menüye geri dön
 });
 
 const settingsPauseBtn = document.getElementById('settings-open-btn-pause');
-if(settingsPauseBtn) settingsPauseBtn.addEventListener('click', () => {
-    settingsScreen.classList.remove('hidden');
-    settingsScreen.classList.add('active');
-    settingsScreen.style.display = 'flex';
-});
-
-if(settingsOpenBtn) settingsOpenBtn.addEventListener('click', () => {
-    settingsScreen.classList.remove('hidden');
-    settingsScreen.classList.add('active');
-    settingsScreen.style.display = 'flex';
-});
 
 const shopBtnGameOver = document.getElementById('shop-open-btn-gameover');
 if(shopBtnGameOver) shopBtnGameOver.addEventListener('click', () => {
@@ -980,13 +1023,17 @@ if(closeShopBtn) {
     };
 }
 
-const closeShopBtn = document.getElementById('shop-close-btn');
-if(closeShopBtn) closeShopBtn.addEventListener('click', () => {
-    document.getElementById('shop-screen').classList.remove('active');
-    document.getElementById('shop-screen').classList.add('hidden');
-    document.getElementById('shop-screen').style.display = '';
-    document.getElementById('shop-screen').style.opacity = '0';
-    document.getElementById('shop-screen').style.zIndex = '100'; // Normale dön
+const closeShopBtnElite = document.getElementById('shop-close-btn');
+if(closeShopBtnElite) closeShopBtnElite.addEventListener('click', () => {
+    const shopScr = document.getElementById('shop-screen');
+    const menuScr = document.getElementById('start-screen');
+    shopScr.classList.remove('active');
+    shopScr.classList.add('hidden');
+    shopScr.style.display = 'none';
+    shopScr.style.opacity = '0';
+    if(!isPlaying && menuScr) {
+        menuScr.classList.remove('hidden'); // Oyunda değilsek menüyü geri getir
+    }
 });
 
 const armorIndicator = document.getElementById('armor-ui-indicator');
@@ -1641,15 +1688,11 @@ function spawnObstacle() {
     let logRot = 0;
     let logRotSpeed = 0;
     
-    // v2.04: Level 1 için Özel Çapraz Akış (Diagonal Flow) - Sadece bazıları (%50 şans)
-    if (currentLevel === 1 && Math.random() < 0.5) {
-        // Hem sola hem sağa, farklı hızlarda akış (40-100px/s)
-        logSpeedX = (Math.random() < 0.5 ? -1 : 1) * (40 + Math.random() * 60);
-        // Doğduğu açıyı da rastgele yapıyoruz (Daha organik görünüm için)
-        logRot = Math.random() * Math.PI * 2;
-        // Dönme hızı (Saniyede 0.5 ile 1.5 radyan arası rastgele)
-        logRotSpeed = (Math.random() < 0.5 ? -1 : 1) * (0.5 + Math.random() * 1.0);
-    }
+    // v1.99.4.1.11: Nizamlı Düz Akış (Straight Highway Flow)
+    // Engeller artık sağa sola savrulmayacak, araba yolu gibi nizamlı ve düz gelecek.
+    logSpeedX = 0;
+    logRot = 0;
+    logRotSpeed = 0;
 
     obstacles.push({
         type: 'vertical',
@@ -1768,25 +1811,24 @@ function startGame() {
     isPlaying = true; 
     isPaused = false;
     
+    // v1.99.5.5: HUD Reveal
+    const hud = document.getElementById('modern-hud');
+    if(hud) hud.style.display = 'flex';
+    
     // v3.31.2: ELITE AUDIO IGNITION (RESTORED)
     if (typeof initAudio === 'function') initAudio();
     if (typeof bgMusicScheduler === 'function' && !isMusicScheduled) {
         bgMusicScheduler();
     }
 
-    // v1.99.3.31.9.6: HARD RESET (All systems GO!)
-    score = 0; goldCount = 0; 
-    level = 1; currentLevel = 1; levelProgress = 0; bgY = 0;
-    lives = 3 + (window.extraLives || 0); 
-    isGameOver = false;
-    gameOverScreen.classList.add('hidden');
-    obstacles = []; golds = []; powerups = []; bullets = []; // Her şeyi temizle!
-    initAudio(); 
-    
-    // v1.99.4.1.9: RESUME LOGIC 🛶
+    // Reset Core States
+    level = 1; 
+    currentLevel = window.resumeLevel || 1; 
     score = window.resumeScore || 0;
-    lives = window.resumeLives || 3;
-    currentLevel = window.resumeLevel || 1;
+    goldCount = 0;
+    lives = window.resumeLives || (3 + (window.extraLives || 0)); 
+    isGameOver = false;
+    obstacles = []; golds = []; powerups = []; bullets = [];
     
     // v1.99.5.4: UNHIDE ELITE HUD & CONTROLS
     const mHud = document.getElementById('modern-hud');
@@ -1810,24 +1852,23 @@ function startGame() {
     dashEnergy = MAX_DASH_ENERGY;
     updateArmorUI();
     
-    spawnTimer = 0; goldTimer = 0;
-    currentLevel = 1; 
-    spawnInterval = levelAssets[0].spawn; 
+    spawnTimer = 0; 
+    goldTimer = 0;
 
-    // v1.73.6: Ultra-Elite Background Sync
-    bgImg = bgImgs[levelAssets[0].bgKey]; 
-    playerImg = players.ilkbahar; // Standard Release Sprite
-    bgScrollSpeed = levelAssets[0].speed;
+    // Sync Assets & UI
+    bgImg = bgImgs[currentAsset.bgKey]; 
+    playerImg = players.ilkbahar; 
+    bgScrollSpeed = currentAsset.speed;
     lastTime = performance.now();
     
     startScreen.classList.remove('active'); startScreen.classList.add('hidden');
     gameOverScreen.classList.remove('active'); gameOverScreen.classList.add('hidden');
-    if(pauseScreen) { pauseScreen.classList.remove('active'); pauseScreen.classList.add('hidden'); pauseScreen.style.display = ''; }
-    updateShopUI(); // Sync weapon icon visibility
+    if(pauseScreen) { pauseScreen.classList.remove('active'); pauseScreen.classList.add('hidden'); pauseScreen.style.display = 'none'; }
+    
     if(pauseBtn) { 
         pauseBtn.style.display = 'block'; 
         pauseBtn.style.opacity = '0.5'; 
-        pauseBtn.innerText = isPaused ? "▶" : "⏸"; 
+        pauseBtn.innerText = "⏸"; 
     }
     if(bombActionBtn && hasWeapon) bombActionBtn.style.display = 'flex';
     updateShopUI();
@@ -1852,104 +1893,83 @@ function startGame() {
     gameLoopRequestId = requestAnimationFrame(gameLoop);
 }
 
+// v1.99.5.65: Modern Leaderboard Connector
+const lbMainBtn = document.getElementById('leaderboard-btn');
+if(lbMainBtn) lbMainBtn.addEventListener('click', () => {
+    const lbScr = document.getElementById('leaderboard-screen');
+    const menuScr = document.getElementById('start-screen');
+    if(lbScr) {
+        lbScr.classList.remove('hidden');
+        lbScr.classList.add('active');
+        if(menuScr) menuScr.classList.add('hidden'); 
+        lbScr.style.display = 'flex';
+        // v1.99.5.65: Trigger data refresh
+        if(typeof Leaderboard !== 'undefined' && typeof Leaderboard.refreshData === 'function') {
+            Leaderboard.refreshData();
+        }
+    }
+});
+
 function gameOver() {
     if (isGameOver) return; 
     
-    // v98: CAN SİSTEMİ KONTROLÜ
-    lives--; // Önce canı düş!
+    lives--; 
     
     if (lives > 0) {
         playCrashSound();
-        // Geçici Dokunulmazlık / Kalkan (3 saniye)
         hasShield = true;
-        // v1.97.0.3: FULL POSITION RESET ON HIT (Sıfır Umut Tuzağı)
         player.x = canvas.width / 2 - player.width / 2;
-        player.y = canvas.height - 150;
-        obstacles = []; // Ekranı temizle
+        player.y = canvas.height - player.height - 100;
+        obstacles = []; 
         setTimeout(() => { hasShield = false; }, 3000);
-        return; // Oyuna devam!
+        return; 
     }
 
-    // SON CAN DA GİTTİ - GERÇEK GAMEOVER
     isGameOver = true;
     isPlaying = false;
-    
-    // v1.96.1: HUD Senkronizasyonu (Görsel Mühür Fix)
     syncEliteHUD();
-    
     playDeathSound(); 
     
-    // v1.99.4.1.9: OTURUM SIFIRLAMA (Gerçek GameOver anında can ve skor uçar ama Level kalır!) 🧼
     window.resumeScore = 0;
     window.resumeLives = 3;
-    // Not: resumeLevel'i ELLEmiyoruz çünkü oyuncu ulaştığı levelden devam etmeli! 🏛️
     saveGame(); 
     
     try {
-        // v3.31.2: Elite Score & Gold is already updated in showGameOver()
-        console.log("Elite Game Over UI Synced.");
-        triggerVibration([100, 50, 100]); // Oyuncu öldüğünde belirgin titreşim
-        
-        // v122: Altınlar GameOver ekranında gösterilir ama KASAya aktarım 
-        // ancak kullanıcı Quit veya Restart dediğinde (ya da reklam izlemediğinde) kesinleşir.
-        // v3.31.2: Elite UI Update (Double Sync for Guaranteed Result)
         const updateEndUI = () => {
             const fsElem = document.getElementById('score-title-final');
             const fgElem = document.getElementById('gold-title-final');
             const t = translations[currentLang];
             if (fsElem) {
                 fsElem.innerHTML = `${t.scoreLabel || 'SKOR:'} <span style="color: #fff; font-size: 32px; font-weight: 900;">${Math.floor(score)}</span>`;
-                console.log("Elite Score Finalized:", Math.floor(score));
             }
             if (fgElem) {
                 fgElem.innerHTML = `${t.goldTitle || 'ALTIN:'} <span style="color: #FFD700; font-weight: 900;">${goldCount}</span>`;
             }
         };
 
-        updateEndUI(); // İlk deneme
-        setTimeout(updateEndUI, 50); // 50ms sonra garanti deneme
+        updateEndUI();
         
         gameOverScreen.classList.remove('hidden'); 
         gameOverScreen.classList.add('active');
         gameOverScreen.style.display = 'flex';
         gameOverScreen.style.opacity = '1';
-        gameOverScreen.style.zIndex = '5000';
         if(pauseBtn) pauseBtn.style.display = 'none';
         if(bombActionBtn) bombActionBtn.style.display = 'none';
 
-        // v1.99.1.0: Oyun bittiğinde skoru buluta gönder
         if (typeof Leaderboard !== 'undefined') {
             Leaderboard.submitProgress(score, currentLevel);
         }
         
-        let rb = document.getElementById('revive-btn');
-        if(rb) {
-            rb.classList.add('pulse-button');
-            rb.innerText = translations[currentLang].reviveBtn;
-        }
-
-        let rgb = document.getElementById('revive-gold-btn');
-        if(rgb) {
-            rgb.innerText = translations[currentLang].reviveGoldBtn;
-        }
-
-        let resb = document.getElementById('restart-btn');
-        if(resb) {
-            resb.innerText = translations[currentLang].hardResetBtn;
-        }
-        
-        saveGame(); // Ayarlar vs. kaydedilsin
-        triggerEliteEconomySync(); // v1.99.4.1.8: Oyun bitince kasayı buluta kilitle
+        triggerEliteEconomySync();
     } catch (e) {
-        console.error("GameOver hatası:", e);
+        console.error("GameOver Error:", e);
     }
 }
 
 // v1.99.4.1.8: GLOBAL ELITE ECONOMY SYNC (Cloud + UI + Local)
 window.triggerEliteEconomySync = function() {
     try {
-        console.log("💰 [ECONOMY] Triggering Elite Sync...");
-        saveGame(); // Yerel hafızaya mühürle
+        saveGame(); 
         
         // 🛰️ Bulut Mührü (Firestore ForceSync)
         if (typeof Leaderboard !== 'undefined' && Leaderboard.forceSync) {
@@ -2025,6 +2045,12 @@ function syncEliteHUD() {
             const progress = ((score % 14000 - prevThreshold) / (nextThreshold - prevThreshold)) * 100;
             cachedHud.progress.style.width = `${Math.min(100, Math.max(0, progress))}%`;
         }
+        
+        // v1.99.4.1.11: Profil Bilgisini Güncelle
+        const pName = document.getElementById('player-name-val');
+        if (pName && window.Leaderboard && Leaderboard.currentUser) {
+            pName.innerText = Leaderboard.currentUser.displayName || "ELITE PLAYER";
+        }
     } catch(e) { console.warn("HUD Sync Error:", e); }
 }
 
@@ -2082,22 +2108,27 @@ function update(dt) {
     
     if (keys.ArrowLeft || keys.a || keys.A) dx = -1;
     if (keys.ArrowRight || keys.d || keys.D) dx = 1;
-    if (keys.ArrowUp || keys.w || keys.W) dy = -1;
-    if (keys.ArrowDown || keys.s || keys.S) dy = 1;
+    if (keys.ArrowUp || keys.w || keys.W) dy = 0; // v1.99.4.1.11: Manuel ileri gitme iptal
+    if (keys.ArrowDown || keys.s || keys.S) dy = 0; // v1.99.4.1.11: Manuel geri gitme iptal
     
     if(touchX !== null && touchY !== null) {
         if (touchX < player.x + player.width/2 - 15) dx = -1;
         else if (touchX > player.x + player.width/2 + 15) dx = 1;
         
-        if (touchY < player.y + player.height/2 - 30) dy = -1;
-        else if (touchY > player.y + player.height/2 + 30) dy = 1;
+        // v1.99.4.1.11: Touch Y kontrolü pasifize edildi
+        dy = 0; 
     }
 
+<<<<<<< Updated upstream
     // SADECE ileri-geri (Y ekseni) hareket edildiğinde skordan düş (0'ın altına inmez)
     if (dy !== 0) {
         // v1.99.5.0: SCORE PENALTY REMOVED (No reset on forward move) 📈
         // score = Math.max(0, score - (Math.abs(dy) * player.speed * dt * 0.1)); 🚫
     }
+=======
+    // v1.99.4.1.11: Manuel hareket cezası kaldırıldı!
+    // Skor artık sadece süreye bağlı olarak artacak, geri gitmeyecek.
+>>>>>>> Stashed changes
 
     // X Ekseni Sınırları (Nehir Kanalı) - v1.97.0.3: Dinamik Büklüm Sistemi
     const pMargin = (currentLAsset && typeof currentLAsset.margin === 'number') ? currentLAsset.margin : 0.32;
@@ -2149,19 +2180,17 @@ function update(dt) {
         if (player.x > playRiverRight - 15) player.x -= pushForce;
         
         player.relativeX = undefined; // Reset drift tracker
-    } else {
-        // Diğer seviyelerde klasik hareket sistemi
-        player.x += dx * player.speed * moveDt;
-        player.relativeX = undefined; 
-    }
-
-    player.y += dy * (player.speed * 0.6) * moveDt; 
+    } // <-- v1.99.4.1.11: Eksik parantez düzeltildi
     
+    // --- v1.99.4.1.11: Yatay Hareket Sistemi (Fixed Horizontal) ---
+    player.x += dx * player.speed * moveDt;
+
+    // Y pozisyonunu sabitle (Kendi kendine ilerleme hissi)
+    player.y = canvas.height - player.height - 100;
+
+    // X Ekseni Sınırları (Nihai Koruma)
     if (player.x < playRiverLeft) player.x = playRiverLeft;
     if (player.x > playRiverRight) player.x = playRiverRight;
-    
-    if (player.y < 50) player.y = 50; 
-    if (player.y > canvas.height - player.height - 20) player.y = canvas.height - player.height - 20;
 
     // --- SU SIÇRATMA (PARTICLE) v126 ---
     if (isPlaying && (dx !== 0 || dy !== 0 || Math.random() < 0.1)) {
@@ -3430,6 +3459,8 @@ if(quitBtn) quitBtn.addEventListener('click', () => {
         gameOverScreen.classList.add('hidden');
         gameOverScreen.style.display = 'none';
     }
+    const hud = document.getElementById('modern-hud');
+    if(hud) hud.style.display = 'none'; // v1.99.5.5
     startScreen.classList.remove('hidden');
     startScreen.classList.add('active');
     if(pauseBtn) pauseBtn.style.display = 'none';
@@ -3450,6 +3481,8 @@ if(qbg) qbg.addEventListener('click', () => {
     
     startScreen.classList.remove('hidden');
     startScreen.classList.add('active');
+    const hud = document.getElementById('modern-hud');
+    if(hud) hud.style.display = 'none'; // v1.99.5.5
     if(pauseBtn) pauseBtn.style.display = 'none';
 });
 
@@ -3520,6 +3553,13 @@ if(spinCloseBtn) spinCloseBtn.addEventListener('click', () => {
     spinScreen.classList.remove('active');
     spinScreen.classList.add('hidden');
     spinScreen.style.display = 'none';
+    
+    // v1.99.5.5: Return to Main Menu safely
+    const menuScr = document.getElementById('start-screen');
+    if(!isPlaying && menuScr) {
+        menuScr.classList.remove('hidden');
+        menuScr.classList.add('active');
+    }
 });
 
 if(spinBtnMain) spinBtnMain.addEventListener('click', startSpin);
