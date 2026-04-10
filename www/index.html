@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="style.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Outfit:wght@700&display=swap" rel="stylesheet">
-    <!-- EMERGENCY ON-SCREEN DEBUGGER v1.99.4.1.4 -->
+    <!-- EMERGENCY ON-SCREEN DEBUGGER v1.99.5.66 -->
     <script>
         window.onerror = function(msg, url, line) {
             var div = document.createElement('div');
@@ -19,7 +19,6 @@
         };
         console.log("🛠️ Emergency Debugger Active.");
     </script>
-    <!-- Capacitor/Cordova Bridge -->
     <script>
         if (window.location.protocol === 'file:' || window.Capacitor) {
             var script = document.createElement('script');
@@ -30,13 +29,11 @@
 </head>
 <body>
     <div id="game-container">
-        <!-- Arka planda çalışacak Canvas -->
         <canvas id="gameCanvas"></canvas>
         
-        <!-- UI (Oyun Arayüzü) Katmanı -->
         <button id="pause-btn" style="position: absolute; top: 20px; right: 20px; display: none; background: rgba(0,0,0,0.4); color: white; border: 1px solid rgba(255,229,255,0.4); padding: 8px; font-family: 'Outfit', sans-serif; font-size: 18px; z-index: 1001; border-radius: 50%; width: 45px; height: 45px; pointer-events: auto; cursor: pointer; backdrop-filter: blur(4px); line-height: 1;">⏸</button>
             
-        <!-- ELITE FULL-SCREEN UI v1.99.5.65 -->
+        <!-- ELITE FULL-SCREEN UI v1.99.5.66 -->
         <div id="start-screen" class="screen" style="
             position: absolute !important; top: 50%; left: 50%; transform: translate(-50%, -50%);
             width: 100%; height: 100%; max-width: 500px;
@@ -46,7 +43,6 @@
         ">
             <!-- Top Row: Profile & Settings -->
             <div style="display: flex; justify-content: space-between; align-items: flex-start; width: 100%;">
-                <!-- PROFILE CARD (GLASSMORPHISM) -->
                 <div id="player-profile-elite" style="
                     background: rgba(255, 255, 255, 0.05); 
                     backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
@@ -75,7 +71,7 @@
                 <button id="open-settings-btn" class="elite-btn-icon" style="background: rgba(255,255,255,0.08); border-radius: 16px; border: 1px solid rgba(255,255,255,0.2); width: 14vmin; height: 14vmin; color: white; font-size: 7vmin; cursor: pointer; box-shadow: 0 10px 25px rgba(0,0,0,0.4);">⚙️</button>
             </div>
 
-            <!-- ELITE MASTERPIECE TITLE v1.99.5.65 -->
+            <!-- ELITE MASTERPIECE TITLE v1.99.5.66 -->
             <div style="text-align: center; margin-bottom: 5vmin; position: relative;">
                 <div style="
                     position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
@@ -94,7 +90,7 @@
                     color: #FFD700; font-family: 'Press Start 2P', cursive; font-size: 2vmin; 
                     font-weight: bold; margin-top: 25px; letter-spacing: 1.5vmin; opacity: 0.9;
                     text-shadow: 0 0 15px rgba(255,215,0,0.4);
-                ">ELITE v1.99.5.65</div>
+                ">ELITE v1.99.5.66</div>
             </div>
 
             <!-- Bottom Row: Submenus & Play -->
@@ -114,7 +110,7 @@
             </div>
         </div>
 
-        <!-- PAUSE SCREEN (ELITE FULL-SCREEN v1.99.5.5) -->
+        <!-- PAUSE SCREEN (ELITE FULL-SCREEN v1.99.5.66) -->
         <div id="pause-screen" class="screen hidden" style="
             position: absolute !important; top: 50%; left: 50%; transform: translate(-50%, -50%);
             width: 100%; height: 100%; max-width: 500px;
@@ -129,7 +125,7 @@
             </div>
         </div>
 
-        <!-- MODERN GLASS HUD v1.99.5.65 -->
+        <!-- MODERN GLASS HUD v1.99.5.66 -->
         <div id="modern-hud" style="
             position: absolute; top: 15px; left: 15px; 
             padding: 10px 18px; border-radius: 15px;
@@ -159,7 +155,7 @@
             </div>
         </div>
 
-        <!-- GAME OVER SCREEN (ELITE FULL-SCREEN v1.99.5.65) -->
+        <!-- GAME OVER SCREEN (ELITE FULL-SCREEN v1.99.5.66) -->
         <div id="game-over-screen" class="screen hidden" style="
             position: absolute !important; top: 50%; left: 50%; transform: translate(-50%, -50%);
             width: 100%; height: 100%; max-width: 500px;
@@ -183,7 +179,7 @@
                 <button id="restart-btn" class="elite-btn-large" style="background: rgba(255,255,255,0.15);">YENİDEN BAŞLA 🔄</button>
                 <button id="quit-btn-gameover" style="background: none; border: none; color: rgba(255,255,255,0.4); font-family: 'Outfit'; font-weight: bold; font-size: 3.5vmin; cursor: pointer; margin-top: 2vmin;">ANA MENÜYE DÖN 🏠</button>
             </div>
-            <div style="color: rgba(255,255,255,0.2); font-size: 2vmin;">v1.99.5.65</div>
+            <div style="color: rgba(255,255,255,0.2); font-size: 2vmin;">v1.99.5.66</div>
         </div>
 
         <!-- SETTINGS SCREEN -->
@@ -219,49 +215,74 @@
             <button id="hard-reset-btn" style="background-color: #b71c1c; font-family: 'Outfit', sans-serif; font-size: 12px; font-weight:bold; padding: 12px; border-radius: 12px; width: 100%; box-sizing: border-box; align-self: stretch; color: #fff; border: none; outline:none; margin-top: 15px; cursor:pointer; opacity: 0.9; box-shadow: 0 4px #5c0000;">⚠️ RESET ALL PROGRESS</button>
         </div>
 
-        <!-- MAĞAZA EKRANI -->
-        <div id="shop-screen" class="screen hidden">
-            <h2 id="shop-title-main">MAĞAZA</h2>
-            <div id="shop-balance-text" style="color: #fff; font-size: 10px; margin-bottom: 20px; font-family: 'Press Start 2P', cursive; opacity: 0.9;">BAKİYE: <span id="totalGoldValue" style="color: #FFD700;">0</span> GOLD</div>
-            
-            <div class="shop-container-elite">
-                <div class="shop-item">
-                    <div style="display: flex; align-items: center; gap: 15px;">
-                        <span style="font-size: 30px;">🧲</span>
-                        <div>
-                            <div id="shop-mag-title" style="font-weight: 800; color: #fff;">Mıknatıs</div>
-                            <div id="shop-mag-desc" style="font-size: 11px; color: rgba(255,255,255,0.6);"><span id="magnet-duration"></span> <span id="magnet-lvl"></span></div>
+        <!-- MODERN ELITE MAĞAZA (GOLD MARKET DAHİL) -->
+        <div id="shop-screen" class="screen hidden" style="background: rgba(10,5,5,0.95); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); z-index: 10005; overflow-y: auto;">
+            <div style="width: 100%; max-width: 500px; padding: 6vmin; box-sizing: border-box; min-height: 100vh; display: flex; flex-direction: column;">
+                <h2 id="shop-title-main" style="color: #FFD700; font-family: 'Outfit'; font-weight: 900; font-size: 10vmin; margin-bottom: 2vmin; letter-spacing: 0.5vmin;">MAĞAZA</h2>
+                <div id="shop-balance-text" style="color: #fff; font-size: 4vmin; margin-bottom: 6vmin; font-family: 'Press Start 2P', cursive; opacity: 0.9;">BAKİYE: <span id="totalGoldValue" style="color: #FFD700;">0</span> GOLD</div>
+                
+                <div class="shop-container-elite" style="display: flex; flex-direction: column; gap: 4vmin;">
+                    <div class="shop-item" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 5vmin; border-radius: 20px; display: flex; justify-content: space-between; align-items: center;">
+                        <div style="display: flex; align-items: center; gap: 4vmin;">
+                            <span style="font-size: 8vmin;">🧲</span>
+                            <div>
+                                <div id="shop-mag-title" style="font-weight: 800; color: #fff; font-size: 4.5vmin;">Mıknatıs</div>
+                                <div id="shop-mag-desc" style="font-size: 3.5vmin; color: rgba(255,255,255,0.6);"><span id="magnet-duration"></span> <span id="magnet-lvl"></span></div>
+                            </div>
+                        </div>
+                        <button id="buy-magnet-btn" class="shop-upgrade-btn" style="background: #00e5ff; border: none; padding: 3vmin 6vmin; border-radius: 12px; font-weight: 900; color: #000; cursor: pointer;">GELİŞTİR</button>
+                    </div>
+
+                    <div class="shop-item" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 5vmin; border-radius: 20px; display: flex; justify-content: space-between; align-items: center;">
+                        <div style="display: flex; align-items: center; gap: 4vmin;">
+                            <span style="font-size: 8vmin;">🛡️</span>
+                            <div>
+                                <div id="shop-shd-title" style="font-weight: 800; color: #fff; font-size: 4.5vmin;">Kalkan</div>
+                                <div id="shop-shd-desc" style="font-size: 3.5vmin; color: rgba(255,255,255,0.6);"><span id="shield-chance"></span> <span id="shield-lvl"></span></div>
+                            </div>
+                        </div>
+                        <button id="buy-shield-btn" class="shop-upgrade-btn" style="background: #64dd17; border: none; padding: 3vmin 6vmin; border-radius: 12px; font-weight: 900; color: #000; cursor: pointer;">GELİŞTİR</button>
+                    </div>
+
+                    <div id="shop-weapon-row" class="shop-item" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 5vmin; border-radius: 20px; display: flex; justify-content: space-between; align-items: center;">
+                        <div style="display: flex; align-items: center; gap: 4vmin;">
+                            <span style="font-size: 8vmin;">💣</span>
+                            <div>
+                                <div id="shop-wpn-title" style="font-weight: 800; color: #fff; font-size: 4.5vmin;">Nehir Topu</div>
+                                <div id="shop-wpn-desc" style="font-size: 3.5vmin; color: rgba(255,255,255,0.6);">Engelleri Patlat</div>
+                            </div>
+                        </div>
+                        <button id="buy-weapon-btn" class="shop-upgrade-btn" style="background: #ff5252; border: none; padding: 3vmin 6vmin; border-radius: 12px; font-weight: 900; color: #fff; cursor: pointer;">AL</button>
+                    </div>
+
+                    <button id="ad-gold-btn" class="elite-ad-btn" style="background: rgba(255,215,0,0.1); border: 2px dashed #FFD700; color: #FFD700; padding: 5vmin; border-radius: 20px; font-weight: 900; cursor: pointer; margin-top: 2vmin;">+100 ALTIN (REKLAM)</button>
+
+                    <!-- ALTIN MARKET 💰 v1.99.5.66 RESTORED -->
+                    <div style="margin-top: 8vmin; padding-bottom: 10vmin;">
+                        <h3 style="color: #FFD700; font-family: 'Outfit'; font-weight: 900; font-size: 6vmin; text-align: center; margin-bottom: 4vmin;">ALTIN MARKET 💰</h3>
+                        <div class="gold-market-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 3vmin;">
+                            <button onclick="GameStore.buy('gold_pack_1')" class="gold-market-btn" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,215,0,0.3); padding: 4vmin; border-radius: 15px; color: #fff; display: flex; flex-direction: column; align-items: center; cursor: pointer;">
+                                <span style="font-size: 5vmin; font-weight: 900;">5.000</span>
+                                <span style="font-size: 3.5vmin; color: #FFD700;">$0.99</span>
+                            </button>
+                            <button onclick="GameStore.buy('gold_pack_2')" class="gold-market-btn" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,215,0,0.3); padding: 4vmin; border-radius: 15px; color: #fff; display: flex; flex-direction: column; align-items: center; cursor: pointer;">
+                                <span style="font-size: 5vmin; font-weight: 900;">10.000</span>
+                                <span style="font-size: 3.5vmin; color: #FFD700;">$1.49</span>
+                            </button>
+                            <button onclick="GameStore.buy('gold_pack_3')" class="gold-market-btn" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,215,0,0.3); padding: 4vmin; border-radius: 15px; color: #fff; display: flex; flex-direction: column; align-items: center; cursor: pointer;">
+                                <span style="font-size: 5vmin; font-weight: 900;">25.000</span>
+                                <span style="font-size: 3.5vmin; color: #FFD700;">$2.99</span>
+                            </button>
+                            <button onclick="GameStore.buy('gold_pack_4')" class="gold-market-btn" style="background: rgba(255,215,0,0.1); border: 2px solid #FFD700; padding: 4vmin; border-radius: 15px; color: #fff; display: flex; flex-direction: column; align-items: center; cursor: pointer; box-shadow: 0 0 15px rgba(255,215,0,0.2);">
+                                <span style="font-size: 6vmin; font-weight: 900; color: #FFD700;">50.000</span>
+                                <span style="font-size: 3.5vmin;">$4.99</span>
+                            </button>
                         </div>
                     </div>
-                    <button id="buy-magnet-btn" class="shop-upgrade-btn">GELİŞTİR</button>
                 </div>
 
-                <div class="shop-item">
-                    <div style="display: flex; align-items: center; gap: 15px;">
-                        <span style="font-size: 30px;">🛡️</span>
-                        <div>
-                            <div id="shop-shd-title" style="font-weight: 800; color: #fff;">Kalkan</div>
-                            <div id="shop-shd-desc" style="font-size: 11px; color: rgba(255,255,255,0.6);"><span id="shield-chance"></span> <span id="shield-lvl"></span></div>
-                        </div>
-                    </div>
-                    <button id="buy-shield-btn" class="shop-upgrade-btn">GELİŞTİR</button>
-                </div>
-
-                <div id="shop-weapon-row" class="shop-item">
-                    <div style="display: flex; align-items: center; gap: 15px;">
-                        <span style="font-size: 30px;">💣</span>
-                        <div>
-                            <div id="shop-wpn-title" style="font-weight: 800; color: #fff;">Nehir Topu</div>
-                            <div id="shop-wpn-desc" style="font-size: 11px; color: rgba(255,255,255,0.6);">Engelleri Patlat</div>
-                        </div>
-                    </div>
-                    <button id="buy-weapon-btn" class="shop-upgrade-btn">SATIN AL</button>
-                </div>
-
-                <button id="ad-gold-btn" class="elite-ad-btn" style="padding: 18px; border-radius: 16px; margin-top: 10px;">+100 ALTIN (REKLAM)</button>
+                <button id="shop-close-btn" style="background: #ff4444; color: white; border: none; padding: 5vmin; border-radius: 50px; font-weight: 900; font-family: 'Outfit'; cursor: pointer; margin-top: auto; margin-bottom: 5vmin; font-size: 5vmin;">MAĞAZAYI KAPAT</button>
             </div>
-
-            <button id="shop-close-btn" style="margin-top: 40px; background: #ff4444; color: white; border: none; padding: 15px 60px; border-radius: 50px; font-weight: 900; font-family: 'Outfit', sans-serif; cursor: pointer;">KAPAT</button>
         </div>
 
         <!-- LEADERBOARD MODAL -->
@@ -276,7 +297,7 @@
             </div>
         </div>
 
-        <!-- LUCKY SPIN (ŞANS ÇARKI) EKRANI -->
+        <!-- LUCKY SPIN (ŞANS ÇARKI) EKRANI v1.99.5.66 -->
         <div id="spin-screen" class="screen hidden" style="z-index: 8000; background: rgba(0,0,0,0.92); width: 100vw; height: 100vh; max-width: 100%; border-radius: 0;">
             <div id="spin-container">
                 <h2 id="spin-title" style="color: #FFD700; font-family: 'Press Start 2P', cursive; font-size: 16px; margin-bottom: 2px;">Lucky Spin</h2>
