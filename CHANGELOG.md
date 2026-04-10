@@ -1,6 +1,11 @@
 # River Escape - Versiyon Günlükleri (CHANGELOG)
 Bu dosya, oyun motorunun ve özelliklerin versiyon versiyon nasıl geliştiğini mühürleyip saklamak için Antigravity tarafından oluşturulmuştur.
 
+## [v1.99.5.67] - 2026-04-10 - "ELITE FINAL MASTERPIECE" Launch
+- **Top Riders Functional Fix:** Leaderboard is now officially stable, data fetching (refreshData) and Close button re-active.
+- **Gold Market Restored:** Shop gold packs (5k to 50k) are fully polished and operational.
+- **Cache-Busting Final:** All assets synced to v1.99.5.67 to force fresh loading on all devices.
+
 ## [v1.99.5.66] - 2026-04-10 - "ELITE CACHE BUSTER" Fix
 - **Cache-Busting:** Script versiyonları v1.99.5.66 olarak yükseltildi. Bu, tarayıcının o bozuk "v=1.99.5.5" dosyasını çöpe atıp tertemiz yeni sürümü yüklemesini kesinleştirir.
 - **Unexpected token Fix:** Merge çakışması kalıntıları tamamen temizlendi, oyun motoru artık stabil çalışıyor.
