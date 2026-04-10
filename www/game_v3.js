@@ -1,4 +1,4 @@
-// RİVER ESCAPE ELİTE - v1.99.4.1.9 (FULL SESSION PERSISTENCE)
+// RİVER ESCAPE ELİTE - v1.99.4.1.10 (MASTER PERSISTENCE)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
