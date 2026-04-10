@@ -97,7 +97,7 @@ let bgImgKis = loadBg('kis', 'assets/ArkaPlan_Kis.png');
 let bgImgLava = loadBg('lava', 'assets/ArkaPlan_Lav.png');
 let bgImgVoid = loadBg('void', 'assets/ArkaPlan_Lav.png'); // v1.97.2.3: ArkaPlan_Void eksik olduğu için Lav ofsetli kullanıldı.
 
-let iPI = safeLoad('Kayik_Spring', 'assets/Kayik_Yaz.png', (img) => { 
+let iPI = safeLoad('Kayik_Spring', 'assets/Kayik.png', (img) => { 
     players.ilkbahar = makeWhiteTransparent(img); 
     if (typeof currentLevel !== 'undefined' && currentLevel===1) playerImg = players.ilkbahar; 
 });
