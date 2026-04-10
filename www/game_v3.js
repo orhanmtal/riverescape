@@ -1981,19 +1981,13 @@ window.triggerEliteEconomySync = function() {
     } catch(e) { console.warn("Economy Sync Error:", e); }
 };
 
-// v1.99.5.1: ELITE THEME SYSTEM (Dark / Light)
+// v1.99.5.6: ELITE THEME ENGINE (Total Visual Shift)
 function setTheme(theme) {
-    const root = document.documentElement;
     if (theme === 'light') {
-        root.style.setProperty('--bg-overlay', 'rgba(240, 240, 240, 0.95)');
-        root.style.setProperty('--text-main', '#111');
-        document.body.style.backgroundColor = "#eee";
-        // Diğer UI elemanlarını da aydınlat...
+        document.body.classList.add('light-theme');
         showToast("Aydınlık Mod Aktif ☀️", false);
     } else {
-        root.style.setProperty('--bg-overlay', 'rgba(0, 0, 0, 0.9)');
-        root.style.setProperty('--text-main', '#fff');
-        document.body.style.backgroundColor = "#111";
+        document.body.classList.remove('light-theme');
         showToast("Karanlık Mod Aktif 🌙", false);
     }
     localStorage.setItem('riverEscapeTheme', theme);
