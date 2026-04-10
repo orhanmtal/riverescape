@@ -1,6 +1,15 @@
 # River Escape - Versiyon Günlükleri (CHANGELOG)
 Bu dosya, oyun motorunun ve özelliklerin versiyon versiyon nasıl geliştiğini mühürleyip saklamak için Antigravity tarafından oluşturulmuştur.
 
+## [v1.99.5.66] - 2026-04-10 - "ELITE CACHE BUSTER" Fix
+- **Cache-Busting:** Script versiyonları v1.99.5.66 olarak yükseltildi. Bu, tarayıcının o bozuk "v=1.99.5.5" dosyasını çöpe atıp tertemiz yeni sürümü yüklemesini kesinleştirir.
+- **Unexpected token Fix:** Merge çakışması kalıntıları tamamen temizlendi, oyun motoru artık stabil çalışıyor.
+
+## [v1.99.5.65] - 2026-04-10 - "ELITE MASTERPIECE" Modernization
+- **Top Riders Connector:** Liderlik tablosu butonu modern modal ile eşlendi ve altın parıltısı eklendi.
+- **Minimalist UI:** Başlangıç ekranındaki tüm metin gereksizleri kaldırıldı, ikon-tabanlı sisteme geçildi.
+- **HUD Intelligence:** Oyun içi göstergeler başlangıç ekranında gizlendi, oyun başladığında açılacak şekilde programlandı.
+
 ## [v1.99.5.5] - 2026-04-10 - "ELITE MASTERPIECE" Güncellemesi
 - **Görsel Devrim:** Ana menü tamamen baştan tasarlandı; neon parlamalı yüzer logo ve dinamik "Ripple" (dalga) efektli "OYNA" butonu eklendi.
 - **Glassmorphism:** HUD ve arayüz elemanları modern buzlu cam estetiğiyle güncellendi.
