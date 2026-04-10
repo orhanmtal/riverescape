@@ -1906,6 +1906,22 @@ if(lbMainBtn) lbMainBtn.addEventListener('click', () => {
     }
 });
 
+// v1.99.5.66: TOP RIDERS CLOSE BUTTON FIX ❌
+const lbCloseBtn = document.getElementById('leaderboard-close-btn');
+if(lbCloseBtn) lbCloseBtn.addEventListener('click', () => {
+    const lbScr = document.getElementById('leaderboard-screen');
+    const menuScr = document.getElementById('start-screen');
+    if(lbScr) {
+        lbScr.classList.add('hidden');
+        lbScr.classList.remove('active');
+        lbScr.style.display = 'none';
+        if(menuScr) {
+            menuScr.classList.remove('hidden');
+            menuScr.style.display = 'flex';
+        }
+    }
+});
+
 function gameOver() {
     if (isGameOver) return; 
     

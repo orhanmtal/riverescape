@@ -494,40 +494,71 @@ const Leaderboard = {
             if (typeof showToast === 'function') showToast("GÜVENLİ GİRİŞ AÇILIYOR...", true);
             
             // 1. Capacitor Native Eklentisine Öncelik Ver
-            const Haptics = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Haptics;
             const AuthPlugin = window.Capacitor && window.Capacitor.Plugins ? window.Capacitor.Plugins.FirebaseAuthentication : null;
 
             if (AuthPlugin) {
                 console.log("📱 [ELITE AUTH] Cihaz İçi Modern Pencere Kullanılıyor!");
-                // Tarayıcı açmadan direkt Google hesabını seçtirir
                 const result = await AuthPlugin.signInWithGoogle();
-                
-                // Gelen modern veriyi Firebase Web SDK'ya tanıt (Sessiz Köprü)
                 if (result.credential && result.credential.idToken) {
                     const credential = firebase.auth.GoogleAuthProvider.credential(result.credential.idToken);
                     const userCredential = await this.auth.signInWithCredential(credential);
                     console.log("✅ [ELITE AUTH] Modern Giriş Başarılı:", userCredential.user.displayName);
                 }
             } else {
-                // v1.99.4.1.11: FORCED REDIRECT FLOW (Mobile & Web Parity)
                 console.log("💻 [ELITE AUTH] Web/Mobile Browser, Redirect Flow Triggered...");
                 const provider = new firebase.auth.GoogleAuthProvider();
-                
-                // Add custom parameters to ensure account selection
                 provider.setCustomParameters({ prompt: 'select_account' });
-                
                 await this.auth.signInWithRedirect(provider);
             }
         } catch (e) {
             console.error("❌ [ELITE AUTH] Giriş Hatası:", e);
-            if (e.code === 'auth/popup-blocked') {
-                if (typeof showToast === 'function') showToast("PENCERE ENGELLENDİ!", false);
-            } else if (e.code === 'auth/operation-not-supported-in-this-environment') {
-                if (typeof showToast === 'function') showToast("KİMLİK DOĞRULAMA DESTEKLENMİYOR!", false);
-            } else {
-                if (typeof showToast === 'function') showToast("Giriş Denemesi Durduruldu.", false);
-            }
         }
+    },
+
+    // v1.99.5.66: THE MISSING DATA REFRESH ENGINE 🚀
+    refreshData() {
+        const listEl = document.getElementById('leaderboard-list');
+        const myRankEl = document.getElementById('leaderboard-my-rank');
+        if(!listEl) return;
+        
+        listEl.innerHTML = '<div style="color:#00e5ff; text-align:center; padding:20px; font-family:\'Outfit\';">YÜKLENİYOR... 🛰️</div>';
+        
+        this.getGlobalRankings((rankings, myRank) => {
+            listEl.innerHTML = '';
+            if(!rankings || rankings.length === 0) {
+                listEl.innerHTML = '<div style="color:#ff4444; text-align:center; padding:20px;">VERİ ALINAMADI! 🛰️</div>';
+                return;
+            }
+            
+            rankings.forEach(rider => {
+                const item = document.createElement('div');
+                item.style.cssText = `
+                    display: flex; justify-content: space-between; align-items: center;
+                    background: rgba(255,255,255,0.05); padding: 12px 15px; border-radius: 12px;
+                    border: 1px solid ${rider.id === this.playerID ? '#FFD700' : 'rgba(255,255,255,0.1)'};
+                    transition: transform 0.2s;
+                `;
+                item.innerHTML = `
+                    <div style="display:flex; align-items:center; gap:12px;">
+                        <span style="color:${rider.rank <= 3 ? '#FF6D00' : '#fff'}; font-weight:900; width:20px;">${rider.rank}.</span>
+                        <span>${rider.flag || '🌍'}</span>
+                        <span style="font-weight:bold; color:#fff;">${(rider.name || 'UNK').substring(0,10).toUpperCase()}</span>
+                    </div>
+                    <div style="color:#FFD700; font-weight:900;">${Math.floor(rider.score || 0)}</div>
+                `;
+                listEl.appendChild(item);
+            });
+            
+            if(myRankEl && myRank) {
+                myRankEl.innerHTML = `
+                    <div style="display:flex; align-items:center; gap:12px;">
+                        <span style="color:#fff; font-weight:900;">SIRAN: ${myRank.rank || '?'}</span>
+                        <span style="color:rgba(255,255,255,0.6); font-size:11px;">SKORUN: ${Math.floor(myRank.score || 0)}</span>
+                    </div>
+                    <span style="color:#FFD700; font-weight:900;">${this.playerFlag}</span>
+                `;
+            }
+        });
     }
 };
 
