@@ -1852,6 +1852,7 @@ function startGame() {
     goldTimer = 0;
 
     // Sync Assets & UI
+    const currentAsset = levelAssets[(currentLevel - 1) % levelAssets.length];
     bgImg = bgImgs[currentAsset.bgKey]; 
     playerImg = players.ilkbahar; 
     bgScrollSpeed = currentAsset.speed;

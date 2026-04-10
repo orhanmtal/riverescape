@@ -1,6 +1,10 @@
 # River Escape - Versiyon Günlükleri (CHANGELOG)
 Bu dosya, oyun motorunun ve özelliklerin versiyon versiyon nasıl geliştiğini mühürleyip saklamak için Antigravity tarafından oluşturulmuştur.
 
+## [v1.99.5.69] - 2026-04-10 - "ELITE LAUNCH FIX" Stability
+- **ReferenceError Resolved:** Restored 'currentAsset' variable in startGame() for a smooth game start.
+- **Sound/Video Sync:** Ensured visuals load properly before audio starts, preventing background noise issues.
+
 ## [v1.99.5.68] - 2026-04-10 - "ELITE STABILITY" Fix
 - **Syntax Error Resolved:** Removed duplicate lbCloseBtn declaration that was blocking the entire engine.
 - **Masterpiece Flow Solidified:** Smooth transitions between Leaderboard and Main Menu.
