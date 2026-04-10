@@ -1115,6 +1115,79 @@ if(adGoldBtnElite) {
     });
 }
 
+// v1.99.5.3: GLOBAL SHOP FUNCTIONS (Elite Logic)
+function buyMagnet() {
+    let price = (magnetLevel + 1) * 1000;
+    if (totalGold >= price && magnetLevel < 10) {
+        totalGold -= price;
+        magnetLevel++;
+        playPowerupSound();
+        saveGame();
+        updateShopUI();
+        showToast("Mıknatıs Geliştirildi! 🧲", true);
+    } else {
+        showToast(translations[currentLang].noGold || "Yetersiz Altın!", false);
+    }
+}
+
+function buyShield() {
+    let price = (shieldLevel + 1) * 1500;
+    if (totalGold >= price && shieldLevel < 10) {
+        totalGold -= price;
+        shieldLevel++;
+        playPowerupSound();
+        saveGame();
+        updateShopUI();
+        showToast("Kalkan Güçlendirildi! 🛡️", true);
+    } else {
+        showToast(translations[currentLang].noGold || "Yetersiz Altın!", false);
+    }
+}
+
+function buyWeapon() {
+    if(!hasWeapon && totalGold >= 5000) {
+        totalGold -= 5000;
+        hasWeapon = true;
+        bombCount = 15;
+        playPowerupSound();
+        saveGame();
+        updateShopUI();
+        showToast("Nehir Topu ALINDI! 💣", true);
+    } else if (hasWeapon) {
+        showToast("Zaten Sahipsin!", false);
+    } else {
+        showToast(translations[currentLang].noGold || "Yetersiz Altın!", false);
+    }
+}
+
+function buyArmorLicense() {
+    if(!ownsArmorLicense && totalGold >= 5000) {
+        totalGold -= 5000;
+        ownsArmorLicense = true;
+        armorCharge = 3;
+        playPowerupSound();
+        saveGame();
+        updateShopUI();
+        showToast("Gemi Zırhı Lisansı ALINDI! 💎", true);
+    } else if (ownsArmorLicense) {
+        // Geliştirme/Şarj mantığı
+        if(totalGold >= 1000 && armorCharge < 5) {
+            totalGold -= 1000;
+            armorCharge++;
+            playPowerupSound();
+            saveGame();
+            updateShopUI();
+            showToast("Zırh Şarj Edildi! ⚡", true);
+        } else if (armorCharge >= 5) {
+            showToast("Maksimum Zırh!", false);
+        } else {
+            showToast(translations[currentLang].noGold, false);
+        }
+    } else {
+        showToast(translations[currentLang].noGold, false);
+    }
+}
+
 function updateShopUI() {
     try {
         // v1.99.5.1: Multiple Gold Displays
@@ -1715,15 +1788,18 @@ function startGame() {
     lives = window.resumeLives || 3;
     currentLevel = window.resumeLevel || 1;
     
-    // Level bazlı başlangıç ayarları
-    const currentAsset = levelAssets[(currentLevel - 1) % levelAssets.length];
-    spawnInterval = currentAsset.spawn; 
-    bgScrollSpeed = currentAsset.speed; isPaused = false;
-    startScreen.classList.add('hidden');
-    if(pauseBtn) pauseBtn.style.display = 'block';
+    // v1.99.5.4: UNHIDE ELITE HUD & CONTROLS
+    const mHud = document.getElementById('modern-hud');
+    if(mHud) { mHud.classList.remove('hidden'); mHud.style.display = 'flex'; }
+    
+    const cUi = document.getElementById('controls-ui');
+    if(cUi) { cUi.classList.remove('hidden'); cUi.style.display = 'flex'; }
+    
+    const lUi = document.getElementById('left-controls-ui');
+    if(lUi) { lUi.classList.remove('hidden'); lUi.style.display = 'flex'; }
     
     player.x = canvas.width / 2 - player.width / 2;
-    // player.y = canvas.height - 150; // Pozisyonu korumak daha mantıklı olabilir
+    // player.y = canvas.height - 150; // Pozisyon koruma
     
     updateLanguageUI();
     fillGoldBag();

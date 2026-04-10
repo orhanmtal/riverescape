@@ -253,7 +253,7 @@
                             <div class="shop-item-title">MIKNATIS</div>
                             <div class="shop-item-desc">Süre: <span id="magnet-duration" style="color:#00e5ff;">0sn</span> (LVL <span id="magnet-lvl">0</span>)</div>
                         </div>
-                        <button id="buy-magnet-btn-elite" onclick="buyMagnet()" class="shop-upgrade-btn">GELİŞTİR<br><span id="magnet-price">0</span> G</button>
+                        <button id="buy-magnet-btn-elite" class="shop-upgrade-btn">GELİŞTİR<br><span id="magnet-price">0</span> G</button>
                     </div>
                     <!-- Kalkan -->
                     <div class="shop-item">
@@ -262,7 +262,7 @@
                             <div class="shop-item-title">KALKAN</div>
                             <div class="shop-item-desc">Şans: <span id="shield-chance" style="color:#64dd17;">%0</span> (LVL <span id="shield-lvl">0</span>)</div>
                         </div>
-                        <button id="buy-shield-btn-elite" onclick="buyShield()" class="shop-upgrade-btn">GELİŞTİR<br><span id="shield-price">0</span> G</button>
+                        <button id="buy-shield-btn-elite" class="shop-upgrade-btn">GELİŞTİR<br><span id="shield-price">0</span> G</button>
                     </div>
                     <!-- Silah -->
                     <div id="shop-weapon-row-elite" class="shop-item">
@@ -271,9 +271,19 @@
                             <div class="shop-item-title">NEHİR TOPU</div>
                             <div class="shop-item-desc">Engelleri yok eder.</div>
                         </div>
-                        <button id="buy-weapon-btn-elite" onclick="buyWeapon()" class="shop-upgrade-btn">AL<br>5.000 G</button>
+                        <button id="buy-weapon-btn-elite" class="shop-upgrade-btn">AL<br>5.000 G</button>
                     </div>
                     <!-- Gemi Zırhı -->
+                    <div class="shop-item">
+                        <div class="shop-icon-container">🧥</div>
+                        <div class="shop-item-info">
+                            <div class="shop-item-title">GEMİ ZIRHI</div>
+                            <div class="shop-item-desc">Ağır hasar engeller.</div>
+                        </div>
+                        <button id="buy-armor-btn-elite" class="shop-upgrade-btn">KİLİTLİ</button>
+                    </div>
+                    <!-- Gold Pack -->
+                    <div class="shop-item">
                         <button onclick="GameStore.buy('gold_pack_4')" class="gold-market-btn" style="padding: 8px; border: 1px solid #ffd700 !important; background: rgba(255,215,0,0.15) !important;">
                             <span style="font-size: 12px; font-weight: 900; color: #ffd700;">50.000</span><br>
                             <span style="font-size: 10px; font-weight: bold; color: #fff;">$4.99</span>
@@ -281,8 +291,8 @@
                     </div>
                 </div>
 
-                <!-- CLOSE BUTTON -->
-                <button id="shop-close-btn" style="background: #f12711; padding: 10px; width: 100%; border-radius: 12px; border: none; color: white; font-family: 'Outfit', sans-serif; font-weight: 900; margin-top: 12px; cursor: pointer; font-size: 14px; text-transform: uppercase;">Kapat</button>
+                <!-- CLOSE BUTTON v1.99.5.3 -->
+                <button id="shop-close-btn-elite" style="background: linear-gradient(135deg, #f12711, #f5af19); padding: 18px; width: 100%; border-radius: 18px; border: none; color: white; font-family: 'Outfit', sans-serif; font-weight: 900; margin-top: 15px; cursor: pointer; font-size: 16px; text-transform: uppercase; box-shadow: 0 4px 15px rgba(241, 39, 17, 0.4);">MAĞAZADAN ÇIK 🔙</button>
             </div>
 
             <!-- LEVEL 2 GEÇİŞ EFEKT EKRANI -->
