@@ -1,6 +1,10 @@
 # River Escape - Versiyon Günlükleri (CHANGELOG)
 Bu dosya, oyun motorunun ve özelliklerin versiyon versiyon nasıl geliştiğini mühürleyip saklamak için Antigravity tarafından oluşturulmuştur.
 
+## [v1.99.5.75] - 2026-04-10 - "THE PERFECT BOAT" Restoration
+- **Elite Asset Swap:** Officially replaced all placeholder boats with the user's perfect pixel-art character rowing asset (assets/Kayik.png).
+- **Masterpiece Finality:** Standardized L1-L6 assets for a cohesive sympathetic feel across all levels.
+
 ## [v1.99.5.74] - 2026-04-10 - "ELITE CUTE BOAT RESTORATION"
 - **Asset Restoration:** Replaced generic 3D rowboat with the original 'Cute Pixel-Art' rowing character for a sympathetic feel.
 - **Spring Asset Fix:** Pointed Level 1 (Spring) to use the high-quality pixel-art boat asset (assets/Kayik_Yaz.png).
