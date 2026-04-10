@@ -3579,59 +3579,6 @@ if(hardResetBtnUI) hardResetBtnUI.addEventListener('click', () => {
     }
 });
 
-// GLOBAL LEADERBOARD MODAL LOGIC v1.99
-const lbOpenBtn = document.getElementById('leaderboard-open-btn');
-const lbCloseBtn = document.getElementById('leaderboard-close-btn');
-const lbScreen = document.getElementById('leaderboard-screen');
-
-if(lbOpenBtn) lbOpenBtn.addEventListener('click', () => {
-    if(lbScreen) {
-        lbScreen.classList.remove('hidden');
-        lbScreen.classList.add('active');
-        lbScreen.style.display = 'flex';
-        
-        // Verileri Çek
-        if (typeof Leaderboard !== 'undefined') {
-            Leaderboard.getGlobalRankings((top10, myRank) => {
-                const listEl = document.getElementById('leaderboard-list');
-                const myRankEl = document.getElementById('leaderboard-my-rank');
-                
-                if(listEl) {
-                    listEl.innerHTML = top10.map(p => `
-                        <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.05); padding:10px 15px; border-radius:10px; border:1px solid rgba(255,255,255,0.05);">
-                            <div style="display:flex; align-items:center; gap:12px;">
-                                <span style="font-family:'Press Start 2P',cursive; font-size:10px; color:${p.rank<=3 ? '#FFD700':'#aaa'}">#${p.rank}</span>
-                                <span style="font-size:18px;">${p.flag}</span>
-                                <span style="font-weight:bold; color:#fff; font-size:14px;">${p.name}</span>
-                            </div>
-                            <span style="font-family:'Outfit',sans-serif; font-weight:900; color:#00e5ff;">${p.score.toLocaleString()}</span>
-                        </div>
-                    `).join('');
-                }
-                
-                if(myRankEl && myRank) {
-                    myRankEl.innerHTML = `
-                        <div style="display:flex; align-items:center; gap:12px;">
-                            <span style="font-family:'Press Start 2P',cursive; font-size:10px; color:#fff;">#${myRank.rank}</span>
-                            <span style="font-size:18px;">${myRank.flag}</span>
-                            <span style="font-weight:bold; color:#fff; font-size:14px;">(YOU) ${myRank.name}</span>
-                        </div>
-                        <span style="font-family:'Outfit',sans-serif; font-weight:900; color:#fff;">${myRank.score.toLocaleString()}</span>
-                    `;
-                }
-            });
-        }
-    }
-});
-
-if(lbCloseBtn) lbCloseBtn.addEventListener('click', () => {
-    if(lbScreen) {
-        lbScreen.classList.remove('active');
-        lbScreen.classList.add('hidden');
-        lbScreen.style.display = 'none';
-    }
-});
-
 // v122: Restart - Altınları kasaya aktar ve yeni oyun başla
 if(restartBtn) restartBtn.addEventListener('click', () => { 
     totalGold += goldCount;

@@ -1,6 +1,10 @@
 # River Escape - Versiyon Günlükleri (CHANGELOG)
 Bu dosya, oyun motorunun ve özelliklerin versiyon versiyon nasıl geliştiğini mühürleyip saklamak için Antigravity tarafından oluşturulmuştur.
 
+## [v1.99.5.68] - 2026-04-10 - "ELITE STABILITY" Fix
+- **Syntax Error Resolved:** Removed duplicate lbCloseBtn declaration that was blocking the entire engine.
+- **Masterpiece Flow Solidified:** Smooth transitions between Leaderboard and Main Menu.
+
 ## [v1.99.5.67] - 2026-04-10 - "ELITE FINAL MASTERPIECE" Launch
 - **Top Riders Functional Fix:** Leaderboard is now officially stable, data fetching (refreshData) and Close button re-active.
 - **Gold Market Restored:** Shop gold packs (5k to 50k) are fully polished and operational.
