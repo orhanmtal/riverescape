@@ -1,6 +1,18 @@
 # River Escape - Versiyon Günlükleri (CHANGELOG)
 Bu dosya, oyun motorunun ve özelliklerin versiyon versiyon nasıl geliştiğini mühürleyip saklamak için Antigravity tarafından oluşturulmuştur.
 
+## [v1.99.6.0] "MASTER UNIFIER" - 2026-04-11
+- **Layer Sync:** Consolidated Z-Index architecture (Shop: 30K, Spin: 25K, Pause: 10K).
+- **Smart Transitions:** Automated Shop-to-Pause hiding/restoring logic during gameplay.
+- **Font Seal:** Replaced 'cursive' fallbacks with 'sans-serif' for pixel/system parity.
+- **Visual Pointer:** Integrated Canvas-drawn Lucky Spin indicator for 100% visibility.
+- **Production Lock:** Intermittant Shop access issues on physical devices fully resolved.
+
+## [v1.99.5.99] - 2026-04-11 - "ELITE SHOP MASTERY"
+- **Shop Accessibility:** Activated open-shop-btn-pause logic for ingame access.
+- **Duplicate Clean:** Removed redundant event listeners and consolidated UI commands.
+- **Z-Index Guard:** Raised Shop layer to 25.000 for interim stability.
+
 ## [v1.99.5.89] - 2026-04-11 - "ELITE SHOP & PAUSE SYNC"
 - **Pause Access:** Restored the ability to access the Shop directly from the Pause menu.
 - **Ammo Restoration:** Re-added the "Mühimmat" (Ammo/Bomb) purchase button to the Shop interface.
