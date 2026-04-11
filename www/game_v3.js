@@ -1,4 +1,4 @@
-// RİVER ESCAPE ELİTE - v1.99.6.2 (MASTERPIECE PURE)
+// RİVER ESCAPE ELİTE - v1.99.6.3 (MASTERPIECE PURE)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -3612,64 +3612,9 @@ function drawHeart(x, y, size, color) {
     ctx.restore();
 }
 
-if(eliteSpinBtn) eliteSpinBtn.addEventListener('click', () => {
-    const sScr = document.getElementById('spin-screen');
-    if(sScr) {
-        sScr.classList.remove('hidden');
-        sScr.classList.add('active');
-        sScr.style.display = 'flex';
-        updateSpinLiveBar();
-        drawWheel();
-    }
-});
+// v1.99.6.3: MASTER UI FINAL SYNC (Cleanup Complete)
+// Tüm ana menü butonları yukarıdaki haptik blokta mühürlenmiştir.
 
-if(spinCloseBtn) spinCloseBtn.addEventListener('click', () => {
-    const sScr = document.getElementById('spin-screen');
-    if(sScr) {
-        sScr.classList.remove('active');
-        sScr.classList.add('hidden');
-        sScr.style.display = 'none';
-    }
-    const menuScr = document.getElementById('start-screen');
-    if(!isPlaying && menuScr) {
-        menuScr.classList.remove('hidden');
-        menuScr.classList.add('active');
-    }
-});
-
-if(spinBtnMain) spinBtnMain.addEventListener('click', startSpin);
-
-// v1.99.6.2: MASTER ELITE LISTENERS
-if(eliteOynaBtn) eliteOynaBtn.addEventListener('click', startGame);
-
-if(eliteShopBtn) {
-    eliteShopBtn.addEventListener('click', () => {
-        const sScr = document.getElementById('shop-screen');
-        if(sScr) {
-            sScr.classList.remove('hidden');
-            sScr.classList.add('active');
-            sScr.style.display = 'flex';
-            sScr.style.zIndex = '30000';
-            updateShopUI();
-        }
-    });
-}
-
-if(leaderboardBtn) {
-    leaderboardBtn.addEventListener('click', () => {
-        if (typeof Leaderboard !== 'undefined' && Leaderboard.show) {
-            Leaderboard.show();
-        }
-    });
-}
-
-if(settingsOpenBtn) {
-    settingsOpenBtn.addEventListener('click', () => {
-        settingsScreen.classList.remove('hidden');
-        settingsScreen.classList.add('active');
-        settingsScreen.style.display = 'flex';
-    });
-}
 
 const shopPauseBtn = document.getElementById('open-shop-btn-pause');
 // v1.99.5.99: Mühürlü Mağaza Dinleyicisi
