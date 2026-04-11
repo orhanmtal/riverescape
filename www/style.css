@@ -1033,72 +1033,75 @@ input:checked + .toggle-slider:before {
 
 .master-play-btn {
     position: relative;
-    width: 30vmin !important;
-    height: 30vmin !important;
+    width: 42vmin !important;
+    height: 42vmin !important;
     border-radius: 50% !important;
     background: linear-gradient(135deg, #00e5ff 0%, #12c2e9 50%, #c471ed 100%) !important;
     border: 1vmin solid rgba(255, 255, 255, 0.9) !important;
     color: white !important;
     font-family: 'Outfit', sans-serif !important;
     font-weight: 900 !important;
-    font-size: 6.5vmin !important;
+    font-size: 8vmin !important;
     cursor: pointer !important;
-    letter-spacing: -0.5px !important;
-    box-shadow: 0 15px 50px rgba(0,229,255,0.5), inset 0 0 15px rgba(255,255,255,0.5) !important;
+    letter-spacing: -1px !important;
+    box-shadow: 0 15px 60px rgba(0,229,255,0.6), inset 0 0 20px rgba(255,255,255,0.5) !important;
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
     z-index: 10 !important;
-    text-shadow: 0 2px 10px rgba(0,0,0,0.2) !important;
+    text-shadow: 0 4px 15px rgba(0,0,0,0.3) !important;
     pointer-events: auto !important;
 }
 
 .master-play-btn:hover {
-    transform: scale(1.05) rotate(2deg);
-    box-shadow: 0 20px 70px rgba(0,229,255,0.7), inset 0 0 20px rgba(255,255,255,0.6) !important;
-}
-
-.pulse-ring {
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-    border-radius: 50%;
-    background: rgba(0, 229, 255, 0.3);
-    animation: ripplePulse 2s infinite;
-    z-index: -1;
-    pointer-events: none;
-}
-
-@keyframes ripplePulse {
-    0% { transform: scale(0.9); opacity: 0.8; }
-    100% { transform: scale(1.6); opacity: 0; }
-}
-    pointer-events: auto !important;
-}
-
-.master-play-btn:hover {
-    transform: scale(1.08) rotate(2deg) !important;
-    box-shadow: 0 30px 80px rgba(0,229,255,0.8), inset 0 0 30px rgba(255,255,255,0.6) !important;
+    transform: scale(1.08) rotate(3deg) !important;
+    box-shadow: 0 30px 90px rgba(0,229,255,0.8), inset 0 0 30px rgba(255,255,255,0.6) !important;
 }
 
 .master-play-btn:active {
-    transform: scale(0.92) !important;
-}
-
-@keyframes pulseRing {
-    0% { transform: scale(0.8) translate(-62%, -62%); opacity: 0.8; }
-    100% { transform: scale(1.4) translate(-36%, -36%); opacity: 0; }
+    transform: scale(0.9) !important;
 }
 
 .pulse-ring {
     position: absolute;
     top: 50%; left: 50%;
     transform: translate(-50%, -50%);
-    width: 32vmin; height: 32vmin;
+    width: 44vmin; height: 44vmin;
     border-radius: 50%;
-    border: 3px solid #00e5ff;
-    animation: pulseRing 2s ease-out infinite;
+    border: 4px solid rgba(0, 229, 255, 0.6);
+    animation: ripplePulse 2s ease-out infinite;
     z-index: 5;
     pointer-events: none;
+}
+
+@keyframes ripplePulse {
+    0% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.8; }
+    100% { transform: translate(-50%, -50%) scale(1.6); opacity: 0; }
+}
+
+.elite-btn-square {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    pointer-events: auto;
+}
+
+.elite-btn-square:hover {
+    transform: translateY(-8px) scale(1.1);
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+}
+
+.elite-btn-square:active {
+    transform: translateY(0) scale(0.95);
 }
 

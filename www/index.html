@@ -34,7 +34,7 @@
         
         <button id="pause-btn" style="position: absolute; top: calc(20px + env(safe-area-inset-top)); right: calc(20px + env(safe-area-inset-right)); display: none; background: rgba(0,0,0,0.4); color: white; border: 1px solid rgba(255,229,255,0.4); padding: 8px; font-family: 'Outfit', sans-serif; font-size: 18px; z-index: 1001; border-radius: 50%; width: 45px; height: 45px; pointer-events: auto; cursor: pointer; backdrop-filter: blur(4px); line-height: 1;">⏸</button>
             
-        <!-- ELITE FULL-SCREEN UI v1.99.5.87 -->
+        <!-- ELITE FULL-SCREEN UI v1.99.5.88 -->
         <div id="start-screen" class="screen">
             <!-- Top Row: Profile & Settings -->
             <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; z-index: 100;">
@@ -60,44 +60,50 @@
             </div>
 
 
-            <!-- ELITE MASTERPIECE TITLE v1.99.5.80 -->
-            <div style="text-align: center; position: relative; width: 100%; flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; pointer-events: none;">
+            <!-- ELITE MASTERPIECE TITLE v1.99.5.87 -->
+            <div style="text-align: center; position: relative; width: 100%; margin-top: 5vh; display: flex; flex-direction: column; justify-content: center; align-items: center; pointer-events: none;">
                 <div style="
                     position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-                    width: 80%; height: 80%; background: radial-gradient(circle, rgba(0,229,255,0.12) 0%, transparent 70%);
-                    filter: blur(40px); z-index: -1;
+                    width: 100%; height: 100%; background: radial-gradient(circle, rgba(0,229,255,0.08) 0%, transparent 70%);
+                    filter: blur(50px); z-index: -1;
                 "></div>
                 <h1 class="floating-logo" style="
-                    font-family: 'Outfit', sans-serif; font-weight: 900; color: white; font-size: 14vmin; 
+                    font-family: 'Outfit', sans-serif; font-weight: 900; color: white; font-size: 13vmin; 
                     letter-spacing: -2px; margin: 0; line-height: 0.85;
                     background: linear-gradient(135deg, #fff 20%, #00e5ff 100%);
                     -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-                    filter: drop-shadow(0 15px 30px rgba(0,229,255,0.4));
+                    filter: drop-shadow(0 15px 30px rgba(0,229,255,0.3));
                     text-transform: uppercase;
                     pointer-events: none;
                 ">RIVER<br><span style="background: linear-gradient(135deg, #00e5ff 0%, #00897b 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; pointer-events: none;">ESCAPE</span></h1>
                 <div style="
                     color: #FFD700; font-family: 'Press Start 2P', cursive; font-size: 1.8vmin; 
-                    font-weight: bold; margin-top: 20px; letter-spacing: 1vmin; opacity: 0.9;
+                    font-weight: bold; margin-top: 15px; letter-spacing: 0.8vmin; opacity: 0.9;
                     text-shadow: 0 0 15px rgba(255,215,0,0.4);
                     pointer-events: none;
-                " version="1.99.5.87">ELITE v1.99.5.87</div>
+                " version="1.99.5.88">ELITE v1.99.5.88</div>
             </div>
 
-            <!-- Bottom Row: Submenus & Play -->
-            <div style="display: flex; justify-content: space-between; align-items: flex-end; width: 100%; z-index: 100;">
-                <div style="display: flex; gap: 3vmin;">
-                    <button id="open-shop-btn" class="elite-btn-square" style="width: 12vmin; height: 12vmin; font-size: 5.5vmin; display: none;">🛒</button>
-                    <button id="leaderboard-btn" class="elite-btn-square" style="width: 12vmin; height: 12vmin; font-size: 5.5vmin; border-color: rgba(255, 215, 0, 0.4); background: rgba(255, 215, 0, 0.05); box-shadow: 0 0 15px rgba(255, 215, 0, 0.2); display: none;">🏆</button>
-                    <button id="spin-btn" class="elite-btn-square" style="width: 12vmin; height: 12vmin; font-size: 5.5vmin; display: none;">🎡</button>
-                </div>
-                
-                <div style="position: relative;">
+            <!-- CENTRAL INTERACTION ZONE -->
+            <div style="flex: 2; display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; gap: 8vh; z-index: 100;">
+                <!-- MAIN PLAY BUTTON -->
+                <div style="position: relative; display: flex; justify-content: center; align-items: center;">
                     <button id="start-btn" class="master-play-btn" style="display: none;">
                         OYNA 🌊
                     </button>
+                    <div class="pulse-ring"></div>
+                </div>
+
+                <!-- SECONDARY ACTION ROW -->
+                <div style="display: flex; gap: 6vmin; align-items: center; justify-content: center;">
+                    <button id="open-shop-btn" class="elite-btn-square" style="width: 18vmin; height: 18vmin; font-size: 8vmin; display: none;">🛒</button>
+                    <button id="leaderboard-btn" class="elite-btn-square" style="width: 18vmin; height: 18vmin; font-size: 8vmin; border-color: rgba(255, 215, 0, 0.4); background: rgba(255, 215, 0, 0.05); box-shadow: 0 0 20px rgba(255, 215, 0, 0.2); display: none;">🏆</button>
+                    <button id="spin-btn" class="elite-btn-square" style="width: 18vmin; height: 18vmin; font-size: 8vmin; display: none;">🎡</button>
                 </div>
             </div>
+
+            <!-- BOTTOM PADDING (Safe Area Support) -->
+            <div style="height: env(safe-area-inset-bottom); width: 100%;"></div>
         </div>
 
         <!-- PAUSE SCREEN (ELITE FULL-SCREEN v1.99.5.69) -->
@@ -337,12 +343,12 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
 
-    <!-- Scriptleri Yükle (v1.99.5.87 Cache Buster) -->
-    <script src="translations.js?v=1.99.5.87"></script>
-    <script src="audio.js?v=1.99.5.87"></script>
-    <script src="assets.js?v=1.99.5.87"></script> 
-    <script src="game_leaderboard.js?v=1.99.5.87"></script>
-    <script src="game_store.js?v=1.99.5.87"></script>
-    <script src="game_v3.js?v=1.99.5.87"></script>
+    <!-- Scriptleri Yükle (v1.99.5.88 Cache Buster) -->
+    <script src="translations.js?v=1.99.5.88"></script>
+    <script src="audio.js?v=1.99.5.88"></script>
+    <script src="assets.js?v=1.99.5.88"></script> 
+    <script src="game_leaderboard.js?v=1.99.5.88"></script>
+    <script src="game_store.js?v=1.99.5.88"></script>
+    <script src="game_v3.js?v=1.99.5.88"></script>
 </body>
 </html>

@@ -1,6 +1,12 @@
 # River Escape - Versiyon Günlükleri (CHANGELOG)
 Bu dosya, oyun motorunun ve özelliklerin versiyon versiyon nasıl geliştiğini mühürleyip saklamak için Antigravity tarafından oluşturulmuştur.
 
+## [v1.99.5.88] - 2026-04-11 - "ELITE MENU REDESIGN"
+- **Central Focus:** Overhauled the main menu with a centered, balanced layout.
+- **Giant Interaction:** Scaled the 'OYNA' button by 40% for a powerful visual impact.
+- **Enhanced Icons:** Increased Shop, Leaderboard, and Spin button sizes and added sophisticated hover animations.
+- **Visual Depth:** Added pulse rings and radial glows to the main interaction zone.
+
 ## [v1.99.5.87] - 2026-04-11 - "ELITE REVIVE RESTORATION"
 - **Gold Revive:** Restored the ability to buy 3 lives for 100 gold on the Game Over screen.
 - **UI Consistency:** Added the gold revive button with premium styling to the game over layout.
