@@ -1,4 +1,4 @@
-// RİVER ESCAPE PRESTIGE - v1.99.8.5 (UNIVERSAL AUTH)
+// RİVER ESCAPE PRESTIGE - v1.99.8.6 (PURPLE V-RELOAD)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -1211,13 +1211,16 @@ function updateShopUI() {
 
         const buyABtn = document.getElementById('buy-armor-btn');
         if (buyABtn && isVoidLevel) {
+            const iconSpan = document.querySelector('#shop-armor-row span');
             if (ownsArmorLicense) {
                 const price = 1000;
+                if(iconSpan) iconSpan.innerText = "⏫"; // Görseldeki V-Enerji Kalkanı formu (v1.99.8.6)
                 buyABtn.innerText = `ŞARJ ET (${armorCharge})\n${price} G`;
                 buyABtn.disabled = (totalGold < price || armorCharge >= 5);
                 if (document.getElementById('shop-arm-title')) document.getElementById('shop-arm-title').innerText = "Zırh Şarjı (Mühimmat)";
                 if (document.getElementById('shop-arm-desc')) document.getElementById('shop-arm-desc').innerText = "Zırhını %100 Hazırla!";
             } else {
+                if(iconSpan) iconSpan.innerText = "💎";
                 buyABtn.innerText = "LİSANS AL\n5000 G";
                 buyABtn.disabled = (totalGold < 5000);
             }
