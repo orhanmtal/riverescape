@@ -1,4 +1,4 @@
-// RİVER ESCAPE PRESTIGE - v1.99.7.4 (MAGMA CORE)
+// RİVER ESCAPE PRESTIGE - v1.99.7.5 (AMBER LAVA)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
