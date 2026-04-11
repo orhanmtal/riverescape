@@ -1,4 +1,4 @@
-// RİVER ESCAPE ELİTE - v1.99.6.1 (MASTERPIECE PURE)
+// RİVER ESCAPE ELİTE - v1.99.6.2 (MASTERPIECE PURE)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -3612,20 +3612,24 @@ function drawHeart(x, y, size, color) {
     ctx.restore();
 }
 
-if(spinOpenBtn) spinOpenBtn.addEventListener('click', () => {
-    spinScreen.classList.remove('hidden');
-    spinScreen.classList.add('active');
-    spinScreen.style.display = 'flex';
-    updateSpinLiveBar(); // Açılınca bakiye göster
-    drawWheel();
+if(eliteSpinBtn) eliteSpinBtn.addEventListener('click', () => {
+    const sScr = document.getElementById('spin-screen');
+    if(sScr) {
+        sScr.classList.remove('hidden');
+        sScr.classList.add('active');
+        sScr.style.display = 'flex';
+        updateSpinLiveBar();
+        drawWheel();
+    }
 });
 
 if(spinCloseBtn) spinCloseBtn.addEventListener('click', () => {
-    spinScreen.classList.remove('active');
-    spinScreen.classList.add('hidden');
-    spinScreen.style.display = 'none';
-    
-    // v1.99.5.5: Return to Main Menu safely
+    const sScr = document.getElementById('spin-screen');
+    if(sScr) {
+        sScr.classList.remove('active');
+        sScr.classList.add('hidden');
+        sScr.style.display = 'none';
+    }
     const menuScr = document.getElementById('start-screen');
     if(!isPlaying && menuScr) {
         menuScr.classList.remove('hidden');
@@ -3635,17 +3639,19 @@ if(spinCloseBtn) spinCloseBtn.addEventListener('click', () => {
 
 if(spinBtnMain) spinBtnMain.addEventListener('click', startSpin);
 
-// v1.99.5.88: CORE MENU LISTENERS (Restored)
-if(startBtn) startBtn.addEventListener('click', startGame);
+// v1.99.6.2: MASTER ELITE LISTENERS
+if(eliteOynaBtn) eliteOynaBtn.addEventListener('click', startGame);
 
-if(shopOpenBtn) {
-    shopOpenBtn.addEventListener('click', () => {
-        shopScreen.classList.remove('hidden');
-        shopScreen.classList.add('active');
-        shopScreen.style.display = 'flex';
-        shopScreen.style.opacity = '1';
-        shopScreen.style.zIndex = '6000';
-        updateShopUI();
+if(eliteShopBtn) {
+    eliteShopBtn.addEventListener('click', () => {
+        const sScr = document.getElementById('shop-screen');
+        if(sScr) {
+            sScr.classList.remove('hidden');
+            sScr.classList.add('active');
+            sScr.style.display = 'flex';
+            sScr.style.zIndex = '30000';
+            updateShopUI();
+        }
     });
 }
 
