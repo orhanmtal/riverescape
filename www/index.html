@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>RiverEscape Mobil</title>
-    <link rel="stylesheet" href="style.css?v=1.99.8.8">
-    <!-- MASTER UI OVERRIDE (FORCE STYLE) v1.99.8.8 -->
+    <link rel="stylesheet" href="style.css?v=1.99.8.9">
+    <!-- MASTER UI OVERRIDE (FORCE STYLE) v1.99.8.9 -->
 
     <style>
         .master-play-btn {
@@ -122,7 +122,7 @@
                     font-weight: bold; margin-top: 15px; letter-spacing: 0.8vmin; opacity: 0.9;
                     text-shadow: 0 0 15px rgba(255,215,0,0.4);
                     pointer-events: none;
-                " version="1.99.8.8">PRESTIGE v1.99.8.8</div>
+                " version="1.99.8.9">PRESTIGE v1.99.8.9</div>
             </div>
 
             <!-- CENTRAL INTERACTION ZONE -->
@@ -187,11 +187,40 @@
                     <div id="progress-fill-hud" style="width: 0%; height: 100%; background: linear-gradient(to right, #00e5ff, #12c2e9); box-shadow: 0 0 8px #00e5ff;"></div>
                 </div>
             </div>
-            <!-- v1.99.8.7: Mor Kalkan Göstergesi (Sol Taraf) -->
-            <div id="armor-ui-indicator" style="display: none; align-items: center; gap: 8px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 6px; margin-top: 4px;">
-                <span style="font-size: 12px; filter: drop-shadow(0 0 5px #9b59b6);">⏫</span>
-                <span id="armor-badge" style="color: #fff; font-family: 'Press Start 2P', cursive; font-size: 10px; text-shadow: 0 0 8px #9b59b6;">0</span>
-                <span style="color: rgba(155, 89, 182, 0.8); font-family: 'Outfit'; font-size: 8px; font-weight: bold; letter-spacing: 1px;">ZIRH</span>
+        </div>
+
+        <!-- v1.99.8.9: Sol Alt Diamond Armor Rozeti -->
+        <div id="armor-ui-indicator" style="
+            position: absolute; 
+            bottom: calc(30px + env(safe-area-inset-bottom)); 
+            left: calc(30px + env(safe-area-inset-left)); 
+            width: 15vmin; height: 15vmin;
+            display: none; align-items: center; justify-content: center;
+            z-index: 1000; pointer-events: none;
+        ">
+            <!-- Diamond Shape Container -->
+            <div style="
+                position: absolute; width: 100%; height: 100%;
+                background: rgba(155, 89, 182, 0.2);
+                border: 2px solid rgba(155, 89, 182, 0.6);
+                backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+                transform: rotate(45deg);
+                box-shadow: 0 0 30px rgba(155, 89, 182, 0.3);
+                border-radius: 4px;
+            "></div>
+            <!-- Content Container (Counter-Rotated) -->
+            <div style="position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;">
+                <span style="font-size: 6vmin; filter: drop-shadow(0 0 10px #9b59b6); margin-bottom: -1vmin;">⏫</span>
+                <span id="armor-badge" style="
+                    color: #fff; font-family: 'Press Start 2P', cursive; 
+                    font-size: 4vmin; text-shadow: 0 0 10px #9b59b6;
+                    font-weight: bold;
+                ">0</span>
+                <span style="
+                    color: rgba(155, 89, 182, 1); font-family: 'Outfit'; 
+                    font-size: 2vmin; font-weight: 900; letter-spacing: 1px;
+                    text-transform: uppercase;
+                ">ZIRH</span>
             </div>
         </div>
 
@@ -462,12 +491,12 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
 
-    <!-- Scriptleri Yükle (v1.99.8.8 Cache Buster) -->
-    <script src="translations.js?v=1.99.8.8"></script>
-    <script src="audio.js?v=1.99.8.8"></script>
-    <script src="assets.js?v=1.99.8.8"></script> 
-    <script src="game_leaderboard.js?v=1.99.8.8"></script>
-    <script src="game_store.js?v=1.99.8.8"></script>
-    <script src="game_v3.js?v=1.99.8.8"></script>
+    <!-- Scriptleri Yükle (v1.99.8.9 Cache Buster) -->
+    <script src="translations.js?v=1.99.8.9"></script>
+    <script src="audio.js?v=1.99.8.9"></script>
+    <script src="assets.js?v=1.99.8.9"></script> 
+    <script src="game_leaderboard.js?v=1.99.8.9"></script>
+    <script src="game_store.js?v=1.99.8.9"></script>
+    <script src="game_v3.js?v=1.99.8.9"></script>
 </body>
 </html>

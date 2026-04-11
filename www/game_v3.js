@@ -1,4 +1,4 @@
-// RİVER ESCAPE PRESTIGE - v1.99.8.8 (HEAVY ARMOR)
+// RİVER ESCAPE PRESTIGE - v1.99.8.9 (DIAMOND SHIELD HUD)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
