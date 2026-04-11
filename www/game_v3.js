@@ -1,5 +1,4 @@
-// RİVER ESCAPE ELİTE - v1.99.5.99 (MASTERPIECE PURE) -> v1.99.6.0
-// PRODUCTION READY - MAJOR UI SYNC v1.99.6.0
+// RİVER ESCAPE ELİTE - v1.99.6.1 (MASTERPIECE PURE)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -44,9 +43,11 @@ const HUD_UPDATE_INTERVAL = 0.1; // 100ms (10 FPS update for UI is plenty)
 const settingsScreen = document.getElementById('settings-screen');
 const settingsOpenBtn = document.getElementById('open-settings-btn');
 const settingsCloseBtn = document.getElementById('settings-close-btn');
-const shopOpenBtn = document.getElementById('open-shop-btn');
-const leaderboardBtn = document.getElementById('leaderboard-btn');
-const spinOpenBtn = document.getElementById('spin-btn');
+// v1.99.6.1: Elite Button Central Controls
+const eliteShopBtn = document.getElementById('open-shop-btn');
+const eliteSpinBtn = document.getElementById('spin-btn');
+const eliteLeaderboardBtn = document.getElementById('leaderboard-btn');
+const eliteOynaBtn = document.getElementById('start-btn');
 const spinScreen = document.getElementById('spin-screen');
 const spinCloseBtn = document.getElementById('spin-close-btn');
 const spinBtnMain = document.getElementById('spin-btn-main');
@@ -950,40 +951,46 @@ window.addEventListener('keydown', (e) => {
     }
 });
 
-// v1.99.4.1.11: MAĞAZA VE AYARLAR YENİ BUTONLAR
-const shopBtn = document.getElementById('open-shop-btn');
-if(shopBtn) shopBtn.addEventListener('click', () => {
+// v1.99.6.1: ELITE BUTTON LISTENERS (UNIFIED & HAPTIC)
+if(eliteShopBtn) eliteShopBtn.onclick = () => {
+    playHaptic('light');
     const shopScr = document.getElementById('shop-screen');
     const menuScr = document.getElementById('start-screen');
-    shopScr.classList.remove('hidden');
-    shopScr.classList.add('active');
-    if(menuScr) menuScr.classList.add('hidden'); // Menüyü gizle
-    shopScr.style.display = 'flex';
-    shopScr.style.opacity = '1';
-    shopScr.style.zIndex = '20000'; // Elite Layer mühürlendi
-    updateShopUI(); // Verileri yenile
-});
+    if(shopScr) {
+        shopScr.classList.remove('hidden');
+        shopScr.classList.add('active');
+        if(menuScr) menuScr.classList.add('hidden');
+        shopScr.style.display = 'flex';
+        shopScr.style.zIndex = '30000';
+        updateShopUI();
+    }
+};
 
-// v1.99.4.1.11: SIRALAMA VE ÇARK BAĞLANTILARI
-const globalBtn = document.getElementById('leaderboard-btn');
-if(globalBtn) globalBtn.addEventListener('click', () => {
+if(eliteLeaderboardBtn) eliteLeaderboardBtn.onclick = () => {
+    playHaptic('light');
     if(window.Leaderboard && typeof Leaderboard.show === 'function') {
         Leaderboard.show();
     }
-});
+};
 
-const spinBtnMenu = document.getElementById('spin-btn');
-if(spinBtnMenu) spinBtnMenu.addEventListener('click', () => {
+if(eliteSpinBtn) eliteSpinBtn.onclick = () => {
+    playHaptic('light');
     const sScr = document.getElementById('spin-screen');
     const menuScr = document.getElementById('start-screen');
     if(sScr) {
         sScr.classList.remove('hidden');
         sScr.classList.add('active');
-        if(menuScr) menuScr.classList.add('hidden'); // Menüyü gizle
+        if(menuScr) menuScr.classList.add('hidden');
         sScr.style.display = 'flex';
-        sScr.style.zIndex = '20000';
+        sScr.style.zIndex = '25000';
     }
-});
+};
+
+if(eliteOynaBtn) eliteOynaBtn.onclick = () => {
+    playHaptic('light');
+    startGame();
+};
+
 
 const settingsOpenBtnElite = document.getElementById('open-settings-btn');
 if(settingsOpenBtnElite) settingsOpenBtnElite.addEventListener('click', () => {
