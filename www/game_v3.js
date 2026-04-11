@@ -1,4 +1,4 @@
-// RİVER ESCAPE ELİTE - v1.99.5.94 (MASTERPIECE PURE)
+// RİVER ESCAPE ELİTE - v1.99.5.95 (MASTERPIECE PURE)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -3495,29 +3495,12 @@ if(pauseBtn) pauseBtn.addEventListener('click', togglePause);
 if(resumeBtn) resumeBtn.addEventListener('click', togglePause);
 
 // v1.199.3.31.10.3: Mükerrer çıkış dinleyicileri temizlendi. 🛡️
-if(quitBtn) quitBtn.addEventListener('click', () => {
+if(quitBtn) quitBtn.onclick = () => {
     // v1.199.3.31.10.3: Session protection (Instant Vault already saved)
     saveGame();
-    
-    isPaused = false;
-    isPlaying = false;
-    isGameOver = false;
-    if(pauseScreen) {
-        pauseScreen.classList.remove('active');
-        pauseScreen.classList.add('hidden');
-        pauseScreen.style.display = 'none';
-    }
-    if(gameOverScreen) {
-        gameOverScreen.classList.remove('active');
-        gameOverScreen.classList.add('hidden');
-        gameOverScreen.style.display = 'none';
-    }
-    const hud = document.getElementById('modern-hud');
-    if(hud) hud.style.display = 'none'; // v1.99.5.5
-    startScreen.classList.remove('hidden');
-    startScreen.classList.add('active');
-    if(pauseBtn) pauseBtn.style.display = 'none';
-});
+    location.reload(); // Üstün Temizlik v1.99.5.95
+};
+
 
 const qbg = document.getElementById('quit-btn-gameover');
 if(qbg) qbg.addEventListener('click', () => {
