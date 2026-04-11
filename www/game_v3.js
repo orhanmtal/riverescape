@@ -1,4 +1,4 @@
-// RİVER ESCAPE ELİTE - v1.99.5.98 (MASTERPIECE PURE)
+// RİVER ESCAPE ELİTE - v1.99.5.99 (MASTERPIECE PURE)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -3643,16 +3643,20 @@ if(settingsOpenBtn) {
 }
 
 const shopPauseBtn = document.getElementById('open-shop-btn-pause');
+// v1.99.5.99: Mühürlü Mağaza Dinleyicisi
 if(shopPauseBtn) {
-    shopPauseBtn.addEventListener('click', () => {
-        shopScreen.classList.remove('hidden');
-        shopScreen.classList.add('active');
-        shopScreen.style.display = 'flex';
-        shopScreen.style.opacity = '1';
-        shopScreen.style.zIndex = '6000';
-        updateShopUI();
-    });
+    shopPauseBtn.onclick = () => {
+        const sScr = document.getElementById('shop-screen');
+        if(sScr) {
+            sScr.classList.remove('hidden');
+            sScr.classList.add('active');
+            sScr.style.display = 'flex';
+            sScr.style.zIndex = '25000'; // Elite Katman Mühürlendi
+            updateShopUI();
+        }
+    };
 }
+
 
 // Settings back functionality handled in Elite section
 
