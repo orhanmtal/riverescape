@@ -1,4 +1,4 @@
-// RİVER ESCAPE PRESTIGE - v1.99.9.0 (PURE DIAMOND SYNC)
+// RİVER ESCAPE PRESTIGE - v1.99.9.1 (VOID LOCKDOWN)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -1201,28 +1201,40 @@ function updateShopUI() {
             }
         }
 
-        // Armor Toggle (Elite Void logic)
+        // Armor Toggle (Elite Void logic v1.99.9.1)
         const armRow = document.getElementById('shop-armor-row');
         const isVoidLevel = (currentLevel > 0 && currentLevel % 6 === 0);
+        const buyABtn = document.getElementById('buy-armor-btn');
+        const iconSpan = document.querySelector('#shop-armor-row span');
 
         if (armRow) {
-            armRow.style.display = isVoidLevel ? 'flex' : 'none';
+            // Her zaman göster ama 6 katı değilse kilitli yap (User Request Sync)
+            armRow.style.display = 'flex';
+            armRow.style.opacity = isVoidLevel ? '1' : '0.4';
+            armRow.style.pointerEvents = isVoidLevel ? 'auto' : 'none';
         }
 
-        const buyABtn = document.getElementById('buy-armor-btn');
-        if (buyABtn && isVoidLevel) {
-            const iconSpan = document.querySelector('#shop-armor-row span');
-            if (ownsArmorLicense) {
-                const price = 1000;
-                if(iconSpan) iconSpan.innerText = "💎"; // Saf Elmas Formu (v1.99.9.0)
-                buyABtn.innerText = `ŞARJ ET (${armorCharge})\n${price} G`;
-                buyABtn.disabled = (totalGold < price || armorCharge >= 10); // v1.99.8.8 Heavy Armor Limit
-                if (document.getElementById('shop-arm-title')) document.getElementById('shop-arm-title').innerText = "Zırh Şarjı (Mühimmat)";
-                if (document.getElementById('shop-arm-desc')) document.getElementById('shop-arm-desc').innerText = "Zırhını %100 Hazırla!";
+        if (buyABtn) {
+            if (isVoidLevel) {
+                // LEVEL 6+: ŞARJ VEYA LİSANS AKTİF
+                if (ownsArmorLicense) {
+                    const price = 1000;
+                    if(iconSpan) iconSpan.innerText = "💎"; 
+                    buyABtn.innerText = `ŞARJ ET (${armorCharge})\n${price} G`;
+                    buyABtn.disabled = (totalGold < price || armorCharge >= 10);
+                    if (document.getElementById('shop-arm-title')) document.getElementById('shop-arm-title').innerText = "Zırh Şarjı (Mühimmat)";
+                } else {
+                    if(iconSpan) iconSpan.innerText = "🔒";
+                    buyABtn.innerText = "LİSANS AL\n5000 G";
+                    buyABtn.disabled = (totalGold < 5000);
+                }
             } else {
-                if(iconSpan) iconSpan.innerText = "💎";
-                buyABtn.innerText = "LİSANS AL\n5000 G";
-                buyABtn.disabled = (totalGold < 5000);
+                // LEVEL 6 DIŞINDA: KİLİTLİ VE ŞARJ GİZLİ
+                if(iconSpan) iconSpan.innerText = "🔒";
+                buyABtn.innerText = "KİLİTLİ\n(LVL 6+)";
+                buyABtn.disabled = true;
+                if (document.getElementById('shop-arm-title')) document.getElementById('shop-arm-title').innerText = "Gemi Zırhı (Void)";
+                if (document.getElementById('shop-arm-desc')) document.getElementById('shop-arm-desc').innerText = "Level 6, 12, 18...'de Açılır";
             }
         }
         // Silah Lisansı Yoksa Mühimmat Satırını Gizle (v1.99.8.4)
