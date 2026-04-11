@@ -1,4 +1,4 @@
-// RİVER ESCAPE PRESTIGE - v1.99.7.7 (SYNTAX FIXED)
+// RİVER ESCAPE PRESTIGE - v1.99.7.8 (CACHE KILLER)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
