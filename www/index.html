@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>RiverEscape Mobil</title>
-    <link rel="stylesheet" href="style.css?v=1.99.7.0">
-    <!-- MASTER UI OVERRIDE (FORCE STYLE) v1.99.7.0 -->
+    <link rel="stylesheet" href="style.css?v=1.99.7.1">
+    <!-- MASTER UI OVERRIDE (FORCE STYLE) v1.99.7.1 -->
 
     <style>
         .master-play-btn {
@@ -122,7 +122,7 @@
                     font-weight: bold; margin-top: 15px; letter-spacing: 0.8vmin; opacity: 0.9;
                     text-shadow: 0 0 15px rgba(255,215,0,0.4);
                     pointer-events: none;
-                " version="1.99.7.0">PRESTIGE v1.99.7.0</div>
+                " version="1.99.7.1">PRESTIGE v1.99.7.1</div>
             </div>
 
             <!-- CENTRAL INTERACTION ZONE -->
@@ -287,7 +287,7 @@
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3vmin;">
                     <h2 id="shop-title-main" style="color: #FFD700; font-family: 'Outfit'; font-weight: 900; font-size: 8vmin; margin: 0; letter-spacing: 0.5vmin; text-shadow: 0 0 15px rgba(255,215,0,0.3);">MAĞAZA</h2>
                 </div>
-                <div id="shop-balance-text" style="color: #fff; font-size: 4vmin; margin-bottom: 6vmin; font-family: 'Press Start 2P', cursive; opacity: 0.9;">BAKİYE: <span id="totalGoldValue-shop" style="color: #FFD700;">0</span> GOLD</div>
+                <div id="shop-balance-text" style="color: #fff; font-size: 4.5vmin; margin-bottom: 6vmin; font-family: 'Press Start 2P', sans-serif; opacity: 0.9; text-align: center; background: rgba(255, 215, 0, 0.05); padding: 15px; border-radius: 12px; border: 1px solid rgba(255, 215, 0, 0.2); box-shadow: 0 0 20px rgba(0,0,0,0.3);">BAKİYE: <span id="totalGoldValue-shop" style="color: #FFD700; text-shadow: 0 0 10px rgba(255,215,0,0.5);">0</span> GOLD</div>
                 
                 <div class="shop-container-elite" style="display: flex; flex-direction: column; gap: 4vmin;">
                     <div class="shop-item">
@@ -322,8 +322,8 @@
                                 <span style="font-size: 8vmin;">💣</span>
                             </div>
                             <div>
-                                <div id="shop-wpn-title" class="shop-item-title">Nehir Topu</div>
-                                <div id="shop-wpn-desc" class="shop-item-desc">Engelleri Patlat</div>
+                                <div id="shop-wpn-title" class="shop-item-title">Mühimmat</div>
+                                <div id="shop-wpn-desc" class="shop-item-desc">Engelleri yok et!</div>
                             </div>
                         </div>
                         <button id="buy-weapon-btn" class="shop-upgrade-btn">AL</button>
@@ -331,7 +331,9 @@
 
                     <div class="shop-item">
                         <div style="display: flex; align-items: center; gap: 4vmin;">
-                            <span style="font-size: 8vmin;">💎</span>
+                            <div style="width: 14vmin; height: 14vmin; background: rgba(0, 172, 193, 0.1); border: 2px solid #00acc1; border-radius: 18px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 15px rgba(0, 172, 193, 0.2);">
+                                <span style="font-size: 8vmin;">💎</span>
+                            </div>
                             <div>
                                 <div id="shop-arm-title" class="shop-item-title">Gemi Zırhı</div>
                                 <div id="shop-arm-desc" class="shop-item-desc">Maksimum Koruma</div>
@@ -342,9 +344,11 @@
 
                     <div id="shop-ammo-row" class="shop-item">
                         <div style="display: flex; align-items: center; gap: 4vmin;">
-                            <span style="font-size: 8vmin;">📦</span>
+                            <div style="width: 14vmin; height: 14vmin; background: rgba(255, 255, 255, 0.05); border: 2px solid rgba(255,255,255,0.3); border-radius: 18px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 15px rgba(255,255,255,0.1);">
+                                <span style="font-size: 8vmin;">📦</span>
+                            </div>
                             <div>
-                                <div class="shop-item-title">Mühimmat</div>
+                                <div class="shop-item-title">Mühimmat Paketi</div>
                                 <div class="shop-item-desc">+10 Enerji Topu</div>
                             </div>
                         </div>
@@ -377,7 +381,15 @@
                     </div>
                 </div>
 
-                <button id="shop-close-btn" style="background: linear-gradient(135deg, #ff4444, #cc0000); color: white; border: none; padding: 3vmin; border-radius: 15px; font-weight: 900; font-family: 'Outfit'; cursor: pointer; margin-top: 5vmin; margin-bottom: 3vmin; font-size: 4.5vmin; box-shadow: 0 4px 15px rgba(255, 68, 68, 0.3); width: 100%;">KAPAT</button>
+                <button id="shop-close-btn" style="
+                    background: rgba(255,255,255,0.05); color: #FFD700; 
+                    border: 1px solid rgba(255,215,0,0.3); padding: 4vmin; 
+                    border-radius: 20px; font-weight: 900; font-family: 'Outfit'; 
+                    cursor: pointer; margin-top: 8vmin; font-size: 4.5vmin; 
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.3); width: 100%;
+                    text-transform: uppercase; letter-spacing: 2px;
+                    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                ">GERİ DÖN</button>
             </div>
         </div>
 
@@ -444,12 +456,12 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
 
-    <!-- Scriptleri Yükle (v1.99.7.0 Cache Buster) -->
-    <script src="translations.js?v=1.99.7.0"></script>
-    <script src="audio.js?v=1.99.7.0"></script>
-    <script src="assets.js?v=1.99.7.0"></script> 
-    <script src="game_leaderboard.js?v=1.99.7.0"></script>
-    <script src="game_store.js?v=1.99.7.0"></script>
-    <script src="game_v3.js?v=1.99.7.0"></script>
+    <!-- Scriptleri Yükle (v1.99.7.1 Cache Buster) -->
+    <script src="translations.js?v=1.99.7.1"></script>
+    <script src="audio.js?v=1.99.7.1"></script>
+    <script src="assets.js?v=1.99.7.1"></script> 
+    <script src="game_leaderboard.js?v=1.99.7.1"></script>
+    <script src="game_store.js?v=1.99.7.1"></script>
+    <script src="game_v3.js?v=1.99.7.1"></script>
 </body>
 </html>
