@@ -1,4 +1,4 @@
-// RİVER ESCAPE ELİTE - v1.99.5.91 (MASTERPIECE PURE)
+// RİVER ESCAPE ELİTE - v1.99.5.92 (MASTERPIECE PURE)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -982,14 +982,24 @@ if(settingsOpenBtnElite) settingsOpenBtnElite.addEventListener('click', () => {
     settingsScreen.style.zIndex = '110000'; // En üstte
 });
 
-const settingsCloseBtnElite = document.getElementById('settings-close-btn');
-if(settingsCloseBtnElite) settingsCloseBtnElite.addEventListener('click', () => {
+const closeSettingsElite = () => {
+    saveGame(); // Elite v1.99.5.92: Her zaman kaydet
     settingsScreen.classList.remove('active');
     settingsScreen.classList.add('hidden');
     settingsScreen.style.display = 'none';
     const menuScr = document.getElementById('start-screen');
-    if(!isPlaying && menuScr) menuScr.classList.remove('hidden'); // Menüye geri dön
-});
+    if(!isPlaying && menuScr) {
+        menuScr.classList.remove('hidden');
+        menuScr.classList.add('active');
+        menuScr.style.display = 'flex';
+    }
+};
+
+const settingsCloseBtnElite = document.getElementById('settings-close-btn');
+if(settingsCloseBtnElite) settingsCloseBtnElite.addEventListener('click', closeSettingsElite);
+
+const settingsBackBtnElite = document.getElementById('settings-back-btn');
+if(settingsBackBtnElite) settingsBackBtnElite.addEventListener('click', closeSettingsElite);
 
 const settingsPauseBtn = document.getElementById('settings-open-btn-pause');
 
@@ -3650,12 +3660,7 @@ if(shopPauseBtn) {
     });
 }
 
-const settingsBackBtn = document.getElementById('settings-back-btn');
-if(settingsBackBtn) settingsBackBtn.addEventListener('click', () => {
-    settingsScreen.classList.remove('active');
-    settingsScreen.classList.add('hidden');
-    settingsScreen.style.display = 'none';
-});
+// Settings back functionality handled in Elite section
 
 const logoutBtn = document.getElementById('logout-btn');
 const logoutConfirmScreen = document.getElementById('logout-confirm-screen');
@@ -3712,48 +3717,22 @@ const resetYes = document.getElementById('confirm-reset-yes');
 const resetNo = document.getElementById('confirm-reset-no');
 
 if(resetYes) resetYes.addEventListener('click', () => {
-    // TAM SIFIRLAMA (Hard Reset)
-    totalGold = 0;
-    magnetLevel = 0;
-    shieldLevel = 0;
-    hasWeapon = false;
-    bombCount = 0;
-    ownsArmorLicense = false;
-    armorCharge = 0;
-    
+    // TAM SIFIRLAMA (Hard Reset) v1.99.5.92
+    localStorage.clear(); // Her şeyi sil
     localStorage.removeItem('riverEscapeSave');
-    saveGame();
+    localStorage.removeItem('re_best_score');
     
-    // Overlay'i kapat
+    // Uygulamayı tamamen tertemiz başlat
+    location.reload(); 
+});
+
+if(resetNo) resetNo.addEventListener('click', () => {
     const resetOverlay = document.getElementById('reset-confirm-overlay');
     if(resetOverlay) {
         resetOverlay.classList.remove('active');
         resetOverlay.classList.add('hidden');
         resetOverlay.style.display = 'none';
     }
-    
-    // Ayarlar ekranını da kapat, ana menüe dön
-    isPlaying = false;
-    isGameOver = false;
-    isPaused = false;
-    if(settingsScreen) {
-        settingsScreen.classList.remove('active');
-        settingsScreen.classList.add('hidden');
-        settingsScreen.style.display = '';
-    }
-    if(pauseScreen) {
-        pauseScreen.classList.remove('active');
-        pauseScreen.classList.add('hidden');
-    }
-    if(gameOverScreen) {
-        gameOverScreen.classList.remove('active');
-        gameOverScreen.classList.add('hidden');
-        gameOverScreen.style.display = 'none';
-    }
-    if(pauseBtn) pauseBtn.style.display = 'none';
-    startScreen.classList.remove('hidden');
-    startScreen.classList.add('active');
-    updateShopUI();
 });
 
 if(resetNo) resetNo.addEventListener('click', () => {
