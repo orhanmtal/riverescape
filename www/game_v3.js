@@ -1,4 +1,4 @@
-// RİVER ESCAPE ELİTE - v1.99.5.92 (MASTERPIECE PURE)
+// RİVER ESCAPE ELİTE - v1.99.5.93 (MASTERPIECE PURE)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -947,7 +947,7 @@ if(shopBtn) shopBtn.addEventListener('click', () => {
     if(menuScr) menuScr.classList.add('hidden'); // Menüyü gizle
     shopScr.style.display = 'flex';
     shopScr.style.opacity = '1';
-    shopScr.style.zIndex = '9999';
+    shopScr.style.zIndex = '20000'; // Elite Layer mühürlendi
     updateShopUI(); // Verileri yenile
 });
 
@@ -968,7 +968,7 @@ if(spinBtnMenu) spinBtnMenu.addEventListener('click', () => {
         sScr.classList.add('active');
         if(menuScr) menuScr.classList.add('hidden'); // Menüyü gizle
         sScr.style.display = 'flex';
-        sScr.style.zIndex = '110000';
+        sScr.style.zIndex = '20000';
     }
 });
 
@@ -979,7 +979,7 @@ if(settingsOpenBtnElite) settingsOpenBtnElite.addEventListener('click', () => {
     settingsScreen.classList.add('active');
     if(menuScr) menuScr.classList.add('hidden'); // Menüyü gizle
     settingsScreen.style.display = 'flex';
-    settingsScreen.style.zIndex = '110000'; // En üstte
+    settingsScreen.style.zIndex = '20000'; // En üstte
 });
 
 const closeSettingsElite = () => {
@@ -1009,7 +1009,7 @@ if(shopBtnGameOver) shopBtnGameOver.addEventListener('click', () => {
     document.getElementById('shop-screen').classList.add('active');
     document.getElementById('shop-screen').style.display = 'flex';
     document.getElementById('shop-screen').style.opacity = '1';
-    document.getElementById('shop-screen').style.zIndex = '6000';
+    document.getElementById('shop-screen').style.zIndex = '20000';
 });
 
 // v1.199.3.31.10.2: ELITE QUIT PROTECTION (Gold Vault Guard)
@@ -1062,7 +1062,7 @@ if(armorIndicator) armorIndicator.addEventListener('click', () => {
     document.getElementById('shop-screen').classList.add('active');
     document.getElementById('shop-screen').style.display = 'flex';
     document.getElementById('shop-screen').style.opacity = '1';
-    document.getElementById('shop-screen').style.zIndex = '6000';
+    document.getElementById('shop-screen').style.zIndex = '20000';
 });
 
 const btnMag = document.getElementById('buy-magnet-btn');
@@ -1367,7 +1367,7 @@ function fireBomb() {
                 shop.classList.add('active');
                 shop.style.display = 'flex';
                 shop.style.opacity = '1';
-                shop.style.zIndex = '6000';
+                shop.style.zIndex = '20000';
             }
         }
         return;
@@ -3414,7 +3414,6 @@ function gameLoop(timestamp) {
 
     // v1.96.6.3: Menülerde akışı tamamen durdur (Kullanıcı tercihi)
     let ambientSpeed = (isPlaying && !isPaused) ? bgScrollSpeed : 0;
-
     bgY += ambientSpeed * dt;
     let totalBgHeight = Math.ceil(canvas.height) * 2; 
     if (bgY >= totalBgHeight) bgY -= totalBgHeight;

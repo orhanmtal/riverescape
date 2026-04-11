@@ -141,8 +141,8 @@ const Leaderboard = {
             eliteButtons.forEach(id => {
                 const btn = document.getElementById(id);
                 if (btn) {
-                    // SADECE GİRİŞ YAPILDIYSA GÖSTER! (Cache bypass kaldırıldı)
-                    btn.style.display = isLoggedIn ? '' : 'none';
+                    // v1.99.5.93: Flex display mühürlendi (Tiny button fix)
+                    btn.style.display = isLoggedIn ? 'flex' : 'none';
                 }
             });
  
