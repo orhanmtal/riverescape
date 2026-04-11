@@ -493,9 +493,13 @@ const wheelCanvas = document.getElementById('wheel-canvas');
 const wctx = wheelCanvas ? wheelCanvas.getContext('2d') : null;
 
 function drawWheel() {
-    if(!wctx) return;
+    const wc = document.getElementById('wheel-canvas');
+    if(!wc) return;
+    const ctx = wc.getContext('2d');
+    if(!ctx) return;
+
     const centerX = 200, centerY = 200, radius = 180;
-    wctx.clearRect(0,0,400,400);
+    ctx.clearRect(0, 0, 400, 400);
 
     const sliceAngle = (Math.PI * 2) / wheelRewards.length;
 
@@ -503,62 +507,73 @@ function drawWheel() {
         const startAng = wheelAngle + i * sliceAngle;
         const endAng = startAng + sliceAngle;
 
-        // Dilim
-        wctx.beginPath();
-        wctx.moveTo(centerX, centerY);
-        wctx.arc(centerX, centerY, radius, startAng, endAng);
-        wctx.fillStyle = r.color;
-        wctx.fill();
-        wctx.strokeStyle = "#fff";
-        wctx.lineWidth = 2;
-        wctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(centerX, centerY);
+        ctx.arc(centerX, centerY, radius, startAng, endAng);
+        ctx.fillStyle = r.color;
+        ctx.fill();
+        ctx.strokeStyle = "rgba(255,255,255,0.4)";
+        ctx.lineWidth = 1;
+        ctx.stroke();
 
-        // Metin
-        wctx.save();
-        wctx.translate(centerX, centerY);
-        wctx.rotate(startAng + sliceAngle / 2);
-        wctx.textAlign = "right";
-        wctx.fillStyle = "#fff";
-        wctx.font = "bold 20px Outfit";
-        wctx.fillText(r.label, radius - 20, 10);
-        wctx.restore();
+        ctx.save();
+        ctx.translate(centerX, centerY);
+        ctx.rotate(startAng + sliceAngle / 2);
+        ctx.textAlign = "right";
+        ctx.fillStyle = "#fff";
+        ctx.font = "bold 20px 'Outfit', sans-serif";
+        ctx.fillText(r.label, radius - 20, 10);
+        ctx.restore();
     });
 
-    // Orta Göbek
-    wctx.beginPath();
-    wctx.arc(centerX, centerY, 30, 0, Math.PI * 2);
-    wctx.fillStyle = "#333";
-    wctx.fill();
-    wctx.strokeStyle = "gold";
-    wctx.lineWidth = 5;
-    wctx.stroke();
+    // Orta Göbek Parlaması
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, 30, 0, Math.PI * 2);
+    ctx.fillStyle = "#1a1a1a";
+    ctx.fill();
+    ctx.strokeStyle = "#FFD700";
+    ctx.lineWidth = 4;
+    ctx.stroke();
+    
+    // Merkez nokta
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, 5, 0, Math.PI * 2);
+    ctx.fillStyle = "#FFD700";
+    ctx.fill();
 }
 
 function startSpin() {
     if (isSpinning) return;
     
     const spinAction = () => {
-        isSpinning = true;
-        updateSpinButtonText();
-        document.getElementById('spin-btn-main').disabled = true;
-        document.getElementById('spin-reward-msg').innerText = translations[currentLang].spinWait;
-        
-        spinVelocity = 0.5 + Math.random() * 0.5;
-        requestAnimationFrame(animateSpin);
+        // Reklam sonrası UI'nın toparlanması için 150ms bekle (Elite Sync)
+        setTimeout(() => {
+            isSpinning = true;
+            updateSpinButtonText();
+            const btn = document.getElementById('spin-btn-main');
+            if(btn) btn.disabled = true;
+            
+            const msg = document.getElementById('spin-reward-msg');
+            if(msg) msg.innerText = translations[currentLang].spinWait || "ZAR ATILIYOR...";
+            
+            // Başlangıç hızı (Daha uzun ve etkileyici bir dönüş için güçlendirildi)
+            spinVelocity = 0.6 + Math.random() * 0.4;
+            requestAnimationFrame(animateSpin);
+        }, 150);
     };
 
-    // HER SEFERİNDE REKLAMLI ÇEVİRME
     showRewardedAd(document.getElementById('spin-btn-main'), translations[currentLang].spinNextBtn, spinAction);
 }
 
-let lastClickTime = 0;
 function animateSpin() {
     if(!isSpinning) return;
 
     wheelAngle += spinVelocity;
-    spinVelocity *= 0.985; // Sönümleme (Gittikçe yavaşlar)
+    // Açıyı normalize et (Sayısal karmaşıklığı önler)
+    wheelAngle %= (Math.PI * 2);
+    
+    spinVelocity *= 0.988; // Sönümleme biraz azaltıldı (Daha uzun döner)
 
-    // Tıkırtı sesi (Açı değişimine göre)
     const sliceWidth = (Math.PI * 2) / wheelRewards.length;
     if(Math.floor(wheelAngle / sliceWidth) !== Math.floor((wheelAngle - spinVelocity) / sliceWidth)) {
         if(typeof playSpinClick === 'function') playSpinClick();
@@ -566,10 +581,12 @@ function animateSpin() {
 
     drawWheel();
 
-    if(spinVelocity < 0.002) {
+    if(spinVelocity < 0.0015) {
         isSpinning = false;
         spinVelocity = 0;
         giveReward();
+        const btn = document.getElementById('spin-btn-main');
+        if(btn) btn.disabled = false;
     } else {
         requestAnimationFrame(animateSpin);
     }
@@ -579,9 +596,9 @@ function updateSpinLiveBar() {
     const gl = document.getElementById('spin-gold-live');
     const ml = document.getElementById('spin-mag-live');
     const sl = document.getElementById('spin-shd-live');
-    if(gl) gl.innerText = totalGold;
-    if(ml) ml.innerText = 'LVL ' + magnetLevel;
-    if(sl) sl.innerText = 'LVL ' + shieldLevel;
+    if(gl) gl.innerText = totalGold || 0;
+    if(ml) ml.innerText = 'LVL ' + (magnetLevel || 0);
+    if(sl) sl.innerText = 'LVL ' + (shieldLevel || 0);
 }
 
 
