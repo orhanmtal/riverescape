@@ -1,6 +1,11 @@
 # River Escape - Versiyon Günlükleri (CHANGELOG)
 Bu dosya, oyun motorunun ve özelliklerin versiyon versiyon nasıl geliştiğini mühürleyip saklamak için Antigravity tarafından oluşturulmuştur.
 
+## [v1.99.5.87] - 2026-04-11 - "ELITE REVIVE RESTORATION"
+- **Gold Revive:** Restored the ability to buy 3 lives for 100 gold on the Game Over screen.
+- **UI Consistency:** Added the gold revive button with premium styling to the game over layout.
+- **Economic Sync:** Integrated gold revive costs with the cloud-synced economy.
+
 ## [v1.99.5.86] - 2026-04-11 - "ELITE SHOP REFINEMENT"
 - **UI Elegance:** Redesigned shop items into a more compact, mobile-friendly layout.
 - **Button Fix:** Unified shop close logic and resolved ID conflicts to ensure 100% functionality.

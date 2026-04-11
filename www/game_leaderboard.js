@@ -1,7 +1,7 @@
 /**
- * RİVER ESCAPE ELİTE - v1.99.5.85 (MASTERPIECE FINAL)
+ * RİVER ESCAPE ELİTE - v1.99.5.87 (MASTERPIECE FINAL)
  * Firebase Firestore Global Sıralama ve Profil Senkronizasyon Sistemi
- * v1.99.5.85
+ * v1.99.5.87
  */
 
 const Leaderboard = {
