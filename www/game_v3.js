@@ -1,4 +1,4 @@
-// RİVER ESCAPE ELİTE - v1.99.5.97 (MASTERPIECE PURE)
+// RİVER ESCAPE ELİTE - v1.99.5.98 (MASTERPIECE PURE)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -2262,7 +2262,7 @@ function update(dt) {
         levelUpOverlay.innerHTML = `
             <div style="text-align: center; animation: proLevelPop 1.5s forwards;">
                 <div style="font-size: 22px; color: gold; letter-spacing: 10px; font-weight: bold; margin-bottom: 25px; text-shadow: 0 0 40px gold;">O Y U N   B İ T T İ !</div>
-                <h1 style="color: #ffffff; font-size: 52px; font-family: 'Press Start 2P', cursive; text-shadow: 6px 6px 0 #000, 0 0 50px rgba(255, 165, 0, 0.6); margin: 0;">ŞAMPİYON!</h1>
+                <h1 style="color: #ffffff; font-size: 52px; font-family: 'Press Start 2P', sans-serif; text-shadow: 6px 6px 0 #000, 0 0 50px rgba(255, 165, 0, 0.6); margin: 0;">ŞAMPİYON!</h1>
                 <h2 style="color: #64dd17; font-size: 30px; font-family: 'Outfit', sans-serif; text-shadow: 3px 3px 0 #000; margin-top: 25px; font-weight: 900; letter-spacing: 4px;">${lTitle}</h2>
                 <div style="margin-top: 30px; color: white; font-size: 20px; text-shadow: 0 0 10px #fff; font-weight: bold;">SEVİYE: 7 (BÜYÜK TUR)</div>
             </div>
@@ -2336,7 +2336,7 @@ function update(dt) {
                     box-shadow: 0 10px 50px rgba(0,0,0,0.5);
                 ">
                     <div style="font-size: 14px; color: gold; letter-spacing: 5px; font-weight: bold; margin-bottom: 12px; text-shadow: 0 0 10px gold;">CHECKPOINT REACHED</div>
-                    <h1 style="color: #ffffff; font-size: 32px; font-family: 'Press Start 2P', cursive; text-shadow: 4px 4px 0 #000; margin: 0; line-height: 1.5;">${translations[currentLang].levelLabel} ${currentLevel}</h1>
+                    <h1 style="color: #ffffff; font-size: 32px; font-family: 'Press Start 2P', sans-serif; text-shadow: 4px 4px 0 #000; margin: 0; line-height: 1.5;">${translations[currentLang].levelLabel} ${currentLevel}</h1>
                     <h2 style="color: ${lAsset.color}; font-size: 26px; font-family: 'Outfit', sans-serif; text-shadow: 3px 3px 0 #000; margin-top: 15px; font-weight: 900; letter-spacing: 4px; text-transform: uppercase;">${lTitle}</h2>
                 </div>
             `;
