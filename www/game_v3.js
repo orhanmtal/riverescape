@@ -1,4 +1,4 @@
-// RİVER ESCAPE PRESTIGE - v1.99.8.0 (DASH OVERRIDE)
+// RİVER ESCAPE PRESTIGE - v1.99.8.3 (CENTERED PRESTIGE)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
