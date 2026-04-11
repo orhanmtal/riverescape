@@ -1,7 +1,7 @@
 /**
- * RİVER ESCAPE ELİTE - v1.99.8.5 (UNIVERSAL AUTH)
+ * RİVER ESCAPE ELİTE - v1.99.8.8 (HEAVY ARMOR)
  * Firebase Firestore Global Sıralama ve Profil Senkronizasyon Sistemi
- * v1.99.8.5
+ * v1.99.8.8
  */
 
 const Leaderboard = {

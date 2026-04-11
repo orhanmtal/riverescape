@@ -1,4 +1,4 @@
-// RİVER ESCAPE PRESTIGE - v1.99.8.7 (LEFT SHIELD HUD)
+// RİVER ESCAPE PRESTIGE - v1.99.8.8 (HEAVY ARMOR)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -1145,8 +1145,8 @@ function buyArmorLicense() {
         updateShopUI();
         showToast("Gemi Zırhı Lisansı ALINDI! 💎", true);
     } else if (ownsArmorLicense) {
-        // Geliştirme/Şarj mantığı
-        if (totalGold >= 1000 && armorCharge < 5) {
+        // Geliştirme/Şarj mantığı (v1.99.8.8: Max 10)
+        if (totalGold >= 1000 && armorCharge < 10) {
             totalGold -= 1000;
             armorCharge++;
             playPowerupSound();
@@ -1216,7 +1216,7 @@ function updateShopUI() {
                 const price = 1000;
                 if(iconSpan) iconSpan.innerText = "⏫"; // Görseldeki V-Enerji Kalkanı formu (v1.99.8.6)
                 buyABtn.innerText = `ŞARJ ET (${armorCharge})\n${price} G`;
-                buyABtn.disabled = (totalGold < price || armorCharge >= 5);
+                buyABtn.disabled = (totalGold < price || armorCharge >= 10); // v1.99.8.8 Heavy Armor Limit
                 if (document.getElementById('shop-arm-title')) document.getElementById('shop-arm-title').innerText = "Zırh Şarjı (Mühimmat)";
                 if (document.getElementById('shop-arm-desc')) document.getElementById('shop-arm-desc').innerText = "Zırhını %100 Hazırla!";
             } else {
