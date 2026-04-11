@@ -1,4 +1,4 @@
-// RİVER ESCAPE ELİTE - v1.99.6.4 (MASTERPIECE PURE)
+// RİVER ESCAPE ELİTE - v1.99.6.5 (MASTERPIECE PURE)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -983,11 +983,32 @@ if(eliteSpinBtn) eliteSpinBtn.onclick = () => {
         if(menuScr) menuScr.classList.add('hidden');
         sScr.style.display = 'flex';
         sScr.style.zIndex = '25000';
-        // v1.99.6.4: Çarkı Çiz ve Bakiyeyi Güncelle (RESTORATION)
         if(typeof updateSpinLiveBar === 'function') updateSpinLiveBar();
         if(typeof drawWheel === 'function') drawWheel();
     }
 };
+
+// v1.99.6.5: Çark Buton Mantığı (RECOVERY)
+if(spinBtnMain) spinBtnMain.onclick = () => {
+    playHaptic('medium');
+    if(typeof startSpin === 'function') startSpin();
+};
+
+if(spinCloseBtn) spinCloseBtn.onclick = () => {
+    const sScr = document.getElementById('spin-screen');
+    if(sScr) {
+        sScr.classList.remove('active');
+        sScr.classList.add('hidden');
+        sScr.style.display = 'none';
+    }
+    const menuScr = document.getElementById('start-screen');
+    if(!isPlaying && menuScr) {
+        menuScr.classList.remove('hidden');
+        menuScr.classList.add('active');
+        menuScr.style.display = 'flex';
+    }
+};
+
 
 
 if(eliteOynaBtn) eliteOynaBtn.onclick = () => {
