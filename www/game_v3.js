@@ -1,4 +1,4 @@
-// RİVER ESCAPE ELİTE - v1.99.5.87 (MASTERPIECE PURE)
+// RİVER ESCAPE ELİTE - v1.99.5.89 (MASTERPIECE PURE)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -3631,6 +3631,18 @@ if(settingsOpenBtn) {
         settingsScreen.classList.remove('hidden');
         settingsScreen.classList.add('active');
         settingsScreen.style.display = 'flex';
+    });
+}
+
+const shopPauseBtn = document.getElementById('open-shop-btn-pause');
+if(shopPauseBtn) {
+    shopPauseBtn.addEventListener('click', () => {
+        shopScreen.classList.remove('hidden');
+        shopScreen.classList.add('active');
+        shopScreen.style.display = 'flex';
+        shopScreen.style.opacity = '1';
+        shopScreen.style.zIndex = '6000';
+        updateShopUI();
     });
 }
 

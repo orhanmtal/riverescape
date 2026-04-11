@@ -1,6 +1,12 @@
 # River Escape - Versiyon Günlükleri (CHANGELOG)
 Bu dosya, oyun motorunun ve özelliklerin versiyon versiyon nasıl geliştiğini mühürleyip saklamak için Antigravity tarafından oluşturulmuştur.
 
+## [v1.99.5.89] - 2026-04-11 - "ELITE SHOP & PAUSE SYNC"
+- **Pause Access:** Restored the ability to access the Shop directly from the Pause menu.
+- **Ammo Restoration:** Re-added the "Mühimmat" (Ammo/Bomb) purchase button to the Shop interface.
+- **Compact Layout:** Redesigned the Shop UI to be more compact, ensuring all items fit on mobile screens without scrolling issues.
+- **Visual Polish:** Updated shop item borders and padding for a sleeker "Elite" look.
+
 ## [v1.99.5.88] - 2026-04-11 - "ELITE MENU REDESIGN"
 - **Central Focus:** Overhauled the main menu with a centered, balanced layout.
 - **Giant Interaction:** Scaled the 'OYNA' button by 40% for a powerful visual impact.

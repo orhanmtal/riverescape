@@ -81,7 +81,7 @@
                     font-weight: bold; margin-top: 15px; letter-spacing: 0.8vmin; opacity: 0.9;
                     text-shadow: 0 0 15px rgba(255,215,0,0.4);
                     pointer-events: none;
-                " version="1.99.5.88">ELITE v1.99.5.88</div>
+                " version="1.99.5.89">ELITE v1.99.5.89</div>
             </div>
 
             <!-- CENTRAL INTERACTION ZONE -->
@@ -109,8 +109,9 @@
         <!-- PAUSE SCREEN (ELITE FULL-SCREEN v1.99.5.69) -->
         <div id="pause-screen" class="screen hidden">
             <h2 style="font-family: 'Outfit'; font-weight: 900; color: white; font-size: 8vmin; margin-bottom: 5vmin; letter-spacing: 1vmin;">DURAKLATILDI</h2>
-            <div style="display: flex; flex-direction: column; gap: 4vmin; width: 60%; max-width: 300px;">
+            <div style="display: flex; flex-direction: column; gap: 4vmin; width: 65%; max-width: 300px;">
                 <button id="resume-btn" class="elite-btn-large" style="background: linear-gradient(135deg, #00e5ff, #004d40);">DEVAM ET</button>
+                <button id="open-shop-btn-pause" class="elite-btn-large" style="background: linear-gradient(135deg, #ffd700, #ff8c00); color: #000;">MAĞAZA 🛒</button>
                 <button id="quit-btn" class="elite-btn-large" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);">ANA MENÜ</button>
             </div>
         </div>
@@ -252,13 +253,24 @@
                             <span style="font-size: 8vmin;">💎</span>
                             <div>
                                 <div id="shop-arm-title" class="shop-item-title">Gemi Zırhı</div>
-                                <div id="shop-arm-desc" class="shop-item-desc">Ekstra Dayanıklılık</div>
+                                <div id="shop-arm-desc" class="shop-item-desc">Maksimum Koruma</div>
                             </div>
                         </div>
                         <button id="buy-armor-btn" class="shop-upgrade-btn">LİSANS AL</button>
                     </div>
 
-                    <button id="ad-gold-btn" class="elite-ad-btn" style="background: rgba(255,215,0,0.1); border: 2px dashed #FFD700; color: #FFD700; padding: 5vmin; border-radius: 20px; font-weight: 900; cursor: pointer; margin-top: 2vmin;">+100 ALTIN (REKLAM)</button>
+                    <div id="shop-ammo-row" class="shop-item">
+                        <div style="display: flex; align-items: center; gap: 4vmin;">
+                            <span style="font-size: 8vmin;">📦</span>
+                            <div>
+                                <div class="shop-item-title">Mühimmat</div>
+                                <div class="shop-item-desc">+10 Enerji Topu</div>
+                            </div>
+                        </div>
+                        <button id="buy-ammo-btn" class="shop-upgrade-btn">AL (1000G)</button>
+                    </div>
+
+                    <button id="ad-gold-btn" class="elite-ad-btn" style="background: rgba(255,215,0,0.1); border: 2px dashed #FFD700; color: #FFD700; padding: 4vmin; border-radius: 20px; font-weight: 900; cursor: pointer; margin-top: 1vmin; font-size: 3.5vmin;">+100 ALTIN (REKLAM)</button>
 
                     <!-- ALTIN MARKET 💰 v1.99.5.69 RESTORED -->
                     <div style="margin-top: 8vmin; padding-bottom: 10vmin;">
@@ -284,7 +296,7 @@
                     </div>
                 </div>
 
-                <button id="shop-close-btn" style="background: linear-gradient(135deg, #ff4444, #cc0000); color: white; border: none; padding: 4vmin; border-radius: 15px; font-weight: 900; font-family: 'Outfit'; cursor: pointer; margin-top: auto; margin-bottom: 4vmin; font-size: 4.5vmin; box-shadow: 0 4px 15px rgba(255, 68, 68, 0.3);">KAPAT</button>
+                <button id="shop-close-btn" style="background: linear-gradient(135deg, #ff4444, #cc0000); color: white; border: none; padding: 3vmin; border-radius: 15px; font-weight: 900; font-family: 'Outfit'; cursor: pointer; margin-top: 5vmin; margin-bottom: 3vmin; font-size: 4.5vmin; box-shadow: 0 4px 15px rgba(255, 68, 68, 0.3); width: 100%;">KAPAT</button>
             </div>
         </div>
 
@@ -343,12 +355,12 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
 
-    <!-- Scriptleri Yükle (v1.99.5.88 Cache Buster) -->
-    <script src="translations.js?v=1.99.5.88"></script>
-    <script src="audio.js?v=1.99.5.88"></script>
-    <script src="assets.js?v=1.99.5.88"></script> 
-    <script src="game_leaderboard.js?v=1.99.5.88"></script>
-    <script src="game_store.js?v=1.99.5.88"></script>
-    <script src="game_v3.js?v=1.99.5.88"></script>
+    <!-- Scriptleri Yükle (v1.99.5.89 Cache Buster) -->
+    <script src="translations.js?v=1.99.5.89"></script>
+    <script src="audio.js?v=1.99.5.89"></script>
+    <script src="assets.js?v=1.99.5.89"></script> 
+    <script src="game_leaderboard.js?v=1.99.5.89"></script>
+    <script src="game_store.js?v=1.99.5.89"></script>
+    <script src="game_v3.js?v=1.99.5.89"></script>
 </body>
 </html>
