@@ -1,4 +1,4 @@
-// RİVER ESCAPE ELİTE - v1.99.5.89 (MASTERPIECE PURE)
+// RİVER ESCAPE ELİTE - v1.99.5.90 (MASTERPIECE PURE)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -674,8 +674,12 @@ function giveReward() {
     // Animasyonlu popup göster
     showSpinRewardPopup(popupEmoji, popupLabel, popupValue);
     
-    document.getElementById('spin-reward-msg').innerText = t.rewardPrefix + rewardLabel;
-    document.getElementById('spin-btn-main').disabled = false;
+    const srm = document.getElementById('spin-reward-msg');
+    if(srm) srm.innerText = t.rewardPrefix + rewardLabel;
+    
+    const sbm = document.getElementById('spin-btn-main');
+    if(sbm) sbm.disabled = false;
+    
     updateSpinButtonText();
 }
 
