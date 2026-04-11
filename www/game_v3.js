@@ -43,6 +43,8 @@ const HUD_UPDATE_INTERVAL = 0.1; // 100ms (10 FPS update for UI is plenty)
 const settingsScreen = document.getElementById('settings-screen');
 const settingsOpenBtn = document.getElementById('open-settings-btn');
 const settingsCloseBtn = document.getElementById('settings-close-btn');
+const shopOpenBtn = document.getElementById('open-shop-btn');
+const leaderboardBtn = document.getElementById('leaderboard-btn');
 const spinOpenBtn = document.getElementById('spin-btn');
 const spinScreen = document.getElementById('spin-screen');
 const spinCloseBtn = document.getElementById('spin-close-btn');
@@ -3584,6 +3586,36 @@ if(spinCloseBtn) spinCloseBtn.addEventListener('click', () => {
 });
 
 if(spinBtnMain) spinBtnMain.addEventListener('click', startSpin);
+
+// v1.99.5.88: CORE MENU LISTENERS (Restored)
+if(startBtn) startBtn.addEventListener('click', startGame);
+
+if(shopOpenBtn) {
+    shopOpenBtn.addEventListener('click', () => {
+        shopScreen.classList.remove('hidden');
+        shopScreen.classList.add('active');
+        shopScreen.style.display = 'flex';
+        shopScreen.style.opacity = '1';
+        shopScreen.style.zIndex = '6000';
+        updateShopUI();
+    });
+}
+
+if(leaderboardBtn) {
+    leaderboardBtn.addEventListener('click', () => {
+        if (typeof Leaderboard !== 'undefined' && Leaderboard.show) {
+            Leaderboard.show();
+        }
+    });
+}
+
+if(settingsOpenBtn) {
+    settingsOpenBtn.addEventListener('click', () => {
+        settingsScreen.classList.remove('hidden');
+        settingsScreen.classList.add('active');
+        settingsScreen.style.display = 'flex';
+    });
+}
 
 // Hard Reset moved to settings v121
 const hardResetBtnUI = document.getElementById('hard-reset-btn');
