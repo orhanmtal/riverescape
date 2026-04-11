@@ -1,4 +1,4 @@
-// RİVER ESCAPE PRESTIGE - v1.99.7.6 (SECURITY LOCK)
+// RİVER ESCAPE PRESTIGE - v1.99.7.7 (SYNTAX FIXED)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -864,7 +864,6 @@ function updateArmorUI() {
     }
     updateArmorUI();
     if(typeof updateWheelForWeapon === 'function') updateWheelForWeapon(); 
-}
 setTimeout(updateShopUI, 100);
 
 // DASH AKTİVASYON FONKSİYONU
