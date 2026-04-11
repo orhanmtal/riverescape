@@ -1,4 +1,4 @@
-// RİVER ESCAPE ELİTE - v1.99.5.90 (MASTERPIECE PURE)
+// RİVER ESCAPE ELİTE - v1.99.5.91 (MASTERPIECE PURE)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -3649,6 +3649,45 @@ if(shopPauseBtn) {
         updateShopUI();
     });
 }
+
+const settingsBackBtn = document.getElementById('settings-back-btn');
+if(settingsBackBtn) settingsBackBtn.addEventListener('click', () => {
+    settingsScreen.classList.remove('active');
+    settingsScreen.classList.add('hidden');
+    settingsScreen.style.display = 'none';
+});
+
+const logoutBtn = document.getElementById('logout-btn');
+const logoutConfirmScreen = document.getElementById('logout-confirm-screen');
+const confirmLogoutBtn = document.getElementById('confirm-logout-btn');
+const cancelLogoutBtn = document.getElementById('cancel-logout-btn');
+
+if(logoutBtn) logoutBtn.addEventListener('click', () => {
+    logoutConfirmScreen.classList.remove('hidden');
+    logoutConfirmScreen.classList.add('active');
+    logoutConfirmScreen.style.display = 'flex';
+});
+
+if(cancelLogoutBtn) cancelLogoutBtn.addEventListener('click', () => {
+    logoutConfirmScreen.classList.remove('active');
+    logoutConfirmScreen.classList.add('hidden');
+    logoutConfirmScreen.style.display = 'none';
+});
+
+if(confirmLogoutBtn) confirmLogoutBtn.addEventListener('click', async () => {
+    try {
+        if(window.gameLeaderboard && typeof window.gameLeaderboard.logout === 'function') {
+            await window.gameLeaderboard.logout();
+        } else {
+            // Fallback
+            localStorage.clear();
+            location.reload();
+        }
+    } catch(e) {
+        console.error("Logout failed:", e);
+        location.reload();
+    }
+});
 
 // Hard Reset moved to settings v121
 const hardResetBtnUI = document.getElementById('hard-reset-btn');

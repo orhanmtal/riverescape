@@ -173,37 +173,58 @@
         <!-- LEVEL UP OVERLAY (EMERGENCY FIX v1.99.5.78) -->
         <div id="level-up-overlay" class="screen hidden" style="z-index: 16000; background: rgba(0,0,0,0.85); pointer-events: none;"></div>
 
-        <!-- SETTINGS SCREEN -->
-        <div id="settings-screen" class="screen hidden" style="z-index: 15000;">
-            <h2 style="color: #FFD700; font-family: 'Outfit', sans-serif; font-weight: 900; margin-bottom: 25px; font-size: 24px; letter-spacing: 2px;">AYARLAR</h2>
-            
-            <div class="settings-item-col">
-                <div class="settings-label-row">
-                    <span class="settings-label" id="music-label-text">🎵 Müzik</span>
-                    <span id="music-vol-txt" style="color: #FFD700; font-weight: bold; font-size: 14px;">100%</span>
+        <!-- MODERN ELITE AYARLAR (v1.99.5.91) -->
+        <div id="settings-screen" class="screen hidden" style="z-index: 15000; background: linear-gradient(160deg, #050a15 0%, #0a1020 100%); width: 100vw; height: 100vh; max-width: 100%; border-radius: 0;">
+            <div style="width: 85%; max-width: 400px; padding: calc(5vmin + env(safe-area-inset-top)) 0; display: flex; flex-direction: column; align-items: center; gap: 5vmin;">
+                <h2 style="color: #FFD700; font-family: 'Outfit', sans-serif; font-weight: 900; font-size: 8vmin; letter-spacing: 0.5vmin; text-shadow: 0 0 20px rgba(255,215,0,0.3); margin-bottom: 2vmin;">AYARLAR</h2>
+                
+                <div style="width: 100%; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 5vmin; box-sizing: border-box; display: flex; flex-direction: column; gap: 5vmin;">
+                    <div class="settings-item-col">
+                        <div class="settings-label-row">
+                            <span class="settings-label" id="music-label-text">🎵 Müzik Sesi</span>
+                            <span id="music-vol-txt" style="color: #FFD700; font-weight: bold; font-size: 3.5vmin;">100%</span>
+                        </div>
+                        <input type="range" id="music-slider" min="0" max="100" value="100" class="vol-slider">
+                    </div>
+
+                    <div class="settings-item-col">
+                        <div class="settings-label-row">
+                            <span class="settings-label" id="sfx-label-text">🔊 Efekt Sesi</span>
+                            <span id="sfx-vol-txt" style="color: #FFD700; font-weight: bold; font-size: 3.5vmin;">100%</span>
+                        </div>
+                        <input type="range" id="sfx-slider" min="0" max="100" value="100" class="vol-slider">
+                    </div>
+
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 4vmin;">
+                        <span class="settings-label" id="vibration-label-text">📳 Titreşim</span>
+                        <label class="switch">
+                            <input type="checkbox" id="vibration-toggle" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
                 </div>
-                <input type="range" id="music-slider" min="0" max="100" value="100" class="vol-slider">
-            </div>
 
-            <div class="settings-item-col">
-                <div class="settings-label-row">
-                    <span class="settings-label" id="sfx-label-text">🔊 Efektler</span>
-                    <span id="sfx-vol-txt" style="color: #FFD700; font-weight: bold; font-size: 14px;">100%</span>
+                <div style="width: 100%; display: flex; flex-direction: column; gap: 3vmin; margin-top: 2vmin;">
+                    <button id="settings-close-btn" style="background: linear-gradient(135deg, #2ecc71, #27ae60); color: #fff; border: none; padding: 4vmin; border-radius: 15px; font-weight: 900; font-family: 'Outfit'; cursor: pointer; font-size: 4.5vmin; box-shadow: 0 5px 15px rgba(46, 204, 113, 0.2);">AYARLARI KAYDET</button>
+                    <button id="logout-btn" style="background: rgba(255,255,255,0.05); color: #fff; border: 1px solid rgba(255,255,255,0.1); padding: 3.5vmin; border-radius: 15px; font-weight: 700; font-family: 'Outfit'; cursor: pointer; font-size: 3.5vmin; display: flex; align-items: center; justify-content: center; gap: 2vmin;">🚪 OTURUMU KAPAT</button>
+                    <button id="hard-reset-btn" style="background: rgba(255, 68, 68, 0.05); border: 1px solid rgba(255, 68, 68, 0.2); color: #ff4444; padding: 3vmin; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 3vmin;">⚠️ TÜM VERİLERİ SIFIRLA</button>
                 </div>
-                <input type="range" id="sfx-slider" min="0" max="100" value="100" class="vol-slider">
+                
+                <button id="settings-back-btn" style="background: none; border: none; color: rgba(255,255,255,0.3); font-family: 'Outfit'; font-weight: bold; font-size: 4vmin; cursor: pointer; margin-top: auto;">GERİ DÖN 🏠</button>
             </div>
+        </div>
 
-            <div class="settings-item">
-                <span class="settings-label" id="vibration-label-text">📳 Titreşim</span>
-                <label class="switch">
-                    <input type="checkbox" id="vibration-toggle" checked>
-                    <span class="toggle-slider"></span>
-                </label>
+        <!-- MODERN LOGOUT CONFIRM MODAL -->
+        <div id="logout-confirm-screen" class="screen hidden" style="z-index: 20000; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);">
+            <div style="width: 85%; max-width: 380px; background: rgba(20, 30, 45, 0.85); border: 1px solid rgba(255,215,0,0.2); border-radius: 30px; padding: 40px 30px; text-align: center; box-shadow: 0 30px 70px rgba(0,0,0,0.6);">
+                <div style="font-size: 65px; margin-bottom: 20px; filter: drop-shadow(0 0 15px rgba(255,255,255,0.2));">🚪</div>
+                <h2 style="color: #fff; font-family: 'Outfit'; font-weight: 900; font-size: 26px; margin-bottom: 12px; letter-spacing: 1px;">ÇIKIŞ YAPILSIN MI?</h2>
+                <p style="color: rgba(255,255,255,0.6); font-family: 'Outfit'; font-size: 15px; margin-bottom: 35px; line-height: 1.5;">Oturumu kapattığınızda verileriniz bulutta güvende kalır ancak tekrar girmek için internet gereklidir.</p>
+                <div style="display: flex; flex-direction: column; gap: 15px; width: 100%;">
+                    <button id="confirm-logout-btn" style="background: linear-gradient(135deg, #ff416c, #ff4b2b); color: #fff; border: none; padding: 18px; border-radius: 18px; font-weight: 900; font-family: 'Outfit'; cursor: pointer; font-size: 17px; box-shadow: 0 4px 15px rgba(255, 65, 108, 0.3);">EVET, ÇIKIŞ YAP</button>
+                    <button id="cancel-logout-btn" style="background: rgba(255,255,255,0.05); color: #fff; border: 1px solid rgba(255,255,255,0.1); padding: 15px; border-radius: 18px; font-weight: 800; font-family: 'Outfit'; cursor: pointer; font-size: 16px;">İPTAL</button>
+                </div>
             </div>
-
-            <button id="settings-close-btn" style="background-color: #4CAF50; font-family: 'Outfit', sans-serif; font-size: 16px; font-weight:bold; padding: 14px; border-radius: 12px; width: 100%; box-sizing: border-box; align-self: stretch; color: #fff; border: none; outline:none; margin-top: 5px; cursor:pointer; box-shadow: 0 4px #2E7D32;">SAVE & CLOSE</button>
-            <button id="logout-btn" style="background-color: #333; font-family: 'Outfit', sans-serif; font-size: 12px; font-weight:bold; padding: 12px; border-radius: 12px; width: 100%; box-sizing: border-box; align-self: stretch; color: #fff; border: 1px solid #555; outline:none; margin-top: 15px; cursor:pointer; box-shadow: 0 4px #111;">🚪 OTURUMU KAPAT</button>
-            <button id="hard-reset-btn" style="background-color: #b71c1c; font-family: 'Outfit', sans-serif; font-size: 12px; font-weight:bold; padding: 12px; border-radius: 12px; width: 100%; box-sizing: border-box; align-self: stretch; color: #fff; border: none; outline:none; margin-top: 15px; cursor:pointer; opacity: 0.9; box-shadow: 0 4px #5c0000;">⚠️ RESET ALL PROGRESS</button>
         </div>
 
         <!-- MODERN ELITE MAĞAZA (GOLD MARKET DAHİL) -->
@@ -363,12 +384,12 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
 
-    <!-- Scriptleri Yükle (v1.99.5.90 Cache Buster) -->
-    <script src="translations.js?v=1.99.5.90"></script>
-    <script src="audio.js?v=1.99.5.90"></script>
-    <script src="assets.js?v=1.99.5.90"></script> 
-    <script src="game_leaderboard.js?v=1.99.5.90"></script>
-    <script src="game_store.js?v=1.99.5.90"></script>
-    <script src="game_v3.js?v=1.99.5.90"></script>
+    <!-- Scriptleri Yükle (v1.99.5.91 Cache Buster) -->
+    <script src="translations.js?v=1.99.5.91"></script>
+    <script src="audio.js?v=1.99.5.91"></script>
+    <script src="assets.js?v=1.99.5.91"></script> 
+    <script src="game_leaderboard.js?v=1.99.5.91"></script>
+    <script src="game_store.js?v=1.99.5.91"></script>
+    <script src="game_v3.js?v=1.99.5.91"></script>
 </body>
 </html>
