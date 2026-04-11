@@ -1,4 +1,4 @@
-// RİVER ESCAPE PRESTIGE - v1.99.7.0 (MASTERPIECE PURE)
+// RİVER ESCAPE PRESTIGE - v1.99.7.2 (AMMO RELOAD)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');

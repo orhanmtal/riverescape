@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>RiverEscape Mobil</title>
-    <link rel="stylesheet" href="style.css?v=1.99.7.1">
-    <!-- MASTER UI OVERRIDE (FORCE STYLE) v1.99.7.1 -->
+    <link rel="stylesheet" href="style.css?v=1.99.7.2">
+    <!-- MASTER UI OVERRIDE (FORCE STYLE) v1.99.7.2 -->
 
     <style>
         .master-play-btn {
@@ -122,7 +122,7 @@
                     font-weight: bold; margin-top: 15px; letter-spacing: 0.8vmin; opacity: 0.9;
                     text-shadow: 0 0 15px rgba(255,215,0,0.4);
                     pointer-events: none;
-                " version="1.99.7.1">PRESTIGE v1.99.7.1</div>
+                " version="1.99.7.2">PRESTIGE v1.99.7.2</div>
             </div>
 
             <!-- CENTRAL INTERACTION ZONE -->
@@ -322,11 +322,24 @@
                                 <span style="font-size: 8vmin;">💣</span>
                             </div>
                             <div>
-                                <div id="shop-wpn-title" class="shop-item-title">Mühimmat</div>
+                                <div id="shop-wpn-title" class="shop-item-title">Nehir Topu</div>
                                 <div id="shop-wpn-desc" class="shop-item-desc">Engelleri yok et!</div>
                             </div>
                         </div>
-                        <button id="buy-weapon-btn" class="shop-upgrade-btn">AL</button>
+                        <button id="buy-weapon-btn" class="shop-upgrade-btn">GELİŞTİR</button>
+                    </div>
+
+                    <div id="shop-ammo-row" class="shop-item">
+                        <div style="display: flex; align-items: center; gap: 4vmin;">
+                            <div style="width: 14vmin; height: 14vmin; background: rgba(255, 140, 0, 0.1); border: 2px solid #ff8c00; border-radius: 18px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 15px rgba(255, 140, 0, 0.2);">
+                                <span style="font-size: 8vmin;">🚀</span>
+                            </div>
+                            <div>
+                                <div class="shop-item-title">Enerji Mermisi</div>
+                                <div class="shop-item-desc">+10 Atış Hakkı</div>
+                            </div>
+                        </div>
+                        <button id="buy-ammo-btn" class="shop-upgrade-btn">AL (1000G)</button>
                     </div>
 
                     <div class="shop-item">
@@ -340,19 +353,6 @@
                             </div>
                         </div>
                         <button id="buy-armor-btn" class="shop-upgrade-btn">LİSANS AL</button>
-                    </div>
-
-                    <div id="shop-ammo-row" class="shop-item">
-                        <div style="display: flex; align-items: center; gap: 4vmin;">
-                            <div style="width: 14vmin; height: 14vmin; background: rgba(255, 255, 255, 0.05); border: 2px solid rgba(255,255,255,0.3); border-radius: 18px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 15px rgba(255,255,255,0.1);">
-                                <span style="font-size: 8vmin;">📦</span>
-                            </div>
-                            <div>
-                                <div class="shop-item-title">Mühimmat Paketi</div>
-                                <div class="shop-item-desc">+10 Enerji Topu</div>
-                            </div>
-                        </div>
-                        <button id="buy-ammo-btn" class="shop-upgrade-btn">AL (1000G)</button>
                     </div>
 
                     <button id="ad-gold-btn" class="elite-ad-btn" style="background: rgba(255,215,0,0.1); border: 2px dashed #FFD700; color: #FFD700; padding: 4vmin; border-radius: 20px; font-weight: 900; cursor: pointer; margin-top: 1vmin; font-size: 3.5vmin;">+100 ALTIN (REKLAM)</button>
@@ -456,12 +456,12 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
 
-    <!-- Scriptleri Yükle (v1.99.7.1 Cache Buster) -->
-    <script src="translations.js?v=1.99.7.1"></script>
-    <script src="audio.js?v=1.99.7.1"></script>
-    <script src="assets.js?v=1.99.7.1"></script> 
-    <script src="game_leaderboard.js?v=1.99.7.1"></script>
-    <script src="game_store.js?v=1.99.7.1"></script>
-    <script src="game_v3.js?v=1.99.7.1"></script>
+    <!-- Scriptleri Yükle (v1.99.7.2 Cache Buster) -->
+    <script src="translations.js?v=1.99.7.2"></script>
+    <script src="audio.js?v=1.99.7.2"></script>
+    <script src="assets.js?v=1.99.7.2"></script> 
+    <script src="game_leaderboard.js?v=1.99.7.2"></script>
+    <script src="game_store.js?v=1.99.7.2"></script>
+    <script src="game_v3.js?v=1.99.7.2"></script>
 </body>
 </html>
