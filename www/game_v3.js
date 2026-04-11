@@ -1,4 +1,4 @@
-// RİVER ESCAPE PRESTIGE - v1.99.7.5 (AMBER LAVA)
+// RİVER ESCAPE PRESTIGE - v1.99.7.6 (SECURITY LOCK)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -799,67 +799,8 @@ function updateArmorUI() {
     }
 }
 
-function updateShopUI() {
-    const t = translations[currentLang];
-    const tg = document.getElementById('totalGoldValue');
-    if(tg) tg.innerText = totalGold;
-    
-    // Ana Başlıklar
-    const titleMain = document.getElementById('shop-title-main');
-    if(titleMain) titleMain.innerText = t.shopTitle || "MAĞAZA";
+// v1.99.7.6: Eski updateShopUI silindi. Master sistem satır 1292'dedir.
 
-    const balanceEl = document.getElementById('shop-balance-text');
-    if(balanceEl) {
-        balanceEl.innerHTML = `${t.balance || "BAKİYE:"} <span class="gold-val-elite" style="color: #FFD700; font-weight: 900;">${totalGold.toLocaleString()}</span> GOLD`;
-    }
-    // Mıknatıs Geliştirme Kontrolü
-    let mmBtn = document.getElementById('buy-magnet-btn');
-    if(mmBtn) {
-        let price = magnetLevel < 5 ? (2000 + magnetLevel * 1000) : "MAX";
-        const lvlEl = document.getElementById('magnet-lvl');
-        if(lvlEl) lvlEl.innerText = magnetLevel;
-        const durEl = document.getElementById('magnet-duration');
-        if(durEl) {
-            const sUnit = currentLang === 'tr' ? 'sn' : 's';
-            durEl.innerText = (3 + magnetLevel * 2) + sUnit;
-        }
-        mmBtn.innerHTML = magnetLevel < 5 ? `${t.buyBtn}<br>${price}` : "MAX";
-        mmBtn.disabled = (magnetLevel >= 5 || totalGold < price);
-    }
-    
-    // Kalkan Geliştirme Kontrolü
-    let msBtn = document.getElementById('buy-shield-btn');
-    if(msBtn) {
-        if(document.getElementById('shop-shd-title')) document.getElementById('shop-shd-title').innerText = t.shieldName;
-        let price = shieldLevel < 5 ? (3500 + shieldLevel * 1500) : "MAX";
-        const slvlEl = document.getElementById('shield-lvl');
-        if(slvlEl) slvlEl.innerText = shieldLevel;
-        const schanceEl = document.getElementById('shield-chance');
-        if(schanceEl) {
-            schanceEl.innerText = "%" + (shieldLevel * 5);
-        }
-        msBtn.innerHTML = shieldLevel < 5 ? `${t.buyBtn}<br>${price}` : "MAX";
-        msBtn.disabled = (shieldLevel >= 5 || totalGold < price);
-    }
-
-    // Nehir Topu Kontrolü (v1.99.3.31.7: 5.000G & LOCKED AFTER OWNED)
-    let wb = document.getElementById('buy-weapon-btn');
-    if(wb) {
-        if(!hasWeapon) {
-            if(document.getElementById('shop-wpn-title')) document.getElementById('shop-wpn-title').innerText = t.weaponName;
-            if(document.getElementById('shop-wpn-desc')) document.getElementById('shop-wpn-desc').innerText = t.weaponDesc;
-            wb.innerHTML = `${t.buyBtn}<br>5.000`;
-            wb.disabled = (totalGold < 5000);
-        } else {
-            // LİSANSLI VE ARTIK KİLİTLİ
-            if(document.getElementById('shop-wpn-title')) document.getElementById('shop-wpn-title').innerText = t.weaponName;
-            if(document.getElementById('shop-wpn-desc')) document.getElementById('shop-wpn-desc').innerText = `Elite Mühimmat: ${bombCount}`;
-            wb.innerHTML = t.owned || "ALINDI";
-            wb.disabled = true;
-            wb.style.opacity = "0.7";
-            wb.style.background = "rgba(255,215,0,0.1)";
-        }
-    }
 
     // Elite Mühimmat Satırı Kontrolü (v1.99.4.1.11 Safety Check)
     const ammoRowElite = document.getElementById('shop-ammo-row');
