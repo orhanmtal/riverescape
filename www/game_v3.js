@@ -1,4 +1,4 @@
-// RİVER ESCAPE ELİTE - v1.99.5.77 (MASTERPIECE FINAL)
+// RİVER ESCAPE ELİTE - v1.99.5.85 (MASTERPIECE PURE)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -15,7 +15,11 @@ const resumeBtn = document.getElementById('resume-btn');
 const quitBtn = document.getElementById('quit-btn');
 const finalGoldElem = document.getElementById('finalGoldValue');
 
-const levelUpOverlay = document.getElementById('level-up-overlay');
+// v1.99.5.78: Safe Overlay Initialization
+let levelUpOverlay = document.getElementById('level-up-overlay'); 
+window.addEventListener('load', () => { 
+    levelUpOverlay = document.getElementById('level-up-overlay'); 
+});
 const reviveBtn = document.getElementById('revive-btn');
 const reviveGoldBtn = document.getElementById('revive-gold-btn');
 
@@ -768,20 +772,18 @@ function updateShopUI() {
 
     const balanceEl = document.getElementById('shop-balance-text');
     if(balanceEl) {
-        // Translation zaten ":" içeriyor, manuel eklemeyi kaldırıyoruz.
-        balanceEl.innerHTML = `${t.balance || "BAKİYE"} <span class="gold-val-elite" style="color: #FFD700;">${totalGold}</span> GOLD`;
+        balanceEl.innerHTML = `${t.balance || "BAKİYE:"} <span class="gold-val-elite" style="color: #FFD700; font-weight: 900;">${totalGold.toLocaleString()}</span> GOLD`;
     }
     // Mıknatıs Geliştirme Kontrolü
     let mmBtn = document.getElementById('buy-magnet-btn');
     if(mmBtn) {
         let price = magnetLevel < 5 ? (2000 + magnetLevel * 1000) : "MAX";
         const lvlEl = document.getElementById('magnet-lvl');
-        if(lvlEl) lvlEl.innerText = `(LVL ${magnetLevel})`;
+        if(lvlEl) lvlEl.innerText = magnetLevel;
         const durEl = document.getElementById('magnet-duration');
         if(durEl) {
             const sUnit = currentLang === 'tr' ? 'sn' : 's';
-            // t.magnetDesc zaten ":" içeriyor
-            durEl.innerText = `${t.magnetDesc || "Süre:"} ${magnetLevel > 0 ? (3 + magnetLevel * 2) + sUnit : '0' + sUnit}`;
+            durEl.innerText = (3 + magnetLevel * 2) + sUnit;
         }
         mmBtn.innerHTML = magnetLevel < 5 ? `${t.buyBtn}<br>${price}` : "MAX";
         mmBtn.disabled = (magnetLevel >= 5 || totalGold < price);
@@ -793,11 +795,10 @@ function updateShopUI() {
         if(document.getElementById('shop-shd-title')) document.getElementById('shop-shd-title').innerText = t.shieldName;
         let price = shieldLevel < 5 ? (3500 + shieldLevel * 1500) : "MAX";
         const slvlEl = document.getElementById('shield-lvl');
-        if(slvlEl) slvlEl.innerText = `(LVL ${shieldLevel})`;
+        if(slvlEl) slvlEl.innerText = shieldLevel;
         const schanceEl = document.getElementById('shield-chance');
         if(schanceEl) {
-            // t.shieldDesc zaten ":" içeriyor
-            schanceEl.innerText = `${t.shieldDesc || "Çıkma:"} %${(shieldLevel * 5)}`;
+            schanceEl.innerText = "%" + (shieldLevel * 5);
         }
         msBtn.innerHTML = shieldLevel < 5 ? `${t.buyBtn}<br>${price}` : "MAX";
         msBtn.disabled = (shieldLevel >= 5 || totalGold < price);
@@ -980,34 +981,11 @@ if(shopBtnGameOver) shopBtnGameOver.addEventListener('click', () => {
 // v1.199.3.31.10.2: ELITE QUIT PROTECTION (Gold Vault Guard)
 const quitBtnGameOver = document.getElementById('quit-btn-gameover');
 if(quitBtnGameOver) {
-    quitBtnGameOver.removeAttribute('onclick'); 
     quitBtnGameOver.onclick = () => {
         const doQuit = () => {
-            // v1.199.3.31.10.3: ALTINLAR ZATEN ANLIK KASADA! Sadece mühürle ve çık. 🏦
             saveGame();
             location.reload();
         };
-
-   const shopBtn = document.getElementById('shop-open-btn');
-const shopScreen = document.getElementById('shop-screen');
-const closeShopBtn = document.getElementById('shop-close-btn-elite');
-
-if(shopBtn) {
-    shopBtn.addEventListener('click', () => {
-        updateShopUI();
-        shopScreen.classList.remove('hidden');
-        shopScreen.classList.add('active');
-        playPowerupSound();
-    });
-}
-
-if(closeShopBtn) {
-    closeShopBtn.addEventListener('click', () => {
-        shopScreen.classList.remove('active');
-        shopScreen.classList.add('hidden');
-        saveGame();
-    });
-}
 
         if (score > 2000) {
             const t = translations[currentLang];
@@ -1019,18 +997,25 @@ if(closeShopBtn) {
     };
 }
 
-const closeShopBtnElite = document.getElementById('shop-close-btn');
-if(closeShopBtnElite) closeShopBtnElite.addEventListener('click', () => {
-    const shopScr = document.getElementById('shop-screen');
-    const menuScr = document.getElementById('start-screen');
-    shopScr.classList.remove('active');
-    shopScr.classList.add('hidden');
-    shopScr.style.display = 'none';
-    shopScr.style.opacity = '0';
-    if(!isPlaying && menuScr) {
-        menuScr.classList.remove('hidden'); // Oyunda değilsek menüyü geri getir
-    }
-});
+// v1.99.5.86: UNIFIED SHOP CONTROLS
+const shopScreen = document.getElementById('shop-screen');
+const closeShopBtn = document.getElementById('shop-close-btn');
+
+if(closeShopBtn) {
+    closeShopBtn.addEventListener('click', () => {
+        const menuScr = document.getElementById('start-screen');
+        if (shopScreen) {
+            shopScreen.classList.remove('active');
+            shopScreen.classList.add('hidden');
+            shopScreen.style.display = 'none';
+            shopScreen.style.opacity = '0';
+        }
+        if(!isPlaying && menuScr) {
+            menuScr.classList.remove('hidden'); // Oyunda değilsek menüyü geri getir
+        }
+        saveGame();
+    });
+}
 
 const armorIndicator = document.getElementById('armor-ui-indicator');
 if(armorIndicator) armorIndicator.addEventListener('click', () => {
@@ -1946,8 +1931,9 @@ function gameOver() {
     
     window.resumeScore = 0;
     window.resumeLives = 3;
+    window.resumeLevel = 1; // v1.99.5.78: Reset progression on death
     saveGame(); 
-    
+    localStorage.removeItem('riverEscapeCurrentSession'); // Seansı temizle    
     try {
         const updateEndUI = () => {
             const fsElem = document.getElementById('score-title-final');
@@ -2006,7 +1992,7 @@ window.triggerEliteEconomySync = function() {
         const charImg = document.getElementById('char-preview-img');
         const charName = document.getElementById('char-preview-name');
         if (charImg && currentLAsset) {
-            charImg.src = `assets/${currentLAsset.pKey}_player.png`;
+            charImg.src = `assets/Kayik.png`;
             if (charName) charName.innerText = currentLang === 'tr' ? currentLAsset.titleTR : currentLAsset.titleEN;
         }
 
@@ -2487,7 +2473,8 @@ function update(dt) {
         let isStraightObject = (obs.type === 'vertical' || obs.type === 'horizontal' || obs.type === 'rock');
         if (isStraightObject) obs.speedX = 0; 
         
-        obs.y += obs.speed * dt;
+        obs.y += (obs.speedY || obs.speed || 0) * dt;
+        obs.x += (obs.speedX || 0) * dt;
         
         // v1.97.0.3: ELITE DRIFT - Nesnelerin nehir kıvrımını takip etmesi
         if (currentLevel === 5) {
@@ -3452,6 +3439,51 @@ if (startScreen.classList.contains('active')) {
 }
 
 if(startBtn) startBtn.addEventListener('click', startGame);
+
+function quitToMainMenu() {
+    window.resumeLevel = 1; 
+    window.resumeScore = 0;
+    saveGame();
+    isPlaying = false;
+    isPaused = false;
+    isGameOver = false;
+    
+    // v1.99.5.78: Clear ALL UI overlays to prevent ghosting
+    const allScreens = [
+        'start-screen', 'pause-screen', 'game-over-screen', 
+        'shop-screen', 'leaderboard-screen', 'spin-screen', 
+        'settings-screen', 'level-up-overlay'
+    ];
+    allScreens.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.classList.add('hidden');
+            el.classList.remove('active');
+            el.style.display = 'none';
+        }
+    });
+
+    // Ana Menüyü göster
+    if (startScreen) {
+        startScreen.classList.remove('hidden');
+        startScreen.classList.add('active');
+        startScreen.style.display = 'flex';
+        startScreen.style.opacity = '1';
+    }
+    
+    // HUD ve Kontrolleri gizle
+    const hud = document.getElementById('modern-hud');
+    const controls = document.getElementById('controls-ui');
+    if (hud) hud.style.display = 'none';
+    if (controls) controls.style.display = 'none';
+    
+    // Background & Player Restore
+    const l1Asset = levelAssets[0];
+    bgImg = bgImgs[l1Asset.bgKey];
+    playerImg = players.ilkbahar;
+
+    if (typeof stopAllAudio === 'function') stopAllAudio();
+}
 
 if(pauseBtn) pauseBtn.addEventListener('click', togglePause);
 if(resumeBtn) resumeBtn.addEventListener('click', togglePause);

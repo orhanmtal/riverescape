@@ -1,7 +1,7 @@
 /**
- * RİVER ESCAPE ELİTE - v1.99.4.1.10 (REVENUE INTEL HUB)
+ * RİVER ESCAPE ELİTE - v1.99.5.85 (MASTERPIECE FINAL)
  * Firebase Firestore Global Sıralama ve Profil Senkronizasyon Sistemi
- * v1.99.3.30
+ * v1.99.5.85
  */
 
 const Leaderboard = {
@@ -83,20 +83,17 @@ const Leaderboard = {
                             this.updateAuthUI(true, user.displayName);
                             this.restoreFromCloud();
                         } else {
-                            console.log("👤 [ELITE AUTH] Guest Mode Activated.");
-                            this.handleGuestMode();
+                            console.log("👤 [ELITE AUTH] Authentication Required.");
+                            this.handleNoAuth();
                         }
                     } catch (authErr) {
                         console.error("❌ [ELITE AUTH] Error in State Change:", authErr);
                     }
                 });
-            } else {
-                console.warn("⚠️ [ELITE INIT] Firebase SDK NOT FOUND. Using Offline Mode.");
-                this.handleGuestMode();
             }
         } catch (e) {
             console.error("❌ [ELITE INIT] Critical Error during Firebase Setup:", e);
-            this.handleGuestMode();
+            this.handleNoAuth();
         }
 
         // Event Listener'ları Güvenli Bağla
@@ -116,26 +113,9 @@ const Leaderboard = {
         setTimeout(() => this.checkPendingSync(), 3000);
     },
 
-    handleGuestMode() {
-        // v1.99.4.1.5: OFFLINE ELITE PROTECTION 📡
-        const cachedID = localStorage.getItem('riverEscapeID');
-        const cachedName = localStorage.getItem('riverEscapeName') || "ELITE PLAYER";
-        
-        if (cachedID) {
-            console.log("📡 [ELITE AUTH] Offline Elite Detected. Granting Access.");
-            this.playerID = cachedID;
-            this.playerName = cachedName;
-            this.updateAuthUI(true, cachedName, true); // True = Offline Mode
-            
-            // İnternet gelirse diye pusuda bekle
-            window.addEventListener('online', () => {
-                console.log("🌐 [ELITE SYNC] Connection restored! Triggering cloud sync...");
-                this.checkPendingSync();
-            });
-        } else {
-            console.log("🔏 [ELITE AUTH] No cached session. Mandatory login required.");
-            this.updateAuthUI(false);
-        }
+    handleNoAuth() {
+        console.log("🔏 [ELITE AUTH] Mandatory Firebase authentication required.");
+        this.updateAuthUI(false);
     },
 
     updateAuthUI(isLoggedIn, displayName, isOffline = false) {
@@ -143,10 +123,10 @@ const Leaderboard = {
             const statusText = document.getElementById('auth-status-text');
             if (statusText) {
                 if (isLoggedIn) {
-                    statusText.innerText = isOffline ? "ELİTE OFFLINE 📡" : "ELİTE HESAP 🏛️";
-                    statusText.style.color = isOffline ? "#ffa500" : "#4caf50";
+                    statusText.innerText = isOffline ? "ELİTE BİLGİ 📡" : "ELİTE HESAP 🏛️";
+                    statusText.style.color = "#4caf50";
                 } else {
-                    statusText.innerText = "LÜTFEN GİRİŞ YAPIN 🔏";
+                    statusText.innerText = "GİRİŞ YAPMANIZ GEREKLİYOR 🔏";
                     statusText.style.color = "#ff4444";
                 }
             }
@@ -154,18 +134,16 @@ const Leaderboard = {
             const loginBtn = document.getElementById('google-login-btn');
             if (loginBtn) {
                 loginBtn.style.display = isLoggedIn ? 'none' : 'flex';
-                // Eğer offline isek ve giriş yapılmamışsa login butonunu pasif/uyarıcı yapabiliriz
-                if (!navigator.onLine && !isLoggedIn) {
-                    loginBtn.style.opacity = "0.5";
-                    loginBtn.innerText = "İNTERNET GEREKLİ 🌐";
-                }
             }
- 
-            // ELITE BUTTONS - Sadece giriş yapıldıysa (veya offline elite ise) göster! 🏛️
+            
+            // ELITE BUTTONS - v1.99.5.82: MANDATORY LOGIN ENFORCED
             const eliteButtons = ['start-btn', 'spin-btn', 'open-shop-btn', 'leaderboard-btn', 'open-settings-btn'];
             eliteButtons.forEach(id => {
                 const btn = document.getElementById(id);
-                if (btn) btn.style.display = isLoggedIn ? '' : 'none';
+                if (btn) {
+                    // SADECE GİRİŞ YAPILDIYSA GÖSTER! (Cache bypass kaldırıldı)
+                    btn.style.display = isLoggedIn ? '' : 'none';
+                }
             });
  
             const welcomeMsg = document.getElementById('auth-welcome-msg');
@@ -324,7 +302,8 @@ const Leaderboard = {
     async getGlobalRankings(callback) {
         if (!navigator.onLine || !this.db) {
             console.warn("⚠️ [LEADERBOARD] Cannot fetch rankings: Offline or No DB.");
-            callback([], { rank: '-', name: this.playerName, score: 0, flag: this.playerFlag });
+            const localHS = parseInt(localStorage.getItem('riverEscapeHighScore')) || 0;
+            callback([], { rank: '-', name: this.playerName, score: localHS, flag: this.playerFlag });
             return;
         }
 
@@ -335,25 +314,41 @@ const Leaderboard = {
                 .limit(10)
                 .get();
 
-            if (snapshot.empty) {
-                console.log("ℹ️ [LEADERBOARD] Ranking list is currently EMPTY.");
-                callback([], { rank: '-', name: this.playerName, score: 0, flag: this.playerFlag });
-                return;
-            }
-
             const rankings = [];
             let i = 1;
             snapshot.forEach(doc => {
                 rankings.push({ rank: i++, ...doc.data() });
             });
 
-            console.log(`✅ [LEADERBOARD] Successfully fetched ${rankings.length} riders.`);
-            
             // Kendi sıramızı bul
-            const myRank = rankings.find(r => r.id === this.playerID) || 
-                           { rank: '?', name: this.playerName, score: Math.floor(window.score || 0), flag: this.playerFlag };
+            let myRank = rankings.find(r => r.id === this.playerID);
             
-            callback(rankings, myRank);
+            if (myRank) {
+                callback(rankings, myRank);
+            } else {
+                // Top 10'da değiliz, gerçek sıramızı bulmaya çalışalım (Count Query)
+                try {
+                    const myDoc = await this.db.collection('leaderboard').doc(this.playerID).get();
+                    if (myDoc.exists) {
+                        const myData = myDoc.data();
+                        // v1.99.5.78: Modern Aggregate Count for Rank Calculation (Compat v9)
+                        const betterSnapshot = await this.db.collection('leaderboard')
+                            .where('score', '>', myData.score)
+                            .get();
+                        
+                        const actualRank = betterSnapshot.size + 1;
+                        callback(rankings, { rank: actualRank, ...myData });
+                    } else {
+                        // Henüz kaydımız yok, en azından skoru yerelden gösterelim
+                        const localHS = parseInt(localStorage.getItem('riverEscapeHighScore')) || 0;
+                        callback(rankings, { rank: '-', name: this.playerName, score: localHS, flag: this.playerFlag });
+                    }
+                } catch (rankErr) {
+                    console.warn("Rank fetch failed, fallback to '?'");
+                    const localHS = parseInt(localStorage.getItem('riverEscapeHighScore')) || 0;
+                    callback(rankings, { rank: '?', name: this.playerName, score: localHS, flag: this.playerFlag });
+                }
+            }
         } catch (e) {
             console.error("❌ [LEADERBOARD] Firestore Download Error:", e);
             if (typeof showToast === 'function') showToast("SIRALAMA LİSTESİ ALINAMADI!", false);
@@ -550,12 +545,21 @@ const Leaderboard = {
             });
             
             if(myRankEl && myRank) {
+                myRankEl.style.cssText = `
+                    display: flex; justify-content: space-between; align-items: center;
+                    background: rgba(0, 229, 255, 0.15); padding: 12px 15px; border-radius: 12px;
+                    border: 1px solid #00e5ff;
+                `;
                 myRankEl.innerHTML = `
                     <div style="display:flex; align-items:center; gap:12px;">
-                        <span style="color:#fff; font-weight:900;">SIRAN: ${myRank.rank || '?'}</span>
-                        <span style="color:rgba(255,255,255,0.6); font-size:11px;">SKORUN: ${Math.floor(myRank.score || 0)}</span>
+                        <span style="color:#fff; font-weight:900;">${myRank.rank || '-'}.</span>
+                        <span>${this.playerFlag}</span>
+                        <span style="font-weight:bold; color:#fff;">${this.playerName.toUpperCase()}</span>
                     </div>
-                    <span style="color:#FFD700; font-weight:900;">${this.playerFlag}</span>
+                    <div style="text-align:right;">
+                        <div style="color:#FFD700; font-weight:900;">${Math.floor(myRank.score || 0)}</div>
+                        <div style="color:rgba(255,255,255,0.4); font-size:9px; font-weight:bold;">SKORUN</div>
+                    </div>
                 `;
             }
         });

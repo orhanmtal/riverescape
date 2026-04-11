@@ -104,9 +104,9 @@ let iPI = safeLoad('Kayik_Spring', 'assets/Kayik.png', (img) => {
 });
 
 // players object already defined at top for safety v76
-let iPY = safeLoad('Kayik_Yaz', 'assets/Kayik_Yaz.png', (img) => { players.yaz = makeWhiteTransparent(img); });
-let iPS = safeLoad('Kayik_Sonbahar', 'assets/Kayik_Sonbahar.png', (img) => { players.sonbahar = makeWhiteTransparent(img); });
-let iPK = safeLoad('Kayik_Kis', 'assets/Kayik_Kis.png', (img) => { players.kis = makeWhiteTransparent(img); });
+let iPY = safeLoad('Kayik_Yaz', 'assets/Kayik.png', (img) => { players.yaz = makeWhiteTransparent(img); });
+let iPS = safeLoad('Kayik_Sonbahar', 'assets/Kayik.png', (img) => { players.sonbahar = makeWhiteTransparent(img); });
+let iPK = safeLoad('Kayik_Kis', 'assets/Kayik.png', (img) => { players.kis = makeWhiteTransparent(img); });
 
 let bgImg = bgImgIlkbahar; 
 let playerImg = iPI; 

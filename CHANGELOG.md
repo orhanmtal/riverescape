@@ -1,6 +1,29 @@
 # River Escape - Versiyon Günlükleri (CHANGELOG)
 Bu dosya, oyun motorunun ve özelliklerin versiyon versiyon nasıl geliştiğini mühürleyip saklamak için Antigravity tarafından oluşturulmuştur.
 
+## [v1.99.5.86] - 2026-04-11 - "ELITE SHOP REFINEMENT"
+- **UI Elegance:** Redesigned shop items into a more compact, mobile-friendly layout.
+- **Button Fix:** Unified shop close logic and resolved ID conflicts to ensure 100% functionality.
+- **Streamlined HUD:** Removed cluttered top-right close button in favor of a clean bottom "KAPAT" button.
+- **Visual Polish:** Adjusted font sizes and paddings for a premium "Elite" feel.
+
+## [v1.99.5.85] - 2026-04-11 - "ELITE AUTH LOCKDOWN"
+- **Mandatory Login Enforced:** Removed Guest Login functionality to ensure 100% data integrity and competitive fairness.
+- **UI Security:** Main menu buttons (Play, Shop, Leaderboard, Spin, Settings) are now hidden by default until a valid Google session is verified.
+- **Protocol Restoration:** Reverted authentication logic to strict "Google-Only" mode.
+- **Script Sync:** Unified all engine versions to v1.99.5.85 with cache-busting.
+
+## [v1.99.5.80] - 2026-04-11 - "THE ELITE ADAPTATION"
+- **Safe Area Support:** Optimized every screen (Menu, HUD, Pause) for phone notches and curved screens using `env(safe-area-inset-...)`.
+- **Responsive Revolution:** Replaced fixed `px` values with `vmin` and `flex` layouts to keep UI perfectly aligned on all screen aspect ratios.
+- **Overlap Fix:** Resolved the persistent collision between the player profile card and the "RIVER ESCAPE" logo.
+- **Elite HUD:** Refined the in-game display with better glassmorphism and padding.
+
+## [v1.99.5.78] - 2026-04-11 - "THE FAVORITE BOAT" Unification
+- **Boat Perfection:** Unified all seasonal slots (`yaz`, `sonbahar`, `kis`) to use `assets/Kayik.png` following user's preference for this specific asset.
+- **Preview Fix:** Corrected the character preview path on the start screen to use the universal `Kayik.png`.
+- **Masterpiece Standard:** Ensured the favorite pixel-art rowing character is the star across all levels.
+
 ## [v1.99.5.77] - 2026-04-10 - "THE UNSTOPPABLE BOAT"
 - **Visibility Emergency:** Added an elliptical fallback silhouette for the boat in drawPlayer to ensure visibility even when assets fail to load.
 - **Improved Fallback:** Reinforced assets.js and game_v3.js with multi-layer loading checks.

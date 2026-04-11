@@ -1,5 +1,8 @@
 # River Escape - Proje Ve Oyun Mantığı Kuralları (RULES.md)
 
+## ⚖️ KUTSAL MOBİL YASA (MOBILE-FIRST DECREE)
+> **DİKKAT:** Bu proje her şeyden önce bir **MOBİL UYGULAMA (Mobile App)** projesidir. Yapılan tüm optimizasyonlar, ekran yerleşimleri (responsiveness), dokunmatik kontroller (touch points) ve performans iyileştirmeleri öncelikli olarak mobil cihazlar (Telefon/Tablet) hedef alınarak tasarlanmak **ZORUNDADIR.** Her türlü UI değişikliği, küçük ekranlarda kusursuz çalışacak şekilde "Mobile-First" felsefesiyle inşa edilmelidir.
+
 Bu dosya, projenin "Mihenk Taşı" kalitesinde kalması ve gelecekte yapılacak her eklemede Antigravity'nin ve senin sadık kalacağın **kutsal mimari kuralları** içerir.
 
 ## 0. Seviye İlerleme ve Zorluk Kademeleri
