@@ -1,4 +1,4 @@
-// RİVER ESCAPE ELİTE - v1.99.5.96 (MASTERPIECE PURE)
+// RİVER ESCAPE ELİTE - v1.99.5.97 (MASTERPIECE PURE)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -540,6 +540,18 @@ function drawWheel() {
     ctx.arc(centerX, centerY, 5, 0, Math.PI * 2);
     ctx.fillStyle = "#FFD700";
     ctx.fill();
+
+    // v1.99.5.97: OK (CANVAS DRAWING) - Dışa taşma yapmayan mühürlü ok
+    ctx.beginPath();
+    ctx.moveTo(centerX - 15, 5); // Üst sol
+    ctx.lineTo(centerX + 15, 5); // Üst sağ
+    ctx.lineTo(centerX, 35);    // Alt orta (uç)
+    ctx.closePath();
+    ctx.fillStyle = "#FFD700";
+    ctx.shadowBlur = 10;
+    ctx.shadowColor = "rgba(255,215,0,0.8)";
+    ctx.fill();
+    ctx.shadowBlur = 0; // Reset shadow
 }
 
 function startSpin() {
