@@ -1,4 +1,4 @@
-// RİVER ESCAPE PRESTIGE - v1.99.7.2 (AMMO RELOAD)
+// RİVER ESCAPE PRESTIGE - v1.99.7.3 (SYSTEM SYNC)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
