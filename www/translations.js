@@ -1,4 +1,4 @@
-// River Escape - Dil Paketleri (TR/EN) - v1.99.5.92 (ELITE MASTERPIECE)
+// River Escape - Dil Paketleri (TR/EN) - v1.99.5.94 (ELITE MASTERPIECE)
 const translations = {
     tr: {
         startDesc: "",
