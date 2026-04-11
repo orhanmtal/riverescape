@@ -1,4 +1,4 @@
-// RİVER ESCAPE PRESTIGE - v1.99.8.3 (CENTERED PRESTIGE)
+// RİVER ESCAPE PRESTIGE - v1.99.8.4 (WEAPON LOCKDOWN)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -1222,6 +1222,12 @@ function updateShopUI() {
                 buyABtn.disabled = (totalGold < 5000);
             }
         }
+        // Silah Lisansı Yoksa Mühimmat Satırını Gizle (v1.99.8.4)
+        const ammoRowElem = document.getElementById('shop-ammo-row');
+        if(ammoRowElem) {
+            ammoRowElem.style.display = hasWeapon ? 'flex' : 'none';
+        }
+
         // BOMBA BUTONU & HUD SYNC
         let bBadge = document.getElementById('bomb-badge');
         if (bBadge) bBadge.innerText = bombCount;
@@ -1304,7 +1310,7 @@ function reviveWithGold() {
 }
 
 function fireBomb() {
-    if (!isPlaying || isPaused || isGameOver) return;
+    if (!isPlaying || isPaused || isGameOver || !hasWeapon) return; // v1.99.8.4 LOCKDOWN
 
     if (bombCount <= 0) {
         if (hasWeapon) {
