@@ -1,4 +1,4 @@
-// RİVER ESCAPE PRESTIGE - v1.99.7.9 (ELITE PURITY)
+// RİVER ESCAPE PRESTIGE - v1.99.8.0 (DASH OVERRIDE)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
