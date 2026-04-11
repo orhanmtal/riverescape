@@ -1201,12 +1201,22 @@ function updateShopUI() {
             }
         }
 
-        // Armor Toggle (Elite logic)
+        // Armor Toggle (Elite Void logic)
+        const armRow = document.getElementById('shop-armor-row');
+        const isVoidLevel = (currentLevel > 0 && currentLevel % 6 === 0);
+        
+        if(armRow) {
+            armRow.style.display = isVoidLevel ? 'flex' : 'none';
+        }
+
         const buyABtn = document.getElementById('buy-armor-btn');
-        if(buyABtn) {
+        if(buyABtn && isVoidLevel) {
             if(ownsArmorLicense) {
-                buyABtn.innerText = `AKTİF (${armorCharge})`;
-                buyABtn.disabled = (armorCharge >= 5);
+                const price = 1000;
+                buyABtn.innerText = `ŞARJ ET (${armorCharge})\n${price} G`;
+                buyABtn.disabled = (totalGold < price || armorCharge >= 5);
+                if(document.getElementById('shop-arm-title')) document.getElementById('shop-arm-title').innerText = "Zırh Şarjı (Mühimmat)";
+                if(document.getElementById('shop-arm-desc')) document.getElementById('shop-arm-desc').innerText = "Zırhını %100 Hazırla!";
             } else {
                 buyABtn.innerText = "LİSANS AL\n5000 G";
                 buyABtn.disabled = (totalGold < 5000);
