@@ -1,4 +1,5 @@
-// RİVER ESCAPE ELİTE - v1.99.5.99 (MASTERPIECE PURE)
+// RİVER ESCAPE ELİTE - v1.99.5.99 (MASTERPIECE PURE) -> v1.99.6.0
+// PRODUCTION READY - MAJOR UI SYNC v1.99.6.0
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -1054,14 +1055,29 @@ if(closeShopBtn) {
             shopScreen.classList.remove('active');
             shopScreen.classList.add('hidden');
             shopScreen.style.display = 'none';
-            shopScreen.style.opacity = '0';
         }
-        if(!isPlaying && menuScr) {
-            menuScr.classList.remove('hidden'); // Oyunda değilsek menüyü geri getir
+        // v1.99.6.0: Akıllı Geri Dönüş
+        if(isPlaying) {
+            const pauseScr = document.getElementById('pause-screen');
+            if(pauseScr && isPaused) {
+                pauseScr.classList.remove('hidden');
+                pauseScr.classList.add('active');
+                pauseScr.style.display = 'flex';
+                pauseScr.style.zIndex = '10000';
+            }
+        } else {
+            const menuScr = document.getElementById('start-screen');
+            if(menuScr) {
+                menuScr.classList.remove('hidden');
+                menuScr.classList.add('active');
+                menuScr.style.display = 'flex';
+                menuScr.style.zIndex = '100';
+            }
         }
         saveGame();
     });
 }
+
 
 const armorIndicator = document.getElementById('armor-ui-indicator');
 if(armorIndicator) armorIndicator.addEventListener('click', () => {
@@ -3647,15 +3663,20 @@ const shopPauseBtn = document.getElementById('open-shop-btn-pause');
 if(shopPauseBtn) {
     shopPauseBtn.onclick = () => {
         const sScr = document.getElementById('shop-screen');
+        const pScr = document.getElementById('pause-screen');
         if(sScr) {
+            // v1.99.6.0: Pause menüsünü gizle (Mühürlü Geçiş)
+            if(pScr) pScr.classList.add('hidden');
+            
             sScr.classList.remove('hidden');
             sScr.classList.add('active');
             sScr.style.display = 'flex';
-            sScr.style.zIndex = '25000'; // Elite Katman Mühürlendi
+            sScr.style.zIndex = '30000'; 
             updateShopUI();
         }
     };
 }
+
 
 
 // Settings back functionality handled in Elite section
