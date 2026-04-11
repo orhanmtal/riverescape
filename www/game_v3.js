@@ -1,4 +1,4 @@
-// RİVER ESCAPE ELİTE - v1.99.6.3 (MASTERPIECE PURE)
+// RİVER ESCAPE ELİTE - v1.99.6.4 (MASTERPIECE PURE)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -983,8 +983,12 @@ if(eliteSpinBtn) eliteSpinBtn.onclick = () => {
         if(menuScr) menuScr.classList.add('hidden');
         sScr.style.display = 'flex';
         sScr.style.zIndex = '25000';
+        // v1.99.6.4: Çarkı Çiz ve Bakiyeyi Güncelle (RESTORATION)
+        if(typeof updateSpinLiveBar === 'function') updateSpinLiveBar();
+        if(typeof drawWheel === 'function') drawWheel();
     }
 };
+
 
 if(eliteOynaBtn) eliteOynaBtn.onclick = () => {
     playHaptic('light');
