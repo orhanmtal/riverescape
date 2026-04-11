@@ -1,4 +1,4 @@
-// RİVER ESCAPE PRESTIGE - v1.99.8.6 (PURPLE V-RELOAD)
+// RİVER ESCAPE PRESTIGE - v1.99.8.7 (LEFT SHIELD HUD)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
