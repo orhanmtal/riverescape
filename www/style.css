@@ -777,33 +777,55 @@ input:checked + .toggle-slider:before {
     background-clip: text;
     animation: shimmerText 2.5s linear infinite;
     text-shadow: none !important;
+}
+
 .shop-item {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
     padding: 2.5vmin 4vmin;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    transition: all 0.3s ease;
-    backdrop-filter: blur(5px);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    margin-bottom: 2vmin;
+    position: relative;
+    overflow: hidden;
+}
+
+.shop-item::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+    transform: translateX(-100%);
+    transition: 0.6s;
+}
+
+.shop-item:hover::before {
+    transform: translateX(100%);
 }
 
 .shop-item:hover {
-    transform: translateY(-2px);
-    background: rgba(255, 255, 255, 0.08);
+    transform: scale(1.02);
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 215, 0, 0.3);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.4);
 }
 
 .shop-item-title {
     color: #fff;
     font-family: 'Outfit', sans-serif;
-    font-size: 18px;
+    font-size: 19px;
     font-weight: 800;
-    letter-spacing: 0.3px;
+    letter-spacing: 0.5px;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.5);
 }
 
 .shop-item-desc {
-    color: rgba(255, 255, 255, 0.5);
+    color: rgba(255, 255, 255, 0.6);
     font-family: 'Outfit', sans-serif;
     font-size: 13px;
     margin-top: 4px;
@@ -811,23 +833,32 @@ input:checked + .toggle-slider:before {
 }
 
 .shop-upgrade-btn {
-    background: linear-gradient(135deg, #00e5ff 0%, #00acc1 100%);
+    background: linear-gradient(135deg, #FFD700 0%, #ff8c00 100%);
     border: none;
     outline: none;
     color: #000;
     font-family: 'Press Start 2P', sans-serif;
-    font-size: 8px;
-    padding: 12px 16px;
-    border-radius: 12px;
+    font-size: 9px;
+    padding: 14px 18px;
+    border-radius: 14px;
     cursor: pointer;
-    font-weight: bold;
-    box-shadow: 0 4px 15px rgba(0, 229, 255, 0.3);
-    transition: all 0.2s ease;
-    min-width: 90px;
+    font-weight: 900;
+    box-shadow: 0 6px 20px rgba(255, 215, 0, 0.3);
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    min-width: 100px;
     text-align: center;
+    text-transform: uppercase;
+}
+
+.shop-upgrade-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(255, 215, 0, 0.5);
 }
 
 .shop-upgrade-btn:active {
+    transform: scale(0.95);
+}
+
     transform: scale(0.95);
     filter: brightness(0.9);
 }
