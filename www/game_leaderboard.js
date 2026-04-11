@@ -1,7 +1,7 @@
 /**
- * RİVER ESCAPE ELİTE - v1.99.8.9 (DIAMOND SHIELD HUD)
+ * RİVER ESCAPE ELİTE - v1.99.9.0 (PURE DIAMOND SYNC)
  * Firebase Firestore Global Sıralama ve Profil Senkronizasyon Sistemi
- * v1.99.8.9
+ * v1.99.9.0
  */
 
 const Leaderboard = {

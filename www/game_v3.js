@@ -1,4 +1,4 @@
-// RİVER ESCAPE PRESTIGE - v1.99.8.9 (DIAMOND SHIELD HUD)
+// RİVER ESCAPE PRESTIGE - v1.99.9.0 (PURE DIAMOND SYNC)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -1214,7 +1214,7 @@ function updateShopUI() {
             const iconSpan = document.querySelector('#shop-armor-row span');
             if (ownsArmorLicense) {
                 const price = 1000;
-                if(iconSpan) iconSpan.innerText = "⏫"; // Görseldeki V-Enerji Kalkanı formu (v1.99.8.6)
+                if(iconSpan) iconSpan.innerText = "💎"; // Saf Elmas Formu (v1.99.9.0)
                 buyABtn.innerText = `ŞARJ ET (${armorCharge})\n${price} G`;
                 buyABtn.disabled = (totalGold < price || armorCharge >= 10); // v1.99.8.8 Heavy Armor Limit
                 if (document.getElementById('shop-arm-title')) document.getElementById('shop-arm-title').innerText = "Zırh Şarjı (Mühimmat)";
