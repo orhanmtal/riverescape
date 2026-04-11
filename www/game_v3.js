@@ -1115,31 +1115,10 @@ if(buyWeaponBtn) buyWeaponBtn.addEventListener('click', () => {
             showToast(t.noGold, false);
         }
     } else {
-        // v1.99.5.1: ELITE SHOP BINDINGS (Magnet, Shield, Weapon, Armor)
-const btnMagElite = document.getElementById('buy-magnet-btn-elite');
-if(btnMagElite) {
-    btnMagElite.addEventListener('click', () => {
-        buyMagnet();
-    });
-}
-
-const btnShdElite = document.getElementById('buy-shield-btn-elite');
-if(btnShdElite) {
-    btnShdElite.addEventListener('click', () => {
-        buyShield();
-    });
-}
-
-const buyWeaponBtnElite = document.getElementById('buy-weapon-btn-elite');
-if(buyWeaponBtnElite) {
-    buyWeaponBtnElite.addEventListener('click', () => {
-        buyWeapon();
-    });
-}
-
-const adGoldBtnElite = document.getElementById('ad-gold-btn-elite');
-if(adGoldBtnElite) {
-    adGoldBtnElite.addEventListener('click', () => {
+// v1.99.5.87: UNIFIED ELITE SHOP BINDINGS
+const adGoldBtn = document.getElementById('ad-gold-btn');
+if(adGoldBtn) {
+    adGoldBtn.addEventListener('click', () => {
         showAdForGold();
     });
 }
@@ -1219,7 +1198,6 @@ function buyArmorLicense() {
 
 function updateShopUI() {
     try {
-        // v1.99.5.1: Multiple Gold Displays
         const tv = document.getElementById('totalGoldValue');
         const tvShop = document.getElementById('totalGoldValue-shop');
         if(tv) tv.innerText = totalGold;
@@ -1238,35 +1216,30 @@ function updateShopUI() {
         if(mLvl) mLvl.innerText = magnetLevel;
         if(sLvl) sLvl.innerText = shieldLevel;
 
-        const mp = document.getElementById('magnet-price');
-        const sp = document.getElementById('shield-price');
-        const mBtn = document.getElementById('buy-magnet-btn-elite');
-        const sBtn = document.getElementById('buy-shield-btn-elite');
-
-        if(mp) mp.innerText = mPrice;
-        if(sp) sp.innerText = sPrice;
+        const mBtn = document.getElementById('buy-magnet-btn');
+        const sBtn = document.getElementById('buy-shield-btn');
 
         if(mBtn) mBtn.disabled = (totalGold < mPrice || magnetLevel >= 10);
         if(sBtn) sBtn.disabled = (totalGold < sPrice || shieldLevel >= 10);
 
         // Weapon Toggle
-        const weaponRow = document.getElementById('shop-weapon-row-elite');
-        const buyWBtn = document.getElementById('buy-weapon-btn-elite');
+        const buyWBtn = document.getElementById('buy-weapon-btn');
         if(buyWBtn) {
             if(hasWeapon) {
                 buyWBtn.innerText = "SAHİPSİN";
                 buyWBtn.disabled = true;
             } else {
+                buyWBtn.innerText = "AL\n5000 G";
                 buyWBtn.disabled = (totalGold < 5000);
             }
         }
 
         // Armor Toggle (Elite logic)
-        const buyABtn = document.getElementById('buy-armor-btn-elite');
+        const buyABtn = document.getElementById('buy-armor-btn');
         if(buyABtn) {
             if(ownsArmorLicense) {
                 buyABtn.innerText = `AKTİF (${armorCharge})`;
-                buyABtn.disabled = (armorCharge >= 5); // v1.95: Max 5 charge
+                buyABtn.disabled = (armorCharge >= 5);
             } else {
                 buyABtn.innerText = "LİSANS AL\n5000 G";
                 buyABtn.disabled = (totalGold < 5000);
