@@ -1,4 +1,4 @@
-// RİVER ESCAPE PRESTIGE - v1.99.7.8 (CACHE KILLER)
+// RİVER ESCAPE PRESTIGE - v1.99.7.9 (ELITE PURITY)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -802,68 +802,8 @@ function updateArmorUI() {
 // v1.99.7.6: Eski updateShopUI silindi. Master sistem satır 1292'dedir.
 
 
-    // Elite Mühimmat Satırı Kontrolü (v1.99.4.1.11 Safety Check)
-    const ammoRowElite = document.getElementById('shop-ammo-row');
-    if(ammoRowElite) {
-        if(hasWeapon) {
-            ammoRowElite.style.display = 'flex';
-            const bAmmoBtn = document.getElementById('buy-ammo-btn');
-            if(bAmmoBtn) {
-                bAmmoBtn.disabled = (totalGold < 1000);
-                const aDesc = document.getElementById('shop-ammo-desc');
-                if(aDesc) aDesc.innerText = `+10 Mermi (Mevcut: ${bombCount})`;
-            }
-        } else {
-            ammoRowElite.style.display = 'none';
-        }
-    }
-
-    // Gemi Zırhı Kontrolü (v1.99.4.1.11 Safety Sweep)
-    let ab = document.getElementById('buy-armor-btn');
-    if(ab) {
-        let isVoidLevel = (currentLevel % 6 === 0);
-        const titleEl = document.getElementById('shop-arm-title');
-        const descEl = document.getElementById('shop-arm-desc');
-        if(!isVoidLevel) {
-            if(titleEl) titleEl.innerText = t.armorName || "Zırh";
-            if(descEl) descEl.innerText = "Sadece Lvl 6, 12, 18...";
-            ab.innerText = `KİLİTLİ`;
-            ab.disabled = true;
-            ab.style.background = "#444";
-        } else {
-            ab.style.background = "linear-gradient(135deg, #8e44ad, #9b59b6)";
-            if(window.ownsArmorLicense) {
-                if (window.armorCharge <= 0) window.armorCharge = 3;
-                if(titleEl) titleEl.innerText = t.armorAmmoName || "Zırh Aktif";
-                if(descEl) descEl.innerText = `Elite Lisans Aktif! %100 Hazır.`;
-                ab.innerHTML = `HAZIR`;
-                ab.disabled = true;
-                ab.style.opacity = "0.8";
-                ab.style.background = "linear-gradient(135deg, #4CAF50, #2E7D32)"; 
-            } else {
-                if(titleEl) titleEl.innerText = t.armorName || "Zırh";
-                if(descEl) descEl.innerText = t.armorDesc || "Zırh Paketi";
-                ab.innerHTML = `${t.buyBtn}<br>5.000`;
-                ab.disabled = (totalGold < 5000);
-            }
-        }
-    }
-
-    // BOMBA BUTONU SAYAÇ GÜNCELLEMESİ
-    let bBadge = document.getElementById('bomb-badge');
-    if(bBadge) bBadge.innerText = bombCount;
-
-    let bBtn = document.getElementById('bomb-action-btn');
-    if(bBtn) {
-        if(window.hasWeapon) {
-            bBtn.style.display = 'flex';
-            bBtn.style.filter = (bombCount <= 0) ? "grayscale(100%) opacity(0.6)" : "none";
-        } else {
-            bBtn.style.display = 'none';
-        }
-    }
-    updateArmorUI();
-    if(typeof updateWheelForWeapon === 'function') updateWheelForWeapon(); 
+// v1.99.7.9: THE ULTIMATE ELITE CLEANUP. Orphaned legacy blocks removed.
+ 
 setTimeout(updateShopUI, 100);
 
 // DASH AKTİVASYON FONKSİYONU
@@ -1147,14 +1087,8 @@ if(buyWeaponBtn) buyWeaponBtn.addEventListener('click', () => {
             if(typeof playHaptic === 'function') playHaptic('light');
             showToast(t.noGold, false);
         }
-    } else {
-// v1.99.5.87: UNIFIED ELITE SHOP BINDINGS
-const adGoldBtn = document.getElementById('ad-gold-btn');
-if(adGoldBtn) {
-    adGoldBtn.addEventListener('click', () => {
-        showAdForGold();
-    });
-}
+    }
+});
 
 // v1.99.5.3: GLOBAL SHOP FUNCTIONS (Elite Logic)
 function buyMagnet() {
@@ -1278,11 +1212,19 @@ function updateShopUI() {
                 buyABtn.disabled = (totalGold < 5000);
             }
         }
+        // BOMBA BUTONU & HUD SYNC
+        let bBadge = document.getElementById('bomb-badge');
+        if(bBadge) bBadge.innerText = bombCount;
+        let bBtn = document.getElementById('bomb-action-btn');
+        if(bBtn) {
+            if(hasWeapon) {
+                bBtn.style.display = 'flex';
+                bBtn.style.filter = (bombCount <= 0) ? "grayscale(100%) opacity(0.6)" : "none";
+            } else { bBtn.style.display = 'none'; }
+        }
+        updateArmorUI();
     } catch(e) { console.warn("Shop UI Error:", e); }
 }
-        showToast(t.owned || "ALINDI", true);
-    }
-});
 
 if(buyAmmoBtn) buyAmmoBtn.addEventListener('click', () => {
     const t = translations[currentLang];
