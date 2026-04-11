@@ -1,4 +1,4 @@
-// RİVER ESCAPE PRESTIGE - v1.99.8.4 (WEAPON LOCKDOWN)
+// RİVER ESCAPE PRESTIGE - v1.99.8.5 (UNIVERSAL AUTH)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');

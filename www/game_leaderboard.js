@@ -1,7 +1,7 @@
 /**
- * RİVER ESCAPE ELİTE - v1.99.5.87 (MASTERPIECE FINAL)
+ * RİVER ESCAPE ELİTE - v1.99.8.5 (UNIVERSAL AUTH)
  * Firebase Firestore Global Sıralama ve Profil Senkronizasyon Sistemi
- * v1.99.5.87
+ * v1.99.8.5
  */
 
 const Leaderboard = {
@@ -500,10 +500,20 @@ const Leaderboard = {
                     console.log("✅ [ELITE AUTH] Modern Giriş Başarılı:", userCredential.user.displayName);
                 }
             } else {
-                console.log("💻 [ELITE AUTH] Web/Mobile Browser, Redirect Flow Triggered...");
+                console.log("💻 [ELITE AUTH] Platform Algılanıyor...");
                 const provider = new firebase.auth.GoogleAuthProvider();
                 provider.setCustomParameters({ prompt: 'select_account' });
-                await this.auth.signInWithRedirect(provider);
+
+                // v1.99.8.5: Web Browser ise Popup, Native ise Redirect kullan
+                const isWebBrowser = !window.Capacitor || window.Capacitor.getPlatform() === 'web';
+
+                if (isWebBrowser) {
+                    console.log("🖥️ [ELITE AUTH] Web Tarayıcı: Popup Kullanılıyor (Block Fix)");
+                    await this.auth.signInWithPopup(provider);
+                } else {
+                    console.log("📱 [ELITE AUTH] Mobil Uygulama: Redirect Kullanılıyor");
+                    await this.auth.signInWithRedirect(provider);
+                }
             }
         } catch (e) {
             console.error("❌ [ELITE AUTH] Giriş Hatası:", e);
