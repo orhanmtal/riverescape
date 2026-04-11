@@ -1,4 +1,4 @@
-// RİVER ESCAPE PRESTIGE - v1.99.7.3 (SYSTEM SYNC)
+// RİVER ESCAPE PRESTIGE - v1.99.7.4 (MAGMA CORE)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
