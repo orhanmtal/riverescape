@@ -1,4 +1,4 @@
-// RİVER ESCAPE PRESTIGE - v1.99.11.0 (LAVA REIGN)
+// RİVER ESCAPE PRESTIGE - v1.99.12.0 (DUAL-CONTROL)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -1385,24 +1385,68 @@ window.addEventListener('keyup', (e) => {
 
 let touchX = null;
 let touchY = null;
+let moveTouchId = null; // v1.99.12.0: MULTI-TOUCH TRACKING
+
 canvas.addEventListener('touchstart', (e) => {
     e.preventDefault();
-    initAudio();
+    if (typeof initAudio === 'function') initAudio();
 
-    // DOUBLE TAP DASH KONTROLÜ
-    let now = performance.now();
-    if (window.lastTap && (now - window.lastTap) < 300) {
-        activateDash();
-    }
-    window.lastTap = now;
+    // v1.99.12.0: Akıllı Multi-Touch Sistemi
+    for (let i = 0; i < e.changedTouches.length; i++) {
+        let touch = e.changedTouches[i];
+        let rect = canvas.getBoundingClientRect();
+        let tx = touch.clientX - rect.left;
+        let ty = touch.clientY - rect.top;
 
-    if (e.touches.length > 0) {
-        touchX = e.touches[0].clientX - canvas.getBoundingClientRect().left;
-        touchY = e.touches[0].clientY - canvas.getBoundingClientRect().top;
+        // Ekranın sol %65'inden başlıyorsa ve henüz bir hareket parmağı yoksa kilitle
+        if (moveTouchId === null && tx < canvas.width * 0.65) {
+            moveTouchId = touch.identifier;
+            touchX = tx;
+            touchY = ty;
+            
+            // DOUBLE TAP DASH (Sadece yönlendirme parmağı için)
+            let now = performance.now();
+            if (window.lastTap && (now - window.lastTap) < 300) {
+                activateDash();
+            }
+            window.lastTap = now;
+        }
     }
 }, { passive: false });
-canvas.addEventListener('touchmove', (e) => { e.preventDefault(); if (e.touches.length > 0) { touchX = e.touches[0].clientX - canvas.getBoundingClientRect().left; touchY = e.touches[0].clientY - canvas.getBoundingClientRect().top; } }, { passive: false });
-canvas.addEventListener('touchend', () => { touchX = null; touchY = null; });
+
+canvas.addEventListener('touchmove', (e) => {
+    e.preventDefault();
+    for (let i = 0; i < e.changedTouches.length; i++) {
+        let touch = e.changedTouches[i];
+        if (touch.id === moveTouchId || touch.identifier === moveTouchId) {
+            let rect = canvas.getBoundingClientRect();
+            touchX = touch.clientX - rect.left;
+            touchY = touch.clientY - rect.top;
+        }
+    }
+}, { passive: false });
+
+canvas.addEventListener('touchend', (e) => {
+    for (let i = 0; i < e.changedTouches.length; i++) {
+        let touch = e.changedTouches[i];
+        if (touch.identifier === moveTouchId) {
+            moveTouchId = null;
+            touchX = null;
+            touchY = null;
+        }
+    }
+});
+
+canvas.addEventListener('touchcancel', (e) => {
+    for (let i = 0; i < e.changedTouches.length; i++) {
+        let touch = e.changedTouches[i];
+        if (touch.identifier === moveTouchId) {
+            moveTouchId = null;
+            touchX = null;
+            touchY = null;
+        }
+    }
+});
 canvas.addEventListener('mousedown', initAudio); // PC için güvenlik kırma
 
 
@@ -1496,9 +1540,11 @@ function spawnObstacle() {
         else if (biomeIndex === 4) allowedSpecialTypes.push('lavaGeyser', 'fireball'); // Lav (Gayzer/Ateş)
         else if (biomeIndex === 5) allowedSpecialTypes.push('asteroid', 'comet'); // Boşluk (Asteroit)
         
-        // Elite Seviyelerde (Lav ve Boşluk) basit kütükleri çıkar
+        // v2.6: ELITE NO-LOG ZONE (Lav ve Boşluk dünyalarında basit kütükler YASAK!)
         if (biomeIndex < 4) {
              allowedSpecialTypes.push('vertical', 'horizontal');
+        } else {
+            // Level 5, 6, 11, 12... gibi Elite seviyelerde kütükler ASLA görünemez.
         }
 
         // Girdap Kuralı: İlkbahar ve Sonbahar hariç her yerde olabilir (L3'te hortum var)
@@ -1593,8 +1639,6 @@ function spawnObstacle() {
                     state: 'dormant',
                     stateTimer: 2.0 + Math.random() * 2,
                     isElite: true
-                });
-            }
                 });
             }
         } else if (selectedType === 'fireball') {
@@ -2388,6 +2432,16 @@ function update(dt) {
                 obs.speedX = (diffX > 0 ? 50 : -50) + naturalSway;
                 if (Math.abs(diffX) < 15) obs.speedX = naturalSway * 0.5;
             }
+
+            // v2.7: RIVER BOUNDARY FOR CROCS (Timsahlar karaya çıkamaz!)
+            const cMargin = currentLAsset ? currentLAsset.margin : 0.35;
+            const rShift = (typeof getRiverShift === 'function') ? getRiverShift(obs.y) : 0;
+            const bLeft = (canvas.width * cMargin) + rShift + 10;
+            const bRight = (canvas.width * (1 - cMargin)) + rShift - obs.width - 10;
+            
+            // Eğer karaya çok yaklaşırsa hızı ve konumu sınırla
+            if (obs.x < bLeft) { obs.x = bLeft; if(obs.speedX < 0) obs.speedX = 0; }
+            if (obs.x > bRight) { obs.x = bRight; if(obs.speedX > 0) obs.speedX = 0; }
         } else if (obs.type === 'whirlpool' || obs.type === 'leafTornado') {
             obs.rotation += dt * 300; // Görsel dönüş hızı
 
@@ -2568,7 +2622,7 @@ function update(dt) {
     // v1.97.0.3: STRICT "ELITE" CLAMPING (Never touch walls)
     const finalPMargin = currentLAsset ? currentLAsset.margin : 0.32;
     const finalShift = getRiverShift(player.y);
-    const wallSafeBuffer = 8; // v1.97.0.3: Stresi azaltan güvenli mesafe tamponu
+    const wallSafeBuffer = 18; // v1.99.11.0: Kayığın karaya çıkmasını önleyen genişletilmiş güvenlik tamponu
     const fLeft = (canvas.width * finalPMargin) + finalShift + wallSafeBuffer;
     const fRight = (canvas.width * (1 - finalPMargin)) + finalShift - player.width - wallSafeBuffer;
 

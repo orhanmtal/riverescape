@@ -1,6 +1,12 @@
 # River Escape - Versiyon Günlükleri (CHANGELOG)
 Bu dosya, oyun motorunun ve özelliklerin versiyon versiyon nasıl geliştiğini mühürleyip saklamak için Antigravity tarafından oluşturulmuştur.
 
+## [v1.99.12.0] "DUAL-CONTROL" - 2026-04-13
+- **Dual-Hand Multi-Touch:** Independent steering and action processing. Left hand manages movement while right hand triggers buttons without interruption.
+- **Move-Lock System:** Introduced `moveTouchId` to prevent boat "jitter" when multiple fingers interact with the screen.
+- **Smart Zone Splitting:** Canvas divided into Steering (Left 65%) and Action (Right 35%) zones for ergonomic mobile play.
+- **Edge Buffer Refinement:** Increased `wallSafeBuffer` to 18px for safer navigation near riverbanks.
+
 ## [v1.99.11.0] "ELITE ADRENALINE" - 2026-04-13
 - **Level 4 Balancing:** Widened the Winter River (margin 0.39 -> 0.35) after tester feedback for better maneuverability.
 - **Lava Geyser (Level 5):** Implemented high-fidelity procedural magma pillars with a 3-stage eruption cycle.
