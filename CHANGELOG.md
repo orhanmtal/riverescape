@@ -1,6 +1,14 @@
 # River Escape - Versiyon Günlükleri (CHANGELOG)
 Bu dosya, oyun motorunun ve özelliklerin versiyon versiyon nasıl geliştiğini mühürleyip saklamak için Antigravity tarafından oluşturulmuştur.
 
+## [v1.99.12.2] "ELITE CYCLE" - 2026-04-13
+- **Elite Spawner Cycle:** Implemented specialized 6-level biome rotation (L7=1, L8=2, etc.) for theme consistency.
+- **Biome Restrictions:** Crocodiles, Hippos, and Logs are now strictly forbidden in Level 5 (Lava) and Level 6 (Void) biomes.
+- **Vertical Spacing Guard:** Introduced a 250px vertical spawn gap to prevent impossible "obstacle walls."
+- **Level 4 Triangle Restoration:** Re-added `iceBerg` (Triangles) and integrated a new high-fidelity ice rock asset.
+- **Dash Buff:** Increased `DASH_DURATION` to 1.2s for enhanced horizontal maneuverability and tester satisfaction.
+- **Level 1 Balance:** Hard-capped early-game density (Max 3 items) and synchronized score-based special spawning.
+
 ## [v1.99.12.0] "DUAL-CONTROL" - 2026-04-13
 - **Dual-Hand Multi-Touch:** Independent steering and action processing. Left hand manages movement while right hand triggers buttons without interruption.
 - **Move-Lock System:** Introduced `moveTouchId` to prevent boat "jitter" when multiple fingers interact with the screen.

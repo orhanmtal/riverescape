@@ -146,7 +146,7 @@ loadIndividualTiles('ilkbahar', 'assets/rock_elite_spring.png', 'assets/Kutuk.pn
 loadIndividualTiles('yaz', 'assets/rock_elite_summer.png', 'assets/Kutuk.png', 'assets/Timsah.png', 'assets/Hippo.png');
 loadIndividualTiles('sonbahar', 'assets/rock_elite_autumn.png', 'assets/Kutuk.png', 'assets/Timsah.png', 'assets/Hippo.png');
 
-loadIndividualTiles('kis', '', 'assets/Kutuk.png', 'assets/Timsah.png', 'assets/Hippo.png');
+loadIndividualTiles('kis', 'assets/rock_elite_winter.png', 'assets/Kutuk.png', 'assets/Timsah.png', 'assets/Hippo.png');
 loadIndividualTiles('lava', 'assets/rock_elite_lava.png', 'assets/Kutuk.png', 'assets/Timsah.png', 'assets/Hippo.png');
 safeLoad('lava_geyser', 'assets/lava_geyser.png', (img) => {
     obsTiles['lava_geyser'] = makeWhiteTransparent(img, true);

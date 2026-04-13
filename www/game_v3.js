@@ -1,4 +1,4 @@
-// RİVER ESCAPE PRESTIGE - v1.99.12.0 (DUAL-CONTROL)
+// RİVER ESCAPE PRESTIGE - v1.99.12.2 (ELITE CYCLE)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -63,7 +63,7 @@ let lives = 3; // v98: 3 Can Sistemi
 let dashEnergy = 0;
 let isDashing = false;
 let dashTimer = 0;
-const DASH_DURATION = 0.8;
+const DASH_DURATION = 1.2;
 const MAX_DASH_ENERGY = 100;
 const DASH_RECHARGE_RATE = 15; // Saniyede dolan enerji
 
@@ -1525,32 +1525,40 @@ function spawnObstacle() {
         spawnInterval *= 0.6; // Engeller %40 daha sık gelir
     }
 
-    let allowedSpecialTypes = [];
-    if (currentLevel === 1) {
-        allowedSpecialTypes.push('rock');
-        if (score >= 500) allowedSpecialTypes.push('hippo');
-        if (score >= 900 && score <= 1000) allowedSpecialTypes.push('croc');
-    } else {
-        // v2.5: MASTER ELITE CYCLE (Engeller biyo-temalara göre her 6 seviyede bir looplanır)
-        let biomeIndex = (currentLevel - 1) % levelAssets.length;
-        allowedSpecialTypes = ['hippo', 'croc', 'rock'];
-        
-        if (biomeIndex === 2) allowedSpecialTypes.push('leafTornado'); // Sonbahar (Hortum)
-        else if (biomeIndex === 3) allowedSpecialTypes.push('whirlpool', 'slidingIce'); // Kış (Girdap/Buz)
-        else if (biomeIndex === 4) allowedSpecialTypes.push('lavaGeyser', 'fireball'); // Lav (Gayzer/Ateş)
-        else if (biomeIndex === 5) allowedSpecialTypes.push('asteroid', 'comet'); // Boşluk (Asteroit)
-        
-        // v2.6: ELITE NO-LOG ZONE (Lav ve Boşluk dünyalarında basit kütükler YASAK!)
-        if (biomeIndex < 4) {
-             allowedSpecialTypes.push('vertical', 'horizontal');
-        } else {
-            // Level 5, 6, 11, 12... gibi Elite seviyelerde kütükler ASLA görünemez.
-        }
+    if (currentLevel === 1 && obstacles.length >= 3) return; // v1.99.12.2: L1 Starter Balance
 
-        // Girdap Kuralı: İlkbahar ve Sonbahar hariç her yerde olabilir (L3'te hortum var)
-        if (currentLAsset.bgKey !== 'ilkbahar' && currentLevel !== 3) {
-            allowedSpecialTypes.push('whirlpool');
-        }
+    // v1.99.12.2: ELITE VERTICAL SPACING GUARD (Anti-Wall System)
+    for (let obs of obstacles) {
+        if (Math.abs(spawnY - obs.y) < 250) return; 
+    }
+
+    let biomeIndex = (currentLevel - 1) % levelAssets.length;
+    let allowedSpecialTypes = ['rock'];
+
+    // --- v1.99.12.2: THE ELITE CYCLE (Strict Biome Filtering) ---
+    if (biomeIndex === 0) { // Spring (L1, L7, L13...)
+        if (score % 14000 >= 500) allowedSpecialTypes.push('hippo');
+        if (score % 14000 >= 900) allowedSpecialTypes.push('croc');
+        allowedSpecialTypes.push('vertical', 'horizontal');
+    } else if (biomeIndex === 1) { // Summer (L2, L8...)
+        allowedSpecialTypes.push('hippo', 'croc', 'vertical', 'horizontal');
+    } else if (biomeIndex === 2) { // Autumn (L3, L9...)
+        allowedSpecialTypes.push('hippo', 'croc', 'vertical', 'horizontal', 'leafTornado');
+        allowedSpecialTypes.push('whirlpool'); // L3 special
+    } else if (biomeIndex === 3) { // Winter (L4, L10...)
+        allowedSpecialTypes.push('iceBerg', 'whirlpool', 'slidingIce', 'vertical', 'horizontal');
+    } else if (biomeIndex === 4) { // Lava (L5, L11...)
+        allowedSpecialTypes.push('lavaGeyser', 'fireball');
+        // CROC/HIPPO/LOGS ARE FORBIDDEN
+    } else if (biomeIndex === 5) { // Void (L6, L12...)
+        allowedSpecialTypes.push('asteroid', 'comet');
+        // CROC/HIPPO/LOGS ARE FORBIDDEN
+    }
+
+    // EXTRA LAYER: Ensure crocodiles/logs NEVER appear in Lava/Void levels
+    const isEliteLethal = (biomeIndex === 4 || biomeIndex === 5);
+    if (!isEliteLethal && currentLAsset.bgKey !== 'ilkbahar' && currentLevel !== 3) {
+        if (!allowedSpecialTypes.includes('whirlpool')) allowedSpecialTypes.push('whirlpool');
     }
 
     let spawnX = Math.random() * (riverRight - riverLeft) + riverLeft;
@@ -2043,7 +2051,9 @@ function syncEliteHUD() {
         }
 
         if (cachedHud.progress) {
-            const nextThreshold = (levelAssets[currentLevel % levelAssets.length]) ? levelAssets[currentLevel % levelAssets.length].threshold : 14000;
+            // v1.99.12.1: Loop-Aware Progress Calculation (Level 6 -> 14.000 fix)
+            const isLastLevelOfCycle = (currentLevel % levelAssets.length === 0);
+            const nextThreshold = isLastLevelOfCycle ? 14000 : levelAssets[currentLevel % levelAssets.length].threshold;
             const prevThreshold = levelAssets[(currentLevel - 1) % levelAssets.length].threshold;
             const progress = ((score % 14000 - prevThreshold) / (nextThreshold - prevThreshold)) * 100;
             cachedHud.progress.style.width = `${Math.min(100, Math.max(0, progress))}%`;
