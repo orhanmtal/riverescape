@@ -1,6 +1,13 @@
 # River Escape - Versiyon Günlükleri (CHANGELOG)
 Bu dosya, oyun motorunun ve özelliklerin versiyon versiyon nasıl geliştiğini mühürleyip saklamak için Antigravity tarafından oluşturulmuştur.
 
+## [v1.99.11.0] "ELITE ADRENALINE" - 2026-04-13
+- **Level 4 Balancing:** Widened the Winter River (margin 0.39 -> 0.35) after tester feedback for better maneuverability.
+- **Lava Geyser (Level 5):** Implemented high-fidelity procedural magma pillars with a 3-stage eruption cycle.
+- **Periodic Elite Challenge:** Established a 6-biome cycle where Lava obstacles recur specifically in their thematic slots.
+- **Difficulty Tuning:** Increased Level 5 spawn frequency (0.70) and sharpened geyser hitboxes for intense gameplay.
+- **Elite Polish:** Removed duplicate spawning logic and fixed critical syntax glitches for v1.99.11.0 stability.
+
 ## [v1.99.10.0] "LAVA REIGN" - 2026-04-13
 - **Lava Level Straightened & Widened:** Removed river curvature and increased width (margin 0.35) for perfect control based on user feedback.
 - **Movement Engine:** Fixed major "Double SpeedX" and "Double Player Movement" bugs.
