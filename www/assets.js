@@ -2,7 +2,7 @@
 const players = { ilkbahar: null, yaz: null, sonbahar: null, kis: null, lava: null, void: null };
 
 // GÖRSELLERİ ŞEFFAFLAŞTIRAN SİHİRLİ FONKSİYON - v110 (Yüksek Çözünürlük & Local Mühür)
-function makeWhiteTransparent(imageElement) {
+function makeWhiteTransparent(imageElement, isAggressive = false) {
     if (imageElement.src.includes('ArkaPlan')) return imageElement; 
 
     const offCanvas = document.createElement('canvas');
@@ -24,6 +24,12 @@ function makeWhiteTransparent(imageElement) {
             // ELITE v1.99.3.31.9.5: Daha agresif beyaz temizliği (210+)
             if (r > 210 && g > 210 && b > 210) { 
                 data[i+3] = 0; 
+            } else if (isAggressive) {
+                // Anti-Alias Halation Cleanup (Grey/White fringing pixels)
+                let maxDiff = Math.max(Math.abs(r-g), Math.abs(r-b), Math.abs(g-b));
+                if (r > 60 && g > 60 && b > 60 && maxDiff < 40) {
+                    data[i+3] = 0;
+                }
             }
         }
         offCtx.putImageData(imgData, 0, 0);
@@ -124,7 +130,7 @@ function loadIndividualTiles(key, rockSrc, logSrc, crocSrc, hippoSrc) {
     const load = (type, src) => {
         if (!src) return;
         safeLoad(`${key}_${type}`, src, (img) => {
-            obsTiles[key][type] = makeWhiteTransparent(img);
+            obsTiles[key][type] = makeWhiteTransparent(img, key === 'lava');
         });
     };
     load('rock', rockSrc);
@@ -141,7 +147,10 @@ loadIndividualTiles('yaz', 'assets/rock_elite_summer.png', 'assets/Kutuk.png', '
 loadIndividualTiles('sonbahar', 'assets/rock_elite_autumn.png', 'assets/Kutuk.png', 'assets/Timsah.png', 'assets/Hippo.png');
 
 loadIndividualTiles('kis', '', 'assets/Kutuk.png', 'assets/Timsah.png', 'assets/Hippo.png');
-loadIndividualTiles('lava', '', 'assets/Kutuk.png', 'assets/Timsah.png', 'assets/Hippo.png');
+loadIndividualTiles('lava', 'assets/rock_elite_lava.png', 'assets/Kutuk.png', 'assets/Timsah.png', 'assets/Hippo.png');
+safeLoad('lava_geyser', 'assets/lava_geyser.png', (img) => {
+    obsTiles['lava_geyser'] = makeWhiteTransparent(img, true);
+});
 loadIndividualTiles('void', '', 'assets/Kutuk.png', 'assets/Timsah.png', 'assets/Hippo.png');
 
 // PARALLAX SİSTEMİ (BULUTLAR/SİS)

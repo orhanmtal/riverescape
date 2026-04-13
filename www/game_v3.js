@@ -713,7 +713,7 @@ const levelAssets = [
     { threshold: 1000, bgKey: 'yaz', speed: 160, spawn: 1.55, titleEN: translations.en.l2Title, titleTR: translations.tr.l2Title, color: "#ffd600", pKey: "ilkbahar", margin: 0.30 },
     { threshold: 2500, bgKey: 'sonbahar', speed: 220, spawn: 1.15, titleEN: translations.en.l3Title, titleTR: translations.tr.l3Title, color: "#ff6d00", pKey: "ilkbahar", margin: 0.35 },
     { threshold: 4500, bgKey: 'kis', speed: 260, spawn: 1.00, titleEN: translations.en.l4Title, titleTR: translations.tr.l4Title, color: "#00e5ff", pKey: "ilkbahar", margin: 0.39 },
-    { threshold: 7000, bgKey: 'lava', speed: 162, spawn: 1.80, titleEN: translations.en.lavaRiver, titleTR: translations.tr.lavaRiver, color: "#ff4500", pKey: "lava", margin: 0.35 },
+    { threshold: 7000, bgKey: 'lava', speed: 285, spawn: 0.70, titleEN: translations.en.lavaRiver, titleTR: translations.tr.lavaRiver, color: "#ff4500", pKey: "lava", margin: 0.34 },
     { threshold: 10000, bgKey: 'void', speed: 190, spawn: 1.40, titleEN: translations.en.voidLevel, titleTR: translations.tr.voidLevel, color: "#9b59b6", pKey: "void", margin: 0.32 }
 ];
 
@@ -1487,12 +1487,19 @@ function spawnObstacle() {
         if (score >= 500) allowedSpecialTypes.push('hippo');
         if (score >= 900 && score <= 1000) allowedSpecialTypes.push('croc');
     } else {
-        // Seviye Bazlı Baz Engeller
-        if (currentLevel === 4) allowedSpecialTypes = ['hippo', 'rock', 'iceBerg', 'slidingIce', 'whirlpool'];
-        else if (currentLevel === 3) allowedSpecialTypes = ['hippo', 'croc', 'rock', 'leafTornado'];
-        else if (currentLevel === 5) allowedSpecialTypes = ['rock', 'whirlpool', 'fireball'];
-        else if (currentLevel === 6) allowedSpecialTypes = ['asteroid', 'comet'];
-        else allowedSpecialTypes = ['hippo', 'croc', 'rock'];
+        // v2.5: MASTER ELITE CYCLE (Engeller biyo-temalara göre her 6 seviyede bir looplanır)
+        let biomeIndex = (currentLevel - 1) % levelAssets.length;
+        allowedSpecialTypes = ['hippo', 'croc', 'rock'];
+        
+        if (biomeIndex === 2) allowedSpecialTypes.push('leafTornado'); // Sonbahar (Hortum)
+        else if (biomeIndex === 3) allowedSpecialTypes.push('whirlpool', 'slidingIce'); // Kış (Girdap/Buz)
+        else if (biomeIndex === 4) allowedSpecialTypes.push('lavaGeyser', 'fireball'); // Lav (Gayzer/Ateş)
+        else if (biomeIndex === 5) allowedSpecialTypes.push('asteroid', 'comet'); // Boşluk (Asteroit)
+        
+        // Elite Seviyelerde (Lav ve Boşluk) basit kütükleri çıkar
+        if (biomeIndex < 4) {
+             allowedSpecialTypes.push('vertical', 'horizontal');
+        }
 
         // Girdap Kuralı: İlkbahar ve Sonbahar hariç her yerde olabilir (L3'te hortum var)
         if (currentLAsset.bgKey !== 'ilkbahar' && currentLevel !== 3) {
@@ -1557,17 +1564,47 @@ function spawnObstacle() {
                 zigzagOffset: Math.random() * Math.PI * 2 // Rastgele faz
             });
         } else if (selectedType === 'whirlpool') {
-            // v1.96.8.7: Level 4'te Dar Kanal İçin Daha Küçük Girdaplar (60-90)
             const isL4 = currentLevel === 4;
             const size = isL4 ? (60 + Math.random() * 30) : (80 + Math.random() * 40);
             obstacles.push({
                 type: 'whirlpool',
                 x: spawnX,
-                relativeX: spawnX - riverShift, // v1.97.0.3: Elite Drift Support
+                relativeX: spawnX - riverShift,
                 y: spawnY, width: size, height: size,
                 speedY: bgScrollSpeed, speedX: 0,
                 rotation: 0,
-                pullStrength: isL4 ? 100 : 120 // Biraz daha az çeksin
+                pullStrength: isL4 ? 100 : 120
+            });
+        } else if (selectedType === 'lavaGeyser') {
+            // v2.1: Elite Spacing (Yanyana kümelenmeyi önleyen mesafe tamponu)
+            let tooClose = false;
+            for (let o of obstacles) {
+                if (o.type === 'lavaGeyser' && Math.abs(o.y - spawnY) < 300) {
+                    tooClose = true; break;
+                }
+            }
+            if (!tooClose) {
+                obstacles.push({
+                    type: 'lavaGeyser',
+                    x: spawnX,
+                    relativeX: spawnX - riverShift,
+                    y: spawnY, width: 120, height: 120,
+                    speedY: bgScrollSpeed, speedX: 0,
+                    state: 'dormant',
+                    stateTimer: 2.0 + Math.random() * 2,
+                    isElite: true
+                });
+            }
+                });
+            }
+        } else if (selectedType === 'fireball') {
+            obstacles.push({
+                type: 'fireball',
+                x: spawnX,
+                relativeX: spawnX - riverShift,
+                y: spawnY, width: 52, height: 52,
+                speedY: (baseSpeed + 150) * 0.75 * (0.92 + Math.random() * 0.16),
+                speedX: (currentLevel === 5 ? 0 : (Math.random() - 0.5) * 50)
             });
         } else if (selectedType === 'rock' || selectedType === 'iceBerg') {
             let isIce = selectedType === 'iceBerg';
@@ -1575,67 +1612,9 @@ function spawnObstacle() {
             obstacles.push({
                 type: selectedType,
                 x: spawnX,
-                relativeX: spawnX - riverShift, // v1.97.0.3: Elite Drift Support
-                y: spawnY + 50, width: rockSize, height: rockSize * 0.8,
-                speedY: bgScrollSpeed * (0.95 + Math.random() * 0.1), speedX: 0 // v1.97.2.2: Speed variance
-            });
-        } else if (selectedType === 'slidingIce') {
-            // v1.96.8.7: DAHA KÜÇÜK VE DENGELİ ŞARAPNEL (35-55)
-            let size = 35 + Math.random() * 20;
-            obstacles.push({
-                type: 'slidingIce',
-                x: spawnX,
-                relativeX: spawnX - riverShift, // v1.97.0.3: Elite Drift Support
-                y: spawnY + 50, width: size, height: size,
-                speedY: baseSpeed * 0.8,
-                speedX: (Math.random() < 0.5 ? 1 : -1) * (70 + Math.random() * 60), // Daha yavaş
-                rotation: Math.random() * Math.PI,
-                rotSpeed: (Math.random() - 0.5) * 3
-            });
-        } else if (selectedType === 'fireball') {
-            obstacles.push({
-                type: 'fireball',
-                x: spawnX,
-                relativeX: spawnX - riverShift, // v1.97.0.3: Elite Drift Support
-                y: spawnY, width: 52, height: 52, // v1.97.1.8: %25 KÜÇÜLTÜLDÜ (70->52)
-                speedY: (baseSpeed + 150) * 0.75 * (0.92 + Math.random() * 0.16), // v1.97.2.2: Dynamic desync
-                speedX: (currentLevel === 5 ? 0 : (Math.random() - 0.5) * 50) // Level 5'te SABİT (Daha elite kontrol)
-            });
-        } else if (selectedType === 'asteroid') {
-            const astSize = 50 + Math.random() * 30; // Daha affedici boyut (50-80)
-            obstacles.push({
-                type: 'asteroid',
-                x: spawnX,
-                relativeX: spawnX - riverShift, // v1.97.0.3: Elite Drift Support
-                y: spawnY, width: astSize, height: astSize,
-                speedY: baseSpeed * 1.25, // Orantısız ışık hızı yerine adil ivmelenme
-                speedX: (Math.random() - 0.5) * 20 // Yatay savrulma minimumda (oyuncuyu köşe sıkıştırmasın)
-            });
-        } else if (selectedType === 'comet') {
-            const cometSize = 30 + Math.random() * 10;
-            obstacles.push({
-                type: 'comet',
-                x: spawnX,
                 relativeX: spawnX - riverShift,
-                y: spawnY, width: cometSize, height: cometSize,
-                speedY: baseSpeed * 1.4,
-                speedX: (Math.random() < 0.5 ? 1 : -1) * (40 + Math.random() * 50) // Çapraz ama daha takip edilebilir
-            });
-        } else if (selectedType === 'leafTornado') {
-            const size = 100 + Math.random() * 50;
-            obstacles.push({
-                type: 'leafTornado',
-                x: spawnX,
-                relativeX: spawnX - riverShift, // v1.97.0.3: Elite Drift Support
-                y: spawnY, width: size, height: size,
-                speedY: bgScrollSpeed + 20,
-                speedX: 0,
-                rotation: 0,
-                pullStrength: 150, // Girdaptan daha güçlü!
-                zigzagFreq: 0.003 + Math.random() * 0.002, // Daha yavaş şık salınım
-                zigzagAmp: 40 + Math.random() * 50,
-                baseX: spawnX,
-                baseRelX: spawnX - riverShift // v1.97.0.3: Drift Synced baseX
+                y: spawnY + 50, width: rockSize, height: rockSize * 0.8,
+                speedY: bgScrollSpeed * (0.95 + Math.random() * 0.1), speedX: 0
             });
         }
         return;
@@ -2444,10 +2423,31 @@ function update(dt) {
                 obs.isSubmerged = false;
                 playCrashSound(); // Sudan çıkış patlaması efekti olarak kullanıyoruz
             }
+        } else if (obs.type === 'lavaGeyser') {
+            obs.stateTimer -= dt;
+            if (obs.stateTimer <= 0) {
+                if (obs.state === 'dormant') {
+                    obs.state = 'warning';
+                    obs.stateTimer = 0.8; // Uyarı süresi biraz kısaltıldı (Daha hızlı refleks)
+                } else if (obs.state === 'warning') {
+                    obs.state = 'erupting';
+                    obs.stateTimer = 1.2; // Patlama süresi
+                    if (typeof playCrashSound === 'function') playCrashSound();
+                    shakeTimer = 0.4;
+                } else if (obs.state === 'erupting') {
+                    obs.state = 'cooldown';
+                    obs.stateTimer = 1.5;
+                } else {
+                    obs.state = 'dormant';
+                    obs.stateTimer = 1.5 + Math.random() * 2;
+                }
+            }
+            // Patlama anında hitbox'ı aktif et
+            obs.isDeadly = (obs.state === 'erupting');
         }
 
         // v1.99.5.0: STRAIGHT MOVEMENT PROTOCOL (No edge drifting for logs/rocks) 🛣️
-        let isStraightObject = (obs.type === 'vertical' || obs.type === 'horizontal' || obs.type === 'rock');
+        let isStraightObject = (obs.type === 'vertical' || obs.type === 'horizontal' || obs.type === 'rock' || obs.type === 'burningPillar');
         if (isStraightObject) obs.speedX = 0;
 
         obs.y += (obs.speedY || obs.speed || 0) * dt;
@@ -2524,8 +2524,13 @@ function update(dt) {
         let ow = obs.width * 0.5;
         let oh = obs.height * 0.5;
 
-        // v2.03 - Kullanıcı Talebi: Ölümüne kolaylaştır (Level 1-3)
-        // Hitbox daha da toleranslı kılındı.
+        // v2.2: Elite Lava Difficulty (Gayzerler affetmez)
+        if (obs.type === 'lavaGeyser') {
+            ox = obs.x + (obs.width * 0.1); // Hitbox genişletildi
+            ow = obs.width * 0.8;
+            oy = obs.y + (obs.height * 0.1);
+            oh = obs.height * 0.8;
+        }
 
         if (px < ox + ow && px + pw > ox &&
             py < oy + oh && py + ph > oy) {
@@ -2535,6 +2540,9 @@ function update(dt) {
 
             // Eğer su aygırı henüz yüzeye çıkmamışsa (su altındaysa) çarpma/sek!
             if (obs.type === 'hippo' && obs.isSubmerged) continue;
+
+            // v2.05: Lav Gayzeri sadece patlama anında (erupting) öldürür
+            if (obs.type === 'lavaGeyser' && !obs.isDeadly) continue;
 
             // Zırh sadece kalkan Level 6 ve üstündeyse hasar bloklar, yoksa sadece roket çarpar! (v1.98 Level 6 Restriction)
             if (armorCharge > 0 && currentLevel >= 6) {
@@ -3125,6 +3133,54 @@ function draw(dt) {
                 ctx.arc(0, 0, obs.width / 2.5, 0, Math.PI * 2);
                 ctx.fill();
 
+                ctx.restore();
+                drawSuccess = true;
+            } else if (obs.type === 'lavaGeyser') {
+                ctx.save();
+                ctx.translate(obs.x + obs.width / 2, obs.y + obs.height / 2);
+
+                if (obs.state === 'dormant' || obs.state === 'cooldown' || obs.state === 'warning') {
+                    // --- v2.1 ELITE MAGMA CRACK (Ground Effect) ---
+                    ctx.beginPath();
+                    ctx.ellipse(0, 0, obs.width / 3, obs.height / 6, 0, 0, Math.PI * 2);
+                    ctx.fillStyle = "rgba(40, 20, 10, 0.8)"; // Koyu volkanik yarık
+                    ctx.fill();
+
+                    if (obs.state === 'warning') {
+                        // Pulsing Warning Glow
+                        let pulse = 0.5 + Math.sin(performance.now() / 100) * 0.5;
+                        ctx.shadowBlur = 20 * pulse;
+                        ctx.shadowColor = "#ff4500";
+                        ctx.strokeStyle = `rgba(255, 69, 0, ${pulse})`;
+                        ctx.lineWidth = 4;
+                        ctx.stroke();
+                        // Shake effect for the vent
+                        ctx.translate((Math.random()-0.5)*5, (Math.random()-0.5)*5);
+                    }
+                } else if (obs.state === 'erupting') {
+                    // --- v2.1 ULTRA ELITE ERUPTION (Pillar of Fire) ---
+                    const grad = ctx.createLinearGradient(0, obs.height/2, 0, -obs.height * 2);
+                    grad.addColorStop(0, "rgba(255, 0, 0, 0.9)");
+                    grad.addColorStop(0.3, "rgba(255, 140, 0, 0.8)");
+                    grad.addColorStop(1, "rgba(255, 255, 0, 0)");
+
+                    ctx.shadowBlur = 40;
+                    ctx.shadowColor = "#ff4500";
+                    ctx.fillStyle = grad;
+                    
+                    // Main Pillar
+                    ctx.beginPath();
+                    ctx.moveTo(-obs.width/3, obs.height/2);
+                    ctx.quadraticCurveTo(0, -obs.height, obs.width/3, obs.height/2);
+                    ctx.fill();
+
+                    // Magma Sparks
+                    for(let k=0; k<5; k++) {
+                        let sx = (Math.random()-0.5) * obs.width;
+                        let sy = (Math.random()-1) * obs.height * 1.5;
+                        particles.push(new Particle(obs.x + obs.width/2 + sx, obs.y + obs.height/2 + sy, "#ffcc00"));
+                    }
+                }
                 ctx.restore();
                 drawSuccess = true;
             }
