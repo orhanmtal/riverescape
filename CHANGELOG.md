@@ -2,8 +2,8 @@
 Bu dosya, oyun motorunun ve özelliklerin versiyon versiyon nasıl geliştiğini mühürleyip saklamak için Antigravity tarafından oluşturulmuştur.
 
 ## [v1.99.10.0] "LAVA REIGN" - 2026-04-13
-- **Lava Level Fixed:** Resolved technical issues in Level 5 (7000+ points).
-- **Movement Engine:** Fixed major "Double SpeedX" bug causing unintended fast horizontal movement for obstacles (Crocs, Logs) in all levels.
+- **Lava Level Balanced:** Reduced margin (0.43 -> 0.40) and sinusoidal amplitude (5% -> 3%) to improve control based on tester feedback.
+- **Movement Engine:** Fixed major "Double SpeedX" bug for obstacles AND fixed "Double Movement" bug for players in Level 5.
 - **Visual Polish:** Upgraded Level 5 Lava Shimmer with procedural sizzle gradients and heat-haze effects.
 - **Elite Particles:** Tailored particle colors to match Lava River (orange/red) and Winter (blue/white) environments.
 - **Documentation Sync:** Synchronized `rules.md` thresholds (7000 pts for L5) with actual game engine logic.
