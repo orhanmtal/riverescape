@@ -142,7 +142,7 @@ class Particle {
 
 // v1.97.0.3: DYNAMİC WİNDİNG RİVER MOTORU (Büklüm Büklüm Nehir)
 function getRiverShift(y) {
-    if (currentLevel !== 5) return 0;
+    return 0; // v1.99.10.0: River curvature removed for Elite precision in Lava Level.
     // v1.97: Arka plan kaymasına (bgY) bağlı sinüs dalgası
     // v1.97.1.8: SOFT SYNC (Damped oscillation)
     // Görsel 1 tam ekran boyunda (canvas.height) kendini tekrar eder
@@ -713,7 +713,7 @@ const levelAssets = [
     { threshold: 1000, bgKey: 'yaz', speed: 160, spawn: 1.55, titleEN: translations.en.l2Title, titleTR: translations.tr.l2Title, color: "#ffd600", pKey: "ilkbahar", margin: 0.30 },
     { threshold: 2500, bgKey: 'sonbahar', speed: 220, spawn: 1.15, titleEN: translations.en.l3Title, titleTR: translations.tr.l3Title, color: "#ff6d00", pKey: "ilkbahar", margin: 0.35 },
     { threshold: 4500, bgKey: 'kis', speed: 260, spawn: 1.00, titleEN: translations.en.l4Title, titleTR: translations.tr.l4Title, color: "#00e5ff", pKey: "ilkbahar", margin: 0.39 },
-    { threshold: 7000, bgKey: 'lava', speed: 162, spawn: 1.80, titleEN: translations.en.lavaRiver, titleTR: translations.tr.lavaRiver, color: "#ff4500", pKey: "lava", margin: 0.40 },
+    { threshold: 7000, bgKey: 'lava', speed: 162, spawn: 1.80, titleEN: translations.en.lavaRiver, titleTR: translations.tr.lavaRiver, color: "#ff4500", pKey: "lava", margin: 0.35 },
     { threshold: 10000, bgKey: 'void', speed: 190, spawn: 1.40, titleEN: translations.en.voidLevel, titleTR: translations.tr.voidLevel, color: "#9b59b6", pKey: "void", margin: 0.32 }
 ];
 
@@ -2144,12 +2144,6 @@ function update(dt) {
     if (currentLevel === 5) {
         // Absolute control in Lava River - No automatic drift
         // v1.99.10.0: Double-movement bug fixed (Removed redundant application)
-
-        // SOFT LAVA PUSH (Edge Protection)
-        // If the player touches the edge, push them back into the lava
-        const pushForce = 3;
-        if (player.x < playRiverLeft + 15) player.x += pushForce;
-        if (player.x > playRiverRight - 15) player.x -= pushForce;
 
         player.relativeX = undefined; // Reset drift tracker
     } // <-- v1.99.4.1.11: Eksik parantez düzeltildi

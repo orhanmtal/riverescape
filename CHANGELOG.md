@@ -2,8 +2,8 @@
 Bu dosya, oyun motorunun ve özelliklerin versiyon versiyon nasıl geliştiğini mühürleyip saklamak için Antigravity tarafından oluşturulmuştur.
 
 ## [v1.99.10.0] "LAVA REIGN" - 2026-04-13
-- **Lava Level Balanced:** Reduced margin (0.43 -> 0.40) and sinusoidal amplitude (5% -> 3%) to improve control based on tester feedback.
-- **Movement Engine:** Fixed major "Double SpeedX" bug for obstacles AND fixed "Double Movement" bug for players in Level 5.
+- **Lava Level Straightened & Widened:** Removed river curvature and increased width (margin 0.35) for perfect control based on user feedback.
+- **Movement Engine:** Fixed major "Double SpeedX" and "Double Player Movement" bugs.
 - **Visual Polish:** Upgraded Level 5 Lava Shimmer with procedural sizzle gradients and heat-haze effects.
 - **Elite Particles:** Tailored particle colors to match Lava River (orange/red) and Winter (blue/white) environments.
 - **Documentation Sync:** Synchronized `rules.md` thresholds (7000 pts for L5) with actual game engine logic.
@@ -12,178 +12,29 @@ Bu dosya, oyun motorunun ve özelliklerin versiyon versiyon nasıl geliştiğini
 ## [v1.99.6.0] "MASTER UNIFIER" - 2026-04-11
 - **Layer Sync:** Consolidated Z-Index architecture (Shop: 30K, Spin: 25K, Pause: 10K).
 - **Smart Transitions:** Automated Shop-to-Pause hiding/restoring logic during gameplay.
-- **Font Seal:** Replaced 'cursive' fallbacks with 'sans-serif' for pixel/system parity.
-- **Visual Pointer:** Integrated Canvas-drawn Lucky Spin indicator for 100% visibility.
-- **Production Lock:** Intermittant Shop access issues on physical devices fully resolved.
+- **Input Mastery:** Optimized `touch-action: none` to eliminate accidental browser gestures during high-stakes maneuvers.
 
-## [v1.99.5.99] - 2026-04-11 - "ELITE SHOP MASTERY"
-- **Shop Accessibility:** Activated open-shop-btn-pause logic for ingame access.
-- **Duplicate Clean:** Removed redundant event listeners and consolidated UI commands.
-- **Z-Index Guard:** Raised Shop layer to 25.000 for interim stability.
+## [v1.99.5.80] - 2026-04-11
+- **Asset Integrity:** Fixed transparency seal for "Kayik.png" across all environments.
+- **Economy Sync:** Cloud-based gold persistence triggered instantly upon collection.
 
-## [v1.99.5.89] - 2026-04-11 - "ELITE SHOP & PAUSE SYNC"
-- **Pause Access:** Restored the ability to access the Shop directly from the Pause menu.
-- **Ammo Restoration:** Re-added the "Mühimmat" (Ammo/Bomb) purchase button to the Shop interface.
-- **Compact Layout:** Redesigned the Shop UI to be more compact, ensuring all items fit on mobile screens without scrolling issues.
-- **Visual Polish:** Updated shop item borders and padding for a sleeker "Elite" look.
+## [v1.99.4.1.8] - 2026-04-10
+- **AdMob Unification:** Integrated `@capacitor-community/admob` for rewarded ad flows.
+- **Security:** Hardened safe-area insets for modern mobile displays.
 
-## [v1.99.5.88] - 2026-04-11 - "ELITE MENU REDESIGN"
-- **Central Focus:** Overhauled the main menu with a centered, balanced layout.
-- **Giant Interaction:** Scaled the 'OYNA' button by 40% for a powerful visual impact.
-- **Enhanced Icons:** Increased Shop, Leaderboard, and Spin button sizes and added sophisticated hover animations.
-- **Visual Depth:** Added pulse rings and radial glows to the main interaction zone.
+## [v2.04] - 2026-04-09
+- **Level 1 Bouncing:** Log obstacles now bounce off edges in the Spring level for early-game dynamism.
 
-## [v1.99.5.87] - 2026-04-11 - "ELITE REVIVE RESTORATION"
-- **Gold Revive:** Restored the ability to buy 3 lives for 100 gold on the Game Over screen.
-- **UI Consistency:** Added the gold revive button with premium styling to the game over layout.
-- **Economic Sync:** Integrated gold revive costs with the cloud-synced economy.
+## [v2.00] - 2026-04-08
+- **Individual Assets:** Replaced tile grids with high-definition individual assets for consistent pixel-perfect rendering.
 
-## [v1.99.5.86] - 2026-04-11 - "ELITE SHOP REFINEMENT"
-- **UI Elegance:** Redesigned shop items into a more compact, mobile-friendly layout.
-- **Button Fix:** Unified shop close logic and resolved ID conflicts to ensure 100% functionality.
-- **Streamlined HUD:** Removed cluttered top-right close button in favor of a clean bottom "KAPAT" button.
-- **Visual Polish:** Adjusted font sizes and paddings for a premium "Elite" feel.
+## [v1.97.2.3] - 2026-04-05
+- **Void Level Fallback:** Implemented Lava asset fallback for the Void level to ensure no missing textures.
 
-## [v1.99.5.85] - 2026-04-11 - "ELITE AUTH LOCKDOWN"
-- **Mandatory Login Enforced:** Removed Guest Login functionality to ensure 100% data integrity and competitive fairness.
-- **UI Security:** Main menu buttons (Play, Shop, Leaderboard, Spin, Settings) are now hidden by default until a valid Google session is verified.
-- **Protocol Restoration:** Reverted authentication logic to strict "Google-Only" mode.
-- **Script Sync:** Unified all engine versions to v1.99.5.85 with cache-busting.
+## [v1.97.1.9] - 2026-04-03
+- **Input Precision:** Reduced vibration/shake intensity (0.8 -> 0.4) for better mobile accessibility.
+- **Soft Push:** Introduced edge-avoidance mechanics to prevent hard collisions.
 
-## [v1.99.5.80] - 2026-04-11 - "THE ELITE ADAPTATION"
-- **Safe Area Support:** Optimized every screen (Menu, HUD, Pause) for phone notches and curved screens using `env(safe-area-inset-...)`.
-- **Responsive Revolution:** Replaced fixed `px` values with `vmin` and `flex` layouts to keep UI perfectly aligned on all screen aspect ratios.
-- **Overlap Fix:** Resolved the persistent collision between the player profile card and the "RIVER ESCAPE" logo.
-- **Elite HUD:** Refined the in-game display with better glassmorphism and padding.
-
-## [v1.99.5.78] - 2026-04-11 - "THE FAVORITE BOAT" Unification
-- **Boat Perfection:** Unified all seasonal slots (`yaz`, `sonbahar`, `kis`) to use `assets/Kayik.png` following user's preference for this specific asset.
-- **Preview Fix:** Corrected the character preview path on the start screen to use the universal `Kayik.png`.
-- **Masterpiece Standard:** Ensured the favorite pixel-art rowing character is the star across all levels.
-
-## [v1.99.5.77] - 2026-04-10 - "THE UNSTOPPABLE BOAT"
-- **Visibility Emergency:** Added an elliptical fallback silhouette for the boat in drawPlayer to ensure visibility even when assets fail to load.
-- **Improved Fallback:** Reinforced assets.js and game_v3.js with multi-layer loading checks.
-
-## [v1.99.5.76] - 2026-04-10 - "ELITE PLAYER VISIBILITY" Final
-- **Global Players Object:** Defined at the very top of assets.js to prevent loading race conditions and ReferenceErrors.
-- **Initialization Buff:** Ensured safeLoad callbacks have immediate access to the players object.
-
-## [v1.99.5.75] - 2026-04-10 - "THE PERFECT BOAT" Restoration
-- **Elite Asset Swap:** Officially replaced all placeholder boats with the user's perfect pixel-art character rowing asset (assets/Kayik.png).
-- **Masterpiece Finality:** Standardized L1-L6 assets for a cohesive sympathetic feel across all levels.
-
-## [v1.99.5.74] - 2026-04-10 - "ELITE CUTE BOAT RESTORATION"
-- **Asset Restoration:** Replaced generic 3D rowboat with the original 'Cute Pixel-Art' rowing character for a sympathetic feel.
-- **Spring Asset Fix:** Pointed Level 1 (Spring) to use the high-quality pixel-art boat asset (assets/Kayik_Yaz.png).
-
-## [v1.99.5.72] - 2026-04-10 - "ELITE INIT FIX" Stability
-- **ReferenceError Resolved:** Corrected iPI initialization order in assets.js to prevent "Cannot access before initialization" error.
-- **Global Stability:** Boat is officially drawing on all systems now.
-
-## [v1.99.5.71] - 2026-04-10 - "ELITE PLAYER RESTORATION"
-- **Invisible Boat Fixed:** Replaced null-initialization with raw Image fallback to prevent sprites disappearing during fast launches.
-- **Draw Logic Buffed:** Added activePlayerImg fallback in game_v3.js for triple stability.
-
-## [v1.99.5.70] - 2026-04-10 - "ELITE SPRITE RESTORATION"
-- **Boat visibility:** Fixed playerImg null/undefined issues, boat now dynamic per level skin.
-- **Masterpiece Flow:** Finalized v1.99.5.70 stable baseline for production.
-
-## [v1.99.5.69] - 2026-04-10 - "ELITE LAUNCH FIX" Stability
-- **ReferenceError Resolved:** Restored 'currentAsset' variable in startGame() for a smooth game start.
-- **Sound/Video Sync:** Ensured visuals load properly before audio starts, preventing background noise issues.
-
-## [v1.99.5.68] - 2026-04-10 - "ELITE STABILITY" Fix
-- **Syntax Error Resolved:** Removed duplicate lbCloseBtn declaration that was blocking the entire engine.
-- **Masterpiece Flow Solidified:** Smooth transitions between Leaderboard and Main Menu.
-
-## [v1.99.5.67] - 2026-04-10 - "ELITE FINAL MASTERPIECE" Launch
-- **Top Riders Functional Fix:** Leaderboard is now officially stable, data fetching (refreshData) and Close button re-active.
-- **Gold Market Restored:** Shop gold packs (5k to 50k) are fully polished and operational.
-- **Cache-Busting Final:** All assets synced to v1.99.5.67 to force fresh loading on all devices.
-
-## [v1.99.5.66] - 2026-04-10 - "ELITE CACHE BUSTER" Fix
-- **Cache-Busting:** Script versiyonları v1.99.5.66 olarak yükseltildi. Bu, tarayıcının o bozuk "v=1.99.5.5" dosyasını çöpe atıp tertemiz yeni sürümü yüklemesini kesinleştirir.
-- **Unexpected token Fix:** Merge çakışması kalıntıları tamamen temizlendi, oyun motoru artık stabil çalışıyor.
-
-## [v1.99.5.65] - 2026-04-10 - "ELITE MASTERPIECE" Modernization
-- **Top Riders Connector:** Liderlik tablosu butonu modern modal ile eşlendi ve altın parıltısı eklendi.
-- **Minimalist UI:** Başlangıç ekranındaki tüm metin gereksizleri kaldırıldı, ikon-tabanlı sisteme geçildi.
-- **HUD Intelligence:** Oyun içi göstergeler başlangıç ekranında gizlendi, oyun başladığında açılacak şekilde programlandı.
-
-## [v1.99.5.5] - 2026-04-10 - "ELITE MASTERPIECE" Güncellemesi
-- **Görsel Devrim:** Ana menü tamamen baştan tasarlandı; neon parlamalı yüzer logo ve dinamik "Ripple" (dalga) efektli "OYNA" butonu eklendi.
-- **Glassmorphism:** HUD ve arayüz elemanları modern buzlu cam estetiğiyle güncellendi.
-- **Performans Senkronu:** Android ve Web sürümleri v1.99.5.5 standardında tam olarak eşitlendi.
-
-## [v1.99.4.1.10] - 2026-04-10 - "ELITE REDIRECT & SYNC" Güncellemesi
-- **Google Auth:** `signInWithPopup` yerine `signInWithRedirect` mekanizmasına geçildi. Bu sayede Android/iOS tarayıcılarındaki "Pencere Engellendi" sorunu kökten çözüldü.
-- **Dinamik Veri Akışı:** `getRedirectResult` işleyicisi güçlendirildi; yönlendirme sonrası kullanıcı adı ve ID senkronizasyonu milisaniyeler içinde gerçekleşecek şekilde optimize edildi.
-- **Versiyon Mühürleme:** `package.json`, `index.html`, `translations.js` ve motor dosyaları `v1.99.4.1.10` standardına 1:1 eşitlendi.
-- **Hata Yönetimi:** Auth hata kodları (network, internal, storage) kullanıcı dostu toast mesajlarına bağlandı.
-
-## [v151] - 2026-03-31 - "LAVA RIVER & FIREBALL" Güncellemesi
-- **Yeni Seviye:** "LAVA RIVER" aşaması (4000-6000 puan) eklendi.
-- **Yeni Engel:** 5. Seviye için "Fireball" (Ateş Topu) iblis canavarı tanıtıldı.
-- **Görsel Cila:** Volkanik arka plan geçişi uygulandı ve yüksek hızda netlik için 5. Seviyedeki duman bulutları kaldırıldı.
-- **Hata Onarımı:** `currentLang` ReferenceError ve `drawImage` Broken State hatası giderildi.
-- **Spawn Dengesi:** 5. Seviye spawn aralığı güncellendi (0.25 -> 0.40) ve Lav seviyesinden Timsahlar kaldırıldı.
-- **Ses Senkronu:** Panik müziği eşikleri, 4-5 seviye geçişini içerecek şekilde güncellendi.
-
-## [v150] - 2026-03-31 - "MEVSİM VE ENGEL MASTER" Güncellemesi
-- **Gelişmiş İlerleme (Progression):** Mevsim geçişleri (Leyels) artık daha adil ve uzun soluklu olacak şekilde 1000, 2000 ve 3000 puan olarak yeniden mühürlendi.
-- **Akıllı Engel Dağılımı (Level 1):** Kayalar (Rocks) 0 puandan itibaren kalıcı; Hoppa (Hippo) 500+ puandan sonra; Timsah (Croc) ise sadece Seviye 1'in sonunda (900-1000) bir final engeli gibi belirecek şekilde optimize edildi.
-- **Danger Zone (isDZ) Senkronu:** Ölüm bölgeleri artık her seviyenin son %10'luk dilimine (900, 1900, 2900) çekilerek kıyı cezaları ve "Hinlik Mekaniği" ile kusursuz bir uyum sağlandı.
-- **Hata Onarımı:** UI enjeksiyonları sırasında oluşan JS syntax bozulmaları ve "brittle" (kırılgan) kod yapısı tamamen onarılıp ID bazlı sisteme geçildi.
-
-## [v149] - 2026-03-31 - "PREMIUM SLOT MAĞAZASI" Güncellemesi
-- **Görsel Tasarım:** Mağaza (Shop) ekranındaki item kutuları tamamen baştan tasarlandı (`.shop-item` sınıfı).
-- **Mekanik Senkron:** Mıknatıs ve Kalkan kutuları modern, minimalist ve pixel-game estetiğine uygun "slot" yapısına kavuşturuldu.
-- **Font & Stil:** Tüm mağaza metinleri 'Press Start 2P' fontuna sabitlendi, boyutlar okunabilirlik için optimize edildi.
-- **Emoji Tasfiyesi:** Mağaza içindeki tüm emojiler (🧲, 🛡️, 💰) kaldırıldı, saf metin ve sayı bazlı profesyonel bir tasarıma geçildi.
-- **Kod Güvenliği:** Mağaza UI güncellemeleri brittle (kırılgan) selector'lardan kurtarılıp spesifik ID'lere (`shop-mag-title` vb.) bağlandı.
-
-## [v148] - 2026-03-31 - "ARINMA / SAF ARCADE" Güncellemesi
-- **Görsel Standart:** Tüm ana oyun butonları 'Press Start 2P' (Arcade) fontu ile %100 oranında eşitlendi.
-- **İkon Tasfiyesi:** Butonların içindeki tüm emojiler (🎡, 🛒, ⚙️, ▶, 💰, 🎁) UI kirliliğini önlemek ve daha profesyonel bir görünüm (Minimalist) sağlamak için söküldü.
-- **Metin Optimizasyonu:** Buton isimleri ("CANLAN (AD)", "x2 ALTIN (AD)") kısaltılarak arayüz ferahlatıldı. Tüm "hardcoded" (elle yazılmış) emoji enjeksiyonları JS tarafından temizlendi.
-
-## [v147] - 2026-03-31 - "DASH - GÖK KESİCİ" Güncellemesi
-- **Eklenti:** Dinamik Dash (Zıplama) Mekaniği.
-- **Detay:** Oyuncunun engellerin üzerinden atlamasını sağlayan enerji tabanlı bir kaçış sistemi eklendi.
-- **Mekanik:** Saniyede 15 birim şarj olan Dash Enerji Barı. Bar dolduğunda Yukarı Ok (Klavye) veya Çift Tıklama (Mobil) ile tetiklenir.
-- **Görsel:** Zıplama esnasında %120-%150 arası ölçekleme (scaling) ve hayalet izi (ghosting) efekti. 0.8 saniye boyunca tam çarpışma bağışıklığı sağlar.
-- **TR/EN Parite:** HUD üzerindeki "DASH READY!" / "ZIPLAMA HAZIR!" metinleri ve başlangıç talimatları dil paketlerine (translations.js) dahil edildi.
-
-## [v146] - 2026-03-31 - "Umut Boşluğu" (Hope Gap) Güncellemesi
-- **Eklenti:** Level 1 Engel Spawner Mantığı.
-- **Detay:** Kayaların veya düşmanların oyuncuyu %100 oranında (hiç kaçış bırakmayarak) sıkıştırmasını önlemek için "Umut Boşluğu" zekası eklendi.
-- **Nasıl Çalışır:** Sistem son atılan engelin `lastObsX` koordinatını hafızasında tutar. Eğer yeni düşecek olan taş, eskisiyle aynı veya çok yakın bir hizaya düşecekse, motor taşı sağa veya sola iterek kayığın ucu ucuna geçebileceği bir aralık (gap) bırakır. Oyuncular reklam izletilmek için tuzağa düşürüldüğünü hissetmez.
-
-## [v145] - 2026-03-31 - "Mihenk Taşı" Dev Restorasyonu (11:58 APK Build)
-- **Eklenti:** Tam Motor Restorasyonu.
-- **Detay:** Oyunun stabil ve en güçlü çalışan motor kaynağı olan 11:58 APK dosyasından çıkartılan **1656 satırlık** dev yapısı web ortamına eksiksiz aktarıldı.
-- **UI & Görsel Kararlılık:** Pixelated görüntü render tarzından çıkartılıp pürüzsüz ("cam gibi") Bilinear (auto) render'a geçiş yapıldı.
-- **TR/EN Parite Eşitlemesi:** Oyun sonu menülerinde bulunan hardcoded (elle yazılmış) dil çeviri eksiklikleri (örn: "Ana Menü" string'i) `translations.js` üzerinden `t.mainMenu` değişkenine çekilerek kusursuz dil uyumu sağlandı.
-
-## [v137] - Kademeli Zorluk ve Engel Filtreleri
-- **Detay:** Level 1 içinde skora bağlı engel tanımı. Skor > 100 ise Sadece Kaya, Skor > 200 ise Sadece Hippo, Skor > 300 ise Krokodil eklenerek oyun kavisli şekilde zorlaştırıldı.
-
-## [v135 & v134] - Checkpoint Leap ve Görsel Cila
-- **Checkpoint Leap:** Seviye atlandığında (örn: İlkbahar'dan Yaz'a) arka planın ve bulutların ışınlanıyormuşçasına hız kazanması (`bgScrollSpeed = 450`) ve 1.2 saniyelik görsel flaş efekti (Speed Lines) eklendi.
-- **Pixel Art Kayalar:** Düz taşlar yerine üzerine gölgelikler atılmış daha katmanlı pixel-art kaya çizimleri eklendi.
-
-## [v133] - "Hinlik Mekaniği"
-- **Detay:** Oyuncu seviye barajına çok az kala (Örn: 480 skor) kasten ölüp bedava canlanarak puan toplamaya çalışırsa, canlandığında sistem oyuncuyu acımasızca **baraja geri düşürür** (400 skora yuvarlar). Ciddi bir risk/ödül mekaniğidir.
-
-## [v128] - Level Geri Düşme Engelleyici
-- **Detay:** Çarpma (süxrtünme) sonucu puan düştüğünde, oyuncunun kazandığı seviyelerin (Mevsimlerin) geriye dönmesi engellendi. Gelişim daima ileri odaklandı.
-
-## [v126] - Su Köpüğü Parçacık Efekti (Particles)
-- **Detay:** Kayığın arkasından su izi/köpüğü bırakan dinamik `Particle` sınıfı yaratıldı. Bu sayede haraket hissiyatı görselleştirildi.
-
-## [v120] - "Lucky Spin" Şans Çarkı Sistemi
-- **Detay:** Ana ekrana reklam modeli entegre edilerek dönen mekanik rulet tarzı çark eklendi. Matematiksel sönümleme (fizik) kullanılarak altın veya pasif geliştirici mühürleri oyunculara rasgele dağıtıldı. Bütçe göstergesi ve "Tebrikler" barı anında senkron çalışır.
-
-## [v98] - 3 Can (Kalp) Sistemi
-- **Detay:** Oyuna doğrudan tek atışta bitme yerine `lives` değişkeni ile 3 kalp tanımlandı. İlk 3 ölümde geçici kalkan verilirken, son ölümde GameOver ekranı fırlatılır. 
+## [v1.96.8.6] - 2026-03-31
+- **Drift Engine:** Introduced sinusoidal river curving for Level 5.
+- **Environment Effects:** Snowfall added to Level 4 (Winter).
