@@ -1,6 +1,12 @@
 # River Escape - Versiyon Günlükleri (CHANGELOG)
 Bu dosya, oyun motorunun ve özelliklerin versiyon versiyon nasıl geliştiğini mühürleyip saklamak için Antigravity tarafından oluşturulmuştur.
 
+## [v1.99.13.1] "ANTI-CLUSTER HOTFIX" - 2026-04-14
+- **Global Spawn Cooldown:** Enforced a mandatory 0.8s gap between any two obstacle spawns to eliminate "horizontal walls."
+- **L1 Trap restriction:** Integrated `spawnGold` traps into the Level 1 density cap (Max 3 items on screen).
+- **UI Version Sync:** Synchronized all visible version identifiers to v1.99.13.1 across the Menu and Game Over screens.
+- **Frame-Accurate Leveling:** Moved level calculation to the top of the update loop for precision logic.
+
 ## [v1.99.13.0] "ELITE HYBRID" - 2026-04-13
 - **Time-Based Progression:** Level transitions are now decoupled from the score and based on total survival time (46 min total loop).
 - **Skill-Based Scoring:** Introduced an "Elite Score Algorithm" where gold collection (+100x), enemy dodges (+50), and level completions (+500) provide significant score boosts.

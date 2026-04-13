@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>RiverEscape Mobil</title>
-    <link rel="stylesheet" href="style.css?v=1.99.12.2">
-    <!-- MASTER UI OVERRIDE (FORCE STYLE) v1.99.13.0 -->
+    <link rel="stylesheet" href="style.css?v=1.99.13.1">
+    <!-- MASTER UI OVERRIDE (FORCE STYLE) v1.99.13.1 -->
 
     <style>
         .master-play-btn {
@@ -49,7 +49,7 @@
             pointer-events: auto !important;
         }
     </style>
-    <!-- EMERGENCY ON-SCREEN DEBUGGER v1.99.12.0 -->
+    <!-- EMERGENCY ON-SCREEN DEBUGGER v1.99.13.1 -->
     <script>
         window.onerror = function(msg, url, line) {
             var div = document.createElement('div');
@@ -76,7 +76,7 @@
         
         <button id="pause-btn" style="position: absolute; top: calc(20px + env(safe-area-inset-top)); right: calc(20px + env(safe-area-inset-right)); display: none; background: rgba(0,0,0,0.4); color: white; border: 1px solid rgba(255,229,255,0.4); padding: 8px; font-family: 'Outfit', sans-serif; font-size: 18px; z-index: 1001; border-radius: 50%; width: 45px; height: 45px; pointer-events: auto; cursor: pointer; backdrop-filter: blur(4px); line-height: 1;">⏸</button>
             
-        <!-- ELITE FULL-SCREEN UI v1.99.12.0 -->
+        <!-- ELITE FULL-SCREEN UI v1.99.13.1 -->
         <div id="start-screen" class="screen">
             <!-- Top Row: Profile & Settings -->
             <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; z-index: 100;">
@@ -101,7 +101,7 @@
                 <button id="open-settings-btn" class="elite-btn-square" style="width: 12vmin; height: 12vmin; font-size: 6vmin; display: none;">⚙️</button>
             </div>
 
-            <!-- ELITE MASTERPIECE TITLE v1.99.12.0 -->
+            <!-- ELITE MASTERPIECE TITLE v1.99.13.1 -->
             <div style="text-align: center; position: relative; width: 100%; margin-top: 5vh; display: flex; flex-direction: column; justify-content: center; align-items: center; pointer-events: none;">
                 <div style="
                     position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
@@ -122,7 +122,7 @@
                     font-weight: bold; margin-top: 15px; letter-spacing: 0.8vmin; opacity: 0.9;
                     text-shadow: 0 0 15px rgba(255,215,0,0.4);
                     pointer-events: none;
-                " version="1.99.12.0">PRESTIGE v1.99.12.0</div>
+                " version="1.99.13.1">PRESTIGE v1.99.13.1</div>
             </div>
 
             <!-- CENTRAL INTERACTION ZONE -->
@@ -147,7 +147,7 @@
             <div style="height: env(safe-area-inset-bottom); width: 100%;"></div>
         </div>
 
-        <!-- PAUSE SCREEN (ELITE FULL-SCREEN v1.99.12.0) -->
+        <!-- PAUSE SCREEN (ELITE FULL-SCREEN v1.99.13.1) -->
         <div id="pause-screen" class="screen hidden">
             <h2 style="font-family: 'Outfit'; font-weight: 900; color: white; font-size: 8vmin; margin-bottom: 5vmin; letter-spacing: 1vmin;">DURAKLATILDI</h2>
             <div style="display: flex; flex-direction: column; gap: 4vmin; width: 65%; max-width: 300px;">
@@ -157,7 +157,7 @@
             </div>
         </div>
 
-        <!-- MODERN GLASS HUD v1.99.12.0 -->
+        <!-- MODERN GLASS HUD v1.99.13.1 -->
         <div id="modern-hud" style="
             position: absolute; 
             top: calc(15px + env(safe-area-inset-top)); 
@@ -189,7 +189,7 @@
             </div>
         </div>
 
-        <!-- v1.99.12.0: Sol Alt Diamond Armor Rozeti -->
+        <!-- v1.99.13.1: Sol Alt Diamond Armor Rozeti -->
         <div id="armor-ui-indicator" style="
             position: absolute; 
             bottom: calc(30px + env(safe-area-inset-bottom)); 
@@ -224,7 +224,7 @@
             </div>
         </div>
 
-        <!-- GAME OVER SCREEN (ELITE FULL-SCREEN v1.99.12.0) -->
+        <!-- GAME OVER SCREEN (ELITE FULL-SCREEN v1.99.13.1) -->
         <div id="game-over-screen" class="screen hidden">
             <div style="text-align: center;">
                 <h2 style="font-family: 'Outfit'; font-weight: 900; font-size: 9vmin; color: #ff5252; letter-spacing: 1vmin; margin: 0; text-shadow: 0 0 20px rgba(255,82,82,0.4);">OYUN BİTTİ</h2>
@@ -243,13 +243,13 @@
                 <button id="restart-btn" class="elite-btn-large" style="background: rgba(255,255,255,0.15);">YENİDEN BAŞLA 🔄</button>
                 <button id="quit-btn-gameover" style="background: none; border: none; color: rgba(255,255,255,0.4); font-family: 'Outfit'; font-weight: bold; font-size: 3.5vmin; cursor: pointer; margin-top: 2vmin;">ANA MENÜYE DÖN 🏠</button>
             </div>
-            <div style="color: rgba(255,229,255,0.2); font-size: 2vmin;">v1.99.12.0</div>
+            <div style="color: rgba(255,229,255,0.2); font-size: 2vmin;">v1.99.13.1</div>
         </div>
 
-        <!-- LEVEL UP OVERLAY (EMERGENCY FIX v1.99.12.0) -->
+        <!-- LEVEL UP OVERLAY (EMERGENCY FIX v1.99.13.1) -->
         <div id="level-up-overlay" class="screen hidden" style="z-index: 16000; background: rgba(0,0,0,0.85); pointer-events: none;"></div>
 
-        <!-- MODERN ELITE AYARLAR (v1.99.12.0) -->
+        <!-- MODERN ELITE AYARLAR (v1.99.13.1) -->
         <div id="settings-screen" class="screen hidden" style="z-index: 15000; background: linear-gradient(160deg, #050a15 0%, #0a1020 100%); width: 100vw; height: 100vh; max-width: 100%; border-radius: 0;">
             <div style="width: 85%; max-width: 400px; padding: calc(5vmin + env(safe-area-inset-top)) 0; display: flex; flex-direction: column; align-items: center; gap: 5vmin;">
                 <h2 style="color: #FFD700; font-family: 'Outfit', sans-serif; font-weight: 900; font-size: 8vmin; letter-spacing: 0.5vmin; text-shadow: 0 0 20px rgba(255,215,0,0.3); margin-bottom: 2vmin;">AYARLAR</h2>
@@ -290,7 +290,7 @@
             </div>
         </div>
 
-        <!-- MODERN LOGOUT CONFIRM MODAL (v1.99.12.0) -->
+        <!-- MODERN LOGOUT CONFIRM MODAL (v1.99.13.1) -->
         <div id="logout-confirm-screen" class="screen hidden" style="z-index: 20000; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);">
             <div style="width: 85%; max-width: 380px; background: rgba(20, 30, 45, 0.85); border: 1px solid rgba(255,215,0,0.2); border-radius: 30px; padding: 40px 30px; text-align: center; box-shadow: 0 30px 70px rgba(0,0,0,0.6);">
                 <div style="font-size: 65px; margin-bottom: 20px; filter: drop-shadow(0 0 15px rgba(255,255,255,0.2));">🚪</div>
@@ -303,7 +303,7 @@
             </div>
         </div>
 
-        <!-- MODERN RESET CONFIRM MODAL (v1.99.12.0 Restored) -->
+        <!-- MODERN RESET CONFIRM MODAL (v1.99.13.1 Restored) -->
         <div id="reset-confirm-overlay" class="screen hidden" style="z-index: 25000; background: rgba(183, 28, 28, 0.4); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);">
             <div style="width: 85%; max-width: 380px; background: rgba(20, 10, 10, 0.95); border: 2px solid #ff4444; border-radius: 30px; padding: 40px 30px; text-align: center; box-shadow: 0 30px 100px rgba(255, 68, 68, 0.4);">
                 <div style="font-size: 70px; margin-bottom: 20px; filter: drop-shadow(0 0 20px rgba(255, 68, 68, 0.5));">⚠️</div>
@@ -392,7 +392,7 @@
 
                     <button id="ad-gold-btn" class="elite-ad-btn" style="background: rgba(255,215,0,0.1); border: 2px dashed #FFD700; color: #FFD700; padding: 4vmin; border-radius: 20px; font-weight: 900; cursor: pointer; margin-top: 1vmin; font-size: 3.5vmin;">+100 ALTIN (REKLAM)</button>
 
-                    <!-- ALTIN MARKET 💰 v1.99.12.0 -->
+                    <!-- ALTIN MARKET 💰 v1.99.13.1 -->
                     <div style="margin-top: 8vmin; padding-bottom: 10vmin;">
                         <h3 style="color: #FFD700; font-family: 'Outfit'; font-weight: 900; font-size: 6vmin; text-align: center; margin-bottom: 4vmin;">ALTIN MARKET 💰</h3>
                         <div class="gold-market-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 3vmin;">
@@ -440,7 +440,7 @@
             </div>
         </div>
 
-        <!-- LUCKY SPIN (ŞANS ÇARKI) EKRANI v1.99.12.0 -->
+        <!-- LUCKY SPIN (ŞANS ÇARKI) EKRANI v1.99.13.1 -->
         <div id="spin-screen" class="screen hidden" style="z-index: 17000; background: rgba(0,0,0,0.92); width: 100vw; height: 100vh; max-width: 100%; border-radius: 0;">
             <div id="spin-container">
                 <h2 id="spin-title" style="color: #FFD700; font-family: 'Press Start 2P', cursive; font-size: 16px; margin-bottom: 2px;">Lucky Spin</h2>
@@ -491,12 +491,12 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
 
-    <!-- Scriptleri Yükle (v1.99.12.0 Cache Buster) -->
-    <script src="translations.js?v=1.99.12.2"></script>
-    <script src="audio.js?v=1.99.12.2"></script>
-    <script src="assets.js?v=1.99.12.2"></script> 
-    <script src="game_leaderboard.js?v=1.99.12.2"></script>
-    <script src="game_store.js?v=1.99.12.2"></script>
-    <script src="game_v3.js?v=1.99.12.2"></script>
+    <!-- Scriptleri Yükle (v1.99.13.1 Cache Buster) -->
+    <script src="translations.js?v=1.99.13.1"></script>
+    <script src="audio.js?v=1.99.13.1"></script>
+    <script src="assets.js?v=1.99.13.1"></script> 
+    <script src="game_leaderboard.js?v=1.99.13.1"></script>
+    <script src="game_store.js?v=1.99.13.1"></script>
+    <script src="game_v3.js?v=1.99.13.1"></script>
 </body>
 </html>

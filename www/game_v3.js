@@ -1,4 +1,4 @@
-// RİVER ESCAPE PRESTIGE - v1.99.13.0 (ELITE CYCLE)
+// RİVER ESCAPE PRESTIGE - v1.99.13.1 (ELITE CYCLE)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -740,7 +740,7 @@ let transitionTimer = 0;
 // OYUN SİSTEMİ 
 // ----------------------------------------------------
 let isPlaying = false, isGameOver = false, isPaused = false;
-let score = 0, goldCount = 0, lastTime = 0, levelProgressTime = 0; // v1.199.13.0 ELITE MAPPING
+let score = 0, goldCount = 0, lastTime = 0, levelProgressTime = 0, lastSpawnTime = 0; // v1.99.13.1 ELITE MAPPING
 let currentLevel = 1;
 let bgY = 0; let bgScrollSpeed = 100;
 let screenFlash = 0; // Seviye geçişi parlaması v132
@@ -1385,13 +1385,13 @@ window.addEventListener('keyup', (e) => {
 
 let touchX = null;
 let touchY = null;
-let moveTouchId = null; // v1.99.12.0: MULTI-TOUCH TRACKING
+let moveTouchId = null; // v1.99.13.1: MULTI-TOUCH TRACKING
 
 canvas.addEventListener('touchstart', (e) => {
     e.preventDefault();
     if (typeof initAudio === 'function') initAudio();
 
-    // v1.99.12.0: Akıllı Multi-Touch Sistemi
+    // v1.99.13.1: Akıllı Multi-Touch Sistemi
     for (let i = 0; i < e.changedTouches.length; i++) {
         let touch = e.changedTouches[i];
         let rect = canvas.getBoundingClientRect();
@@ -1522,12 +1522,18 @@ function spawnObstacle() {
     // Death Valley (DZ) Etkileri - TÜM SEVİYELER İÇİN GENEL
     if (isDZ) {
         baseSpeed *= 1.4; // %40 Hız artışı (Dengeli Ölüm Vadisi)
-        spawnInterval *= 0.6; // Engeller %40 daha sık gelir
+        spawnInterval *= 0.6;    // v1.99.13.1: ELITE SPAWN COOLDOWN (Anti-Clustering)
     }
+    // Bir engel doğduktan sonra diğeri için en az 0.8 saniye bekleme zorunluluğu
+    if (levelProgressTime - lastSpawnTime < 0.8) return; 
 
-    if (currentLevel === 1 && obstacles.length >= 3) return; // v1.99.13.0: L1 Starter Balance
+    // v1.99.12.2: ELITE LEVEL 1 DENSITY CAP (Max 3 obstacles)
+    if (currentLevel === 1 && obstacles.length >= 3) return;
+    
+    lastSpawnTime = levelProgressTime; // Doğumu mühürle
+ // v1.99.13.1: L1 Starter Balance
 
-    // v1.99.13.0: ELITE VERTICAL SPACING GUARD (Anti-Wall System)
+    // v1.99.13.1: ELITE VERTICAL SPACING GUARD (Anti-Wall System)
     for (let obs of obstacles) {
         if (Math.abs(spawnY - obs.y) < 250) return; 
     }
@@ -1535,7 +1541,7 @@ function spawnObstacle() {
     let biomeIndex = (currentLevel - 1) % levelAssets.length;
     let allowedSpecialTypes = ['rock'];
 
-    // --- v1.99.13.0: THE ELITE CYCLE (Strict Biome Filtering) ---
+    // --- v1.99.13.1: THE ELITE CYCLE (Strict Biome Filtering) ---
     if (biomeIndex === 0) { // Spring (L1, L7, L13...)
         if (score % 14000 >= 500) allowedSpecialTypes.push('hippo');
         if (score % 14000 >= 900) allowedSpecialTypes.push('croc');
@@ -1720,8 +1726,9 @@ function spawnGold() {
     else if (gVal === 5) { gColor = "#00e5ff"; gRadius = 18; }
     else if (gVal === 10) { gColor = "#ff00ff"; gRadius = 22; }
 
-    if (gVal === 10 && currentLevel !== 5 && currentLevel !== 6) {
+    if (gVal === 10 && currentLevel !== 5 && currentLevel !== 6 && !(currentLevel === 1 && obstacles.length >= 2)) {
         // HIRS VE RİSK MEKANİĞİ: 10'luk altını almak ecel terleri döktürmeli (L5/L6 hariç)
+        // v1.99.13.1: Seviye 1'de tuzak doğmasını da kısıtladık (Kapasite koruma)
         let trapDir = Math.random() < 0.5 ? 1 : -1;
         let trapX1 = gx;
         let trapY1 = gy - 150;
@@ -1846,7 +1853,7 @@ function startGame() {
 
     spawnTimer = 0;
     goldTimer = 0;
-    levelProgressTime = 0; // v1.99.13.0: Reset timer for new game
+    levelProgressTime = 0; // v1.99.13.1: Reset timer for new game
 
     // Sync Assets & UI
     const currentAsset = levelAssets[(currentLevel - 1) % levelAssets.length];
@@ -2053,7 +2060,7 @@ function syncEliteHUD() {
 
         if (cachedHud.progress) {
             // v1.99.12.1: Loop-Aware Progress Calculation (Level 6 -> 14.000 fix)
-            // v1.99.13.0: Time-Based Progress (Matching 46 min loop)
+            // v1.99.13.1: Time-Based Progress (Matching 46 min loop)
             const isLastLevelOfCycle = (currentLevel % levelAssets.length === 0);
             const nextThreshold = isLastLevelOfCycle ? 14000 : levelAssets[currentLevel % levelAssets.length].threshold;
             const prevThreshold = levelAssets[(currentLevel - 1) % levelAssets.length].threshold;
@@ -2074,6 +2081,39 @@ function syncEliteHUD() {
 
 function update(dt) {
     if (!isPlaying) return;
+
+    if (isPlaying) {
+        levelProgressTime += dt;
+        score += dt * 5; // v1.99.13.1: Baseline score restored
+
+        // --- v1.99.13.1: FRAME-ACCURATE LEVEL CALCULATION ---
+        let loopCount = Math.floor((levelProgressTime * 5) / 14000);
+        let baseProgressVal = Math.floor(levelProgressTime * 5) % 14000;
+        let targetIndex = 0;
+        for (let i = levelAssets.length - 1; i >= 0; i--) {
+            if (baseProgressVal >= levelAssets[i].threshold) {
+                targetIndex = i;
+                break;
+            }
+        }
+        let calculatedLevel = (loopCount * 6) + targetIndex + 1;
+        if (calculatedLevel > currentLevel) {
+            score += 500; 
+            currentLevel = calculatedLevel; 
+            const lAsset = levelAssets[targetIndex];
+            if (lAsset) {
+                bgImg = bgImgs[lAsset.bgKey];
+                playerImg = players[lAsset.pKey] || players.ilkbahar;
+                bgScrollSpeed = lAsset.speed;
+                if(typeof showLevelUp === 'function') showLevelUp(currentLevel);
+                saveGame();
+            }
+        }
+
+        // AUTO-PILOT FORWARD
+        const autoSpeed = 15;
+        player.y -= autoSpeed * dt;
+        if (player.y < 100) player.y = 100;
 
     // v1.73.2 Master Init: Move currentLAsset to TOP to prevent ReferenceError
     const currentLAsset = levelAssets[(currentLevel - 1) % levelAssets.length];
@@ -2281,7 +2321,7 @@ function update(dt) {
         levelProgressTime += dt;
     }
 
-    // --- v1.99.13.0: SEVİYE SÜRE & GEÇİŞ MANTIĞI (Timed Transitions) ---
+    // --- v1.99.13.1: SEVİYE SÜRE & GEÇİŞ MANTIĞI (Timed Transitions) ---
     // Toplam döngü 14000 puan eşdeğeri = 2800 saniye (~46 dk)
     let loopCount = Math.floor((levelProgressTime * 5) / 14000);
     let baseProgressVal = Math.floor(levelProgressTime * 5) % 14000;
@@ -2296,7 +2336,7 @@ function update(dt) {
 
     let calculatedLevel = (loopCount * 6) + targetIndex + 1;
 
-    // Seviye Atlama Bonusu (v1.99.13.0 Elite Bonus)
+    // Seviye Atlama Bonusu (v1.99.13.1 Elite Bonus)
     if (calculatedLevel > currentLevel) {
         score += 500; // Seviye atlayana anlık 500 puan!
         currentLevel = calculatedLevel; 
@@ -2423,7 +2463,7 @@ function update(dt) {
             let collected = (g.value || 1);
             goldCount += collected;
             totalGold += collected;
-            score += collected * 100; // v1.199.13.0: SKOR ARTIK DEĞERLİ! (x100 Bonus)
+            score += collected * 100; // v1.99.13.1: SKOR ARTIK DEĞERLİ! (x100 Bonus)
             triggerEliteEconomySync();
             saveGame();
             golds.splice(i, 1);
