@@ -1,4 +1,4 @@
-// RİVER ESCAPE PRESTIGE - v1.99.9.1 (VOID LOCKDOWN)
+// RİVER ESCAPE PRESTIGE - v1.99.10.0 (LAVA REIGN)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -2169,7 +2169,10 @@ function update(dt) {
         // Kayığın arkasından su köpüğü çıkar
         let px = player.x + player.width / 2 + (Math.random() - 0.5) * 20;
         let py = player.y + player.height - 5;
-        particles.push(new Particle(px, py, currentLevel === 4 ? "rgba(200, 230, 255, 0.7)" : "rgba(255, 255, 255, 0.6)"));
+        let pColor = "rgba(255, 255, 255, 0.6)";
+        if (currentLevel === 4) pColor = "rgba(200, 230, 255, 0.7)";
+        else if (currentLevel === 5) pColor = "rgba(255, 69, 0, 0.8)"; // Lava orange
+        particles.push(new Particle(px, py, pColor));
     }
     // Parçacıkları güncelle ve ömrü biteni sil
     // --- KAR YAĞIŞI (SNOWFALL) v1.96.8.3 ---
@@ -2466,8 +2469,6 @@ function update(dt) {
 
             // Toplam X = Kıvrım Kayması + Nehir İçi Konum
             obs.x = getRiverShift(obs.y) + obs.relativeX;
-        } else {
-            obs.x += obs.speedX * dt;
         }
 
         // v1.96.8.6: YATAY KAYAN BUZLAR İÇİN KENARLARDAN SEKME (BOUNCE)
@@ -3357,13 +3358,25 @@ function drawProceduralWater(dt) {
             ctx.stroke();
         }
     } else if (currentLevel === 5) {
-        // Lava Deformation & Glow
-        ctx.globalAlpha = 0.2;
-        ctx.fillStyle = "#ff4500";
-        for (let i = 0; i < 4; i++) {
-            let ly = (performance.now() / 10 + i * 200) % canvas.height;
-            ctx.fillRect(rLeft, ly, rRight - rLeft, 40);
+        // --- v1.99.10.0 ELITE LAVA SHIMMER (Sizzling Heat) ---
+        ctx.globalAlpha = 0.35;
+        for (let i = 0; i < 6; i++) {
+            let ly = (performance.now() / 8 + i * 150) % canvas.height;
+            let sizzle = Math.sin(performance.now() / 200 + i) * 15;
+            let grad = ctx.createLinearGradient(rLeft, ly, rRight, ly);
+            grad.addColorStop(0, "rgba(255, 69, 0, 0)");
+            grad.addColorStop(0.5, "rgba(255, 140, 0, 0.6)");
+            grad.addColorStop(1, "rgba(255, 69, 0, 0)");
+            ctx.fillStyle = grad;
+            ctx.fillRect(rLeft + sizzle, ly, rRight - rLeft, 25);
         }
+        
+        // Heat Haze (Subtle distortion effect)
+        ctx.save();
+        ctx.globalCompositeOperation = 'overlay';
+        ctx.fillStyle = "rgba(255, 100, 0, 0.05)";
+        ctx.fillRect(rLeft, 0, rRight - rLeft, canvas.height);
+        ctx.restore();
     }
 
     ctx.restore();

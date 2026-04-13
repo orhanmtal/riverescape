@@ -1,4 +1,4 @@
-// River Escape - Görsel ve Sahne Motoru (Assets & Scene) - v1.99.5.77
+// River Escape - Görsel ve Sahne Motoru (Assets & Scene) - v1.99.10.0 (LAVA REIGN)
 const players = { ilkbahar: null, yaz: null, sonbahar: null, kis: null, lava: null, void: null };
 
 // GÖRSELLERİ ŞEFFAFLAŞTIRAN SİHİRLİ FONKSİYON - v110 (Yüksek Çözünürlük & Local Mühür)

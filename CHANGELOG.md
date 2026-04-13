@@ -1,6 +1,14 @@
 # River Escape - Versiyon Günlükleri (CHANGELOG)
 Bu dosya, oyun motorunun ve özelliklerin versiyon versiyon nasıl geliştiğini mühürleyip saklamak için Antigravity tarafından oluşturulmuştur.
 
+## [v1.99.10.0] "LAVA REIGN" - 2026-04-13
+- **Lava Level Fixed:** Resolved technical issues in Level 5 (7000+ points).
+- **Movement Engine:** Fixed major "Double SpeedX" bug causing unintended fast horizontal movement for obstacles (Crocs, Logs) in all levels.
+- **Visual Polish:** Upgraded Level 5 Lava Shimmer with procedural sizzle gradients and heat-haze effects.
+- **Elite Particles:** Tailored particle colors to match Lava River (orange/red) and Winter (blue/white) environments.
+- **Documentation Sync:** Synchronized `rules.md` thresholds (7000 pts for L5) with actual game engine logic.
+- **Production Seal:** Official v1.99.10.0 release for Google Play preparation.
+
 ## [v1.99.6.0] "MASTER UNIFIER" - 2026-04-11
 - **Layer Sync:** Consolidated Z-Index architecture (Shop: 30K, Spin: 25K, Pause: 10K).
 - **Smart Transitions:** Automated Shop-to-Pause hiding/restoring logic during gameplay.

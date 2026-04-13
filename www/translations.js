@@ -1,4 +1,4 @@
-// River Escape - Dil Paketleri (TR/EN) - v1.99.5.96 (ELITE MASTERPIECE)
+// River Escape - Dil Paketleri (TR/EN) - v1.99.10.0 (LAVA REIGN)
 const translations = {
     tr: {
         startDesc: "",

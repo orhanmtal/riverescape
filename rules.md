@@ -7,11 +7,11 @@ Bu dosya, projenin "Mihenk Taşı" kalitesinde kalması ve gelecekte yapılacak 
 
 ## 0. Seviye İlerleme ve Zorluk Kademeleri
    - LEVEL 1: 0-1000 (Spring)
-   - LEVEL 2: 1000-2000 (Summer)
-   - LEVEL 3: 2000-3000 (Autumn)
-   - LEVEL 4: 3000-4000 (Winter)
-   - LEVEL 5: 4000-6000 (Lava River)
-   - DANGER ZONES: 900-1000, 1900-2000, 2900-3000, 3900-4000 (Lava Gate).
+   - LEVEL 2: 1000-2500 (Summer)
+   - LEVEL 3: 2500-4500 (Autumn)
+   - LEVEL 4: 4500-7000 (Winter)
+   - LEVEL 5: 7000-10000 (Lava River)
+   - DANGER ZONES: 900-1000, 2100-2500, 4100-4500, 6500-7000, 9400-10000.
 
 ## 1. Altın Kural: "Sıfır Umut Tuzağı Yok" (Hope Gap Kuralı)
 - Oyun kesinlikle **%100 tıkanmış geçilmez** bölümler (tuzaklar) KESİNLİKLE OLUŞTURAMAZ.
