@@ -1,4 +1,4 @@
-// RİVER ESCAPE PRESTIGE - v1.99.12.2 (ELITE CYCLE)
+// RİVER ESCAPE PRESTIGE - v1.99.13.0 (ELITE CYCLE)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -740,7 +740,7 @@ let transitionTimer = 0;
 // OYUN SİSTEMİ 
 // ----------------------------------------------------
 let isPlaying = false, isGameOver = false, isPaused = false;
-let score = 0, goldCount = 0, lastTime = 0; // v1.97.2.3 RELEASE
+let score = 0, goldCount = 0, lastTime = 0, levelProgressTime = 0; // v1.199.13.0 ELITE MAPPING
 let currentLevel = 1;
 let bgY = 0; let bgScrollSpeed = 100;
 let screenFlash = 0; // Seviye geçişi parlaması v132
@@ -1525,9 +1525,9 @@ function spawnObstacle() {
         spawnInterval *= 0.6; // Engeller %40 daha sık gelir
     }
 
-    if (currentLevel === 1 && obstacles.length >= 3) return; // v1.99.12.2: L1 Starter Balance
+    if (currentLevel === 1 && obstacles.length >= 3) return; // v1.99.13.0: L1 Starter Balance
 
-    // v1.99.12.2: ELITE VERTICAL SPACING GUARD (Anti-Wall System)
+    // v1.99.13.0: ELITE VERTICAL SPACING GUARD (Anti-Wall System)
     for (let obs of obstacles) {
         if (Math.abs(spawnY - obs.y) < 250) return; 
     }
@@ -1535,7 +1535,7 @@ function spawnObstacle() {
     let biomeIndex = (currentLevel - 1) % levelAssets.length;
     let allowedSpecialTypes = ['rock'];
 
-    // --- v1.99.12.2: THE ELITE CYCLE (Strict Biome Filtering) ---
+    // --- v1.99.13.0: THE ELITE CYCLE (Strict Biome Filtering) ---
     if (biomeIndex === 0) { // Spring (L1, L7, L13...)
         if (score % 14000 >= 500) allowedSpecialTypes.push('hippo');
         if (score % 14000 >= 900) allowedSpecialTypes.push('croc');
@@ -1846,6 +1846,7 @@ function startGame() {
 
     spawnTimer = 0;
     goldTimer = 0;
+    levelProgressTime = 0; // v1.99.13.0: Reset timer for new game
 
     // Sync Assets & UI
     const currentAsset = levelAssets[(currentLevel - 1) % levelAssets.length];
@@ -2052,10 +2053,14 @@ function syncEliteHUD() {
 
         if (cachedHud.progress) {
             // v1.99.12.1: Loop-Aware Progress Calculation (Level 6 -> 14.000 fix)
+            // v1.99.13.0: Time-Based Progress (Matching 46 min loop)
             const isLastLevelOfCycle = (currentLevel % levelAssets.length === 0);
             const nextThreshold = isLastLevelOfCycle ? 14000 : levelAssets[currentLevel % levelAssets.length].threshold;
             const prevThreshold = levelAssets[(currentLevel - 1) % levelAssets.length].threshold;
-            const progress = ((score % 14000 - prevThreshold) / (nextThreshold - prevThreshold)) * 100;
+            
+            // Map levelProgressTime * 5 to the thresholds
+            const currentVal = (levelProgressTime * 5) % 14000;
+            const progress = ((currentVal - prevThreshold) / (nextThreshold - prevThreshold)) * 100;
             cachedHud.progress.style.width = `${Math.min(100, Math.max(0, progress))}%`;
         }
 
@@ -2272,12 +2277,18 @@ function update(dt) {
         playVictoryFanfare();
     }
 
-    let loopCount = Math.floor(score / 14000);
-    let baseScore = Math.floor(score) % 14000;
+    if (isPlaying) {
+        levelProgressTime += dt;
+    }
+
+    // --- v1.99.13.0: SEVİYE SÜRE & GEÇİŞ MANTIĞI (Timed Transitions) ---
+    // Toplam döngü 14000 puan eşdeğeri = 2800 saniye (~46 dk)
+    let loopCount = Math.floor((levelProgressTime * 5) / 14000);
+    let baseProgressVal = Math.floor(levelProgressTime * 5) % 14000;
 
     let targetIndex = 0;
     for (let i = levelAssets.length - 1; i >= 0; i--) {
-        if (baseScore >= levelAssets[i].threshold) {
+        if (baseProgressVal >= levelAssets[i].threshold) {
             targetIndex = i;
             break;
         }
@@ -2285,9 +2296,10 @@ function update(dt) {
 
     let calculatedLevel = (loopCount * 6) + targetIndex + 1;
 
-    // Eğer hesaplanan seviye, mevcut seviyeden BÜYÜKSE geçiş yap (Geri Düşme Yok!)
+    // Seviye Atlama Bonusu (v1.99.13.0 Elite Bonus)
     if (calculatedLevel > currentLevel) {
-        currentLevel = calculatedLevel; // 1 tabanlı indeks
+        score += 500; // Seviye atlayana anlık 500 puan!
+        currentLevel = calculatedLevel; 
         const lAsset = levelAssets[targetIndex];
 
         // v1.98.x: Void Zırhı Kısıtlaması (Sadece Level 6 ve katlarında geçerli)
@@ -2410,8 +2422,9 @@ function update(dt) {
             triggerVibration(15); // Altın aldığında kısa titreşim
             let collected = (g.value || 1);
             goldCount += collected;
-            totalGold += collected; // v1.199.3.31.10.3: ANLIK KASA (Progress Protection)
-            triggerEliteEconomySync(); // v1.99.4.1.8: Nehirdeki altın anında buluta!
+            totalGold += collected;
+            score += collected * 100; // v1.199.13.0: SKOR ARTIK DEĞERLİ! (x100 Bonus)
+            triggerEliteEconomySync();
             saveGame();
             golds.splice(i, 1);
             continue;

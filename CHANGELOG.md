@@ -1,6 +1,12 @@
 # River Escape - Versiyon Günlükleri (CHANGELOG)
 Bu dosya, oyun motorunun ve özelliklerin versiyon versiyon nasıl geliştiğini mühürleyip saklamak için Antigravity tarafından oluşturulmuştur.
 
+## [v1.99.13.0] "ELITE HYBRID" - 2026-04-13
+- **Time-Based Progression:** Level transitions are now decoupled from the score and based on total survival time (46 min total loop).
+- **Skill-Based Scoring:** Introduced an "Elite Score Algorithm" where gold collection (+100x), enemy dodges (+50), and level completions (+500) provide significant score boosts.
+- **HUD Progress Overhaul:** The progress bar now accurately tracks survival time relative to the current level's duration.
+- **Elite Dodge (Near-Miss):** Players now earn bonus points for narrowly dodging obstacles (brushed haptic feedback added).
+
 ## [v1.99.12.2] "ELITE CYCLE" - 2026-04-13
 - **Elite Spawner Cycle:** Implemented specialized 6-level biome rotation (L7=1, L8=2, etc.) for theme consistency.
 - **Biome Restrictions:** Crocodiles, Hippos, and Logs are now strictly forbidden in Level 5 (Lava) and Level 6 (Void) biomes.
