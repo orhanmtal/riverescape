@@ -2101,10 +2101,33 @@ function update(dt) {
             score += 500; 
             currentLevel = calculatedLevel; 
             const lAsset = levelAssets[targetIndex];
+            
+            // v1.98.x: Void Zırhı Kısıtlaması (Sadece Level 6 ve katlarında geçerli)
+            let isVoidLevel = (currentLevel % 6 === 0);
+            if (!isVoidLevel && armorCharge > 0) {
+                armorCharge = 0;
+                showToast(translations[currentLang].armorDeactivated, false);
+                saveGame();
+                updateArmorUI(); // UI Sync
+                updateShopUI();
+            }
+
+            // --- ADRENALİN PATLAMASI (Checkpoint Leap) v1.99.13.1 ---
+            isTransitioningLevel = true;
+            transitionTimer = 2.0;
+            screenFlash = 0.5;
+
             if (lAsset) {
                 bgImg = bgImgs[lAsset.bgKey];
                 playerImg = players[lAsset.pKey] || players.ilkbahar;
-                bgScrollSpeed = lAsset.speed;
+                bgScrollSpeed = 450; // IŞINLANMA HIZI! 🚀⚡️ (Engeller durmaz!)
+                spawnInterval = lAsset.spawn;
+
+                if (currentLevel > 1) {
+                    if (typeof triggerVibration === 'function') triggerVibration([30, 20, 100, 50, 150]);
+                    for (let i = 0; i < 3; i++) setTimeout(playCoinSound, i * 150);
+                }
+
                 if(typeof showLevelUp === 'function') showLevelUp(currentLevel);
                 saveGame();
             }
@@ -2317,90 +2340,8 @@ function update(dt) {
         playVictoryFanfare();
     }
 
-    if (isPlaying) {
-        levelProgressTime += dt;
-    }
 
-    // --- v1.99.13.1: SEVİYE SÜRE & GEÇİŞ MANTIĞI (Timed Transitions) ---
-    // Toplam döngü 14000 puan eşdeğeri = 2800 saniye (~46 dk)
-    let loopCount = Math.floor((levelProgressTime * 5) / 14000);
-    let baseProgressVal = Math.floor(levelProgressTime * 5) % 14000;
 
-    let targetIndex = 0;
-    for (let i = levelAssets.length - 1; i >= 0; i--) {
-        if (baseProgressVal >= levelAssets[i].threshold) {
-            targetIndex = i;
-            break;
-        }
-    }
-
-    let calculatedLevel = (loopCount * 6) + targetIndex + 1;
-
-    // Seviye Atlama Bonusu (v1.99.13.1 Elite Bonus)
-    if (calculatedLevel > currentLevel) {
-        score += 500; // Seviye atlayana anlık 500 puan!
-        currentLevel = calculatedLevel; 
-        const lAsset = levelAssets[targetIndex];
-
-        // v1.98.x: Void Zırhı Kısıtlaması (Sadece Level 6 ve katlarında geçerli)
-        let isVoidLevel = (currentLevel % 6 === 0);
-        if (!isVoidLevel && armorCharge > 0) {
-            armorCharge = 0;
-            saveGame();
-            updateArmorUI();
-            updateShopUI();
-            showToast(translations[currentLang].armorDeactivated, false);
-        }
-
-        // --- ADRENALİN PATLAMASI (Checkpoint Leap) v135 ---
-        isTransitioningLevel = true;
-        transitionTimer = 2.0;
-        screenFlash = 0.5; // Hafif flaş, hız çizgileri ön planda
-
-        bgImg = bgImgs[lAsset.bgKey];
-        playerImg = players[lAsset.pKey] || players.ilkbahar; // v153: Şeffaflık mühürü (Garantili Fallback)
-
-        bgScrollSpeed = 450; // IŞINLANMA HIZI! 🚀⚡️ (Engeller durmaz!)
-        spawnInterval = lAsset.spawn;
-
-        if (currentLevel > 1) {
-            if (typeof triggerVibration === 'function') triggerVibration([30, 20, 100, 50, 150]);
-            for (let i = 0; i < 3; i++) setTimeout(playCoinSound, i * 150);
-
-            const lTitle = currentLang === 'tr' ? lAsset.titleTR : lAsset.titleEN;
-            levelUpOverlay.innerHTML = `
-                <div style="
-                    text-align: center; transform: scale(0.5); 
-                    animation: proLevelPop 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-                    background: rgba(255, 255, 255, 0.1);
-                    backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-                    padding: 30px 50px; border-radius: 20px;
-                    border: 1px solid rgba(255, 255, 255, 0.2);
-                    box-shadow: 0 10px 50px rgba(0,0,0,0.5);
-                ">
-                    <div style="font-size: 14px; color: gold; letter-spacing: 5px; font-weight: bold; margin-bottom: 12px; text-shadow: 0 0 10px gold;">CHECKPOINT REACHED</div>
-                    <h1 style="color: #ffffff; font-size: 32px; font-family: 'Press Start 2P', sans-serif; text-shadow: 4px 4px 0 #000; margin: 0; line-height: 1.5;">${translations[currentLang].levelLabel} ${currentLevel}</h1>
-                    <h2 style="color: ${lAsset.color}; font-size: 26px; font-family: 'Outfit', sans-serif; text-shadow: 3px 3px 0 #000; margin-top: 15px; font-weight: 900; letter-spacing: 4px; text-transform: uppercase;">${lTitle}</h2>
-                </div>
-            `;
-
-            levelUpOverlay.classList.remove('hidden');
-            levelUpOverlay.classList.add('active');
-            levelUpOverlay.style.display = 'flex';
-            levelUpOverlay.style.opacity = '1';
-
-            // 1.2 Saniye sonra Boost biter, yeni seviye hızına geçer
-            setTimeout(() => {
-                bgScrollSpeed = lAsset.speed * 0.75; // v1.70: %25 Yavaşlatıldı
-                levelUpOverlay.style.opacity = '0';
-                setTimeout(() => {
-                    levelUpOverlay.classList.remove('active');
-                    levelUpOverlay.classList.add('hidden');
-                    levelUpOverlay.style.display = 'none';
-                }, 500);
-            }, 1200);
-        }
-    }
 
     // Kayığın Çarpışma Kutusu (Hitbox) - Daha Gerçekçi (Artık kenarlara vurduğunda yanar)
     let px = player.x + 4, py = player.y + 10, pw = player.width - 8, ph = player.height - 20;
