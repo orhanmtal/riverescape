@@ -1,4 +1,4 @@
-// RİVER ESCAPE PRESTIGE - v1.99.14.31 (GOLDEN SHINE)
+// RİVER ESCAPE PRESTIGE - v1.99.14.32 (TRUE GOLDEN SHINE)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -2460,6 +2460,7 @@ function update(dt) {
         if (px < g.x + g.radius && px + pw > g.x - g.radius &&
             py < g.y + g.radius && py + ph > g.y - g.radius) {
             triggerVibration(15); // Altın aldığında kısa titreşim
+            if (typeof playCoinSound === 'function') playCoinSound();
             let collected = (g.value || 1);
             goldCount += collected;
             totalGold += collected;
