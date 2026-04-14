@@ -2056,8 +2056,9 @@ function spawnGold() {
     else if (gVal === 10) { gColor = "#ff00ff"; gRadius = 22; }
 
     // v1.99.15.10: NO TRAPS IN ELITE BIOMES (Lava, Void, Nostalgia, Cyber)
+    // v1.99.16.13: NO TRAPS IN TOXIC WASTELAND (Biome 8)
     const eliteBiomeGold = (currentLevel - 1) % levelAssets.length;
-    const isEliteForGold = (eliteBiomeGold === 4 || eliteBiomeGold === 5 || eliteBiomeGold === 6 || eliteBiomeGold === 7);
+    const isEliteForGold = (eliteBiomeGold === 4 || eliteBiomeGold === 5 || eliteBiomeGold === 6 || eliteBiomeGold === 7 || eliteBiomeGold === 8);
 
     if (gVal === 10 && !isEliteForGold && !(currentLevel === 1 && obstacles.length >= 2)) {
         // v1.99.13.1: Seviye 1'de tuzak doğmasını da kısıtladık (Kapasite koruma)
