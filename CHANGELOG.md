@@ -1,6 +1,11 @@
 # River Escape - Versiyon Günlükleri (CHANGELOG)
 Bu dosya, oyun motorunun ve özelliklerin versiyon versiyon nasıl geliştiğini mühürleyip saklamak için Antigravity tarafından oluşturulmuştur.
 
+## [v1.99.14.26] "CUNNING LOGS & PROGRESS FIX" - 2026-04-14
+- **Level 2 Cunning Log Mechanic**: Logs now start spinning and drifting sideways when they collide with rocks, exclusively in Level 2.
+- **Progress Bar Fix**: Resolved a logic error in `syncEliteHUD` that caused the progress bar to stall in Level 2.
+- **Cycle Engine Sync**: Fixed a hardcoded level calculation bug (changed `6` to `levelAssets.length`) for safe infinite loop progression.
+
 ## [v1.99.14.25] "TRANSITION FIX" - 2026-04-14
 - **Teleport Fatigue Fix**: Resolved a critical bug where `bgScrollSpeed` would remain stuck at 450 (boost speed) after level transitions.
 - **Speed Normalization**: Added a reset command to return background speed to level-specific values (`currentLAsset.speed`) immediately after the 2s transition timer completes.

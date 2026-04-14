@@ -1,4 +1,4 @@
-// RİVER ESCAPE PRESTIGE - v1.99.14.24 (AUDIO SYNC)
+// RİVER ESCAPE PRESTIGE - v1.99.14.26 (HINLIK & PROGRESS)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -2143,14 +2143,19 @@ function syncEliteHUD() {
         }
 
         if (cachedHud.progress) {
-            // v1.99.12.1: Loop-Aware Progress Calculation (Level 6 -> 14.000 fix)
-            // v1.99.13.0: Time-Based Progress (Matching 46 min loop)
-            const isLastLevelOfCycle = (currentLevel % levelAssets.length === 0);
-            const nextThreshold = isLastLevelOfCycle ? 18000 : levelAssets[currentLevel % levelAssets.length].threshold;
-            const prevThreshold = levelAssets[(currentLevel - 1) % levelAssets.length].threshold;
+            // v1.99.14.26: FIXED PROGRESS CALCULATION (Sync with Dynamic Cycle)
+            const cycleLength = levelAssets.length;
+            const cycleMax = 18000;
+            const absoluteProgress = levelProgressTime * 5;
+            const currentVal = absoluteProgress % cycleMax;
             
-            // Map levelProgressTime * 5 to the thresholds
-            const currentVal = (levelProgressTime * 5) % 18000;
+            // v1.99.14.26: Seviye varlıkları dizisindeki gerçek indeks (0-6)
+            const assetIndex = (currentLevel - 1) % cycleLength;
+            const isLastLevelOfAssetCycle = (assetIndex === cycleLength - 1);
+            
+            const nextThreshold = isLastLevelOfAssetCycle ? cycleMax : levelAssets[assetIndex + 1].threshold;
+            const prevThreshold = levelAssets[assetIndex].threshold;
+            
             const progress = ((currentVal - prevThreshold) / (nextThreshold - prevThreshold)) * 100;
             cachedHud.progress.style.width = `${Math.min(100, Math.max(0, progress))}%`;
         }
@@ -2179,7 +2184,7 @@ function update(dt) {
             break;
         }
     }
-    let calculatedLevel = (loopCount * 6) + targetIndex + 1;
+    let calculatedLevel = (loopCount * levelAssets.length) + targetIndex + 1;
     if (calculatedLevel > currentLevel) {
         score += 500; 
         currentLevel = calculatedLevel; 
@@ -2628,10 +2633,26 @@ function update(dt) {
                         obs.y < other.y + other.height && obs.y + obs.height > other.y) {
                         obs.speedX *= -1;
                         obs.x += obs.speedX * dt * 2;
+                        break;
+                    }
+                }
+            }
+            if (obs.rotSpeed) (obs.rotation = (obs.rotation || 0) + obs.rotSpeed * dt);
+        }
 
-                        // v2.04: ROCK BOUNCE PARTICLES (Splinters)
-                        // Splinters Removed v3.30 Final
-                        // if(typeof playCrashSound === 'function') playCrashSound(); 
+        // v1.99.14.26: LEVEL 2 HİNLİK MEKANİZMASI (Rotation on Rock Collision)
+        if (currentLevel === 2 && obs.type === 'vertical') {
+            for (let jObs = 0; jObs < obstacles.length; jObs++) {
+                let other = obstacles[jObs];
+                if (other === obs) continue;
+                if (other.type === 'rock') {
+                    if (obs.x < other.x + other.width && obs.x + obs.width > other.x &&
+                        obs.y < other.y + other.height && obs.y + obs.height > other.y) {
+                        
+                        // Hinlik Başlasın: Kütük dönmeye ve yana kaymaya başlar
+                        obs.rotSpeed = (obs.rotSpeed || 0) + 5; 
+                        obs.speedX = (obs.x < other.x) ? -100 : 100; // Çarptığı yöne fırlar
+                        obs.x += obs.speedX * dt * 2;
                         break;
                     }
                 }
