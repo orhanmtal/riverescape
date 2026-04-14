@@ -1848,8 +1848,8 @@ function spawnObstacle() {
                 relativeX: spawnX - riverShift,
                 y: spawnY, width: 55, height: 55,
                 speedY: baseSpeed * (selectedType === 'comet' ? 1.8 : 1.1) * (isL6 ? 1.25 : 1),
-                speedX: (selectedType === 'comet' ? (Math.random() - 0.5) * 150 : 0),
-                isHoming: isL6 && Math.random() < 0.35, // v1.99.14.81: Takipçi Mekaniği
+                speedX: 0,
+                isHoming: false, // v1.99.14.81: Takipçi Mekaniği
                 hp: selectedType === 'asteroid' ? 4 : 1
             });
         } else if (selectedType === 'blackHole') {
