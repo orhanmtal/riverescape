@@ -2729,23 +2729,28 @@ function update(dt) {
             obs.relativeX = (obs.baseX - getRiverShift(obs.y)) + Math.sin(obs.time * obs.frequency) * obs.amplitude;
             obs.x = getRiverShift(obs.y) + obs.relativeX;
         } else if (obs.type === 'toyBalloon') {
-            // Balonlar hafifçe sağa sola ve yukarı aşağı salınır
             obs.time += (dt || 0.016);
-            const driftX = Math.sin(obs.time * 2) * 40;
+            const driftX = Math.sin(obs.time * 2) * 50;
             const driftY = Math.cos(obs.time * 3) * 15;
             obs.relativeX = (obs.relativeX || (obs.x - getRiverShift(obs.y))) + driftX * dt; 
+            obs.x = getRiverShift(obs.y) + obs.relativeX; // v1.99.14.88: VİSİUAL SYNC
             obs.speedY += driftY * dt;
         } else if (obs.type === 'paperPlane') {
-            // Kağıt uçaklar hızlı zikzaklar çizer
             obs.time += (dt || 0.016);
             const zigzag = Math.sin(obs.time * 8) * 180;
             obs.speedX = zigzag;
+            // Kağıt uçaklar da nehre göre hareket etmeli
+            if (obs.relativeX === undefined) obs.relativeX = obs.x - getRiverShift(obs.y);
+            obs.relativeX += obs.speedX * dt;
+            obs.x = getRiverShift(obs.y) + obs.relativeX;
         } else if (obs.type === 'kite') {
-            // Uçurtmalar geniş kavisler çizer
             obs.time += (dt || 0.016);
             const windSweep = Math.sin(obs.time * 1.5) * 100;
             obs.speedX = windSweep;
-            obs.rotation = Math.sin(obs.time * 2) * 0.2; // Hafif yatış
+            obs.rotation = Math.sin(obs.time * 2) * 0.2;
+            if (obs.relativeX === undefined) obs.relativeX = obs.x - getRiverShift(obs.y);
+            obs.relativeX += obs.speedX * dt;
+            obs.x = getRiverShift(obs.y) + obs.relativeX;
         }
 
         // v1.99.5.0: STRAIGHT MOVEMENT PROTOCOL (No edge drifting for logs/rocks) 🛣️
