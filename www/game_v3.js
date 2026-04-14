@@ -1649,7 +1649,8 @@ function spawnObstacle() {
     } else if (biomeIndex === 6) { // Nostalji (L7, L14...)
         allowedSpecialTypes.push('toyBalloon', 'paperPlane', 'paperPlane', 'kite');
     } else if (biomeIndex === 7) { // Cyber City (L8, L16...)
-        allowedSpecialTypes.push('laserGate', 'cyberDrone', 'glitchStream', 'cyberSpear');
+        // v1.99.15.21: Lazerler baskın engel haline getirildi (Triple frequency)
+        allowedSpecialTypes.push('laserGate', 'laserGate', 'laserGate', 'cyberDrone', 'glitchStream', 'cyberSpear');
     }
 
     // EXTRA LAYER: Ensure crocodiles/logs NEVER appear in Lava/Void/Lagoon/Cyber levels
