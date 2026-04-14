@@ -1933,8 +1933,10 @@ function spawnGold() {
     const sMargin = currentAsset ? currentAsset.margin : 0.35;
     const spawnY = -50;
     const riverShift = getRiverShift(spawnY);
-    const riverLeft = (canvas.width * sMargin) + riverShift;
-    const riverRight = (canvas.width * (1 - sMargin)) + riverShift - 30;
+    const isL7Gold = (currentLevel === 7 || (currentLevel > 0 && (currentLevel - 1) % levelAssets.length === 6));
+    const goldBuffer = isL7Gold ? 35 : 0;
+    const riverLeft = (canvas.width * sMargin) + riverShift + goldBuffer;
+    const riverRight = (canvas.width * (1 - sMargin)) + riverShift - (isL7Gold ? 35 : 30);
 
     if (goldBag.length === 0) fillGoldBag();
     let gVal = goldBag.pop();
