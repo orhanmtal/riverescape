@@ -1649,7 +1649,7 @@ function spawnObstacle() {
     } else if (biomeIndex === 6) { // Nostalji (L7, L14...)
         allowedSpecialTypes.push('toyBalloon', 'paperPlane', 'paperPlane', 'kite');
     } else if (biomeIndex === 7) { // Cyber City (L8, L16...)
-        allowedSpecialTypes.push('laserGate', 'cyberDrone', 'glitchStream');
+        allowedSpecialTypes.push('laserGate', 'cyberDrone', 'glitchStream', 'cyberSpear');
     }
 
     // EXTRA LAYER: Ensure crocodiles/logs NEVER appear in Lava/Void/Lagoon/Cyber levels
@@ -1931,6 +1931,20 @@ function spawnObstacle() {
                 width: 120, height: 180,
                 speedY: baseSpeed,
                 time: 0
+            });
+        } else if (selectedType === 'cyberSpear') {
+            // v1.99.15.20: NEON GREEN SPEAR - Targets player X at spawn
+            const targetX = player.x + (player.width / 2);
+            obstacles.push({
+                type: 'cyberSpear',
+                x: spawnX,
+                relativeX: spawnX - riverShift,
+                y: spawnY,
+                width: 25, height: 110,
+                speedY: baseSpeed * 2.1, 
+                speedX: (targetX - spawnX) * 1.5,
+                time: 0,
+                rotation: Math.atan2((targetX - spawnX) * 1.5, baseSpeed * 2.1)
             });
         }
         return;
@@ -2801,6 +2815,11 @@ function update(dt) {
             obs.time += (dt || 0.016);
             obs.offsetX = (Math.random() - 0.5) * 8;
             obs.x = getRiverShift(obs.y) + (obs.relativeX || 0) + obs.offsetX;
+        } else if (obs.type === 'cyberSpear') {
+            obs.time += (dt || 0.016);
+            if (obs.relativeX === undefined) obs.relativeX = obs.x - getRiverShift(obs.y);
+            obs.relativeX += obs.speedX * dt;
+            obs.x = getRiverShift(obs.y) + obs.relativeX;
         } else if (obs.type === 'toyBalloon') {
             obs.time += (dt || 0.016);
             const driftX = Math.sin(obs.time * 3) * 80;
@@ -3712,6 +3731,35 @@ function draw(dt) {
                     ctx.fillStyle = i % 2 === 0 ? "rgba(0, 229, 255, 0.4)" : "rgba(255, 0, 255, 0.4)";
                     ctx.fillRect(rx, ry, rw, 4);
                 }
+                
+                ctx.restore();
+                drawSuccess = true;
+            } else if (obs.type === 'cyberSpear') {
+                // --- v1.99.15.20: NEON GREEN ENERGY SPEAR ---
+                ctx.save();
+                ctx.translate(obs.x + obs.width / 2, obs.y + obs.height / 2);
+                ctx.rotate(obs.rotation);
+                
+                // Mızrak Gövdesi - Neon Yeşil
+                ctx.shadowBlur = 18;
+                ctx.shadowColor = "#39ff14";
+                ctx.fillStyle = "#39ff14";
+                
+                ctx.beginPath();
+                ctx.moveTo(0, -obs.height / 2); // Keskin uç (tip)
+                ctx.lineTo(obs.width / 2, obs.height / 2);
+                ctx.lineTo(-obs.width / 2, obs.height / 2);
+                ctx.closePath();
+                ctx.fill();
+                
+                // İç Işık (Core)
+                ctx.fillStyle = "#ffff";
+                ctx.beginPath();
+                ctx.moveTo(0, -obs.height / 2 + 15);
+                ctx.lineTo(5, obs.height / 2 - 5);
+                ctx.lineTo(-5, obs.height / 2 - 5);
+                ctx.closePath();
+                ctx.fill();
                 
                 ctx.restore();
                 drawSuccess = true;
