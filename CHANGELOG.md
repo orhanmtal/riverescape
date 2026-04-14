@@ -1,6 +1,13 @@
 # River Escape - Versiyon Günlükleri (CHANGELOG)
 Bu dosya, oyun motorunun ve özelliklerin versiyon versiyon nasıl geliştiğini mühürleyip saklamak için Antigravity tarafından oluşturulmuştur.
 
+## [v1.99.14.0] "LAGOON OF MEMORIES" - 2026-04-14
+- **New Biome: Level 7 Nostalgia:** Added the "Lagoon of Memories" after Level 6, extending the cycle to 18,000 points.
+- **Paper Boat Skin:** Automatic transformation into a folded paper boat during Level 7.
+- **Nostalgic Obstacles:** Implemented Rubber Ducks (Rocks), Balloons (Logs), and Paper Planes (Projectiles).
+- **Elite Plane AI:** Paper planes now follow curved, diagonal flight paths for unpredictable challenge.
+- **Economy Sync:** Maintained gold and armor synchronization throughout the new extended cycle.
+
 ## [v1.99.13.1] "ANTI-CLUSTER HOTFIX" - 2026-04-14
 - **Global Spawn Cooldown:** Enforced a mandatory 0.8s gap between any two obstacle spawns to eliminate "horizontal walls."
 - **L1 Trap restriction:** Integrated `spawnGold` traps into the Level 1 density cap (Max 3 items on screen).

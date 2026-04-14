@@ -1,5 +1,5 @@
 // River Escape - Görsel ve Sahne Motoru (Assets & Scene) - v1.99.10.0 (LAVA REIGN)
-const players = { ilkbahar: null, yaz: null, sonbahar: null, kis: null, lava: null, void: null };
+const players = { ilkbahar: null, yaz: null, sonbahar: null, kis: null, lava: null, void: null, nostalji: null };
 
 // GÖRSELLERİ ŞEFFAFLAŞTIRAN SİHİRLİ FONKSİYON - v110 (Yüksek Çözünürlük & Local Mühür)
 function makeWhiteTransparent(imageElement, isAggressive = false) {
@@ -103,6 +103,7 @@ let bgImgSonbahar = loadBg('sonbahar', 'assets/ArkaPlan_Sonbahar.png');
 let bgImgKis = loadBg('kis', 'assets/ArkaPlan_Kis.png');
 let bgImgLava = loadBg('lava', 'assets/ArkaPlan_Lav.png');
 let bgImgVoid = loadBg('void', 'assets/ArkaPlan_Lav.png'); // v1.97.2.3: ArkaPlan_Void eksik olduğu için Lav ofsetli kullanıldı.
+let bgImgLagoon = loadBg('lagoon', 'assets/ArkaPlan_Lagoon.png'); // v1.99.14.0: ELITE LAGOON
 
 let iPI = safeLoad('Kayik_Spring', 'assets/Kayik.png', (img) => { 
     players.ilkbahar = makeWhiteTransparent(img); 
@@ -113,6 +114,7 @@ let iPI = safeLoad('Kayik_Spring', 'assets/Kayik.png', (img) => {
 let iPY = safeLoad('Kayik_Yaz', 'assets/Kayik.png', (img) => { players.yaz = makeWhiteTransparent(img); });
 let iPS = safeLoad('Kayik_Sonbahar', 'assets/Kayik.png', (img) => { players.sonbahar = makeWhiteTransparent(img); });
 let iPK = safeLoad('Kayik_Kis', 'assets/Kayik.png', (img) => { players.kis = makeWhiteTransparent(img); });
+let iPN = safeLoad('Kayik_Nostalji', 'assets/Kayik_Nostalji.png', (img) => { players.nostalji = makeWhiteTransparent(img); });
 
 let bgImg = bgImgIlkbahar; 
 let playerImg = iPI; 
@@ -152,6 +154,10 @@ safeLoad('lava_geyser', 'assets/lava_geyser.png', (img) => {
     obsTiles['lava_geyser'] = makeWhiteTransparent(img, true);
 });
 loadIndividualTiles('void', '', 'assets/Kutuk.png', 'assets/Timsah.png', 'assets/Hippo.png');
+loadIndividualTiles('lagoon', 'assets/duck_elite.png', 'assets/balloon_elite.png', 'assets/Timsah.png', 'assets/Hippo.png');
+safeLoad('plane_elite', 'assets/plane_elite.png', (img) => {
+    obsTiles['plane_elite'] = makeWhiteTransparent(img, false);
+});
 
 // PARALLAX SİSTEMİ (BULUTLAR/SİS)
 let clouds = [];
