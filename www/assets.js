@@ -157,10 +157,15 @@ safeLoad('kite_elite', 'assets/kite_elite.png', (img) => {
     obsTiles['kite_elite'] = makeWhiteTransparent(img, false);
 });
 loadIndividualTiles('void', '', 'assets/Kutuk.png', 'assets/Timsah.png', 'assets/Hippo.png');
-loadIndividualTiles('lagoon', 'assets/duck_elite.png', 'assets/balloon_elite.png', 'assets/Timsah.png', 'assets/Hippo.png');
+loadIndividualTiles('lagoon', 'assets/duck_elite.png', 'assets/Kutuk.png', 'assets/Timsah.png', 'assets/Hippo.png');
 safeLoad('plane_elite', 'assets/plane_elite.png', (img) => {
     obsTiles['plane_elite'] = makeWhiteTransparent(img, false);
 });
+
+// v1.99.14.4: INDIVIDUAL SCATTERED BALLOONS (Elite)
+safeLoad('balloon_red', 'assets/balloon_red_elite.png', (img) => { obsTiles['balloon_red'] = makeWhiteTransparent(img, false); });
+safeLoad('balloon_blue', 'assets/balloon_blue_elite.png', (img) => { obsTiles['balloon_blue'] = makeWhiteTransparent(img, false); });
+safeLoad('balloon_yellow', 'assets/balloon_yellow_elite.png', (img) => { obsTiles['balloon_yellow'] = makeWhiteTransparent(img, false); });
 
 // PARALLAX SİSTEMİ (BULUTLAR/SİS)
 let clouds = [];

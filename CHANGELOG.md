@@ -1,12 +1,15 @@
 # River Escape - Versiyon Günlükleri (CHANGELOG)
 Bu dosya, oyun motorunun ve özelliklerin versiyon versiyon nasıl geliştiğini mühürleyip saklamak için Antigravity tarafından oluşturulmuştur.
 
+## [v1.99.14.8] "ELITE LAGOON POLISH" - 2026-04-14
+- **Log Evasion**: Disabled all standard logs (`Kutuk.png`) in Level 7 (Lagoon) to match user aesthetic preferences.
+- **Colossal Balloons**: Increased the size of scattered balloons by 50% (48x68) for higher visibility and "Elite" presence.
+- **Boat Restoration**: Reverted the Level 7 player skin from "Nostalji" back to the original Level 1 "Spring" kayak.
+- **Asset Integrity**: Resolved the "brown box" rendering error by correcting biome-specific log mapping.
+
 ## [v1.99.14.0] "LAGOON OF MEMORIES" - 2026-04-14
 - **New Biome: Level 7 Nostalgia:** Added the "Lagoon of Memories" after Level 6, extending the cycle to 18,000 points.
-- **Paper Boat Skin:** Automatic transformation into a folded paper boat during Level 7.
-- **Nostalgic Obstacles:** Implemented Rubber Ducks (Rocks), Balloons (Logs), and Paper Planes (Projectiles).
-- **Elite Plane AI:** Paper planes now follow curved, diagonal flight paths for unpredictable challenge.
-- **Economy Sync:** Maintained gold and armor synchronization throughout the new extended cycle.
+- **Special AI**: Implemented Oscar-winning kites and unpredictably scattered elite balloons.
 
 ## [v1.99.13.1] "ANTI-CLUSTER HOTFIX" - 2026-04-14
 - **Global Spawn Cooldown:** Enforced a mandatory 0.8s gap between any two obstacle spawns to eliminate "horizontal walls."

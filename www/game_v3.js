@@ -715,7 +715,7 @@ const levelAssets = [
     { threshold: 4500, bgKey: 'kis', speed: 260, spawn: 1.00, titleEN: translations.en.l4Title, titleTR: translations.tr.l4Title, color: "#00e5ff", pKey: "ilkbahar", margin: 0.35 },
     { threshold: 7000, bgKey: 'lava', speed: 285, spawn: 0.70, titleEN: translations.en.lavaRiver, titleTR: translations.tr.lavaRiver, color: "#ff4500", pKey: "lava", margin: 0.34 },
     { threshold: 10000, bgKey: 'void', speed: 190, spawn: 1.40, titleEN: translations.en.voidLevel, titleTR: translations.tr.voidLevel, color: "#9b59b6", pKey: "void", margin: 0.32 },
-    { threshold: 14000, bgKey: 'lagoon', speed: 310, spawn: 0.65, titleEN: translations.en.l7Title, titleTR: translations.tr.l7Title, color: "#00e5ff", pKey: "nostalji", margin: 0.30 }
+    { threshold: 14000, bgKey: 'lagoon', speed: 310, spawn: 0.65, titleEN: translations.en.l7Title, titleTR: translations.tr.l7Title, color: "#00e5ff", pKey: "ilkbahar", margin: 0.30 }
 ];
 
 // v1.96.6.6: Ölüm Vadisi (DZ) Durumunu Merkezi Olarak Belirle
@@ -1687,45 +1687,53 @@ function spawnObstacle() {
                     isElite: true
                 });
             }
-        } else if (selectedType === 'rubberDuck') {
-            obstacles.push({
-                type: 'rock', // Lagoon biyomunda 'rock' ördek olarak tanımlandı
-                x: spawnX,
-                relativeX: spawnX - riverShift,
-                y: spawnY, width: 70, height: 70,
-                speedY: baseSpeed * 0.95, speedX: 0
-            });
         } else if (selectedType === 'toyBalloon') {
-            obstacles.push({
-                type: 'vertical', // Lagoon biyomunda 'vertical' balon olarak tanımlandı
-                x: spawnX,
-                relativeX: spawnX - riverShift,
-                y: spawnY, width: 85, height: 125,
-                speedY: baseSpeed * 0.85, speedX: 0
+            // v1.99.14.6: INDIVIDUAL SCATTERED BALLOONS (Red, Blue, Yellow)
+            const colors = ['balloon_red', 'balloon_blue', 'balloon_yellow'];
+            colors.forEach((cType, idx) => {
+                let bx = riverLeft + 30 + (Math.random() * (riverRight - riverLeft - 60));
+                obstacles.push({
+                    type: cType,
+                    x: bx,
+                    relativeX: bx - riverShift,
+                    y: spawnY - (idx * 160), // Vertical scatter
+                    width: 48,
+                    height: 68,
+                    speedY: baseSpeed * 0.9,
+                    speedX: (Math.random() - 0.5) * 40,
+                    oscillation: Math.random() * Math.PI,
+                    oscillationSpeed: 2 + Math.random() * 2,
+                    oscillationRange: 40 + Math.random() * 40
+                });
             });
-        } else if (selectedType === 'kite') {
+            return;
+        } else if (selectedType === 'kite' || selectedType === 'kite_elite') {
+            let ox = riverLeft + 50 + (Math.random() * (riverRight - riverLeft - 100));
             obstacles.push({
-                type: 'kite',
-                x: spawnX,
-                relativeX: spawnX - riverShift,
-                y: spawnY, width: 60, height: 90,
-                speedY: baseSpeed * 0.75, // Biraz daha yavaş süzülür
-                speedX: 0, 
-                oscillation: 0,
+                type: 'kite_elite',
+                x: ox,
+                relativeX: ox - riverShift,
+                y: spawnY,
+                width: 65,
+                height: 95,
+                speedY: baseSpeed * 0.7,
+                speedX: (Math.random() - 0.5) * 60,
+                oscillation: Math.random() * Math.PI,
                 oscillationSpeed: 2 + Math.random() * 2,
-                oscillationRange: 40 + Math.random() * 40,
-                isElite: true
+                oscillationRange: 60 + Math.random() * 40
             });
+            return;
         } else if (selectedType === 'paperPlane') {
             obstacles.push({
                 type: 'paper_plane',
-                x: (Math.random() < 0.5) ? -50 : canvas.width + 50, // Yanlardan fırla!
+                x: (Math.random() < 0.5) ? -50 : canvas.width + 50,
                 relativeX: undefined,
                 y: spawnY + 200, width: 45, height: 45,
                 speedY: baseSpeed * 0.8,
                 speedX: (Math.random() < 0.5) ? 120 : -120, // Kavisli çapraz uçuş
-                isElite: true
+                oscillationRange: 60 + Math.random() * 40
             });
+            return;
         } else if (selectedType === 'fireball') {
             obstacles.push({
                 type: 'fireball',
@@ -1750,7 +1758,7 @@ function spawnObstacle() {
     }
 
     // v152: LAV VE BOŞLUK SEVİYELERİNDEKİ KÜTÜKLERİ (LOGS) İPTAL ET!
-    if (currentLevel === 5 || currentLevel === 6) return;
+    if (currentLevel === 5 || currentLevel === 6 || currentLevel === 7) return;
 
     // Bütün Kütükler Dikey (Vertical) Gelsin
     let logSpeedX = 0;
@@ -1929,7 +1937,7 @@ function startGame() {
     const currentAsset = levelAssets[(currentLevel - 1) % levelAssets.length];
     bgImg = bgImgs[currentAsset.bgKey];
     // v1.99.5.70: Dinamik Kayık Sistemi (Skin Fallback) ⛵
-    playerImg = players[currentAsset.skin] || players.ilkbahar;
+    playerImg = players[currentAsset.pKey] || players.ilkbahar;
     bgScrollSpeed = currentAsset.speed;
     lastTime = performance.now();
 
@@ -2976,7 +2984,8 @@ function draw(dt) {
         if (tile) {
             // New Individual System (Level 2+) // v2.03 Full Classic Revert
             if (tile.isIndividual) {
-                const img = tile[obs.type];
+                // v1.99.14.5: ELITE ASSET FALLBACK (Check level tile first, then global pool)
+                let img = tile[obs.type] || obsTiles[obs.type];
                 if (img && (img.tagName === 'CANVAS' || img.complete)) {
                     // Kutuk.png orijinal dosyada YATAY'dır. Base64 olduğu için isim kontrolü silindi.
                     if (obs.type === 'vertical') {
