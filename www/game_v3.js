@@ -3429,16 +3429,28 @@ function draw(dt) {
                 ctx.shadowColor = "#9b59b6";
 
                 // Rock Body (Jagged Polygon)
-                ctx.fillStyle = "#333333";
+                ctx.fillStyle = "#1e1e24"; // Dark Space Rock
+                ctx.strokeStyle = "#4a148c"; // Deep purple outline
+                ctx.lineWidth = 2;
                 ctx.beginPath();
-                for (let a = 0; a < Math.PI * 2; a += Math.PI / 4) {
-                    let r = (obs.width / 2.5) + Math.random() * 8;
+                for (let a = 0; a < Math.PI * 2; a += Math.PI / 5) {
+                    let r = (obs.width / 2.5) + Math.random() * 12;
                     ctx.lineTo(Math.cos(a) * r, Math.sin(a) * r);
                 }
                 ctx.closePath();
                 ctx.fill();
+                ctx.stroke();
 
-                // Craters / Shading
+                // Craters / Shading (Elite Details)
+                ctx.fillStyle = "rgba(0,0,0,0.4)";
+                for (let i = 0; i < 3; i++) {
+                    let cx = (Math.random() - 0.5) * obs.width * 0.4;
+                    let cy = (Math.random() - 0.5) * obs.width * 0.4;
+                    let cr = Math.random() * (obs.width / 8) + 2;
+                    ctx.beginPath();
+                    ctx.arc(cx, cy, cr, 0, Math.PI * 2);
+                    ctx.fill();
+                }
                 ctx.fillStyle = "rgba(0,0,0,0.4)";
                 ctx.beginPath(); ctx.arc(-5, -5, 6, 0, Math.PI * 2); ctx.fill();
                 ctx.beginPath(); ctx.arc(10, 8, 4, 0, Math.PI * 2); ctx.fill();
