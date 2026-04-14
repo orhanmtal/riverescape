@@ -1,4 +1,4 @@
-// River Escape - Ses Motoru (Audio Engine) - v1.97.0.1 (LAVA ELITE)
+// River Escape - Ses Motoru (Audio Engine) - v1.99.14.24 (AUDIO SYNC)
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 let audioCtx;
 
@@ -24,15 +24,17 @@ function bgMusicScheduler() {
             nextNoteTime = audioCtx.currentTime + 0.05;
         }
         while (nextNoteTime < audioCtx.currentTime + 0.1) {
-            // v1.96.5.0: DİNAMİK ÖLÜM VADİSİ (DZ) MANTIĞI
-            let isDZ = 
-                (currentLevel === 1 && score >= 900) || 
-                (currentLevel === 2 && score >= 2200) || 
-                (currentLevel === 3 && score >= 4200) || 
-                (currentLevel === 4 && score >= 6700) || 
-                (currentLevel === 5 && score >= 9600) || 
-                (currentLevel === 6 && score >= 13500) ||
-                (currentLevel >= 7 && (score % 1000 >= 800));
+            // v1.99.14.23: ELITE DZ SYNC - Zaman bazlı (levelProgressTime) kesin %10 kuralı
+            let pVal = (typeof levelProgressTime !== 'undefined') ? (levelProgressTime * 5) % 18000 : score; 
+            let isDZ = (typeof getDZStatus === 'function') ? getDZStatus() : (
+                (currentLevel === 1 && pVal >= 900) || 
+                (currentLevel === 2 && pVal >= 2350) || 
+                (currentLevel === 3 && pVal >= 4300) || 
+                (currentLevel === 4 && pVal >= 6750) || 
+                (currentLevel === 5 && pVal >= 9700) || 
+                (currentLevel === 6 && pVal >= 13600) ||
+                (currentLevel >= 7 && (pVal % 1000 >= 900))
+            );
 
             playMelodyNote(melody[currentNote], nextNoteTime, isDZ);
             nextNoteTime += isDZ ? 0.10 : 0.2; // Ölüm Vadisi'nde tempo hızlanır

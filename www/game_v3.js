@@ -1,4 +1,4 @@
-// RİVER ESCAPE PRESTIGE - v1.99.14.23 (LAGOON OF MEMORIES)
+// RİVER ESCAPE PRESTIGE - v1.99.14.24 (AUDIO SYNC)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');

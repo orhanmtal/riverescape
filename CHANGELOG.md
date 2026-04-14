@@ -1,6 +1,11 @@
 # River Escape - Versiyon Günlükleri (CHANGELOG)
 Bu dosya, oyun motorunun ve özelliklerin versiyon versiyon nasıl geliştiğini mühürleyip saklamak için Antigravity tarafından oluşturulmuştur.
 
+## [v1.99.14.24] "AUDIO SYNC" - 2026-04-14
+- **DZ Music Accuracy**: Synchronized the "Dönence" (Panic) music trigger with the centralized `getDZStatus()` logic.
+- **Time-Based Trigger**: Replaced score-based triggers with `levelProgressTime` (seconds) to prevent gold bonuses from triggering the music too early.
+- **Fallback Thresholds**: Updated hardcoded fallback values in `audio.js` to strictly honor the last 10% rule.
+
 ## [v1.99.14.9] "AGGRESSIVE LAGOON" - 2026-04-14
 - **Spawn Overdrive**: Increased Level 7 spawn probability from 45% to 90% to eliminate "dead zones."
 - **Balloon Barrage**: Doubled the scattered balloon cluster size from 3 to 6 for intense difficulty.
