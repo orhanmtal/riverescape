@@ -1671,7 +1671,7 @@ function spawnObstacle() {
         // v1.99.15.21: Lazerler baskın engel haline getirildi (Triple frequency)
         allowedSpecialTypes.push('laserGate', 'laserGate', 'laserGate', 'cyberDrone', 'glitchStream', 'cyberSpear');
     } else if (biomeIndex === 8) { // Toxic Wasteland (L9, L17...)
-        allowedSpecialTypes.push('toxicRat', 'toxicRat', 'toxicBarrel');
+        allowedSpecialTypes.push('toxicRat', 'toxicRat', 'toxicBarrel', 'toxicSerpent');
     }
 
     // EXTRA LAYER: Ensure crocodiles/logs NEVER appear in Lava/Void/Lagoon/Cyber levels
@@ -1989,14 +1989,15 @@ function spawnObstacle() {
                 y: spawnY + 50, width: 38, height: 52,
                 speedY: bgScrollSpeed, speedX: 0
             });
-        } else if (selectedType === 'toxicDebris') {
-            // v1.99.16.00: RUINED CONCRETE BLOCK
+        } else if (selectedType === 'toxicSerpent') {
+            // v1.99.16.40: GIANT TOXIC SERPENT
             obstacles.push({
-                type: 'toxicDebris',
+                type: 'toxicSerpent',
                 x: spawnX,
                 relativeX: spawnX - riverShift,
-                y: spawnY, width: 90 + Math.random() * 50, height: 45 + Math.random() * 45,
-                speedY: bgScrollSpeed, speedX: 0
+                y: spawnY, width: 40, height: 130, // Long body
+                speedY: bgScrollSpeed * 1.1, speedX: 0,
+                time: Math.random() * 10
             });
         }
         return;
@@ -2881,6 +2882,13 @@ function update(dt) {
             // Nehir kaymasına (drift) uyum sağla (Opsiyonel: Sıçanlar nehirden bağımsız yüzebilir ama senkronizasyon için ekledik)
             if (obs.relativeX === undefined) obs.relativeX = obs.x - getRiverShift(obs.y);
             obs.relativeX += (obs.speedX + swimWiggle) * dt; 
+            obs.x = getRiverShift(obs.y) + obs.relativeX;
+        } else if (obs.type === 'toxicSerpent') {
+            // v1.99.16.40: WIDE S-SLITHER MOVEMENT
+            obs.time += (dt || 0.016);
+            const slitherX = Math.sin(obs.time * 2.0) * 140;
+            if (obs.relativeX === undefined) obs.relativeX = obs.x - getRiverShift(obs.y);
+            obs.relativeX = (obs.relativeX || 0) * 0.95 + slitherX * 0.05;
             obs.x = getRiverShift(obs.y) + obs.relativeX;
         } else if (obs.type === 'toyBalloon') {
             obs.time += (dt || 0.016);
@@ -3936,57 +3944,46 @@ function draw(dt) {
                 
                 ctx.restore();
                 drawSuccess = true;
-            } else if (obs.type === 'toxicDebris') {
-                // --- v1.99.16.20: ADVANCED RUINED PILLAR (Redesign) ---
+            } else if (obs.type === 'toxicSerpent') {
+                // --- v1.99.16.40: GIANT SEGMENTED SERPENT (Elite Rendering) ---
                 ctx.save();
                 ctx.translate(obs.x + obs.width / 2, obs.y + obs.height / 2);
-                
-                // 1. Yükselen Dumanlar (Toxic Smoke)
-                ctx.fillStyle = "rgba(100, 100, 100, 0.15)";
-                for(let i=0; i<4; i++) {
-                    let sTime = obs.time + i*0.5;
-                    let sY = -((sTime * 25) % 80);
-                    let sX = Math.cos(sTime * 1.5) * 15;
+
+                const segmentCount = 6;
+                const segmentDist = 20;
+
+                for (let i = segmentCount - 1; i >= 0; i--) {
+                    // Her segment bir önceki segmenti takip eden bir sine-wave gecikmesine sahip
+                    const sOffset = Math.sin(obs.time * 5 + i * 0.6) * 25;
+                    const sY = i * segmentDist - (obs.height / 2);
+                    const sSize = (obs.width / 2) * (1 - (i / (segmentCount + 2)));
+
+                    ctx.fillStyle = i === 0 ? "#222" : "#1a1a1a"; // Kafa daha belirgin
                     ctx.beginPath();
-                    ctx.arc(sX, -obs.height/3 + sY, 12 + i*2, 0, Math.PI*2);
+                    ctx.arc(sOffset, sY, sSize, 0, Math.PI * 2);
                     ctx.fill();
-                }
 
-                // 2. Beton Gövde (Harabe Formu)
-                ctx.fillStyle = "#2a2a2a";
-                ctx.beginPath();
-                ctx.moveTo(-obs.width/2, -obs.height/2);
-                ctx.lineTo(obs.width/2 - 10, -obs.height/2 + 5);
-                ctx.lineTo(obs.width/2, obs.height/2);
-                ctx.lineTo(-obs.width/2 + 15, obs.height/2 - 5);
-                ctx.closePath();
-                ctx.fill();
+                    // Radyoaktif Desenler (Bioluminescence)
+                    if (i % 2 === 0) {
+                        ctx.fillStyle = "#adff2f";
+                        ctx.beginPath();
+                        ctx.arc(sOffset - sSize/3, sY, 2, 0, Math.PI * 2);
+                        ctx.arc(sOffset + sSize/3, sY, 2, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
 
-                // Çatlaklar (Cracks)
-                ctx.strokeStyle = "#000"; ctx.lineWidth = 1; ctx.globalAlpha = 0.4;
-                ctx.beginPath(); ctx.moveTo(0, -obs.height/2); ctx.lineTo(-10, 0); ctx.lineTo(5, 20); ctx.stroke();
-                ctx.globalAlpha = 1.0;
-
-                // 3. Çoklu Paslı Demirler (Rebars)
-                ctx.strokeStyle = "#5d2e00";
-                ctx.lineWidth = 3;
-                let rebarSeeds = [0.2, 0.5, 0.8];
-                rebarSeeds.forEach((s, idx) => {
-                    ctx.beginPath();
-                    let startX = -obs.width/2 + (obs.width * s);
-                    ctx.moveTo(startX, -obs.height/2);
-                    ctx.quadraticCurveTo(startX + 20, -obs.height/2 - 20, startX + 30 + idx*5, -obs.height/2 - 35);
-                    ctx.stroke();
-                    // Demir ucu parlama
-                    ctx.fillStyle = "#8b4513"; ctx.beginPath(); ctx.arc(startX+30+idx*5, -obs.height/2-35, 2, 0, Math.PI*2); ctx.fill();
-                });
-
-                // 4. Zehirli Yosunlar (Neon Moss)
-                ctx.fillStyle = "#adff2f";
-                for(let i=0; i<8; i++) {
-                    let mx = -obs.width/2 + (Math.random()*obs.width);
-                    let my = -obs.height/2 + (Math.random()*obs.height);
-                    ctx.beginPath(); ctx.arc(mx, my, 2, 0, Math.PI*2); ctx.fill();
+                    // Kafa Detayları
+                    if (i === 0) {
+                        // Parlayan Gözler (Neon Sarı)
+                        ctx.fillStyle = "#ffff00";
+                        ctx.shadowBlur = 15;
+                        ctx.shadowColor = "yellow";
+                        ctx.beginPath();
+                        ctx.arc(sOffset - 6, sY - 4, 4, 0, Math.PI * 2);
+                        ctx.arc(sOffset + 6, sY - 4, 4, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.shadowBlur = 0;
+                    }
                 }
 
                 ctx.restore();
