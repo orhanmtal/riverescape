@@ -1,4 +1,4 @@
-// RİVER ESCAPE PRESTIGE - v1.99.14.28 (AUDIO REBORN)
+// RİVER ESCAPE PRESTIGE - v1.99.14.29 (EXTREME AUDIO)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -2030,7 +2030,7 @@ function gameOver() {
     isGameOver = true;
     isPlaying = false;
     syncEliteHUD();
-    playDeathSound();
+    playEliteDeathEffect();
 
     window.resumeScore = 0;
     window.resumeLives = 3;

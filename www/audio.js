@@ -1,4 +1,4 @@
-// River Escape - Ses Motoru (Audio Engine) - v1.99.14.28 (AUDIO REBORN)
+// River Escape - Ses Motoru (Audio Engine) - v1.99.14.29 (EXTREME AUDIO)
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 let audioCtx;
 
@@ -103,49 +103,34 @@ function playCrashSound() {
     osc.start(); osc.stop(audioCtx.currentTime + 0.15);
 }
 
-function playDeathSound() {
+function playEliteDeathEffect() {
     if(!audioCtx) return;
     const now = audioCtx.currentTime;
     
-    // v1.99.14.28: Elite Death Sound (Explosion + Pitch Dive)
-    
-    // 1. White Noise Explosion
-    const bufferSize = audioCtx.sampleRate * 0.4;
-    const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-    const data = buffer.getChannelData(0);
-    for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
-    
-    const noise = audioCtx.createBufferSource();
-    noise.buffer = buffer;
-    const noiseGain = audioCtx.createGain();
-    const noiseFilter = audioCtx.createBiquadFilter();
-    
-    noiseFilter.type = 'lowpass';
-    noiseFilter.frequency.setValueAtTime(1000, now);
-    noiseFilter.frequency.exponentialRampToValueAtTime(10, now + 0.4);
-    
-    noiseGain.gain.setValueAtTime(0.3 * isSFXVolume, now);
-    noiseGain.gain.linearRampToValueAtTime(0, now + 0.4);
-    
-    noise.connect(noiseFilter);
-    noiseFilter.connect(noiseGain);
-    noiseGain.connect(audioCtx.destination);
-    noise.start(now);
-    
-    // 2. Square Power-Down Tone
-    const osc = audioCtx.createOscillator();
-    const oscGain = audioCtx.createGain();
-    osc.type = 'square';
-    osc.frequency.setValueAtTime(440, now);
-    osc.frequency.exponentialRampToValueAtTime(50, now + 0.8);
-    
-    oscGain.gain.setValueAtTime(0.2 * isSFXVolume, now);
-    oscGain.gain.exponentialRampToValueAtTime(0.01, now + 0.8);
-    
-    osc.connect(oscGain);
-    oscGain.connect(audioCtx.destination);
-    osc.start(now);
-    osc.stop(now + 0.8);
+    // v1.99.14.29: Extreme Death (Sawtooth Sweep + Low Rumble)
+    // Eski "tıp-tıp" sesinden tamamen farklı, agresif bir ses.
+
+    // 1. Derin Patlama (Low Rumble)
+    const osc1 = audioCtx.createOscillator();
+    const gain1 = audioCtx.createGain();
+    osc1.type = 'sawtooth';
+    osc1.frequency.setValueAtTime(150, now);
+    osc1.frequency.exponentialRampToValueAtTime(40, now + 0.5);
+    gain1.gain.setValueAtTime(0.4 * isSFXVolume, now);
+    gain1.gain.linearRampToValueAtTime(0, now + 0.5);
+    osc1.connect(gain1); gain1.connect(audioCtx.destination);
+    osc1.start(now); osc1.stop(now + 0.5);
+
+    // 2. Metalik Siren İnişi (Falling Alarm)
+    const osc2 = audioCtx.createOscillator();
+    const gain2 = audioCtx.createGain();
+    osc2.type = 'sawtooth';
+    osc2.frequency.setValueAtTime(880, now);
+    osc2.frequency.exponentialRampToValueAtTime(80, now + 1.2);
+    gain2.gain.setValueAtTime(0.15 * isSFXVolume, now);
+    gain2.gain.exponentialRampToValueAtTime(0.01, now + 1.2);
+    osc2.connect(gain2); gain2.connect(audioCtx.destination);
+    osc2.start(now); osc2.stop(now + 1.2);
 }
 
 function playPowerupSound() {

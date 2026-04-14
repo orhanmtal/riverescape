@@ -1,6 +1,10 @@
 # River Escape - Versiyon Günlükleri (CHANGELOG)
 Bu dosya, oyun motorunun ve özelliklerin versiyon versiyon nasıl geliştiğini mühürleyip saklamak için Antigravity tarafından oluşturulmuştur.
 
+## [v1.99.14.29] "EXTREME AUDIO" - 2026-04-14
+- **Death Effect Rename**: Renamed `playDeathSound` to `playEliteDeathEffect` to bypass browser audio caching and ensure fresh logic is used.
+- **Aggressive Audio Design**: Replaced the 4-note descending sound with a dramatic sawtooth "Falling Siren" and a deep low-frequency "Explosion Rumble" for maximum impact.
+
 ## [v1.99.14.28] "AUDIO REBORN" - 2026-04-14
 - **Hippo (Hoppa) Sound Removal**: Silenced the `playCrashSound` trigger when hippos emerge from the water, as per user request.
 - **New Death Sound**: Redesigned `playDeathSound` with a cinematic white-noise explosion and a deep square-wave pitch dive for a more high-fidelity game-over experience.
