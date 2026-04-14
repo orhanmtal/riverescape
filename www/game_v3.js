@@ -1,4 +1,4 @@
-// RİVER ESCAPE PRESTIGE - v1.99.14.15 (LAGOON OF MEMORIES)
+// RİVER ESCAPE PRESTIGE - v1.99.14.16 (LAGOON OF MEMORIES)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -1610,8 +1610,8 @@ function spawnObstacle() {
     let isBlocked = true;
     let spawnGap = player.width + 75; // Kayıktan biraz daha geniş "güvenli şerit"
 
-    // v1.99.14.15: DYNAMIC EDGE BUFFER - Scale based on river width
-    const dynamicObsBuffer = (spawnMargin < 0.20) ? 65 : 15; 
+    // v1.99.14.16: L7 EXCLUSIVE EDGE BUFFER - Strictly exclusive to Lagoon
+    const dynamicObsBuffer = (currentLevel === 7) ? 65 : 15; 
     const leftLimitRel = (canvas.width * spawnMargin) + dynamicObsBuffer;  
     const rightLimitRel = (canvas.width * (1 - spawnMargin)) - (dynamicObsBuffer + 45); 
 
@@ -2282,8 +2282,8 @@ function update(dt) {
     // X Ekseni Sınırları (Nehir Kanalı) - v1.97.0.3: Dinamik Büklüm Sistemi
     const pMargin = (currentLAsset && typeof currentLAsset.margin === 'number') ? currentLAsset.margin : 0.32;
     const riverShift = getRiverShift(player.y);
-    // v1.99.14.15: DYNAMIC PLAYER BUFFER - Scale based on river width
-    const dynamicPlayBuffer = (pMargin < 0.20) ? 40 : 10;
+    // v1.99.14.16: L7 EXCLUSIVE PLAYER BUFFER - Strictly exclusive to Lagoon
+    const dynamicPlayBuffer = (currentLevel === 7) ? 40 : 10;
     const playRiverLeft = (canvas.width * pMargin) + riverShift + dynamicPlayBuffer; 
     const playRiverRight = (canvas.width * (1 - pMargin)) + riverShift - player.width - dynamicPlayBuffer; 
 
