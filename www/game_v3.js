@@ -2385,38 +2385,11 @@ function update(dt) {
         goldTimer = 0;
     }
 
-    // DİNAMİK 4 MEVSİM SEVİYE GÜNCELLEMESİ v128 (SEVİYE GERİ DÜŞMESİ ENGELLENDİ)
-    // 14.000 ŞAMPİYONLUK MÜHRÜ (TEK SEFERLİK BÜYÜK KUTLAMA) - v1.98 (Level 6 eklendiği için sona itildi)
+    // 14.000 ŞAMPİYONLUK MÜHRÜ (v1.98 Level 7 Final Loop)
     if (score >= 18000 && totalLoops === 0) {
-        totalLoops = 1; // Artık sonsuz devam edeceğiz ama şov bir kez olsun
-        isTransitioningLevel = true;
-        transitionTimer = 5.0;
-        screenFlash = 1.0;
-
-        // Şampiyonluk Ekranı (v158: Level 7'ye Bağladık)
-        const lTitle = translations[currentLang].gameCompleted;
-        console.log("CEZA: Büyük Şampiyonluk Ekranı (14K) Açılıyor...");
-
-        levelUpOverlay.innerHTML = `
-            <div style="text-align: center; animation: proLevelPop 1.5s forwards;">
-                <div style="font-size: 22px; color: gold; letter-spacing: 10px; font-weight: bold; margin-bottom: 25px; text-shadow: 0 0 40px gold;">O Y U N   B İ T T İ !</div>
-                <h1 style="color: #ffffff; font-size: 52px; font-family: 'Press Start 2P', sans-serif; text-shadow: 6px 6px 0 #000, 0 0 50px rgba(255, 165, 0, 0.6); margin: 0;">ŞAMPİYON!</h1>
-                <h2 style="color: #64dd17; font-size: 30px; font-family: 'Outfit', sans-serif; text-shadow: 3px 3px 0 #000; margin-top: 25px; font-weight: 900; letter-spacing: 4px;">${lTitle}</h2>
-                <div style="margin-top: 30px; color: white; font-size: 20px; text-shadow: 0 0 10px #fff; font-weight: bold;">SEVİYE: 7 (BÜYÜK TUR)</div>
-            </div>
-        `;
-        levelUpOverlay.classList.remove('hidden');
-        levelUpOverlay.style.display = 'flex';
-        levelUpOverlay.style.opacity = '1';
-
-        setTimeout(() => {
-            levelUpOverlay.classList.add('hidden');
-            levelUpOverlay.style.display = 'none';
-            levelUpOverlay.style.opacity = '0';
-            isTransitioningLevel = false;
-        }, 5000);
-
-        playVictoryFanfare();
+        totalLoops = 1; // Artık sonsuz devam edeceğiz
+        // v1.99.14.17: Şampionluk yazısı kullanıcı talebiyle KALDIRILDI.
+        // Oyun artık kesintisiz akmaya devam edecek.
     }
 
 
