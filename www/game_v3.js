@@ -1,4 +1,4 @@
-// RİVER ESCAPE PRESTIGE - v1.99.14.22 (LAGOON OF MEMORIES)
+// RİVER ESCAPE PRESTIGE - v1.99.14.23 (LAGOON OF MEMORIES)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -709,7 +709,7 @@ resizeCanvas();
 
 
 const levelAssets = [
-    { threshold: 0, bgKey: 'ilkbahar', speed: 140, spawn: 1.60, titleEN: translations.en.l1Title, titleTR: translations.tr.l1Title, color: "#64dd17", pKey: "ilkbahar", margin: 0.37 },
+    { threshold: 0, bgKey: 'ilkbahar', speed: 140, spawn: 1.60, titleEN: translations.en.l1Title, titleTR: translations.tr.l1Title, color: "#64dd17", pKey: "ilkbahar", margin: 0.35 },
     { threshold: 1000, bgKey: 'yaz', speed: 160, spawn: 1.55, titleEN: translations.en.l2Title, titleTR: translations.tr.l2Title, color: "#ffd600", pKey: "ilkbahar", margin: 0.33 },
     { threshold: 2500, bgKey: 'sonbahar', speed: 220, spawn: 1.15, titleEN: translations.en.l3Title, titleTR: translations.tr.l3Title, color: "#ff6d00", pKey: "ilkbahar", margin: 0.35 },
     { threshold: 4500, bgKey: 'kis', speed: 260, spawn: 1.00, titleEN: translations.en.l4Title, titleTR: translations.tr.l4Title, color: "#00e5ff", pKey: "ilkbahar", margin: 0.35 },
@@ -2689,7 +2689,7 @@ function update(dt) {
     // v1.97.0.3: STRICT "ELITE" CLAMPING (Never touch walls)
     const finalPMargin = currentLAsset ? currentLAsset.margin : 0.32;
     const finalShift = getRiverShift(player.y);
-    const wallSafeBuffer = 18; // v1.99.11.0: Kayığın karaya çıkmasını önleyen genişletilmiş güvenlik tamponu
+    const wallSafeBuffer = 10; // v1.99.14.23: Elite 'Touch' Buffer (Reduced from 18)
     const fLeft = (canvas.width * finalPMargin) + finalShift + wallSafeBuffer;
     const fRight = (canvas.width * (1 - finalPMargin)) + finalShift - player.width - wallSafeBuffer;
 
