@@ -3842,81 +3842,104 @@ function draw(dt) {
                 ctx.restore();
                 drawSuccess = true;
             } else if (obs.type === 'toxicRat') {
-                // --- v1.99.16.00: MUTATED GIANT RAT ---
+                // --- v1.99.16.10: ELITE MUTATED RAT (Redesign) ---
                 ctx.save();
                 ctx.translate(obs.x + obs.width / 2, obs.y + obs.height / 2);
                 
-                // Gövde (Gri/Kahve)
-                ctx.fillStyle = "#4a4a4a";
+                // 1. Su üstünde sülfürlü yeşil iz (Toxic Wake)
+                ctx.fillStyle = "rgba(50, 205, 50, 0.2)";
                 ctx.beginPath();
-                ctx.ellipse(0, 0, obs.width / 2, obs.height / 2.5, 0, 0, Math.PI * 2);
+                ctx.arc(-obs.width/2, 5, 10 + Math.sin(obs.time*10)*5, 0, Math.PI*2);
+                ctx.fill();
+
+                // 2. Gövde (Paslı Gri)
+                ctx.fillStyle = "#3d3d3d";
+                ctx.beginPath();
+                ctx.ellipse(0, 0, obs.width / 2, obs.height / 2.3, 0, 0, Math.PI * 2);
                 ctx.fill();
                 
-                // Kuyruk (Pembe/Gri)
-                ctx.strokeStyle = "#8b5a5a";
+                // 3. Animatif Kuyruk (Yılan gibi kıvrılan)
+                ctx.strokeStyle = "#5a3a3a";
                 ctx.lineWidth = 3;
                 ctx.beginPath();
-                ctx.moveTo(-obs.width / 2, 0);
-                ctx.quadraticCurveTo(-obs.width / 1.5, Math.sin(obs.time * 5) * 10, -obs.width, 5);
+                ctx.moveTo(-obs.width / 2, 2);
+                for(let i=0; i<15; i++) {
+                    let tx = -obs.width/2 - i*3;
+                    let ty = Math.sin(obs.time * 8 + i*0.5) * 8;
+                    ctx.lineTo(tx, ty);
+                }
                 ctx.stroke();
 
-                // Parlayan Kırmızı Gözler
-                ctx.fillStyle = "#ff0000";
-                ctx.shadowBlur = 5;
+                // 4. Parlayan Gözler (Neon Kırmızı)
+                ctx.fillStyle = "#ff1111";
+                ctx.shadowBlur = 10;
                 ctx.shadowColor = "red";
                 ctx.beginPath();
-                ctx.arc(obs.width / 4, -4, 3, 0, Math.PI * 2);
-                ctx.arc(obs.width / 4, 4, 3, 0, Math.PI * 2);
+                ctx.arc(obs.width / 3, -5, 3, 0, Math.PI * 2);
+                ctx.arc(obs.width / 3, 5, 3, 0, Math.PI * 2);
                 ctx.fill();
                 
                 ctx.restore();
                 drawSuccess = true;
             } else if (obs.type === 'toxicBarrel') {
-                // --- v1.99.16.00: RADIOACTIVE BARREL ---
+                // --- v1.99.16.10: LEAKING RADIOACTIVE BARREL (Redesign) ---
                 ctx.save();
                 ctx.translate(obs.x + obs.width / 2, obs.y + obs.height / 2);
                 
-                // Varil Gövdesi (Metalik Gri/Paslı)
-                ctx.fillStyle = "#3a3a3a";
+                // 1. Sızan Radyoaktif Sıvı (Puddle)
+                ctx.fillStyle = "rgba(50, 255, 50, 0.5)";
+                ctx.shadowBlur = 15;
+                ctx.shadowColor = "lime";
+                ctx.beginPath();
+                ctx.ellipse(0, obs.height/2, obs.width*0.8, 10 + Math.sin(obs.time*3)*4, 0, 0, Math.PI*2);
+                ctx.fill();
+
+                // 2. Paslı Varil Gövdesi
+                ctx.fillStyle = "#2c2c2c";
                 ctx.fillRect(-obs.width / 2, -obs.height / 2, obs.width, obs.height);
                 
-                // Radyoaktif Kuşaklar (Sarı)
-                ctx.fillStyle = "#ffd600";
-                ctx.fillRect(-obs.width / 2, -obs.height / 4, obs.width, 10);
+                // Pas Lekeleri
+                ctx.fillStyle = "#8b4513";
+                ctx.globalAlpha = 0.6;
+                ctx.fillRect(-obs.width/2 + 5, -obs.height/2 + 10, 10, 15);
+                ctx.fillRect(5, 5, 12, 8);
+                ctx.globalAlpha = 1.0;
+
+                // 3. Radyoaktif Kuşak ve İkon
+                ctx.fillStyle = "#ffcc00";
+                ctx.fillRect(-obs.width / 2, -5, obs.width, 14);
                 
-                // Biohazard İkonu (Basit)
                 ctx.strokeStyle = "#000";
                 ctx.lineWidth = 2;
-                ctx.beginPath();
-                ctx.arc(0, 5, 5, 0, Math.PI * 2);
-                ctx.stroke();
+                ctx.beginPath(); ctx.arc(0, 2, 4, 0, Math.PI*2); ctx.stroke();
                 
                 ctx.restore();
                 drawSuccess = true;
             } else if (obs.type === 'toxicDebris') {
-                // --- v1.99.16.00: RUINED CONCRETE DEBRIS ---
+                // --- v1.99.16.10: RUSTED PIPES & RUINS (Redesign) ---
                 ctx.save();
                 ctx.translate(obs.x + obs.width / 2, obs.y + obs.height / 2);
                 
-                // Beton Bloğu
-                ctx.fillStyle = "#2e2e2e";
+                // Beton Parçası
+                ctx.fillStyle = "#2a2a2a";
                 ctx.beginPath();
-                ctx.moveTo(-obs.width / 2, -obs.height / 2);
-                ctx.lineTo(obs.width / 2, -obs.height / 2 + 10);
-                ctx.lineTo(obs.width / 3, obs.height / 2);
-                ctx.lineTo(-obs.width / 2 - 5, obs.height / 2 - 5);
-                ctx.closePath();
+                ctx.moveTo(-obs.width/2, -obs.height/2);
+                ctx.lineTo(obs.width/2, -obs.height/3);
+                ctx.lineTo(obs.width/2.5, obs.height/2);
+                ctx.lineTo(-obs.width/2, obs.height/2.2);
                 ctx.fill();
+
+                // Paslı Borular (Pipes fırlayan)
+                ctx.strokeStyle = "#7b3f00";
+                ctx.lineWidth = 6;
+                ctx.beginPath();
+                ctx.moveTo(0, 0);
+                ctx.lineTo(obs.width/2 + 15, -15);
+                ctx.stroke();
                 
-                // Demir Çubuklar (Rebar)
-                ctx.strokeStyle = "#444";
-                ctx.lineWidth = 2;
-                for (let i = 0; i < 3; i++) {
-                    ctx.beginPath();
-                    ctx.moveTo(-obs.width / 2 + (i * 15), -obs.height / 2);
-                    ctx.lineTo(-obs.width / 2 + (i * 15) - 10, -obs.height / 2 - 15);
-                    ctx.stroke();
-                }
+                // Borunun ucu (Açık)
+                ctx.fillStyle = "#1a1a1a";
+                ctx.beginPath(); ctx.arc(obs.width/2+15, -15, 3, 0, Math.PI*2); ctx.fill();
 
                 ctx.restore();
                 drawSuccess = true;
