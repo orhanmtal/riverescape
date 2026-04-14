@@ -883,7 +883,8 @@ window.addEventListener('keydown', (e) => {
     }
     // --- TEMPORARY TEST MAGIC: LEVEL SKIP (Press 'L') ---
     if (e.key === 'l' || e.key === 'L') {
-        score += 1000;
+        levelProgressTime += 200; // Artık biyomlar arası saniyeler içinde zıplar
+        score += 2000;
     }
 });
 
@@ -2363,8 +2364,8 @@ function update(dt) {
     score += dt * 5; // v1.99.14.12: Baseline score restored
 
     // --- v1.99.13.1: FRAME-ACCURATE LEVEL CALCULATION ---
-    let loopCount = Math.floor((levelProgressTime * 5) / 18000);
-    let baseProgressVal = Math.floor(levelProgressTime * 5) % 18000;
+    let loopCount = Math.floor((levelProgressTime * 5) / 22500);
+    let baseProgressVal = Math.floor(levelProgressTime * 5) % 22500;
     let targetIndex = 0;
     for (let i = levelAssets.length - 1; i >= 0; i--) {
         if (baseProgressVal >= levelAssets[i].threshold) {
