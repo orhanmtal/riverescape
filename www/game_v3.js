@@ -1549,6 +1549,7 @@ function spawnObstacle() {
     // v1.99.13.1: ELITE SPAWN COOLDOWN (Anti-Cluster System)
     // Ölüm Vadisi'nde 0.5s, Normal zamanda 0.8s emniyet payı
     let currentCooldown = isDZ ? 0.5 : 0.8; 
+    if (currentLevel === 7) currentCooldown = 0.4; 
     if (levelProgressTime - lastSpawnTime < currentCooldown) return;
 
     // Ölüm Vadisi Hız Bonusu (Elite Seviye)
@@ -1632,7 +1633,9 @@ function spawnObstacle() {
     }
     spawnX = relSpawnX + riverShift;
     window.lastObsRelX = relSpawnX; // Geriye uyumluluk için tutuyorum
-    if (Math.random() < 0.45 && allowedSpecialTypes.length > 0) {
+    
+    const currentSpawnChance = (currentLevel === 7) ? 0.90 : 0.45;
+    if (Math.random() < currentSpawnChance && allowedSpecialTypes.length > 0) {
         let selectedType = allowedSpecialTypes[Math.floor(Math.random() * allowedSpecialTypes.length)];
 
         if (selectedType === 'hippo') {
@@ -1688,8 +1691,8 @@ function spawnObstacle() {
                 });
             }
         } else if (selectedType === 'toyBalloon') {
-            // v1.99.14.6: INDIVIDUAL SCATTERED BALLOONS (Red, Blue, Yellow)
-            const colors = ['balloon_red', 'balloon_blue', 'balloon_yellow'];
+            // v1.99.14.9: AGGRESSIVE BALLOON BARRAGE (6 Balloons per cluster)
+            const colors = ['balloon_red', 'balloon_blue', 'balloon_yellow', 'balloon_red', 'balloon_blue', 'balloon_yellow'];
             colors.forEach((cType, idx) => {
                 let bx = riverLeft + 30 + (Math.random() * (riverRight - riverLeft - 60));
                 obstacles.push({

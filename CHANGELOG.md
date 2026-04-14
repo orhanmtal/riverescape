@@ -1,6 +1,11 @@
 # River Escape - Versiyon Günlükleri (CHANGELOG)
 Bu dosya, oyun motorunun ve özelliklerin versiyon versiyon nasıl geliştiğini mühürleyip saklamak için Antigravity tarafından oluşturulmuştur.
 
+## [v1.99.14.9] "AGGRESSIVE LAGOON" - 2026-04-14
+- **Spawn Overdrive**: Increased Level 7 spawn probability from 45% to 90% to eliminate "dead zones."
+- **Balloon Barrage**: Doubled the scattered balloon cluster size from 3 to 6 for intense difficulty.
+- **Turbo Cooldown**: Reduced spawning cooldown to 0.4s specifically for the Lagoon biome.
+
 ## [v1.99.14.8] "ELITE LAGOON POLISH" - 2026-04-14
 - **Log Evasion**: Disabled all standard logs (`Kutuk.png`) in Level 7 (Lagoon) to match user aesthetic preferences.
 - **Colossal Balloons**: Increased the size of scattered balloons by 50% (48x68) for higher visibility and "Elite" presence.
