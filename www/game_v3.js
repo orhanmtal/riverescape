@@ -1,4 +1,4 @@
-// RİVER ESCAPE PRESTIGE - v1.99.14.70 (MAGMA SERPENT)
+// RİVER ESCAPE PRESTIGE - v1.99.14.73 (FIRE BARRAGE)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -1591,7 +1591,7 @@ function spawnObstacle() {
     } else if (biomeIndex === 3) { // Winter (L4, L10...)
         allowedSpecialTypes.push('iceBerg', 'whirlpool', 'slidingIce', 'vertical', 'horizontal');
     } else if (biomeIndex === 4) { // Lava (L5, L11...)
-        allowedSpecialTypes.push('rock', 'lavaGeyser', 'lavaGeyser', 'burningPillar', 'burningPillar', 'fireball', 'magmaSerpent');
+        allowedSpecialTypes.push('rock', 'lavaGeyser', 'burningPillar', 'burningPillar', 'fireball', 'fireball', 'fireball', 'magmaSerpent');
         // CROC/HIPPO/LOGS ARE FORBIDDEN
     } else if (biomeIndex === 5) { // Void (L6, L12...)
         allowedSpecialTypes.push('asteroid', 'comet');
@@ -1747,15 +1747,34 @@ function spawnObstacle() {
             });
             return;
         } else if (selectedType === 'fireball') {
-            obstacles.push({
-                type: 'fireball',
-                x: spawnX,
-                relativeX: spawnX - riverShift,
-                y: spawnY, width: 52, height: 52,
-                speedY: (baseSpeed + 150) * 0.75 * (0.92 + Math.random() * 0.16),
-                speedX: (currentLevel === 5 ? 0 : (Math.random() - 0.5) * 50),
-                isHoming: (currentLevel === 5) // v1.99.14.70 Surprise
-            });
+            const isL5 = currentLevel === 5;
+            if (isL5) {
+                // v1.99.14.73: TRIPLE BARRAGE (Left, Center, Right)
+                const lanePositions = [0.2, 0.5, 0.8]; // Relative X positions
+                lanePositions.forEach(relPos => {
+                    const fX = riverLeft + (riverRight - riverLeft) * relPos;
+                    obstacles.push({
+                        type: 'fireball',
+                        x: fX,
+                        relativeX: fX - riverShift,
+                        y: spawnY, width: 52, height: 52,
+                        speedY: (baseSpeed + 120) * (0.9 + Math.random() * 0.2),
+                        speedX: 0,
+                        isHoming: true
+                    });
+                });
+            } else {
+                // Default single fireball for other levels
+                obstacles.push({
+                    type: 'fireball',
+                    x: spawnX,
+                    relativeX: spawnX - riverShift,
+                    y: spawnY, width: 52, height: 52,
+                    speedY: (baseSpeed + 150) * 0.75 * (0.92 + Math.random() * 0.16),
+                    speedX: (Math.random() - 0.5) * 50,
+                    isHoming: false
+                });
+            }
         } else if (selectedType === 'leafTornado') {
             obstacles.push({
                 type: 'leafTornado',
