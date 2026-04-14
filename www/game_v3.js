@@ -2659,7 +2659,6 @@ function update(dt) {
             obs.time += dt;
             obs.relativeX = (obs.baseX - getRiverShift(obs.y)) + Math.sin(obs.time * obs.frequency) * obs.amplitude;
             obs.x = getRiverShift(obs.y) + obs.relativeX;
-        }
         } else if (obs.type === 'paper_plane') {
             // Kağıt uçaklar çapraz ve kavisli uçar
             if (!obs.rotation) obs.rotation = 0;
