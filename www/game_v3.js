@@ -1818,7 +1818,7 @@ function spawnObstacle() {
                 x: sX,
                 relativeX: sX - riverShift,
                 baseX: sX,
-                y: spawnY, width: 68, height: 68,
+                y: spawnY, width: 48, height: 48,
                 speedY: baseSpeed * 0.9,
                 time: Math.random() * Math.PI * 2,
                 amplitude: (riverRight - riverLeft) * 0.38,
@@ -3519,13 +3519,13 @@ function draw(dt) {
                 // Body Segments (Lagging behind slightly for snake effect)
                 ctx.restore(); // Exit head local space
                 
-                for (let i = 1; i <= 4; i++) {
+                for (let i = 1; i <= 3; i++) {
                     ctx.save();
                     // Lag the segments along the sine wave
                     const lagTime = obs.time - (i * 0.15);
                     const segRelX = (obs.baseX - getRiverShift(obs.y + i*25)) + Math.sin(lagTime * obs.frequency) * obs.amplitude;
                     const segX = getRiverShift(obs.y + i*25) + segRelX;
-                    const segY = obs.y + i * 40; // Spacing
+                    const segY = obs.y + i * 28; // Spacing
                     
                     ctx.translate(segX + obs.width/2, segY + obs.height/2);
                     const sSize = (obs.width / 2) * (1 - (i * 0.15));
