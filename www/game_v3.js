@@ -1644,6 +1644,9 @@ function spawnObstacle() {
     }
 
     let biomeIndex = (currentLevel - 1) % levelAssets.length;
+    const currentAsset = levelAssets[biomeIndex];
+    const bgScrollSpeed = baseSpeed * (currentAsset ? currentAsset.scrollSpeed : 1.0);
+
     let allowedSpecialTypes = (biomeIndex === 4 || biomeIndex === 5 || biomeIndex === 6 || biomeIndex === 7 || biomeIndex === 8) ? [] : ['rock'];
 
     // --- v1.99.13.0: THE ELITE CYCLE (Strict Biome Filtering) ---
