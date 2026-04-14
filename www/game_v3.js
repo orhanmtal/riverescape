@@ -718,7 +718,7 @@ const levelAssets = [
 ];
 
 // v1.96.6.6: Ölüm Vadisi (DZ) Durumunu Merkezi Olarak Belirle
-// v1.99.13.1: Ölüm Vadisi (DZ) Tetikleyicisi - Seviye Süresinin Son %5'inde Başlar
+// v1.99.13.1: Ölüm Vadisi (DZ) Tetikleyicisi - Seviye Süresinin Son %10'unda Başlar
 function getDZStatus() {
     // Sanal ilerleme puanı (Zaman bazlı: 5 puan/sn)
     let p = Math.floor(levelProgressTime * 5) % 14000;
@@ -1526,8 +1526,15 @@ function spawnObstacle() {
     // v1.96.6.6: DİNAMİK ÖLÜM VADİSİ (DZ) MANTIĞI - Senkronize edildi
     let isDZ = getDZStatus();
 
-    // Bir engel doğduktan sonra diğeri için en az 0.8 saniye bekleme zorunluluğu (v1.99.13.1 Anti-Cluster)
-    if (levelProgressTime - lastSpawnTime < 0.8) return; 
+    // v1.99.13.1: ELITE SPAWN COOLDOWN (Anti-Cluster System)
+    // Ölüm Vadisi'nde 0.5s, Normal zamanda 0.8s emniyet payı
+    let currentCooldown = isDZ ? 0.5 : 0.8; 
+    if (levelProgressTime - lastSpawnTime < currentCooldown) return;
+
+    // Ölüm Vadisi Hız Bonusu (Elite Seviye)
+    if (isDZ) {
+        baseSpeed *= 1.7; // v1.99.13.1: Ölüm Vadisi Ciddiyeti (Hız x1.7)
+    }
 
     // v1.99.13.1: ELITE LEVEL 1 DENSITY CAP (Max 3 obstacles)
     if (currentLevel === 1 && obstacles.length >= 3) return;
