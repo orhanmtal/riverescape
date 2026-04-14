@@ -1643,7 +1643,7 @@ function spawnObstacle() {
     }
 
     let biomeIndex = (currentLevel - 1) % levelAssets.length;
-    let allowedSpecialTypes = (biomeIndex === 4 || biomeIndex === 5 || biomeIndex === 6) ? [] : ['rock'];
+    let allowedSpecialTypes = (biomeIndex === 4 || biomeIndex === 5 || biomeIndex === 6 || biomeIndex === 7 || biomeIndex === 8) ? [] : ['rock'];
 
     // --- v1.99.13.0: THE ELITE CYCLE (Strict Biome Filtering) ---
     if (biomeIndex === 0) { // Spring (L1, L7, L13...)
@@ -1674,7 +1674,7 @@ function spawnObstacle() {
     }
 
     // EXTRA LAYER: Ensure crocodiles/logs NEVER appear in Lava/Void/Lagoon/Cyber levels
-    const isEliteLethal = (biomeIndex === 4 || biomeIndex === 5 || biomeIndex === 6 || biomeIndex === 7);
+    const isEliteLethal = (biomeIndex === 4 || biomeIndex === 5 || biomeIndex === 6 || biomeIndex === 7 || biomeIndex === 8);
     if (!isEliteLethal && currentLAsset.bgKey !== 'ilkbahar') {
         if (!allowedSpecialTypes.includes('whirlpool')) allowedSpecialTypes.push('whirlpool');
     }
