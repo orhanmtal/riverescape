@@ -1596,7 +1596,7 @@ function spawnObstacle() {
 
     // EXTRA LAYER: Ensure crocodiles/logs NEVER appear in Lava/Void levels
     const isEliteLethal = (biomeIndex === 4 || biomeIndex === 5);
-    if (!isEliteLethal && currentLAsset.bgKey !== 'ilkbahar' && currentLevel !== 3) {
+    if (!isEliteLethal && currentLAsset.bgKey !== 'ilkbahar') {
         if (!allowedSpecialTypes.includes('whirlpool')) allowedSpecialTypes.push('whirlpool');
     }
 
@@ -1748,6 +1748,37 @@ function spawnObstacle() {
                 y: spawnY, width: 52, height: 52,
                 speedY: (baseSpeed + 150) * 0.75 * (0.92 + Math.random() * 0.16),
                 speedX: (currentLevel === 5 ? 0 : (Math.random() - 0.5) * 50)
+            });
+        } else if (selectedType === 'leafTornado') {
+            obstacles.push({
+                type: 'leafTornado',
+                x: spawnX,
+                relativeX: spawnX - riverShift,
+                y: spawnY, width: 90, height: 90,
+                speedY: bgScrollSpeed, speedX: 0,
+                rotation: 0,
+                pullStrength: 130,
+                baseX: spawnX, baseRelX: spawnX - riverShift,
+                zigzagFreq: 0.002 + Math.random() * 0.001,
+                zigzagAmp: 30 + Math.random() * 40
+            });
+        } else if (selectedType === 'asteroid' || selectedType === 'comet') {
+            obstacles.push({
+                type: selectedType,
+                x: spawnX,
+                relativeX: spawnX - riverShift,
+                y: spawnY, width: 55, height: 55,
+                speedY: baseSpeed * (selectedType === 'comet' ? 1.8 : 1.1),
+                speedX: (selectedType === 'comet' ? (Math.random() - 0.5) * 150 : 0)
+            });
+        } else if (selectedType === 'slidingIce') {
+            obstacles.push({
+                type: 'slidingIce',
+                x: (Math.random() < 0.5) ? riverLeft - 50 : riverRight + 50,
+                relativeX: undefined,
+                y: spawnY, width: 80, height: 40,
+                speedY: baseSpeed * 0.6,
+                speedX: (Math.random() < 0.5) ? 120 : -120
             });
         } else if (selectedType === 'rock' || selectedType === 'iceBerg') {
             let isIce = selectedType === 'iceBerg';
