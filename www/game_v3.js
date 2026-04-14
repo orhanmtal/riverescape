@@ -1865,7 +1865,6 @@ function spawnObstacle() {
                 pullStrength: 180,
                 isElite: true
             });
-        }
         } else if (selectedType === 'slidingIce') {
             obstacles.push({
                 type: 'slidingIce',
