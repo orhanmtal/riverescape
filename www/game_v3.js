@@ -831,6 +831,29 @@ function updateArmorUI() {
     }
 }
 
+// v1.99.14.76: GLOBAL SHOP TRIGGER (Fixing ReferenceError)
+function openShop() {
+    const sScr = document.getElementById('shop-screen');
+    const pScr = document.getElementById('pause-screen');
+    const startScr = document.getElementById('start-screen');
+    
+    // Eğer oyundaysak duraklat
+    if (gameState === 'playing' && typeof pauseGame === 'function') {
+        pauseGame();
+    }
+    
+    if (sScr) {
+        if (pScr) pScr.classList.add('hidden');
+        if (startScr) startScr.classList.add('hidden');
+        
+        sScr.classList.remove('hidden');
+        sScr.classList.add('active');
+        sScr.style.display = 'flex';
+        sScr.style.zIndex = '30000';
+        if (typeof updateShopUI === 'function') updateShopUI();
+    }
+}
+
 // v1.99.7.6: Eski updateShopUI silindi. Master sistem satır 1292'dedir.
 
 
