@@ -2333,7 +2333,7 @@ function update(dt) {
     const pMargin = (currentLAsset && typeof currentLAsset.margin === 'number') ? currentLAsset.margin : 0.32;
     const riverShift = getRiverShift(player.y);
     // v1.99.14.16: L7 EXCLUSIVE PLAYER BUFFER - Strictly exclusive to Lagoon
-    const dynamicPlayBuffer = (currentLevel === 7) ? 40 : 10;
+    const dynamicPlayBuffer = (currentLevel === 7) ? 40 : 25;
     const playRiverLeft = (canvas.width * pMargin) + riverShift + dynamicPlayBuffer; 
     const playRiverRight = (canvas.width * (1 - pMargin)) + riverShift - player.width - dynamicPlayBuffer; 
 
