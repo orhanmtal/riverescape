@@ -1385,6 +1385,36 @@ window.addEventListener('keydown', (e) => {
     if ((key === 'p' || e.key === 'escape') && isPlaying && !isGameOver) {
         togglePause();
     }
+    // v1.99.14.0: DEBUG - Profesyonel Test Sistemi (L Tuşu: Akıllı Seviye Atla)
+    if (key === 'l' && isPlaying && !isGameOver) {
+        let p = (levelProgressTime * 5) % 18000;
+        let newP = p + 2500; // +500sn
+        
+        let oldIdx = 0;
+        for(let i=levelAssets.length-1; i>=0; i--) {
+            if(p >= levelAssets[i].threshold) { oldIdx = i; break; }
+        }
+
+        let targetP = newP % 18000;
+        let newIdx = 0;
+        for(let i=levelAssets.length-1; i>=0; i--) {
+            if(targetP >= levelAssets[i].threshold) { newIdx = i; break; }
+        }
+
+        if (newIdx !== oldIdx) {
+            // Seviye Atladık! O seviyenin başına mühürle (Reset Duration)
+            levelProgressTime = (levelAssets[newIdx].threshold) / 5;
+        } else {
+            // Aynı seviyeyiz, normal arttır
+            levelProgressTime = (newP % 18000) / 5;
+        }
+
+        if (typeof showToast === 'function') showToast("DEBUG: SNAP TO LEVEL! 🚀", true);
+    }
+    if (key === 'j' && isPlaying && !isGameOver) {
+        levelProgressTime += 100;
+        if (typeof showToast === 'function') showToast("DEBUG: +100 SECONDS! ⚡", true);
+    }
 });
 window.addEventListener('keyup', (e) => {
     let key = e.key.toLowerCase();
