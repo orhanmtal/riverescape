@@ -1,4 +1,4 @@
-// RİVER ESCAPE PRESTIGE - v1.99.14.13 (LAGOON OF MEMORIES)
+// RİVER ESCAPE PRESTIGE - v1.99.14.14 (LAGOON OF MEMORIES)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -1610,8 +1610,8 @@ function spawnObstacle() {
     let isBlocked = true;
     let spawnGap = player.width + 75; // Kayıktan biraz daha geniş "güvenli şerit"
 
-    const leftLimitRel = (canvas.width * spawnMargin) + 40;  // v1.99.14.13: Increased Edge Buffer
-    const rightLimitRel = (canvas.width * (1 - spawnMargin)) - 85; // v1.99.14.13: Increased Edge Buffer
+    const leftLimitRel = (canvas.width * spawnMargin) + 65;  // v1.99.14.14: SAFE ZONE - Keep objects away from edges
+    const rightLimitRel = (canvas.width * (1 - spawnMargin)) - 110; // v1.99.14.14: SAFE ZONE - Keep objects away from edges
 
     while (isBlocked && maxAttempts > 0) {
         isBlocked = false;
@@ -2279,8 +2279,8 @@ function update(dt) {
     // X Ekseni Sınırları (Nehir Kanalı) - v1.97.0.3: Dinamik Büklüm Sistemi
     const pMargin = (currentLAsset && typeof currentLAsset.margin === 'number') ? currentLAsset.margin : 0.32;
     const riverShift = getRiverShift(player.y);
-    const playRiverLeft = (canvas.width * pMargin) + riverShift;
-    const playRiverRight = (canvas.width * (1 - pMargin)) + riverShift - player.width;
+    const playRiverLeft = (canvas.width * pMargin) + riverShift + 40; // v1.99.14.14: SAFE ZONE - Prevent player from hitting edges
+    const playRiverRight = (canvas.width * (1 - pMargin)) + riverShift - player.width - 40; // v1.99.14.14: SAFE ZONE - Prevent player from hitting edges
 
     // PLAYER X CLAMP: Karaya çıkışı fiziksel olarak da engelle!
     if (player.x < playRiverLeft) player.x = playRiverLeft;
@@ -2290,7 +2290,7 @@ function update(dt) {
     let moveDt = dt;
     let isDZ = getDZStatus();
 
-    if (player.x <= playRiverLeft + 5 || player.x >= playRiverRight - 5) {
+    if (player.x <= playRiverLeft + 1 || player.x >= playRiverRight - 1) {
         // Kıyıya sürtünce artık ÖLDÜRMÜYOR (Ölüm Bölgesi/isDZ olsa bile kaldırıldı)
         // Normal sürtünme mekaniği
         moveDt = dt * 0.4; // Sadece KAYIK yavaşlar!
