@@ -1671,7 +1671,7 @@ function spawnObstacle() {
         // v1.99.15.21: Lazerler baskın engel haline getirildi (Triple frequency)
         allowedSpecialTypes.push('laserGate', 'laserGate', 'laserGate', 'cyberDrone', 'glitchStream', 'cyberSpear');
     } else if (biomeIndex === 8) { // Toxic Wasteland (L9, L17...)
-        allowedSpecialTypes.push('toxicRat', 'toxicRat', 'toxicBarrel', 'toxicSerpent');
+        allowedSpecialTypes.push('toxicRat', 'toxicBarrel', 'toxicSerpent', 'toxicSerpent');
     }
 
     // EXTRA LAYER: Ensure crocodiles/logs NEVER appear in Lava/Void/Lagoon/Cyber levels
@@ -2886,7 +2886,7 @@ function update(dt) {
         } else if (obs.type === 'toxicSerpent') {
             // v1.99.16.40: WIDE S-SLITHER MOVEMENT
             obs.time += (dt || 0.016);
-            const slitherX = Math.sin(obs.time * 2.0) * 140;
+            const slitherX = Math.sin(obs.time * 2.0) * 90;
             if (obs.relativeX === undefined) obs.relativeX = obs.x - getRiverShift(obs.y);
             obs.relativeX = (obs.relativeX || 0) * 0.95 + slitherX * 0.05;
             obs.x = getRiverShift(obs.y) + obs.relativeX;
