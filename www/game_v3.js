@@ -1898,6 +1898,11 @@ function spawnObstacle() {
     const isEliteTheme = (biomeIndex === 4 || biomeIndex === 5 || biomeIndex === 6);
     if (isEliteTheme) return;
 
+    // v1.99.14.90: ELITE BIOME PURITY (No logs in Lava, Void, or Nostalgia)
+    const currentBiome = (currentLevel - 1) % levelAssets.length;
+    const isEliteThemeSpawn = (currentBiome === 4 || currentBiome === 5 || currentBiome === 6);
+    if (isEliteThemeSpawn) return;
+
     // Bütün Kütükler Dikey (Vertical) Gelsin
     let logSpeedX = 0;
     let logRot = 0;
@@ -1943,7 +1948,11 @@ function spawnGold() {
     else if (gVal === 5) { gColor = "#00e5ff"; gRadius = 18; }
     else if (gVal === 10) { gColor = "#ff00ff"; gRadius = 22; }
 
-    if (gVal === 10 && currentLevel !== 5 && currentLevel !== 6 && !(currentLevel === 1 && obstacles.length >= 2)) {
+    // v1.99.14.90: NO TRAPS IN ELITE BIOMES (Lava, Void, Nostalgia)
+    const eliteBiomeGold = (currentLevel - 1) % levelAssets.length;
+    const isEliteForGold = (eliteBiomeGold === 4 || eliteBiomeGold === 5 || eliteBiomeGold === 6);
+
+    if (gVal === 10 && !isEliteForGold && !(currentLevel === 1 && obstacles.length >= 2)) {
         // v1.99.13.1: Seviye 1'de tuzak doğmasını da kısıtladık (Kapasite koruma)
         let trapDir = Math.random() < 0.5 ? 1 : -1;
         let trapX1 = gx;
