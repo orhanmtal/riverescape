@@ -1641,7 +1641,8 @@ function spawnObstacle() {
         allowedSpecialTypes.push('rock', 'lavaGeyser', 'burningPillar', 'burningPillar', 'fireball', 'fireball', 'fireball', 'magmaSerpent');
         // CROC/HIPPO/LOGS ARE FORBIDDEN
     } else if (biomeIndex === 5) { // Void (L6, L12...)
-        allowedSpecialTypes.push('asteroid', 'comet', 'fireball');
+        // v1.99.14.81: ELITE VOID POOL
+        allowedSpecialTypes.push('asteroid', 'asteroid', 'comet', 'fireball', 'blackHole');
         // CROC/HIPPO/LOGS ARE FORBIDDEN
     } else if (biomeIndex === 6) { // Nostalji (L7, L14...)
         allowedSpecialTypes.push('toyBalloon', 'paperPlane', 'kite');
@@ -1690,7 +1691,11 @@ function spawnObstacle() {
     spawnX = relSpawnX + riverShift;
     window.lastObsRelX = relSpawnX; // Geriye uyumluluk için tutuyorum
     
-    const currentSpawnChance = (currentLevel === 7) ? 0.90 : 0.45;
+    // v1.99.14.81: ELITE VOID DENSITY
+    let currentSpawnChance = 0.45;
+    if (currentLevel === 7) currentSpawnChance = 0.90;
+    else if (biomeIndex === 5) currentSpawnChance = 0.65; // Boşluk Yoğunluğu
+    
     if (Math.random() < currentSpawnChance && allowedSpecialTypes.length > 0) {
         let selectedType = allowedSpecialTypes[Math.floor(Math.random() * allowedSpecialTypes.length)];
 
@@ -1836,14 +1841,31 @@ function spawnObstacle() {
                 zigzagAmp: 30 + Math.random() * 40
             });
         } else if (selectedType === 'asteroid' || selectedType === 'comet') {
+            const isL6 = currentLevel === 6 || (currentLevel > 0 && (currentLevel - 1) % 6 === 5);
             obstacles.push({
                 type: selectedType,
                 x: spawnX,
                 relativeX: spawnX - riverShift,
                 y: spawnY, width: 55, height: 55,
-                speedY: baseSpeed * (selectedType === 'comet' ? 1.8 : 1.1),
-                speedX: (selectedType === 'comet' ? (Math.random() - 0.5) * 150 : 0)
+                speedY: baseSpeed * (selectedType === 'comet' ? 1.8 : 1.1) * (isL6 ? 1.25 : 1),
+                speedX: (selectedType === 'comet' ? (Math.random() - 0.5) * 150 : 0),
+                isHoming: isL6 && Math.random() < 0.35, // v1.99.14.81: Takipçi Mekaniği
+                hp: selectedType === 'asteroid' ? 4 : 1
             });
+        } else if (selectedType === 'blackHole') {
+            obstacles.push({
+                type: 'blackHole',
+                x: spawnX,
+                relativeX: spawnX - riverShift,
+                y: spawnY,
+                width: 80 + Math.random() * 40,
+                height: 80 + Math.random() * 40,
+                speedY: baseSpeed * 0.45, // Kara delikler yavaş ve ürkütücü süzülür
+                pullRadius: 300,
+                pullStrength: 180,
+                isElite: true
+            });
+        }
         } else if (selectedType === 'slidingIce') {
             obstacles.push({
                 type: 'slidingIce',
@@ -2645,8 +2667,8 @@ function update(dt) {
             // Eğer karaya çok yaklaşırsa hızı ve konumu sınırla
             if (obs.x < bLeft) { obs.x = bLeft; if(obs.speedX < 0) obs.speedX = 0; }
             if (obs.x > bRight) { obs.x = bRight; if(obs.speedX > 0) obs.speedX = 0; }
-        } else if (obs.type === 'whirlpool' || obs.type === 'leafTornado') {
-            obs.rotation += dt * 300; // Görsel dönüş hızı
+        } else if (obs.type === 'whirlpool' || obs.type === 'leafTornado' || obs.type === 'blackHole') {
+            obs.rotation += dt * (obs.type === 'blackHole' ? 120 : 300); // Görsel dönüş hızı
 
             if (obs.type === 'leafTornado') {
                 if (currentLevel === 5) {
@@ -2656,14 +2678,14 @@ function update(dt) {
                 }
             }
 
-            // --- GİRDAP/HORTUM ÇEKİM KUVVETİ (PULL FORCE) ---
+            // --- GİRDAP/HORTUM/KARA DELİK ÇEKİM KUVVETİ (PULL FORCE) ---
             let gx = obs.x + obs.width / 2;
             let gy = obs.y + obs.height / 2;
             let pxC = player.x + player.width / 2;
             let pyC = player.y + player.height / 2;
 
             let distToPlayer = Math.sqrt((pxC - gx) ** 2 + (pyC - gy) ** 2);
-            let effectRadius = obs.type === 'leafTornado' ? 320 : 300;
+            let effectRadius = obs.type === 'blackHole' ? obs.pullRadius : 300;
 
             // Eğer oyuncu merkeze yeterince yakınsa, onu yavaşça kendine çeker
             if (distToPlayer < effectRadius && !isDashing) {
@@ -2713,12 +2735,16 @@ function update(dt) {
             }
             // Patlama anında hitbox'ı aktif et
             obs.isDeadly = (obs.state === 'erupting');
-        } else if (obs.type === 'fireball' && obs.isHoming) {
-            // v1.99.14.70: HOMING FIREBALL TRACKING
-            const trackingSpeed = 95; // Elite Tracking
+        } else if ((obs.type === 'fireball' || obs.type === 'asteroid') && obs.isHoming) {
+            // v1.99.14.81: HOMING TRACKING (Elite Standards)
+            const trackingSpeed = obs.type === 'asteroid' ? 65 : 95; // Asteroidler daha kütleli, daha yavaş döner
             if (player.x > obs.x + obs.width / 2) obs.x += trackingSpeed * dt;
             else obs.x -= trackingSpeed * dt;
+            
             // Update relativeX for Elite Drift consistency
+            if (typeof getRiverShift === 'function') {
+                obs.relativeX = obs.x - getRiverShift(obs.y);
+            }
             obs.relativeX = obs.x - getRiverShift(obs.y);
         } else if (obs.type === 'magmaSerpent') {
             // v1.99.14.70: SINE WAVE SERPENT MOVEMENT
@@ -3480,6 +3506,35 @@ function draw(dt) {
                 ctx.arc(0, 0, obs.width / 2.5, 0, Math.PI * 2);
                 ctx.fill();
 
+                ctx.restore();
+                drawSuccess = true;
+            } else if (obs.type === 'blackHole') {
+                // --- v1.99.14.81: ELITE BLACK HOLE RENDERING ---
+                ctx.save();
+                ctx.translate(obs.x + obs.width / 2, obs.y + obs.height / 2);
+                
+                // Event Horizon (Pulsing Glow)
+                let pulse = 0.85 + Math.sin(performance.now() / 200) * 0.15;
+                ctx.shadowBlur = 40 * pulse;
+                ctx.shadowColor = "#9b59b6"; // Forbidden Void Purple
+                
+                // Inner Void
+                ctx.fillStyle = "#000000";
+                ctx.beginPath();
+                ctx.arc(0, 0, (obs.width / 2.2) * pulse, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Distortion Ring
+                ctx.strokeStyle = "rgba(155, 89, 182, 0.6)";
+                ctx.lineWidth = 4;
+                ctx.rotate(obs.rotation || 0);
+                for (let i = 0; i < 3; i++) {
+                    ctx.rotate(Math.PI / 1.5);
+                    ctx.beginPath();
+                    ctx.arc(obs.width / 3, 0, obs.width / 4, 0, Math.PI);
+                    ctx.stroke();
+                }
+                
                 ctx.restore();
                 drawSuccess = true;
             } else if (obs.type === 'lavaGeyser') {
