@@ -1,4 +1,4 @@
-// RİVER ESCAPE PRESTIGE - v1.99.14.10 (LAGOON OF MEMORIES)
+// RİVER ESCAPE PRESTIGE - v1.99.14.12 (LAGOON OF MEMORIES)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -715,7 +715,7 @@ const levelAssets = [
     { threshold: 4500, bgKey: 'kis', speed: 260, spawn: 1.00, titleEN: translations.en.l4Title, titleTR: translations.tr.l4Title, color: "#00e5ff", pKey: "ilkbahar", margin: 0.35 },
     { threshold: 7000, bgKey: 'lava', speed: 285, spawn: 0.70, titleEN: translations.en.lavaRiver, titleTR: translations.tr.lavaRiver, color: "#ff4500", pKey: "lava", margin: 0.34 },
     { threshold: 10000, bgKey: 'void', speed: 190, spawn: 1.40, titleEN: translations.en.voidLevel, titleTR: translations.tr.voidLevel, color: "#9b59b6", pKey: "void", margin: 0.32 },
-    { threshold: 14000, bgKey: 'lagoon', speed: 310, spawn: 0.65, titleEN: translations.en.l7Title, titleTR: translations.tr.l7Title, color: "#00e5ff", pKey: "ilkbahar", margin: 0.30 }
+    { threshold: 14000, bgKey: 'lagoon', speed: 310, spawn: 0.65, titleEN: translations.en.l7Title, titleTR: translations.tr.l7Title, color: "#00e5ff", pKey: "ilkbahar", margin: 0.15 }
 ];
 
 // v1.96.6.6: Ölüm Vadisi (DZ) Durumunu Merkezi Olarak Belirle
@@ -2164,7 +2164,7 @@ function update(dt) {
     if (!isPlaying) return;
 
     levelProgressTime += dt;
-    score += dt * 5; // v1.99.13.1: Baseline score restored
+    score += dt * 5; // v1.99.14.12: Baseline score restored
 
     // --- v1.99.13.1: FRAME-ACCURATE LEVEL CALCULATION ---
     let loopCount = Math.floor((levelProgressTime * 5) / 18000);
