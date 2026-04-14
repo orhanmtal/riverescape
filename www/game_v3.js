@@ -3884,64 +3884,90 @@ function draw(dt) {
                 ctx.restore();
                 drawSuccess = true;
             } else if (obs.type === 'toxicBarrel') {
-                // --- v1.99.16.10: LEAKING RADIOACTIVE BARREL (Redesign) ---
+                // --- v1.99.16.20: LEAKING BARREL WITH GAS ---
                 ctx.save();
                 ctx.translate(obs.x + obs.width / 2, obs.y + obs.height / 2);
                 
-                // 1. Sızan Radyoaktif Sıvı (Puddle)
-                ctx.fillStyle = "rgba(50, 255, 50, 0.5)";
-                ctx.shadowBlur = 15;
-                ctx.shadowColor = "lime";
+                // 1. Yükselen Zehirli Gaz (Gas Smoke)
+                ctx.fillStyle = "rgba(173, 255, 47, 0.2)";
+                for(let i=0; i<3; i++) {
+                    let offY = -((obs.time * 40 + i*20) % 60);
+                    let offX = Math.sin(obs.time*2 + i) * 10;
+                    let size = 8 + (i*4);
+                    ctx.beginPath();
+                    ctx.arc(offX, -obs.height/2 + offY, size, 0, Math.PI*2);
+                    ctx.fill();
+                }
+
+                // 2. Sızan Radyoaktif Sıvı
+                ctx.fillStyle = "rgba(50, 255, 50, 0.4)";
                 ctx.beginPath();
-                ctx.ellipse(0, obs.height/2, obs.width*0.8, 10 + Math.sin(obs.time*3)*4, 0, 0, Math.PI*2);
+                ctx.ellipse(0, obs.height/2, obs.width*0.9, 10 + Math.sin(obs.time*3)*4, 0, 0, Math.PI*2);
                 ctx.fill();
 
-                // 2. Paslı Varil Gövdesi
+                // 3. Paslı Varil
                 ctx.fillStyle = "#2c2c2c";
                 ctx.fillRect(-obs.width / 2, -obs.height / 2, obs.width, obs.height);
-                
-                // Pas Lekeleri
-                ctx.fillStyle = "#8b4513";
-                ctx.globalAlpha = 0.6;
-                ctx.fillRect(-obs.width/2 + 5, -obs.height/2 + 10, 10, 15);
-                ctx.fillRect(5, 5, 12, 8);
-                ctx.globalAlpha = 1.0;
+                ctx.fillStyle = "#8b4513"; ctx.globalAlpha = 0.5;
+                ctx.fillRect(-obs.width/2+2, -obs.height/2+5, 8, 20); ctx.globalAlpha = 1.0;
 
-                // 3. Radyoaktif Kuşak ve İkon
-                ctx.fillStyle = "#ffcc00";
-                ctx.fillRect(-obs.width / 2, -5, obs.width, 14);
-                
-                ctx.strokeStyle = "#000";
-                ctx.lineWidth = 2;
-                ctx.beginPath(); ctx.arc(0, 2, 4, 0, Math.PI*2); ctx.stroke();
+                // 4. İkon
+                ctx.fillStyle = "#ffcc00"; ctx.fillRect(-obs.width/2, -4, obs.width, 10);
                 
                 ctx.restore();
                 drawSuccess = true;
             } else if (obs.type === 'toxicDebris') {
-                // --- v1.99.16.10: RUSTED PIPES & RUINS (Redesign) ---
+                // --- v1.99.16.20: ADVANCED RUINED PILLAR (Redesign) ---
                 ctx.save();
                 ctx.translate(obs.x + obs.width / 2, obs.y + obs.height / 2);
                 
-                // Beton Parçası
+                // 1. Yükselen Dumanlar (Toxic Smoke)
+                ctx.fillStyle = "rgba(100, 100, 100, 0.15)";
+                for(let i=0; i<4; i++) {
+                    let sTime = obs.time + i*0.5;
+                    let sY = -((sTime * 25) % 80);
+                    let sX = Math.cos(sTime * 1.5) * 15;
+                    ctx.beginPath();
+                    ctx.arc(sX, -obs.height/3 + sY, 12 + i*2, 0, Math.PI*2);
+                    ctx.fill();
+                }
+
+                // 2. Beton Gövde (Harabe Formu)
                 ctx.fillStyle = "#2a2a2a";
                 ctx.beginPath();
                 ctx.moveTo(-obs.width/2, -obs.height/2);
-                ctx.lineTo(obs.width/2, -obs.height/3);
-                ctx.lineTo(obs.width/2.5, obs.height/2);
-                ctx.lineTo(-obs.width/2, obs.height/2.2);
+                ctx.lineTo(obs.width/2 - 10, -obs.height/2 + 5);
+                ctx.lineTo(obs.width/2, obs.height/2);
+                ctx.lineTo(-obs.width/2 + 15, obs.height/2 - 5);
+                ctx.closePath();
                 ctx.fill();
 
-                // Paslı Borular (Pipes fırlayan)
-                ctx.strokeStyle = "#7b3f00";
-                ctx.lineWidth = 6;
-                ctx.beginPath();
-                ctx.moveTo(0, 0);
-                ctx.lineTo(obs.width/2 + 15, -15);
-                ctx.stroke();
-                
-                // Borunun ucu (Açık)
-                ctx.fillStyle = "#1a1a1a";
-                ctx.beginPath(); ctx.arc(obs.width/2+15, -15, 3, 0, Math.PI*2); ctx.fill();
+                // Çatlaklar (Cracks)
+                ctx.strokeStyle = "#000"; ctx.lineWidth = 1; ctx.globalAlpha = 0.4;
+                ctx.beginPath(); ctx.moveTo(0, -obs.height/2); ctx.lineTo(-10, 0); ctx.lineTo(5, 20); ctx.stroke();
+                ctx.globalAlpha = 1.0;
+
+                // 3. Çoklu Paslı Demirler (Rebars)
+                ctx.strokeStyle = "#5d2e00";
+                ctx.lineWidth = 3;
+                let rebarSeeds = [0.2, 0.5, 0.8];
+                rebarSeeds.forEach((s, idx) => {
+                    ctx.beginPath();
+                    let startX = -obs.width/2 + (obs.width * s);
+                    ctx.moveTo(startX, -obs.height/2);
+                    ctx.quadraticCurveTo(startX + 20, -obs.height/2 - 20, startX + 30 + idx*5, -obs.height/2 - 35);
+                    ctx.stroke();
+                    // Demir ucu parlama
+                    ctx.fillStyle = "#8b4513"; ctx.beginPath(); ctx.arc(startX+30+idx*5, -obs.height/2-35, 2, 0, Math.PI*2); ctx.fill();
+                });
+
+                // 4. Zehirli Yosunlar (Neon Moss)
+                ctx.fillStyle = "#adff2f";
+                for(let i=0; i<8; i++) {
+                    let mx = -obs.width/2 + (Math.random()*obs.width);
+                    let my = -obs.height/2 + (Math.random()*obs.height);
+                    ctx.beginPath(); ctx.arc(mx, my, 2, 0, Math.PI*2); ctx.fill();
+                }
 
                 ctx.restore();
                 drawSuccess = true;
