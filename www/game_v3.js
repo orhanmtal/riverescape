@@ -882,19 +882,27 @@ window.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') {
         activateDash();
     }
-    // --- v1.99.16.02: FORCED LEVEL SKIP (Press 'L' to Jump) ---
+    // --- v1.99.16.03: ULTIMATE SYNC LEVEL SKIP (Press 'L') ---
     if (e.key === 'l' || e.key === 'L') {
-        let currentP = (levelProgressTime * 5) % 27500;
-        let nextT = 27500;
+        let cycleLimit = 27500;
+        let p = (levelProgressTime * 5) % cycleLimit;
+        let nextT = cycleLimit;
+        let nextIdx = 0;
+
         for (let i = 0; i < levelAssets.length; i++) {
-            if (levelAssets[i].threshold > currentP) {
+            if (levelAssets[i].threshold > p) {
                 nextT = levelAssets[i].threshold;
+                nextIdx = i;
                 break;
             }
         }
-        levelProgressTime = (nextT / 5) + 5; // +5 saniye tampon ile kesin geçiş
-        score = levelProgressTime * 5;
-        console.log("Forced Skip to Progress:", nextT, "Next Level Active.");
+
+        // --- ZORUNLU SENKRONİZASYON ---
+        levelProgressTime = (nextT / 5) + 5; 
+        score = Math.floor(levelProgressTime * 5);
+        currentLevel = nextIdx + 1; // Manuel Override
+        
+        console.log("MASTER SKIP EXECUTED: Level Index", nextIdx, "Target Threshold:", nextT);
     }
 });
 
