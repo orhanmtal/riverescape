@@ -1986,7 +1986,7 @@ function spawnObstacle() {
                 type: 'toxicBarrel',
                 x: spawnX,
                 relativeX: spawnX - riverShift,
-                y: spawnY + 50, width: 45, height: 60,
+                y: spawnY + 50, width: 38, height: 52,
                 speedY: bgScrollSpeed, speedX: 0
             });
         } else if (selectedType === 'toxicDebris') {
@@ -3905,14 +3905,34 @@ function draw(dt) {
                 ctx.ellipse(0, obs.height/2, obs.width*0.9, 10 + Math.sin(obs.time*3)*4, 0, 0, Math.PI*2);
                 ctx.fill();
 
-                // 3. Paslı Varil
+                // 3. Paslı Varil Gövdesi (Kavisli Silindir Formu)
                 ctx.fillStyle = "#2c2c2c";
-                ctx.fillRect(-obs.width / 2, -obs.height / 2, obs.width, obs.height);
-                ctx.fillStyle = "#8b4513"; ctx.globalAlpha = 0.5;
-                ctx.fillRect(-obs.width/2+2, -obs.height/2+5, 8, 20); ctx.globalAlpha = 1.0;
+                // Ana Gövde
+                ctx.beginPath();
+                ctx.moveTo(-obs.width/2 + 2, -obs.height/2);
+                ctx.quadraticCurveTo(0, -obs.height/2 - 3, obs.width/2 - 2, -obs.height/2);
+                ctx.lineTo(obs.width/2, obs.height/2);
+                ctx.quadraticCurveTo(0, obs.height/2 + 3, -obs.width/2, obs.height/2);
+                ctx.closePath();
+                ctx.fill();
+                
+                // Varil Boğumları (Ribs)
+                ctx.strokeStyle = "#1a1a1a";
+                ctx.lineWidth = 2;
+                for(let i=-1; i<=1; i++) {
+                    ctx.beginPath();
+                    let ry = i * (obs.height/3.5);
+                    ctx.moveTo(-obs.width/2, ry);
+                    ctx.quadraticCurveTo(0, ry + 2, obs.width/2, ry);
+                    ctx.stroke();
+                }
 
-                // 4. İkon
-                ctx.fillStyle = "#ffcc00"; ctx.fillRect(-obs.width/2, -4, obs.width, 10);
+                // Pas Lekeleri
+                ctx.fillStyle = "#8b4513"; ctx.globalAlpha = 0.5;
+                ctx.fillRect(-obs.width/4, -obs.height/3, 6, 12); ctx.globalAlpha = 1.0;
+
+                // 4. İkon (Kuşak üzerinde)
+                ctx.fillStyle = "#ffcc00"; ctx.fillRect(-obs.width/2 + 2, -4, obs.width - 4, 10);
                 
                 ctx.restore();
                 drawSuccess = true;
