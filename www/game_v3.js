@@ -1,4 +1,5 @@
-// RİVER ESCAPE PRESTIGE - v1.99.14.73 (FIRE BARRAGE)
+// RİVER ESCAPE PRESTIGE - v1.99.16.12 (GHOST PURGE)
+console.log("%c TOXIC PROTOCOL ACTIVE - v1.99.16.12 ", "background: #222; color: #adff2f; font-size: 20px; font-weight: bold;");
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
