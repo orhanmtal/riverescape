@@ -1,6 +1,12 @@
 # River Escape - Versiyon Günlükleri (CHANGELOG)
 Bu dosya, oyun motorunun ve özelliklerin versiyon versiyon nasıl geliştiğini mühürleyip saklamak için Antigravity tarafından oluşturulmuştur.
 
+## [v1.99.14.27] "ECONOMY & HUD SYNC" - 2026-04-14
+- **Thicker Progress Bar**: Increased HUD progress bar height from 3px to 6px and increased glow intensity for better visibility.
+- **Smooth Animation**: Updated `syncEliteHUD` to use high-precision decimals for the progress bar width, ensuring sub-pixel smooth movement.
+- **Revive Economy Fix**: Explicitly synchronized the global gold stash (`totalGold`) immediately after a revive purchase to ensure the "Shop" balance stays correct.
+- **Revive Cost**: Maintained 3 lives for 100 Gold revive cost as per user preference.
+
 ## [v1.99.14.26] "CUNNING LOGS & PROGRESS FIX" - 2026-04-14
 - **Level 2 Cunning Log Mechanic**: Logs now start spinning and drifting sideways when they collide with rocks, exclusively in Level 2.
 - **Progress Bar Fix**: Resolved a logic error in `syncEliteHUD` that caused the progress bar to stall in Level 2.

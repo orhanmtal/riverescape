@@ -1,4 +1,4 @@
-// River Escape - Ses Motoru (Audio Engine) - v1.99.14.26 (HINLIK & PROGRESS)
+// River Escape - Ses Motoru (Audio Engine) - v1.99.14.27 (ECONOMY & HUD SYNC)
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 let audioCtx;
 

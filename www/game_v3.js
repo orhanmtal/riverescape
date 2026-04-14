@@ -1,4 +1,4 @@
-// RİVER ESCAPE PRESTIGE - v1.99.14.26 (HINLIK & PROGRESS)
+// RİVER ESCAPE PRESTIGE - v1.99.14.27 (ECONOMY & HUD SYNC)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -1291,7 +1291,7 @@ function reviveWithGold() {
 
     if (totalGold >= cost) {
         totalGold -= cost;
-        triggerEliteEconomySync(); // v1.99.4.1.8: Harcama anında buluta!
+        triggerEliteEconomySync(); // v1.99.14.27: Economy Sync (Deduct from shop)
         lives = 3 + (window.extraLives || 0);
         hasShield = true; // Dokunulmazlık Ver
         shieldTimer = 3.0; // 3 Saniye Koruma
@@ -2156,8 +2156,10 @@ function syncEliteHUD() {
             const nextThreshold = isLastLevelOfAssetCycle ? cycleMax : levelAssets[assetIndex + 1].threshold;
             const prevThreshold = levelAssets[assetIndex].threshold;
             
+            // v1.99.14.27: Ultra-Smooth Progress (Preserve precise decimal width)
             const progress = ((currentVal - prevThreshold) / (nextThreshold - prevThreshold)) * 100;
-            cachedHud.progress.style.width = `${Math.min(100, Math.max(0, progress))}%`;
+            const smoothWidth = Math.min(100, Math.max(0, progress));
+            cachedHud.progress.style.width = smoothWidth.toFixed(2) + '%';
         }
 
         // v1.99.4.1.11: Profil Bilgisini Güncelle
