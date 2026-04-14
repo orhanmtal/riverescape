@@ -1,4 +1,4 @@
-// RİVER ESCAPE PRESTIGE - v1.99.14.60 (LAVA HELL)
+// RİVER ESCAPE PRESTIGE - v1.99.14.70 (MAGMA SERPENT)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -1591,7 +1591,7 @@ function spawnObstacle() {
     } else if (biomeIndex === 3) { // Winter (L4, L10...)
         allowedSpecialTypes.push('iceBerg', 'whirlpool', 'slidingIce', 'vertical', 'horizontal');
     } else if (biomeIndex === 4) { // Lava (L5, L11...)
-        allowedSpecialTypes.push('lavaGeyser', 'fireball');
+        allowedSpecialTypes.push('rock', 'lavaGeyser', 'lavaGeyser', 'burningPillar', 'burningPillar', 'fireball', 'magmaSerpent');
         // CROC/HIPPO/LOGS ARE FORBIDDEN
     } else if (biomeIndex === 5) { // Void (L6, L12...)
         allowedSpecialTypes.push('asteroid', 'comet');
@@ -1753,7 +1753,8 @@ function spawnObstacle() {
                 relativeX: spawnX - riverShift,
                 y: spawnY, width: 52, height: 52,
                 speedY: (baseSpeed + 150) * 0.75 * (0.92 + Math.random() * 0.16),
-                speedX: (currentLevel === 5 ? 0 : (Math.random() - 0.5) * 50)
+                speedX: (currentLevel === 5 ? 0 : (Math.random() - 0.5) * 50),
+                isHoming: (currentLevel === 5) // v1.99.14.70 Surprise
             });
         } else if (selectedType === 'leafTornado') {
             obstacles.push({
@@ -1808,6 +1809,22 @@ function spawnObstacle() {
                 health: 2, // Elite Armor: Needs 2 shots
                 maxHealth: 2,
                 speedY: bgScrollSpeed, speedX: 0
+            });
+        } else if (selectedType === 'magmaSerpent') {
+            // v1.99.14.70: NEW MAGMA SERPENT (Sine Wave Movement)
+            const sX = riverLeft + (riverRight - riverLeft) / 2;
+            obstacles.push({
+                type: 'magmaSerpent',
+                x: sX,
+                relativeX: sX - riverShift,
+                baseX: sX,
+                y: spawnY, width: 68, height: 68,
+                speedY: baseSpeed * 0.9,
+                time: Math.random() * Math.PI * 2,
+                amplitude: (riverRight - riverLeft) * 0.38,
+                frequency: 2.2,
+                health: 4, // More Elite for the Serpent
+                maxHealth: 4
             });
         }
         return;
@@ -2630,6 +2647,19 @@ function update(dt) {
             }
             // Patlama anında hitbox'ı aktif et
             obs.isDeadly = (obs.state === 'erupting');
+        } else if (obs.type === 'fireball' && obs.isHoming) {
+            // v1.99.14.70: HOMING FIREBALL TRACKING
+            const trackingSpeed = 95; // Elite Tracking
+            if (player.x > obs.x + obs.width / 2) obs.x += trackingSpeed * dt;
+            else obs.x -= trackingSpeed * dt;
+            // Update relativeX for Elite Drift consistency
+            obs.relativeX = obs.x - getRiverShift(obs.y);
+        } else if (obs.type === 'magmaSerpent') {
+            // v1.99.14.70: SINE WAVE SERPENT MOVEMENT
+            obs.time += dt;
+            obs.relativeX = (obs.baseX - getRiverShift(obs.y)) + Math.sin(obs.time * obs.frequency) * obs.amplitude;
+            obs.x = getRiverShift(obs.y) + obs.relativeX;
+        }
         } else if (obs.type === 'paper_plane') {
             // Kağıt uçaklar çapraz ve kavisli uçar
             if (!obs.rotation) obs.rotation = 0;
@@ -3464,6 +3494,51 @@ function draw(dt) {
                 }
 
                 ctx.restore();
+                drawSuccess = true;
+            } else if (obs.type === 'magmaSerpent') {
+                // v1.99.14.70: DYNAMIC MAGMA SERPENT RENDERING
+                ctx.save();
+                ctx.translate(obs.x + obs.width / 2, obs.y + obs.height / 2);
+                
+                // Head Section
+                const headGlow = 0.7 + Math.sin(performance.now() / 150) * 0.3;
+                ctx.shadowBlur = 25 * headGlow;
+                ctx.shadowColor = "#ff4500";
+                
+                ctx.fillStyle = "#331100"; // Dark volcanic head
+                ctx.beginPath();
+                ctx.arc(0, 0, obs.width / 2, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Magma Eyes / Core
+                ctx.fillStyle = "#ffcc00";
+                ctx.beginPath();
+                ctx.arc(-obs.width/4, -obs.height/6, 6, 0, Math.PI * 2);
+                ctx.arc(obs.width/4, -obs.height/6, 6, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Body Segments (Lagging behind slightly for snake effect)
+                ctx.restore(); // Exit head local space
+                
+                for (let i = 1; i <= 4; i++) {
+                    ctx.save();
+                    // Lag the segments along the sine wave
+                    const lagTime = obs.time - (i * 0.15);
+                    const segRelX = (obs.baseX - getRiverShift(obs.y + i*25)) + Math.sin(lagTime * obs.frequency) * obs.amplitude;
+                    const segX = getRiverShift(obs.y + i*25) + segRelX;
+                    const segY = obs.y + i * 40; // Spacing
+                    
+                    ctx.translate(segX + obs.width/2, segY + obs.height/2);
+                    const sSize = (obs.width / 2) * (1 - (i * 0.15));
+                    
+                    ctx.shadowBlur = 10;
+                    ctx.shadowColor = "#ff4500";
+                    ctx.fillStyle = (i % 2 === 0) ? "#ff4500" : "#442200";
+                    ctx.beginPath();
+                    ctx.arc(0, 0, sSize, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.restore();
+                }
                 drawSuccess = true;
             }
         }
