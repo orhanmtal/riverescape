@@ -730,7 +730,7 @@ function getDZStatus() {
         
         if (p >= start && p < end) {
             let duration = end - start;
-            let dzStartPoint = end - (duration * 0.20); // Daha agresif: Son %20 dilimi
+            let dzStartPoint = end - (duration * 0.10); // v1.99.14.19: Elite DZ Threshold (Last 10%)
             return p >= dzStartPoint;
         }
     }
