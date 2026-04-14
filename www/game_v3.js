@@ -1251,6 +1251,12 @@ function updateShopUI() {
             ammoRowElem.style.display = hasWeapon ? 'flex' : 'none';
         }
 
+        // AMMO BUY BUTTON SYNC (v1.99.14.35)
+        const ammoBuyBtn = document.getElementById('buy-ammo-btn');
+        if (ammoBuyBtn) {
+            ammoBuyBtn.disabled = (totalGold < 1000);
+        }
+
         // BOMBA BUTONU & HUD SYNC
         let bBadge = document.getElementById('bomb-badge');
         if (bBadge) bBadge.innerText = bombCount;
