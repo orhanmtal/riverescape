@@ -1385,32 +1385,21 @@ window.addEventListener('keydown', (e) => {
     if ((key === 'p' || e.key === 'escape') && isPlaying && !isGameOver) {
         togglePause();
     }
-    // v1.99.14.0: DEBUG - Profesyonel Test Sistemi (L Tuşu: Akıllı Seviye Atla)
+    // v1.99.14.1: DEBUG - Kesin Seviye Atlama (L Tuşu)
     if (key === 'l' && isPlaying && !isGameOver) {
         let p = (levelProgressTime * 5) % 18000;
-        let newP = p + 2500; // +500sn
+        let currentIdx = 0;
+        for(let i=levelAssets.length-1; i>=0; i--) {
+            if(p >= levelAssets[i].threshold) { currentIdx = i; break; }
+        }
         
-        let oldIdx = 0;
-        for(let i=levelAssets.length-1; i>=0; i--) {
-            if(p >= levelAssets[i].threshold) { oldIdx = i; break; }
-        }
+        // Bir sonraki seviyeye geç (Döngüsel)
+        let nextIdx = (currentIdx + 1) % levelAssets.length;
+        levelProgressTime = (levelAssets[nextIdx].threshold) / 5;
 
-        let targetP = newP % 18000;
-        let newIdx = 0;
-        for(let i=levelAssets.length-1; i>=0; i--) {
-            if(targetP >= levelAssets[i].threshold) { newIdx = i; break; }
-        }
-
-        if (newIdx !== oldIdx) {
-            // Seviye Atladık! O seviyenin başına mühürle (Reset Duration)
-            levelProgressTime = (levelAssets[newIdx].threshold) / 5;
-        } else {
-            // Aynı seviyeyiz, normal arttır
-            levelProgressTime = (newP % 18000) / 5;
-        }
-
-        if (typeof showToast === 'function') showToast("DEBUG: SNAP TO LEVEL! 🚀", true);
+        if (typeof showToast === 'function') showToast(`DEBUG: SKIP TO LEVEL ${nextIdx + 1}! 🚀`, true);
     }
+    // v1.99.14.1: DEBUG - Hassas Süre Artışı (J Tuşu)
     if (key === 'j' && isPlaying && !isGameOver) {
         levelProgressTime += 100;
         if (typeof showToast === 'function') showToast("DEBUG: +100 SECONDS! ⚡", true);
@@ -1580,12 +1569,12 @@ function spawnObstacle() {
     }
 
     let biomeIndex = (currentLevel - 1) % levelAssets.length;
-    let allowedSpecialTypes = ['rock'];
+    let allowedSpecialTypes = (biomeIndex === 6) ? [] : ['rock'];
 
     // --- v1.99.13.0: THE ELITE CYCLE (Strict Biome Filtering) ---
     if (biomeIndex === 0) { // Spring (L1, L7, L13...)
-        if (score % 14000 >= 500) allowedSpecialTypes.push('hippo');
-        if (score % 14000 >= 900) allowedSpecialTypes.push('croc');
+        if (score % 18000 >= 500) allowedSpecialTypes.push('hippo');
+        if (score % 18000 >= 900) allowedSpecialTypes.push('croc');
         allowedSpecialTypes.push('vertical', 'horizontal');
     } else if (biomeIndex === 1) { // Summer (L2, L8...)
         allowedSpecialTypes.push('hippo', 'croc', 'vertical', 'horizontal');
@@ -1601,7 +1590,7 @@ function spawnObstacle() {
         allowedSpecialTypes.push('asteroid', 'comet');
         // CROC/HIPPO/LOGS ARE FORBIDDEN
     } else if (biomeIndex === 6) { // Nostalji (L7, L14...)
-        allowedSpecialTypes.push('rubberDuck', 'toyBalloon', 'paperPlane', 'kite');
+        allowedSpecialTypes.push('toyBalloon', 'paperPlane', 'kite');
     }
 
     // EXTRA LAYER: Ensure crocodiles/logs NEVER appear in Lava/Void levels
@@ -2143,11 +2132,11 @@ function syncEliteHUD() {
             // v1.99.12.1: Loop-Aware Progress Calculation (Level 6 -> 14.000 fix)
             // v1.99.13.0: Time-Based Progress (Matching 46 min loop)
             const isLastLevelOfCycle = (currentLevel % levelAssets.length === 0);
-            const nextThreshold = isLastLevelOfCycle ? 14000 : levelAssets[currentLevel % levelAssets.length].threshold;
+            const nextThreshold = isLastLevelOfCycle ? 18000 : levelAssets[currentLevel % levelAssets.length].threshold;
             const prevThreshold = levelAssets[(currentLevel - 1) % levelAssets.length].threshold;
             
             // Map levelProgressTime * 5 to the thresholds
-            const currentVal = (levelProgressTime * 5) % 14000;
+            const currentVal = (levelProgressTime * 5) % 18000;
             const progress = ((currentVal - prevThreshold) / (nextThreshold - prevThreshold)) * 100;
             cachedHud.progress.style.width = `${Math.min(100, Math.max(0, progress))}%`;
         }
@@ -2167,8 +2156,8 @@ function update(dt) {
     score += dt * 5; // v1.99.13.1: Baseline score restored
 
     // --- v1.99.13.1: FRAME-ACCURATE LEVEL CALCULATION ---
-    let loopCount = Math.floor((levelProgressTime * 5) / 14000);
-    let baseProgressVal = Math.floor(levelProgressTime * 5) % 14000;
+    let loopCount = Math.floor((levelProgressTime * 5) / 18000);
+    let baseProgressVal = Math.floor(levelProgressTime * 5) % 18000;
     let targetIndex = 0;
     for (let i = levelAssets.length - 1; i >= 0; i--) {
         if (baseProgressVal >= levelAssets[i].threshold) {
@@ -2381,7 +2370,7 @@ function update(dt) {
 
     // DİNAMİK 4 MEVSİM SEVİYE GÜNCELLEMESİ v128 (SEVİYE GERİ DÜŞMESİ ENGELLENDİ)
     // 14.000 ŞAMPİYONLUK MÜHRÜ (TEK SEFERLİK BÜYÜK KUTLAMA) - v1.98 (Level 6 eklendiği için sona itildi)
-    if (score >= 14000 && totalLoops === 0) {
+    if (score >= 18000 && totalLoops === 0) {
         totalLoops = 1; // Artık sonsuz devam edeceğiz ama şov bir kez olsun
         isTransitioningLevel = true;
         transitionTimer = 5.0;
