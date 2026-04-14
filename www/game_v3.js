@@ -1623,7 +1623,7 @@ function spawnObstacle() {
     }
 
     let biomeIndex = (currentLevel - 1) % levelAssets.length;
-    let allowedSpecialTypes = (biomeIndex === 6) ? [] : ['rock'];
+    let allowedSpecialTypes = (biomeIndex === 4 || biomeIndex === 5 || biomeIndex === 6) ? [] : ['rock'];
 
     // --- v1.99.13.0: THE ELITE CYCLE (Strict Biome Filtering) ---
     if (biomeIndex === 0) { // Spring (L1, L7, L13...)
