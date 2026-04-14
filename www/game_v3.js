@@ -2143,22 +2143,28 @@ function syncEliteHUD() {
         }
 
         if (cachedHud.progress) {
-            // v1.99.14.26: FIXED PROGRESS CALCULATION (Sync with Dynamic Cycle)
-            const cycleLength = levelAssets.length;
+            // v1.99.14.33: ELITE PROGRESS ENGINE - Independent sync from raw time
             const cycleMax = 18000;
             const absoluteProgress = levelProgressTime * 5;
             const currentVal = absoluteProgress % cycleMax;
             
-            // v1.99.14.26: Seviye varlıkları dizisindeki gerçek indeks (0-6)
-            const assetIndex = (currentLevel - 1) % cycleLength;
-            const isLastLevelOfAssetCycle = (assetIndex === cycleLength - 1);
+            // Find the actual level tier this currentVal belongs to
+            let activeIdx = 0;
+            for (let i = levelAssets.length - 1; i >= 0; i--) {
+                if (currentVal >= levelAssets[i].threshold) {
+                    activeIdx = i;
+                    break;
+                }
+            }
             
-            const nextThreshold = isLastLevelOfAssetCycle ? cycleMax : levelAssets[assetIndex + 1].threshold;
-            const prevThreshold = levelAssets[assetIndex].threshold;
+            const isLastInCycle = (activeIdx === levelAssets.length - 1);
+            const nextThreshold = isLastInCycle ? cycleMax : levelAssets[activeIdx + 1].threshold;
+            const prevThreshold = levelAssets[activeIdx].threshold;
             
-            // v1.99.14.27: Ultra-Smooth Progress (Preserve precise decimal width)
-            const progress = ((currentVal - prevThreshold) / (nextThreshold - prevThreshold)) * 100;
-            const smoothWidth = Math.min(100, Math.max(0, progress));
+            // Calculate progress WITHIN the detected level tier
+            const tierProgress = ((currentVal - prevThreshold) / (nextThreshold - prevThreshold)) * 100;
+            const smoothWidth = Math.min(100, Math.max(0, tierProgress));
+            
             cachedHud.progress.style.width = smoothWidth.toFixed(2) + '%';
         }
 
