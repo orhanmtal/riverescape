@@ -718,14 +718,21 @@ const levelAssets = [
 ];
 
 // v1.96.6.6: Ölüm Vadisi (DZ) Durumunu Merkezi Olarak Belirle
+// v1.99.13.1: Ölüm Vadisi (DZ) Tetikleyicisi - Seviye Süresinin Son %5'inde Başlar
 function getDZStatus() {
-    let s = Math.floor(score) % 14000;
-    if (s < 1000) return s >= 850;
-    if (s >= 1000 && s < 2500) return s >= 2100;
-    if (s >= 2500 && s < 4500) return s >= 4100;
-    if (s >= 4500 && s < 7000) return s >= 6500;
-    if (s >= 7000 && s < 10000) return s >= 9400;
-    if (s >= 10000 && s < 14000) return s >= 13200;
+    // Sanal ilerleme puanı (Zaman bazlı: 5 puan/sn)
+    let p = Math.floor(levelProgressTime * 5) % 14000;
+    
+    for (let i = 0; i < levelAssets.length; i++) {
+        let start = levelAssets[i].threshold;
+        let end = (i < levelAssets.length - 1) ? levelAssets[i+1].threshold : 14000;
+        
+        if (p >= start && p < end) {
+            let duration = end - start;
+            let dzStartPoint = end - (duration * 0.10); // Son %10 dilimi
+            return p >= dzStartPoint;
+        }
+    }
     return false;
 }
 
