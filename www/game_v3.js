@@ -715,18 +715,19 @@ const levelAssets = [
     { threshold: 4500, bgKey: 'kis', speed: 260, spawn: 1.40, titleEN: translations.en.l4Title, titleTR: translations.tr.l4Title, color: "#00e5ff", pKey: "ilkbahar", margin: 0.35 },
     { threshold: 7000, bgKey: 'lava', speed: 315, spawn: 0.55, titleEN: translations.en.lavaRiver, titleTR: translations.tr.lavaRiver, color: "#ff4500", pKey: "lava", margin: 0.34 },
     { threshold: 10000, bgKey: 'void', speed: 190, spawn: 1.40, titleEN: translations.en.voidLevel, titleTR: translations.tr.voidLevel, color: "#9b59b6", pKey: "void", margin: 0.32 },
-    { threshold: 14000, bgKey: 'lagoon', speed: 310, spawn: 0.65, titleEN: translations.en.l7Title, titleTR: translations.tr.l7Title, color: "#00e5ff", pKey: "ilkbahar", margin: 0.15 }
+    { threshold: 14000, bgKey: 'lagoon', speed: 310, spawn: 0.65, titleEN: translations.en.l7Title, titleTR: translations.tr.l7Title, color: "#00e5ff", pKey: "ilkbahar", margin: 0.15 },
+    { threshold: 18500, bgKey: 'cyber', speed: 340, spawn: 0.50, titleEN: "CYBER CITY", titleTR: "SİBER ŞEHİR", color: "#ff00ff", pKey: "void", margin: 0.18 }
 ];
 
 // v1.96.6.6: Ölüm Vadisi (DZ) Durumunu Merkezi Olarak Belirle
 // v1.99.13.1: Ölüm Vadisi (DZ) Tetikleyicisi - Seviye Süresinin Son %10'unda Başlar
 function getDZStatus() {
     // v1.99.14.9: ELITE DYNAMIC DZ - Triggers at last 20% of CURRENT level progress
-    let p = Math.floor(levelProgressTime * 5) % 18000;
+    let p = Math.floor(levelProgressTime * 5) % 22500;
     
     for (let i = 0; i < levelAssets.length; i++) {
         let start = levelAssets[i].threshold;
-        let end = (i < levelAssets.length - 1) ? levelAssets[i+1].threshold : 18000;
+        let end = (i < levelAssets.length - 1) ? levelAssets[i+1].threshold : 22500;
         
         if (p >= start && p < end) {
             let duration = end - start;
@@ -1646,10 +1647,12 @@ function spawnObstacle() {
         // CROC/HIPPO/LOGS ARE FORBIDDEN
     } else if (biomeIndex === 6) { // Nostalji (L7, L14...)
         allowedSpecialTypes.push('toyBalloon', 'paperPlane', 'paperPlane', 'kite');
+    } else if (biomeIndex === 7) { // Cyber City (L8, L16...)
+        allowedSpecialTypes.push('laserGate', 'cyberDrone', 'glitchStream');
     }
 
-    // EXTRA LAYER: Ensure crocodiles/logs NEVER appear in Lava/Void levels
-    const isEliteLethal = (biomeIndex === 4 || biomeIndex === 5);
+    // EXTRA LAYER: Ensure crocodiles/logs NEVER appear in Lava/Void/Lagoon/Cyber levels
+    const isEliteLethal = (biomeIndex === 4 || biomeIndex === 5 || biomeIndex === 6 || biomeIndex === 7);
     if (!isEliteLethal && currentLAsset.bgKey !== 'ilkbahar') {
         if (!allowedSpecialTypes.includes('whirlpool')) allowedSpecialTypes.push('whirlpool');
     }
@@ -1890,17 +1893,51 @@ function spawnObstacle() {
                 health: 4, // More Elite for the Serpent
                 maxHealth: 4
             });
+        } else if (selectedType === 'laserGate') {
+            const buffer = 50;
+            const gateWidth = (riverRight - riverLeft) - (buffer * 2);
+            obstacles.push({
+                type: 'laserGate',
+                x: riverLeft + buffer,
+                relativeX: (riverLeft + buffer) - riverShift,
+                y: spawnY,
+                width: gateWidth,
+                height: 30,
+                speedY: baseSpeed * 0.45,
+                state: 'warning',
+                timer: 1.5,
+                time: 0
+            });
+        } else if (selectedType === 'cyberDrone') {
+            obstacles.push({
+                type: 'cyberDrone',
+                x: spawnX,
+                relativeX: spawnX - riverShift,
+                y: spawnY,
+                width: 44, height: 44,
+                speedY: baseSpeed * 1.6,
+                speedX: 0,
+                time: 0,
+                isHoming: true
+            });
+        } else if (selectedType === 'glitchStream') {
+            obstacles.push({
+                type: 'glitchStream',
+                x: spawnX,
+                relativeX: spawnX - riverShift,
+                y: spawnY,
+                width: 120, height: 180,
+                speedY: baseSpeed,
+                time: 0
+            });
         }
         return;
     }
 
     // v1.99.14.86: ELITE BIOME PURITY (No logs in Lava, Void, or Nostalgia)
-    const isEliteTheme = (biomeIndex === 4 || biomeIndex === 5 || biomeIndex === 6);
-    if (isEliteTheme) return;
-
-    // v1.99.14.90: ELITE BIOME PURITY (No logs in Lava, Void, or Nostalgia)
+    // v1.99.15.10: ELITE BIOME PURITY (No logs in Lava, Void, Nostalgia, Cyber)
     const currentBiome = (currentLevel - 1) % levelAssets.length;
-    const isEliteThemeSpawn = (currentBiome === 4 || currentBiome === 5 || currentBiome === 6);
+    const isEliteThemeSpawn = (currentBiome === 4 || currentBiome === 5 || currentBiome === 6 || currentBiome === 7);
     if (isEliteThemeSpawn) return;
 
     // Bütün Kütükler Dikey (Vertical) Gelsin
@@ -1950,9 +1987,9 @@ function spawnGold() {
     else if (gVal === 5) { gColor = "#00e5ff"; gRadius = 18; }
     else if (gVal === 10) { gColor = "#ff00ff"; gRadius = 22; }
 
-    // v1.99.14.90: NO TRAPS IN ELITE BIOMES (Lava, Void, Nostalgia)
+    // v1.99.15.10: NO TRAPS IN ELITE BIOMES (Lava, Void, Nostalgia, Cyber)
     const eliteBiomeGold = (currentLevel - 1) % levelAssets.length;
-    const isEliteForGold = (eliteBiomeGold === 4 || eliteBiomeGold === 5 || eliteBiomeGold === 6);
+    const isEliteForGold = (eliteBiomeGold === 4 || eliteBiomeGold === 5 || eliteBiomeGold === 6 || eliteBiomeGold === 7);
 
     if (gVal === 10 && !isEliteForGold && !(currentLevel === 1 && obstacles.length >= 2)) {
         // v1.99.13.1: Seviye 1'de tuzak doğmasını da kısıtladık (Kapasite koruma)
@@ -2739,6 +2776,29 @@ function update(dt) {
             obs.time += dt;
             obs.relativeX = (obs.baseX - getRiverShift(obs.y)) + Math.sin(obs.time * obs.frequency) * obs.amplitude;
             obs.x = getRiverShift(obs.y) + obs.relativeX;
+        } else if (obs.type === 'laserGate') {
+            obs.timer -= (dt || 0.016);
+            if (obs.timer <= 0) {
+                if (obs.state === 'warning') {
+                    obs.state = 'active';
+                    obs.timer = 0.8;
+                } else {
+                    obs.state = 'warning';
+                    obs.timer = 1.5;
+                }
+            }
+            obs.x = getRiverShift(obs.y) + (obs.relativeX || 0);
+        } else if (obs.type === 'cyberDrone') {
+            obs.time += (dt || 0.016);
+            const targetX = player.x - (obs.width / 2);
+            obs.speedX = (targetX - obs.x) * 1.8;
+            if (obs.relativeX === undefined) obs.relativeX = obs.x - getRiverShift(obs.y);
+            obs.relativeX += obs.speedX * dt;
+            obs.x = getRiverShift(obs.y) + obs.relativeX;
+        } else if (obs.type === 'glitchStream') {
+            obs.time += (dt || 0.016);
+            obs.offsetX = (Math.random() - 0.5) * 8;
+            obs.x = getRiverShift(obs.y) + (obs.relativeX || 0) + obs.offsetX;
         } else if (obs.type === 'toyBalloon') {
             obs.time += (dt || 0.016);
             const driftX = Math.sin(obs.time * 3) * 80;
@@ -2877,6 +2937,15 @@ function update(dt) {
 
             // v2.05: Lav Gayzeri sadece patlama anında (erupting) öldürür
             if (obs.type === 'lavaGeyser' && !obs.isDeadly) continue;
+
+            // v1.99.15.10: Siber Lazer sadece aktifken öldürür
+            if (obs.type === 'laserGate' && obs.state === 'warning') continue;
+
+            // v1.99.15.10: Glitch Stream (Kontrol Bozulması) - Öldürmez ama yavaşlatır/saptırır
+            if (obs.type === 'glitchStream') {
+                player.x += (Math.random() - 0.5) * 15; // Kontrol titremesi
+                continue;
+            }
 
             // Zırh sadece kalkan Level 6 ve üstündeyse hasar bloklar, yoksa sadece roket çarpar! (v1.98 Level 6 Restriction)
             if (armorCharge > 0 && currentLevel >= 6) {
@@ -3532,6 +3601,79 @@ function draw(dt) {
                     ctx.beginPath();
                     ctx.arc(obs.width / 3, 0, obs.width / 4, 0, Math.PI);
                     ctx.stroke();
+                }
+                
+                ctx.restore();
+                drawSuccess = true;
+            } else if (obs.type === 'laserGate') {
+                // --- v1.99.15.10: NEON LASER BARRIER ---
+                ctx.save();
+                ctx.translate(obs.x + obs.width / 2, obs.y + obs.height / 2);
+                
+                if (obs.state === 'warning') {
+                    // Titreyen Pembe Uyarı Işığı
+                    let blink = Math.sin(performance.now() / 50) > 0 ? 0.8 : 0.2;
+                    ctx.strokeStyle = `rgba(255, 0, 255, ${blink})`;
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.moveTo(-obs.width / 2, 0);
+                    ctx.lineTo(obs.width / 2, 0);
+                    ctx.stroke();
+                } else {
+                    // Kalın Cyan Neon Lazer
+                    ctx.shadowBlur = 20;
+                    ctx.shadowColor = "#00e5ff";
+                    ctx.strokeStyle = "#00e5ff";
+                    ctx.lineWidth = 8;
+                    ctx.beginPath();
+                    ctx.moveTo(-obs.width / 2, 0);
+                    ctx.lineTo(obs.width / 2, 0);
+                    ctx.stroke();
+                    
+                    // İç Beyaz Çizgi (Core)
+                    ctx.strokeStyle = "#ffffff";
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+                }
+                ctx.restore();
+                drawSuccess = true;
+            } else if (obs.type === 'cyberDrone') {
+                // --- v1.99.15.10: ORBITAL CYBER DRONE ---
+                ctx.save();
+                ctx.translate(obs.x + obs.width / 2, obs.y + obs.height / 2);
+                ctx.rotate(obs.time * 2);
+                
+                // Drone Gövdesi (Üçgen)
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = "#ff00ff";
+                ctx.fillStyle = "#ff00ff";
+                ctx.beginPath();
+                ctx.moveTo(0, -obs.height / 2);
+                ctx.lineTo(obs.width / 2, obs.height / 2);
+                ctx.lineTo(-obs.width / 2, obs.height / 2);
+                ctx.closePath();
+                ctx.fill();
+                
+                // Core
+                ctx.fillStyle = "#fff";
+                ctx.beginPath();
+                ctx.arc(0, 0, 8, 0, Math.PI * 2);
+                ctx.fill();
+                
+                ctx.restore();
+                drawSuccess = true;
+            } else if (obs.type === 'glitchStream') {
+                // --- v1.99.15.10: DIGITAL GLITCH STREAM ---
+                ctx.save();
+                ctx.translate(obs.x, obs.y);
+                
+                // Parazit parçacıkları
+                for (let i = 0; i < 5; i++) {
+                    let rx = Math.random() * obs.width;
+                    let ry = Math.random() * obs.height;
+                    let rw = Math.random() * 40;
+                    ctx.fillStyle = i % 2 === 0 ? "rgba(0, 229, 255, 0.4)" : "rgba(255, 0, 255, 0.4)";
+                    ctx.fillRect(rx, ry, rw, 4);
                 }
                 
                 ctx.restore();
