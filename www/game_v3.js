@@ -1,4 +1,4 @@
-// RİVER ESCAPE PRESTIGE - v1.99.14.12 (LAGOON OF MEMORIES)
+// RİVER ESCAPE PRESTIGE - v1.99.14.13 (LAGOON OF MEMORIES)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -1610,8 +1610,8 @@ function spawnObstacle() {
     let isBlocked = true;
     let spawnGap = player.width + 75; // Kayıktan biraz daha geniş "güvenli şerit"
 
-    const leftLimitRel = (canvas.width * spawnMargin) + 10;
-    const rightLimitRel = (canvas.width * (1 - spawnMargin)) - 55;
+    const leftLimitRel = (canvas.width * spawnMargin) + 40;  // v1.99.14.13: Increased Edge Buffer
+    const rightLimitRel = (canvas.width * (1 - spawnMargin)) - 85; // v1.99.14.13: Increased Edge Buffer
 
     while (isBlocked && maxAttempts > 0) {
         isBlocked = false;
