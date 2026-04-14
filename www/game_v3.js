@@ -2588,19 +2588,31 @@ function update(dt) {
             obs.stateTimer -= dt;
             if (obs.stateTimer <= 0) {
                 if (obs.state === 'dormant') {
+                    // %15 Chance for INSTANT BURST (0.2s warning) - v1.99.14.50 Surprise
+                    const isInstant = Math.random() < 0.15;
                     obs.state = 'warning';
-                    obs.stateTimer = 0.8; // Uyarı süresi biraz kısaltıldı (Daha hızlı refleks)
+                    obs.stateTimer = isInstant ? 0.2 : (0.6 + Math.random() * 0.4); 
                 } else if (obs.state === 'warning') {
                     obs.state = 'erupting';
-                    obs.stateTimer = 1.2; // Patlama süresi
+                    obs.stateTimer = 1.0 + Math.random() * 0.8; // Değişken patlama süresi
                     if (typeof playCrashSound === 'function') playCrashSound();
-                    shakeTimer = 0.4;
+                    shakeTimer = 0.5;
                 } else if (obs.state === 'erupting') {
                     obs.state = 'cooldown';
-                    obs.stateTimer = 1.5;
+                    obs.stateTimer = 1.0;
+                } else if (obs.state === 'cooldown') {
+                    // %20 Chance for DOUBLE TAP (Back to warning immediately)
+                    const isDoubleTap = Math.random() < 0.20;
+                    if (isDoubleTap) {
+                        obs.state = 'warning';
+                        obs.stateTimer = 0.5;
+                    } else {
+                        obs.state = 'dormant';
+                        obs.stateTimer = 1.5 + Math.random() * 2.5;
+                    }
                 } else {
                     obs.state = 'dormant';
-                    obs.stateTimer = 1.5 + Math.random() * 2;
+                    obs.stateTimer = 2.0;
                 }
             }
             // Patlama anında hitbox'ı aktif et
@@ -3373,27 +3385,28 @@ function draw(dt) {
                         ctx.translate((Math.random()-0.5)*5, (Math.random()-0.5)*5);
                     }
                 } else if (obs.state === 'erupting') {
-                    // --- v2.1 ULTRA ELITE ERUPTION (Pillar of Fire) ---
-                    const grad = ctx.createLinearGradient(0, obs.height/2, 0, -obs.height * 2);
-                    grad.addColorStop(0, "rgba(255, 0, 0, 0.9)");
-                    grad.addColorStop(0.3, "rgba(255, 140, 0, 0.8)");
-                    grad.addColorStop(1, "rgba(255, 255, 0, 0)");
+                    // --- v1.99.14.50 ULTRA ELITE SURPRISE ERUPTION ---
+                    const grad = ctx.createLinearGradient(0, obs.height/2, 0, -obs.height * 2.5);
+                    grad.addColorStop(0, "rgba(255, 60, 0, 0.95)");
+                    grad.addColorStop(0.3, "rgba(255, 165, 0, 0.9)");
+                    grad.addColorStop(0.6, "rgba(255, 255, 0, 0.7)");
+                    grad.addColorStop(1, "rgba(255, 255, 255, 0)");
 
-                    ctx.shadowBlur = 40;
+                    ctx.shadowBlur = 50;
                     ctx.shadowColor = "#ff4500";
                     ctx.fillStyle = grad;
                     
-                    // Main Pillar
+                    // Main Pillar (Dynamic width based on eruption peak)
                     ctx.beginPath();
-                    ctx.moveTo(-obs.width/3, obs.height/2);
-                    ctx.quadraticCurveTo(0, -obs.height, obs.width/3, obs.height/2);
+                    ctx.moveTo(-obs.width/2, obs.height/2);
+                    ctx.quadraticCurveTo(0, -obs.height * 2.2, obs.width/2, obs.height/2);
                     ctx.fill();
 
-                    // Magma Sparks
-                    for(let k=0; k<5; k++) {
+                    // Magma Sparks (Increased count for v1.99.14.50 Surprise)
+                    for(let k=0; k<8; k++) {
                         let sx = (Math.random()-0.5) * obs.width;
-                        let sy = (Math.random()-1) * obs.height * 1.5;
-                        particles.push(new Particle(obs.x + obs.width/2 + sx, obs.y + obs.height/2 + sy, "#ffcc00"));
+                        let sy = (Math.random()-1) * obs.height * 2;
+                        particles.push(new Particle(obs.x + obs.width/2 + sx, obs.y + obs.height/2 + sy, "#ffaa00"));
                     }
                 }
                 ctx.restore();
