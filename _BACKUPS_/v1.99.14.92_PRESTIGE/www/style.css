@@ -1,0 +1,1147 @@
+/* Genel Ayarlar */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #000;
+    font-family: 'Outfit', sans-serif;
+    color: #fff;
+    touch-action: none;
+}
+
+body::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: url('https://www.transparenttextures.com/patterns/dark-matter.png');
+    opacity: 0.15;
+    pointer-events: none;
+}
+    cursor: default;
+    /* Puruzsuz HD Goruntu Muhuru */
+    image-rendering: auto; 
+    -webkit-font-smoothing: antialiased;
+}
+
+
+
+button, .switch, .toggle-slider, #gameCanvas {
+    cursor: pointer;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.4); }
+    70% { transform: scale(1.05); box-shadow: 0 0 0 8px rgba(255, 215, 0, 0); }
+    100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 215, 0, 0); }
+}
+
+.pulse-button {
+    animation: pulse 1.5s infinite !important;
+    border: 2px solid #FFD700 !important;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+@keyframes neonPulse {
+    0%, 100% { text-shadow: 0 0 10px rgba(0,229,255,0.4), 0 0 20px rgba(0,229,255,0.2); }
+    50% { text-shadow: 0 0 25px rgba(0,229,255,0.8), 0 0 50px rgba(0,229,255,0.4); }
+}
+
+/* Oyun Konteyneri - Tamamen Ortala */
+#game-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    max-width: 600px; /* Tablet/Desktop için taşmayı önleyen max genişlik */
+    margin: 0 auto;
+    background: #000;
+}
+
+/* Ana Çizim Yeri */
+#gameCanvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    /* Puruzsuz HD Goruntu Muhuru */
+    image-rendering: auto; 
+}
+
+
+
+/* Arayüzler */
+#ui-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; /* UI arkasına tıklanabilsin */
+}
+
+/* Skor */
+#score-display {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    color: white;
+    font-family: 'Press Start 2P', sans-serif;
+    font-size: 16px;
+    text-shadow: 2px 2px 0px #000;
+    z-index: 10;
+}
+
+/* HUD visibility control restored to original v1.99.4.1.10 */
+#score-display {
+    z-index: 10;
+}
+
+.screen {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: space-between; /* Parçaları uclara dağıt */
+    background: rgba(5, 10, 20, 0.85);
+    transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    color: #fff;
+    overflow: hidden;
+    pointer-events: auto;
+    z-index: 100;
+    padding: 6vmin; /* Ekrana gore dinamik bosluk */
+    box-sizing: border-box;
+}
+
+#level-up-overlay {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle, rgba(0, 229, 255, 0.1) 0%, rgba(0,0,0,0.9) 80%);
+    text-align: center;
+    z-index: 16000;
+}
+
+/* Elite Character Preview Box */
+.character-preview-box {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 45%;
+    height: 60%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    z-index: 5;
+}
+
+#char-preview-img {
+    width: 140px;
+    height: 220px;
+    object-fit: contain;
+    filter: drop-shadow(0 0 30px rgba(0, 229, 255, 0.4));
+    animation: charFloat 3s ease-in-out infinite;
+}
+
+@keyframes charFloat {
+    0%, 100% { transform: translateY(0) rotate(0); }
+    50% { transform: translateY(-15px) rotate(2deg); }
+}
+
+/* Stratejik Buton Konumları (v1.99.5.6) */
+.bottom-right-anchor {
+    position: absolute;
+    bottom: 30px;
+    right: 25px;
+    width: auto !important;
+}
+
+.middle-right-anchor {
+    position: absolute;
+    top: 55%;
+    right: 25px;
+    width: auto !important;
+}
+
+.bottom-left-cluster {
+    position: absolute;
+    bottom: 30px;
+    left: 25px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.profile-top-left {
+    position: absolute;
+    top: 25px;
+    left: 25px;
+}
+.screen::-webkit-scrollbar { display: none; } /* Chrome/Safari için scrollbar gizle */
+
+.screen.hidden {
+    display: none !important;
+    opacity: 0;
+    pointer-events: none;
+    visibility: hidden;
+}
+
+.screen.active {
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 1;
+    visibility: visible;
+}
+
+h1 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: #4CAF50;
+}
+
+/* STABLE UI ROLLBACK v1.99.4.1.10 */
+#start-screen {
+    z-index: 10000;
+}
+
+/* Sol Üst: Hesap Bilgisi (Responsive Fix) */
+.account-info-elite {
+    background: rgba(10, 20, 30, 0.8) !important;
+    backdrop-filter: blur(10px);
+    padding: 12px 20px !important;
+    border-radius: 18px !important;
+    border: 1px solid rgba(0, 229, 255, 0.3) !important;
+    color: white !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    pointer-events: auto !important;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5) !important;
+    z-index: 100 !important;
+}
+
+/* Sağ Taraf: Karakter Önizleme */
+.character-preview-container {
+    position: absolute !important;
+    right: 50px !important;
+    top: 45% !important;
+    transform: translateY(-50%) !important;
+    width: 220px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    pointer-events: none !important;
+}
+
+#menu-character-img {
+    width: 160px !important;
+    height: auto !important;
+    filter: drop-shadow(0 0 20px rgba(0, 229, 255, 0.6)) !important;
+    animation: boatFloat 2.5s ease-in-out infinite !important;
+}
+
+/* Buton Grupları (Absolute Cornering) */
+.bottom-left-group {
+    position: absolute !important;
+    bottom: 30px !important;
+    left: 30px !important;
+    display: flex !important;
+    gap: 15px !important;
+    pointer-events: auto !important;
+    z-index: 10000 !important;
+}
+
+.bottom-right-group {
+    position: absolute !important;
+    bottom: 30px !important;
+    right: 30px !important;
+    pointer-events: auto !important;
+    z-index: 10000 !important;
+}
+
+.right-middle-group {
+    position: absolute !important;
+    right: 30px !important;
+    top: 160px !important; 
+    pointer-events: auto !important;
+    z-index: 10000 !important;
+}
+
+/* --- ELITE FULL-SCREEN COMPONENT SYSTEM v1.99.4.1.10 --- */
+/* SQUARE ELITE BUTTON SYSTEM */
+.elite-btn-square {
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    overflow: hidden;
+    pointer-events: auto !important;
+    z-index: 1000 !important;
+}
+
+.elite-btn-square:hover {
+    background: rgba(255, 255, 255, 0.12);
+    transform: translateY(-5px);
+    border-color: rgba(0, 229, 255, 0.5);
+    box-shadow: 0 12px 40px rgba(0, 229, 255, 0.2);
+}
+
+.elite-btn-square:active { transform: scale(0.9); }
+
+.elite-btn-large {
+    width: 100%;
+    padding: 3.5vmin 5vmin;
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: white;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: 4.2vmin;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    outline: none;
+}
+
+.elite-btn-large:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-4px);
+    box-shadow: 0 15px 50px rgba(0,0,0,0.5);
+}
+
+.elite-btn-large:active { transform: scale(0.96); }
+
+.elite-btn-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s;
+}
+
+.elite-btn-icon:active { transform: rotate(15deg) scale(0.9); }
+
+h2 {
+    font-size: 28px;
+    color: #fff;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+p {
+    font-size: 14px;
+    margin-bottom: 20px;
+    color: #ddd;
+    text-align: center;
+}
+
+.buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    align-items: center;
+}
+
+.buttons button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 14px 24px;
+    font-size: 14px;
+    font-weight: bold;
+    font-family: 'Press Start 2P', cursive !important;
+    border-radius: 12px;
+    cursor: pointer;
+    width: 100%;
+    box-shadow: 0 4px rgba(0,0,0,0.2);
+    transition: all 0.1s;
+    outline: none;
+}
+
+.buttons button:active {
+    transform: translateY(4px);
+    box-shadow: none;
+}
+
+/* --- MODERN ELITE BUTTONS v1.99.3.24 --- */
+.elite-btn {
+    position: relative;
+    width: 100%;
+    padding: 18px 28px;
+    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    font-family: 'Outfit', sans-serif !important;
+    font-weight: 800;
+    font-size: 16px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    font-family: 'Outfit', sans-serif !important;
+}
+
+.elite-btn::after {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%; width: 200%; height: 200%;
+    background: linear-gradient(rgba(255,255,255,0.1), transparent, rgba(255,255,255,0.05));
+    transform: rotate(45deg);
+    pointer-events: none;
+}
+
+.elite-btn:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.elite-btn:active {
+    transform: translateY(1px) scale(0.98);
+}
+
+/* Elite Colors - Modern Soft Gradients */
+.elite-btn-green { background: linear-gradient(135deg, rgba(76, 175, 80, 0.85), rgba(56, 142, 60, 0.9)); }
+.elite-btn-orange { background: linear-gradient(135deg, rgba(243, 156, 18, 0.85), rgba(211, 84, 0, 0.9)); }
+.elite-btn-purple { background: linear-gradient(135deg, rgba(142, 68, 173, 0.85), rgba(107, 44, 145, 0.9)); }
+.elite-btn-blue { background: linear-gradient(135deg, rgba(52, 152, 219, 0.85), rgba(41, 128, 185, 0.9)); }
+.elite-btn-red { background: linear-gradient(135deg, rgba(231, 76, 60, 0.85), rgba(192, 57, 43, 0.9)); }
+.elite-btn-gray { background: rgba(255, 255, 255, 0.1); border: 1px solid #FFD700; color: #fff; }
+
+.elite-btn-gray:hover { background: rgba(255, 255, 255, 0.15); }
+
+/* --- YENİ SETTINGS (SWITCH) TASARIMI --- */
+.settings-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    align-self: stretch;
+    width: 100%;
+    margin-bottom: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 12px 18px;
+    border-radius: 12px;
+}
+
+.settings-label {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    color: #fff;
+    font-size: 16px;
+}
+
+.settings-item-col {
+    display: flex;
+    flex-direction: column;
+    align-self: stretch;
+    width: 100%;
+    margin-bottom: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 12px 18px;
+    border-radius: 12px;
+}
+
+.settings-label-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+/* --- MAĞAZA (SHOP) TASARIMI v1.99.2.0 ELITE --- */
+.shop-item {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 12px 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.shop-item:hover {
+    background: rgba(255, 255, 255, 0.07);
+    border-color: rgba(0, 229, 255, 0.3);
+    transform: translateY(-4px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+}
+
+.shop-icon-container {
+    font-size: 20px;
+    min-width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 14px;
+    margin-right: 12px;
+    box-shadow: inset 0 0 10px rgba(255,255,255,0.05);
+}
+
+.shop-item-info {
+    flex: 1;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.shop-item-title {
+    color: #fff;
+    font-family: 'Outfit', sans-serif;
+    font-size: 17px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+}
+
+.shop-item-desc {
+    color: rgba(255, 255, 255, 0.5);
+    font-family: 'Outfit', sans-serif;
+    font-size: 11px;
+    margin-top: 2px;
+    font-weight: 500;
+}
+
+.shop-upgrade-btn {
+    background: linear-gradient(135deg, #00e5ff 0%, #00acc1 100%);
+    border: none;
+    outline: none;
+    color: #000;
+    font-family: 'Press Start 2P', sans-serif;
+    font-size: 7px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    box-shadow: 0 4px 12px rgba(0, 229, 255, 0.25);
+    transition: all 0.2s ease;
+    min-width: 90px;
+    text-align: center;
+}
+
+.shop-upgrade-btn:active {
+    transform: scale(0.95);
+    filter: brightness(0.9);
+}
+
+.shop-upgrade-btn:disabled {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.3);
+    box-shadow: none;
+    cursor: not-allowed;
+}
+
+.gold-market-btn {
+    transition: all 0.3s ease !important;
+    position: relative;
+    overflow: hidden;
+}
+
+.gold-market-btn:hover {
+    background: rgba(255, 215, 0, 0.08) !important;
+    border-color: rgba(255, 215, 0, 0.6) !important;
+    transform: scale(1.02);
+}
+
+.elite-ad-btn {
+    transition: all 0.3s ease;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.1);
+}
+
+.elite-ad-btn:hover {
+    background: rgba(255, 215, 0, 0.15) !important;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(255, 215, 0, 0.2);
+}
+
+/* --- PREMİUM SLIDER TASARIMI --- */
+.vol-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 6px;
+    background: #444;
+    border-radius: 5px;
+    outline: none;
+    transition: 0.2s;
+}
+
+.vol-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: #FFD700;
+    cursor: pointer;
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    border: 3px solid #fff;
+}
+
+.vol-slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: #FFD700;
+    cursor: pointer;
+    border-radius: 50%;
+    border: 3px solid #fff;
+}
+
+/* Switch (Toggle) Kabuğu */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 54px;
+    height: 30px;
+}
+
+/* Görünmez Checkbox */
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* Kaydıran Kısım */
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #444;
+    transition: .3s;
+    border-radius: 34px;
+}
+
+.toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 22px;
+    width: 22px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .3s;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+input:checked + .toggle-slider {
+    background-color: #FFD700; /* Bizim Altın Sarımız */
+}
+
+input:checked + .toggle-slider:before {
+    transform: translateX(24px);
+}
+
+#settings-screen {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    border: 3px solid #FFD700;
+    border-radius: 25px;
+    max-width: 350px;
+}
+
+/* =============================================
+   LUCKY SPIN - PREMİUM TASARIM v2
+   ============================================= */
+
+/* Çark Ekranı Arka Planı */
+#spin-screen {
+    background: radial-gradient(ellipse at top, #1a0533 0%, #0a0a1a 60%, #000 100%) !important;
+    overflow: hidden;
+}
+
+/* Animasyonlu yıldız parıltı arka plan */
+#spin-screen::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+        radial-gradient(1px 1px at 20% 30%, rgba(255,215,0,0.6) 0%, transparent 100%),
+        radial-gradient(1px 1px at 80% 10%, rgba(255,255,255,0.5) 0%, transparent 100%),
+        radial-gradient(1px 1px at 50% 70%, rgba(255,215,0,0.4) 0%, transparent 100%),
+        radial-gradient(1px 1px at 10% 80%, rgba(255,255,255,0.3) 0%, transparent 100%),
+        radial-gradient(1px 1px at 90% 60%, rgba(255,165,0,0.5) 0%, transparent 100%),
+        radial-gradient(1px 1px at 35% 15%, rgba(255,255,255,0.4) 0%, transparent 100%),
+        radial-gradient(1px 1px at 65% 85%, rgba(255,215,0,0.5) 0%, transparent 100%),
+        radial-gradient(2px 2px at 75% 40%, rgba(255,215,0,0.7) 0%, transparent 100%),
+        radial-gradient(2px 2px at 25% 55%, rgba(255,165,0,0.6) 0%, transparent 100%);
+    animation: starTwinkle 4s ease-in-out infinite alternate;
+    pointer-events: none;
+    z-index: 0;
+}
+
+@keyframes starTwinkle {
+    0%   { opacity: 0.4; }
+    50%  { opacity: 1; }
+    100% { opacity: 0.6; }
+}
+
+/* Altta kalan parlayan halka */
+#spin-screen::after {
+    content: '';
+    position: absolute;
+    bottom: -80px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 340px;
+    height: 160px;
+    background: radial-gradient(ellipse, rgba(255,200,0,0.18) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+    animation: glowPulse 2.5s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+    0%, 100% { opacity: 0.5; transform: translateX(-50%) scaleX(1); }
+    50%       { opacity: 1;   transform: translateX(-50%) scaleX(1.1); }
+}
+
+/* Spin Container - Glassmorphism */
+#spin-container {
+    position: relative;
+    background: linear-gradient(160deg, rgba(30,10,60,0.85) 0%, rgba(10,5,30,0.9) 100%);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 2px solid rgba(255, 215, 0, 0.5);
+    border-radius: 28px;
+    width: 92%;
+    max-width: 380px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 22px 18px 18px;
+    z-index: 7000;
+    box-shadow:
+        0 0 0 1px rgba(255,215,0,0.15),
+        0 0 40px rgba(255,165,0,0.25),
+        0 20px 60px rgba(0,0,0,0.7),
+        inset 0 1px 0 rgba(255,255,255,0.08);
+    animation: containerAppear 0.4s cubic-bezier(0.34,1.56,0.64,1);
+}
+
+@keyframes containerAppear {
+    from { transform: scale(0.8) translateY(30px); opacity: 0; }
+    to   { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+/* Başlık */
+#spin-title {
+    font-family: 'Press Start 2P', cursive !important;
+    font-size: 15px !important;
+    background: linear-gradient(90deg, #FFD700, #ff8c00, #FFD700);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmerText 2.5s linear infinite;
+    text-shadow: none !important;
+}
+
+.shop-item {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    padding: 2.5vmin 4vmin;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    margin-bottom: 2vmin;
+    position: relative;
+    overflow: hidden;
+}
+
+.shop-item::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+    transform: translateX(-100%);
+    transition: 0.6s;
+}
+
+.shop-item:hover::before {
+    transform: translateX(100%);
+}
+
+.shop-item:hover {
+    transform: scale(1.02);
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 215, 0, 0.3);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+}
+
+.shop-item-title {
+    color: #fff;
+    font-family: 'Outfit', sans-serif;
+    font-size: 19px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+}
+
+.shop-item-desc {
+    color: rgba(255, 255, 255, 0.6);
+    font-family: 'Outfit', sans-serif;
+    font-size: 13px;
+    margin-top: 4px;
+    font-weight: 500;
+}
+
+.shop-upgrade-btn {
+    background: linear-gradient(135deg, #FFD700 0%, #ff8c00 100%);
+    border: none;
+    outline: none;
+    color: #000;
+    font-family: 'Press Start 2P', sans-serif;
+    font-size: 9px;
+    padding: 14px 18px;
+    border-radius: 14px;
+    cursor: pointer;
+    font-weight: 900;
+    box-shadow: 0 6px 20px rgba(255, 215, 0, 0.3);
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    min-width: 100px;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.shop-upgrade-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(255, 215, 0, 0.5);
+}
+
+.shop-upgrade-btn:active {
+    transform: scale(0.95);
+}
+
+    transform: scale(0.95);
+    filter: brightness(0.9);
+}
+
+.shop-upgrade-btn:disabled {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.3);
+    box-shadow: none;
+    cursor: not-allowed;
+}
+
+.gold-market-btn {
+    transition: all 0.3s ease !important;
+    position: relative;
+    overflow: hidden;
+}
+
+.gold-market-btn:hover {
+    background: rgba(255, 215, 0, 0.08) !important;
+    border-color: rgba(255, 215, 0, 0.6) !important;
+    transform: scale(1.02);
+}
+
+.elite-ad-btn {
+    transition: all 0.3s ease;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.1);
+}
+
+.elite-ad-btn:hover {
+    background: rgba(255, 215, 0, 0.15) !important;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(255, 215, 0, 0.2);
+}
+
+/* Canlı Bakiye Barı */
+#spin-balance-bar {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,215,0,0.2);
+    border-radius: 50px;
+    padding: 6px 16px;
+    display: flex;
+    gap: 16px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 8px !important;
+    backdrop-filter: blur(4px);
+}
+
+#spin-balance-bar span {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* Çark Container */
+#wheel-canvas-container {
+    position: relative;
+    width: 280px;
+    height: 280px;
+    margin: 15px auto;
+    overflow: visible !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Çark dış parlayan çember */
+#wheel-canvas-container::before {
+    content: '';
+    position: absolute;
+    inset: -8px;
+    border-radius: 50%;
+    background: conic-gradient(
+        #f12711, #f5af19, #FFD700, #00e5ff, #9b59b6,
+        #2ecc71, #e74c3c, #f12711
+    );
+    animation: rotateBorder 8s linear infinite;
+    z-index: -1;
+    filter: blur(4px);
+    opacity: 0.7;
+}
+
+#wheel-canvas-container::after {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.6);
+    z-index: -1;
+}
+
+@keyframes rotateBorder {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+}
+
+#wheel-canvas {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.5));
+}
+
+/* Ok (Pointer) */
+#wheel-pointer {
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 20px solid transparent;
+    border-right: 20px solid transparent;
+    border-top: 40px solid #FFD700;
+    filter: drop-shadow(0 0 15px rgba(255,215,0,0.8));
+    z-index: 50000 !important;
+    animation: pointerBob 1s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes pointerBob {
+    0%, 100% { top: -14px; }
+    50%       { top: -10px; }
+}
+
+/* Ödül Mesajı */
+.spin-reward-text {
+    font-family: 'Press Start 2P', sans-serif;
+    color: #FFD700;
+    font-size: 11px;
+    margin: 10px 0 6px;
+    min-height: 20px;
+    text-shadow: 0 0 10px rgba(255,215,0,0.7), 2px 2px #000;
+    letter-spacing: 0.5px;
+    text-align: center;
+}
+
+/* Çevir Butonu */
+#spin-btn-main {
+    background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 50%, #f5af19 100%);
+    background-size: 200% auto;
+    color: white;
+    border: none;
+    padding: 14px 20px;
+    font-family: 'Press Start 2P', sans-serif;
+    font-size: 12px;
+    border-radius: 14px;
+    cursor: pointer;
+    box-shadow:
+        0 6px 0 #8b0000,
+        0 8px 20px rgba(255,65,60,0.4),
+        inset 0 1px 0 rgba(255,255,255,0.2);
+    transition: transform 0.1s, box-shadow 0.1s, background-position 0.4s;
+    width: 100%;
+    margin-top: 6px;
+    letter-spacing: 1px;
+    animation: btnGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes btnGlow {
+    from { box-shadow: 0 6px 0 #8b0000, 0 8px 20px rgba(255,65,60,0.3), inset 0 1px 0 rgba(255,255,255,0.2); }
+    to   { box-shadow: 0 6px 0 #8b0000, 0 8px 30px rgba(255,150,0,0.6), inset 0 1px 0 rgba(255,255,255,0.2); }
+}
+
+#spin-btn-main:hover {
+    background-position: right center;
+    transform: translateY(-2px);
+}
+
+#spin-btn-main:active {
+    transform: translateY(6px);
+    box-shadow: 0 0 0 #8b0000, 0 2px 10px rgba(255,65,60,0.3), inset 0 1px 0 rgba(255,255,255,0.2);
+}
+
+#spin-btn-main:disabled {
+    background: linear-gradient(135deg, #333, #555);
+    box-shadow: 0 4px 0 #111;
+    cursor: not-allowed;
+    opacity: 0.6;
+    animation: none;
+}
+
+/* Kapat Butonu */
+#spin-close-btn {
+    background: rgba(255,255,255,0.07) !important;
+    color: #aaa !important;
+    border: 1px solid rgba(255,255,255,0.15) !important;
+    padding: 10px !important;
+    font-family: 'Outfit', sans-serif !important;
+    font-weight: 700 !important;
+    border-radius: 10px !important;
+    font-size: 13px !important;
+    transition: background 0.2s, color 0.2s !important;
+    margin-top: 4px;
+}
+
+#spin-close-btn:hover {
+    background: rgba(255,255,255,0.14) !important;
+    color: #fff !important;
+}
+
+/* --- ELITE MASTERPIECE v1.99.5.5 ADDITIONS --- */
+@keyframes floatingLogo {
+    0%, 100% { transform: translateY(0) scale(1.0); filter: drop-shadow(0 15px 30px rgba(0,229,255,0.4)); }
+    50% { transform: translateY(-15px) scale(1.02); filter: drop-shadow(0 25px 50px rgba(0,229,255,0.6)); }
+}
+
+.floating-logo {
+    animation: floatingLogo 4s ease-in-out infinite;
+}
+
+.master-play-btn {
+    position: relative;
+    width: 42vmin !important;
+    height: 42vmin !important;
+    border-radius: 50% !important;
+    background: linear-gradient(135deg, #00e5ff 0%, #12c2e9 50%, #c471ed 100%) !important;
+    border: 1vmin solid rgba(255, 255, 255, 0.9) !important;
+    color: white !important;
+    font-family: 'Outfit', sans-serif !important;
+    font-weight: 900 !important;
+    font-size: 8vmin !important;
+    cursor: pointer !important;
+    letter-spacing: -1px !important;
+    box-shadow: 0 15px 60px rgba(0,229,255,0.6), inset 0 0 20px rgba(255,255,255,0.5) !important;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    z-index: 10 !important;
+    text-shadow: 0 4px 15px rgba(0,0,0,0.3) !important;
+    pointer-events: auto !important;
+}
+
+.master-play-btn:hover {
+    transform: scale(1.08) rotate(3deg) !important;
+    box-shadow: 0 30px 90px rgba(0,229,255,0.8), inset 0 0 30px rgba(255,255,255,0.6) !important;
+}
+
+.master-play-btn:active {
+    transform: scale(0.9) !important;
+}
+
+.pulse-ring {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 44vmin; height: 44vmin;
+    border-radius: 50%;
+    border: 4px solid rgba(0, 229, 255, 0.6);
+    animation: ripplePulse 2s ease-out infinite;
+    z-index: 5;
+    pointer-events: none;
+}
+
+@keyframes ripplePulse {
+    0% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.8; }
+    100% { transform: translate(-50%, -50%) scale(1.6); opacity: 0; }
+}
+
+.elite-btn-square {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    pointer-events: auto;
+}
+
+.elite-btn-square:hover {
+    transform: translateY(-8px) scale(1.1);
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+}
+
+.elite-btn-square:active {
+    transform: translateY(0) scale(0.95);
+}
+
