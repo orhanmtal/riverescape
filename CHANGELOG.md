@@ -1,6 +1,10 @@
 # River Escape - Versiyon Günlükleri (CHANGELOG)
 Bu dosya, oyun motorunun ve özelliklerin versiyon versiyon nasıl geliştiğini mühürleyip saklamak için Antigravity tarafından oluşturulmuştur.
 
+## [v1.99.14.30] "AUDIO UNIFIED" - 2026-04-14
+- **Unified Elite Sounds**: Upgraded `playCrashSound` (used for single-life loss) to follow the new "Elite" audio style. It now features a punchy, low-frequency sawtooth impact (0.3s) that matches the theme of the full death effect.
+- **Full Death Consistency**: Ensured both partial and total failures share the updated audio aesthetic for a professional, consistent experience.
+
 ## [v1.99.14.29] "EXTREME AUDIO" - 2026-04-14
 - **Death Effect Rename**: Renamed `playDeathSound` to `playEliteDeathEffect` to bypass browser audio caching and ensure fresh logic is used.
 - **Aggressive Audio Design**: Replaced the 4-note descending sound with a dramatic sawtooth "Falling Siren" and a deep low-frequency "Explosion Rumble" for maximum impact.

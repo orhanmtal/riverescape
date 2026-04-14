@@ -1,4 +1,4 @@
-// River Escape - Ses Motoru (Audio Engine) - v1.99.14.29 (EXTREME AUDIO)
+// River Escape - Ses Motoru (Audio Engine) - v1.99.14.30 (AUDIO UNIFIED)
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 let audioCtx;
 
@@ -89,18 +89,21 @@ function playCoinSound() {
 
 function playCrashSound() {
     if(!audioCtx) return;
+    const now = audioCtx.currentTime;
+    
+    // v1.99.14.30: Elite Hit Sound (Shorter, punchy version of death)
     const osc = audioCtx.createOscillator();
-    const gainNode = audioCtx.createGain();
+    const gain = audioCtx.createGain();
+    
     osc.type = 'sawtooth';
-    osc.frequency.setValueAtTime(200, audioCtx.currentTime); 
-    osc.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.15); 
+    osc.frequency.setValueAtTime(220, now);
+    osc.frequency.exponentialRampToValueAtTime(40, now + 0.3);
     
-    let finalGain = 0.5 * isSFXVolume;
-    gainNode.gain.setValueAtTime(finalGain, audioCtx.currentTime);
-    gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+    gain.gain.setValueAtTime(0.4 * isSFXVolume, now);
+    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
     
-    osc.connect(gainNode); gainNode.connect(audioCtx.destination);
-    osc.start(); osc.stop(audioCtx.currentTime + 0.15);
+    osc.connect(gain); gain.connect(audioCtx.destination);
+    osc.start(now); osc.stop(now + 0.3);
 }
 
 function playEliteDeathEffect() {
