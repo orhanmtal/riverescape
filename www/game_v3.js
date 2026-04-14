@@ -716,18 +716,19 @@ const levelAssets = [
     { threshold: 7000, bgKey: 'lava', speed: 315, spawn: 0.55, titleEN: translations.en.lavaRiver, titleTR: translations.tr.lavaRiver, color: "#ff4500", pKey: "lava", margin: 0.34 },
     { threshold: 10000, bgKey: 'void', speed: 190, spawn: 1.40, titleEN: translations.en.voidLevel, titleTR: translations.tr.voidLevel, color: "#9b59b6", pKey: "void", margin: 0.32 },
     { threshold: 14000, bgKey: 'lagoon', speed: 310, spawn: 0.65, titleEN: translations.en.l7Title, titleTR: translations.tr.l7Title, color: "#00e5ff", pKey: "ilkbahar", margin: 0.15 },
-    { threshold: 18500, bgKey: 'cyber', speed: 340, spawn: 0.50, titleEN: "CYBER CITY", titleTR: "SİBER ŞEHİR", color: "#ff00ff", pKey: "void", margin: 0.18 }
+    { threshold: 18500, bgKey: 'cyber', speed: 340, spawn: 0.50, titleEN: "CYBER CITY", titleTR: "SİBER ŞEHİR", color: "#ff00ff", pKey: "void", margin: 0.18 },
+    { threshold: 22500, bgKey: 'toxic', speed: 320, spawn: 0.85, titleEN: "TOXIC WASTELAND", titleTR: "ZEHİRLİ ATIK", color: "#32CD32", pKey: "lava", margin: 0.30 }
 ];
 
 // v1.96.6.6: Ölüm Vadisi (DZ) Durumunu Merkezi Olarak Belirle
 // v1.99.13.1: Ölüm Vadisi (DZ) Tetikleyicisi - Seviye Süresinin Son %10'unda Başlar
 function getDZStatus() {
     // v1.99.14.9: ELITE DYNAMIC DZ - Triggers at last 20% of CURRENT level progress
-    let p = Math.floor(levelProgressTime * 5) % 22500;
+    let p = Math.floor(levelProgressTime * 5) % 27500;
     
     for (let i = 0; i < levelAssets.length; i++) {
         let start = levelAssets[i].threshold;
-        let end = (i < levelAssets.length - 1) ? levelAssets[i+1].threshold : 22500;
+        let end = (i < levelAssets.length - 1) ? levelAssets[i+1].threshold : 27500;
         
         if (p >= start && p < end) {
             let duration = end - start;
@@ -1651,6 +1652,8 @@ function spawnObstacle() {
     } else if (biomeIndex === 7) { // Cyber City (L8, L16...)
         // v1.99.15.21: Lazerler baskın engel haline getirildi (Triple frequency)
         allowedSpecialTypes.push('laserGate', 'laserGate', 'laserGate', 'cyberDrone', 'glitchStream', 'cyberSpear');
+    } else if (biomeIndex === 8) { // Toxic Wasteland (L9, L17...)
+        allowedSpecialTypes.push('toxicRat', 'toxicRat', 'toxicBarrel', 'toxicDebris');
     }
 
     // EXTRA LAYER: Ensure crocodiles/logs NEVER appear in Lava/Void/Lagoon/Cyber levels
@@ -1947,6 +1950,36 @@ function spawnObstacle() {
                 time: 0,
                 rotation: Math.atan2((targetX - spawnX) * 1.5, baseSpeed * 2.1)
             });
+        } else if (selectedType === 'toxicRat') {
+            // v1.99.16.00: MUTATED GIANT RAT - Swims across
+            const moveDir = Math.random() < 0.5 ? 1 : -1;
+            obstacles.push({
+                type: 'toxicRat',
+                x: (moveDir === 1) ? riverLeft - 60 : riverRight + 20,
+                relativeX: undefined,
+                y: spawnY, width: 70, height: 45,
+                speedY: baseSpeed * 0.9,
+                speedX: moveDir * 125,
+                time: Math.random() * 10
+            });
+        } else if (selectedType === 'toxicBarrel') {
+            // v1.99.16.00: RADIOACTIVE BARREL
+            obstacles.push({
+                type: 'toxicBarrel',
+                x: spawnX,
+                relativeX: spawnX - riverShift,
+                y: spawnY + 50, width: 45, height: 60,
+                speedY: bgScrollSpeed, speedX: 0
+            });
+        } else if (selectedType === 'toxicDebris') {
+            // v1.99.16.00: RUINED CONCRETE BLOCK
+            obstacles.push({
+                type: 'toxicDebris',
+                x: spawnX,
+                relativeX: spawnX - riverShift,
+                y: spawnY, width: 90 + Math.random() * 50, height: 45 + Math.random() * 45,
+                speedY: bgScrollSpeed, speedX: 0
+            });
         }
         return;
     }
@@ -1954,7 +1987,7 @@ function spawnObstacle() {
     // v1.99.14.86: ELITE BIOME PURITY (No logs in Lava, Void, or Nostalgia)
     // v1.99.15.10: ELITE BIOME PURITY (No logs in Lava, Void, Nostalgia, Cyber)
     const currentBiome = (currentLevel - 1) % levelAssets.length;
-    const isEliteThemeSpawn = (currentBiome === 4 || currentBiome === 5 || currentBiome === 6 || currentBiome === 7);
+    const isEliteThemeSpawn = (currentBiome === 4 || currentBiome === 5 || currentBiome === 6 || currentBiome === 7 || currentBiome === 8);
     if (isEliteThemeSpawn) return;
 
     // Bütün Kütükler Dikey (Vertical) Gelsin
@@ -2380,8 +2413,8 @@ function update(dt) {
     score += dt * 5; // v1.99.14.12: Baseline score restored
 
     // --- v1.99.13.1: FRAME-ACCURATE LEVEL CALCULATION ---
-    let loopCount = Math.floor((levelProgressTime * 5) / 22500);
-    let baseProgressVal = Math.floor(levelProgressTime * 5) % 22500;
+    let loopCount = Math.floor((levelProgressTime * 5) / 27500);
+    let baseProgressVal = Math.floor(levelProgressTime * 5) % 27500;
     let targetIndex = 0;
     for (let i = levelAssets.length - 1; i >= 0; i--) {
         if (baseProgressVal >= levelAssets[i].threshold) {
@@ -2821,6 +2854,15 @@ function update(dt) {
             if (obs.relativeX === undefined) obs.relativeX = obs.x - getRiverShift(obs.y);
             obs.relativeX += obs.speedX * dt;
             obs.x = getRiverShift(obs.y) + obs.relativeX;
+        } else if (obs.type === 'toxicRat') {
+            obs.time += (dt || 0.016);
+            // Sıçanlar hem nehirle akar hem de çapraz yüzerler (Dalgalı hareketle)
+            const swimWiggle = Math.sin(obs.time * 5) * 1.5;
+            obs.x += (obs.speedX + swimWiggle) * dt;
+            // Nehir kaymasına (drift) uyum sağla (Opsiyonel: Sıçanlar nehirden bağımsız yüzebilir ama senkronizasyon için ekledik)
+            if (obs.relativeX === undefined) obs.relativeX = obs.x - getRiverShift(obs.y);
+            obs.relativeX += (obs.speedX + swimWiggle) * dt; 
+            obs.x = getRiverShift(obs.y) + obs.relativeX;
         } else if (obs.type === 'toyBalloon') {
             obs.time += (dt || 0.016);
             const driftX = Math.sin(obs.time * 3) * 80;
@@ -3249,6 +3291,53 @@ function draw(dt) {
             ctx.stroke();
             
             ctx.shadowBlur = 0; // Reset
+        } else if (biomeIndexForBg === 8) {
+            // --- v1.99.16.00: PROCEDURAL TOXIC WASTELAND BACKGROUND ---
+            ctx.fillStyle = "#0a1a05"; // Koyu, Bataklıksı Çürümüş Yeşil
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            const toxicMargin = canvas.width * 0.30;
+            const tPulse = (Math.sin(performance.now() / 600) * 0.2 + 0.8);
+
+            // 1. Zehirli Su Parıltısı (River Glow)
+            ctx.fillStyle = `rgba(50, 205, 50, ${0.12 * tPulse})`;
+            ctx.fillRect(toxicMargin, 0, canvas.width - (toxicMargin * 2), canvas.height);
+
+            // 2. Radyoaktif Kabarcıklar (Bubbles)
+            ctx.fillStyle = "rgba(173, 255, 47, 0.4)";
+            for (let i = 0; i < 12; i++) {
+                let seed = (i * 777) % 500;
+                let bx = toxicMargin + ((seed * 1.5) % (canvas.width - toxicMargin * 2));
+                let by = (performance.now() / 4 + seed) % canvas.height;
+                let bSize = 2 + (i % 4);
+                ctx.beginPath();
+                ctx.arc(bx, by, bSize, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // 3. YIKIK BİNALAR VE HARABELER (RUINS)
+            ctx.fillStyle = "#1e1e1e"; // Beton Grisi/Siyah
+            ctx.shadowBlur = 0;
+            for (let i = 0; i < 6; i++) {
+                let side = (i % 2 === 0) ? -20 : canvas.width - toxicMargin + 20;
+                let buildY = ((performance.now() / 2) + (i * 200)) % (canvas.height + 250) - 200;
+                let bWidth = toxicMargin - 10;
+                let bHeight = 150 + (i * 30) % 100;
+                
+                // Bina Gövdesi
+                ctx.fillRect(side, buildY, bWidth, bHeight);
+                
+                // Harabe Pencereleri (Karanlık/Kırık)
+                ctx.fillStyle = "rgba(0,0,0,0.6)";
+                for (let px = 15; px < bWidth - 15; px += 20) {
+                    for (let py = 20; py < bHeight - 20; py += 25) {
+                        if ((px + py + i) % 7 !== 0) { 
+                            ctx.fillRect(side + px, buildY + py, 8, 12);
+                        }
+                    }
+                }
+                ctx.fillStyle = "#1e1e1e"; 
+            }
         } else {
             // Hiçbir şey yoksa Spring gör - Ama Lav'da asla Spring görme!
             if (bgImgs['ilkbahar'] && currentLevel !== 5) {
@@ -3733,6 +3822,85 @@ function draw(dt) {
                     ctx.fillRect(rx, ry, rw, 4);
                 }
                 
+                ctx.restore();
+                drawSuccess = true;
+            } else if (obs.type === 'toxicRat') {
+                // --- v1.99.16.00: MUTATED GIANT RAT ---
+                ctx.save();
+                ctx.translate(obs.x + obs.width / 2, obs.y + obs.height / 2);
+                
+                // Gövde (Gri/Kahve)
+                ctx.fillStyle = "#4a4a4a";
+                ctx.beginPath();
+                ctx.ellipse(0, 0, obs.width / 2, obs.height / 2.5, 0, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Kuyruk (Pembe/Gri)
+                ctx.strokeStyle = "#8b5a5a";
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.moveTo(-obs.width / 2, 0);
+                ctx.quadraticCurveTo(-obs.width / 1.5, Math.sin(obs.time * 5) * 10, -obs.width, 5);
+                ctx.stroke();
+
+                // Parlayan Kırmızı Gözler
+                ctx.fillStyle = "#ff0000";
+                ctx.shadowBlur = 5;
+                ctx.shadowColor = "red";
+                ctx.beginPath();
+                ctx.arc(obs.width / 4, -4, 3, 0, Math.PI * 2);
+                ctx.arc(obs.width / 4, 4, 3, 0, Math.PI * 2);
+                ctx.fill();
+                
+                ctx.restore();
+                drawSuccess = true;
+            } else if (obs.type === 'toxicBarrel') {
+                // --- v1.99.16.00: RADIOACTIVE BARREL ---
+                ctx.save();
+                ctx.translate(obs.x + obs.width / 2, obs.y + obs.height / 2);
+                
+                // Varil Gövdesi (Metalik Gri/Paslı)
+                ctx.fillStyle = "#3a3a3a";
+                ctx.fillRect(-obs.width / 2, -obs.height / 2, obs.width, obs.height);
+                
+                // Radyoaktif Kuşaklar (Sarı)
+                ctx.fillStyle = "#ffd600";
+                ctx.fillRect(-obs.width / 2, -obs.height / 4, obs.width, 10);
+                
+                // Biohazard İkonu (Basit)
+                ctx.strokeStyle = "#000";
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.arc(0, 5, 5, 0, Math.PI * 2);
+                ctx.stroke();
+                
+                ctx.restore();
+                drawSuccess = true;
+            } else if (obs.type === 'toxicDebris') {
+                // --- v1.99.16.00: RUINED CONCRETE DEBRIS ---
+                ctx.save();
+                ctx.translate(obs.x + obs.width / 2, obs.y + obs.height / 2);
+                
+                // Beton Bloğu
+                ctx.fillStyle = "#2e2e2e";
+                ctx.beginPath();
+                ctx.moveTo(-obs.width / 2, -obs.height / 2);
+                ctx.lineTo(obs.width / 2, -obs.height / 2 + 10);
+                ctx.lineTo(obs.width / 3, obs.height / 2);
+                ctx.lineTo(-obs.width / 2 - 5, obs.height / 2 - 5);
+                ctx.closePath();
+                ctx.fill();
+                
+                // Demir Çubuklar (Rebar)
+                ctx.strokeStyle = "#444";
+                ctx.lineWidth = 2;
+                for (let i = 0; i < 3; i++) {
+                    ctx.beginPath();
+                    ctx.moveTo(-obs.width / 2 + (i * 15), -obs.height / 2);
+                    ctx.lineTo(-obs.width / 2 + (i * 15) - 10, -obs.height / 2 - 15);
+                    ctx.stroke();
+                }
+
                 ctx.restore();
                 drawSuccess = true;
             } else if (obs.type === 'cyberSpear') {
