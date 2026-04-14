@@ -1,6 +1,10 @@
 # River Escape - Versiyon Günlükleri (CHANGELOG)
 Bu dosya, oyun motorunun ve özelliklerin versiyon versiyon nasıl geliştiğini mühürleyip saklamak için Antigravity tarafından oluşturulmuştur.
 
+## [v1.99.14.28] "AUDIO REBORN" - 2026-04-14
+- **Hippo (Hoppa) Sound Removal**: Silenced the `playCrashSound` trigger when hippos emerge from the water, as per user request.
+- **New Death Sound**: Redesigned `playDeathSound` with a cinematic white-noise explosion and a deep square-wave pitch dive for a more high-fidelity game-over experience.
+
 ## [v1.99.14.27] "ECONOMY & HUD SYNC" - 2026-04-14
 - **Thicker Progress Bar**: Increased HUD progress bar height from 3px to 6px and increased glow intensity for better visibility.
 - **Smooth Animation**: Updated `syncEliteHUD` to use high-precision decimals for the progress bar width, ensuring sub-pixel smooth movement.

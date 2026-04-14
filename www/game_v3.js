@@ -1,4 +1,4 @@
-// RİVER ESCAPE PRESTIGE - v1.99.14.27 (ECONOMY & HUD SYNC)
+// RİVER ESCAPE PRESTIGE - v1.99.14.28 (AUDIO REBORN)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -2538,7 +2538,7 @@ function update(dt) {
             // Su aygırı suyun altından gelir, oyuncuya 220px yaklaştığında aniden yüzeye çıkar!
             if (obs.isSubmerged && obs.y > player.y - 220) {
                 obs.isSubmerged = false;
-                playCrashSound(); // Sudan çıkış patlaması efekti olarak kullanıyoruz
+                // v1.99.14.28: Hippo emergence sound removed per user request
             }
         } else if (obs.type === 'lavaGeyser') {
             obs.stateTimer -= dt;

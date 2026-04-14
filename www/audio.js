@@ -1,4 +1,4 @@
-// River Escape - Ses Motoru (Audio Engine) - v1.99.14.27 (ECONOMY & HUD SYNC)
+// River Escape - Ses Motoru (Audio Engine) - v1.99.14.28 (AUDIO REBORN)
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 let audioCtx;
 
@@ -105,20 +105,47 @@ function playCrashSound() {
 
 function playDeathSound() {
     if(!audioCtx) return;
-    const startTime = audioCtx.currentTime;
-    const notes = [523.25, 392.00, 329.63, 261.63]; 
+    const now = audioCtx.currentTime;
     
-    notes.forEach((freq, i) => {
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.type = 'square';
-        osc.frequency.setValueAtTime(freq, startTime + i * 0.15);
-        gain.gain.setValueAtTime(0.3 * isSFXVolume, startTime + i * 0.15);
-        gain.gain.exponentialRampToValueAtTime(0.01, startTime + (i + 1) * 0.15);
-        osc.connect(gain); gain.connect(audioCtx.destination);
-        osc.start(startTime + i * 0.15);
-        osc.stop(startTime + (i + 1) * 0.15);
-    });
+    // v1.99.14.28: Elite Death Sound (Explosion + Pitch Dive)
+    
+    // 1. White Noise Explosion
+    const bufferSize = audioCtx.sampleRate * 0.4;
+    const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+    
+    const noise = audioCtx.createBufferSource();
+    noise.buffer = buffer;
+    const noiseGain = audioCtx.createGain();
+    const noiseFilter = audioCtx.createBiquadFilter();
+    
+    noiseFilter.type = 'lowpass';
+    noiseFilter.frequency.setValueAtTime(1000, now);
+    noiseFilter.frequency.exponentialRampToValueAtTime(10, now + 0.4);
+    
+    noiseGain.gain.setValueAtTime(0.3 * isSFXVolume, now);
+    noiseGain.gain.linearRampToValueAtTime(0, now + 0.4);
+    
+    noise.connect(noiseFilter);
+    noiseFilter.connect(noiseGain);
+    noiseGain.connect(audioCtx.destination);
+    noise.start(now);
+    
+    // 2. Square Power-Down Tone
+    const osc = audioCtx.createOscillator();
+    const oscGain = audioCtx.createGain();
+    osc.type = 'square';
+    osc.frequency.setValueAtTime(440, now);
+    osc.frequency.exponentialRampToValueAtTime(50, now + 0.8);
+    
+    oscGain.gain.setValueAtTime(0.2 * isSFXVolume, now);
+    oscGain.gain.exponentialRampToValueAtTime(0.01, now + 0.8);
+    
+    osc.connect(oscGain);
+    oscGain.connect(audioCtx.destination);
+    osc.start(now);
+    osc.stop(now + 0.8);
 }
 
 function playPowerupSound() {
