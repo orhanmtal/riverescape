@@ -1,6 +1,11 @@
 # River Escape - Versiyon Günlükleri (CHANGELOG)
 Bu dosya, oyun motorunun ve özelliklerin versiyon versiyon nasıl geliştiğini mühürleyip saklamak için Antigravity tarafından oluşturulmuştur.
 
+## [v1.99.14.25] "TRANSITION FIX" - 2026-04-14
+- **Teleport Fatigue Fix**: Resolved a critical bug where `bgScrollSpeed` would remain stuck at 450 (boost speed) after level transitions.
+- **Speed Normalization**: Added a reset command to return background speed to level-specific values (`currentLAsset.speed`) immediately after the 2s transition timer completes.
+- **Visual Integrity**: Fixed the "backwards-flowing obstacles" illusion by synchronizing the water speed with obstacle movement.
+
 ## [v1.99.14.24] "AUDIO SYNC" - 2026-04-14
 - **DZ Music Accuracy**: Synchronized the "Dönence" (Panic) music trigger with the centralized `getDZStatus()` logic.
 - **Time-Based Trigger**: Replaced score-based triggers with `levelProgressTime` (seconds) to prevent gold bonuses from triggering the music too early.

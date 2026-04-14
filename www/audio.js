@@ -1,4 +1,4 @@
-// River Escape - Ses Motoru (Audio Engine) - v1.99.14.24 (AUDIO SYNC)
+// River Escape - Ses Motoru (Audio Engine) - v1.99.14.25 (TRANSITION FIX)
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 let audioCtx;
 

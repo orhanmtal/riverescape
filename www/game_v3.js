@@ -2317,6 +2317,7 @@ function update(dt) {
         goldTimer = 0;  // Altın çıkmasını da engelle
         if (transitionTimer <= 0) {
             isTransitioningLevel = false;
+            bgScrollSpeed = currentLAsset.speed; // v1.99.14.25: Işınlanma bitti, hızı normale döndür!
         }
     }
 
