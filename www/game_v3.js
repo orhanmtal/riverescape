@@ -1671,7 +1671,8 @@ function spawnObstacle() {
         // v1.99.15.21: Lazerler baskın engel haline getirildi (Triple frequency)
         allowedSpecialTypes.push('laserGate', 'laserGate', 'laserGate', 'cyberDrone', 'glitchStream', 'cyberSpear');
     } else if (biomeIndex === 8) { // Toxic Wasteland (L9, L17...)
-        allowedSpecialTypes.push('toxicRat', 'toxicBarrel', 'toxicSerpent', 'toxicSerpent');
+        // v1.99.16.42: TEMP 100% SERPENT SPAWN FOR TESTING
+        allowedSpecialTypes.push('toxicSerpent', 'toxicSerpent', 'toxicSerpent');
     }
 
     // EXTRA LAYER: Ensure crocodiles/logs NEVER appear in Lava/Void/Lagoon/Cyber levels
@@ -1715,15 +1716,16 @@ function spawnObstacle() {
         if (relSpawnX > rightLimitRel) relSpawnX = rightLimitRel;
     }
     spawnX = relSpawnX + riverShift;
-    window.lastObsRelX = relSpawnX; // Geriye uyumluluk için tutuyorum
-    
-    // v1.99.14.81: ELITE VOID DENSITY
+    window.lastObsRelX = relSpawnX; 
     let currentSpawnChance = 0.45;
     if (currentLevel === 7) currentSpawnChance = 0.90;
     else if (biomeIndex === 5) currentSpawnChance = 0.65; // Boşluk Yoğunluğu
     
     if (Math.random() < currentSpawnChance && allowedSpecialTypes.length > 0) {
         let selectedType = allowedSpecialTypes[Math.floor(Math.random() * allowedSpecialTypes.length)];
+        
+        // v1.99.16.42: VERIFICATION LOG
+        if (biomeIndex === 8) console.log("%c FORCE SPAWN: " + selectedType, "background: #222; color: #adff2f; font-weight: bold;");
 
         if (selectedType === 'hippo') {
             obstacles.push({
