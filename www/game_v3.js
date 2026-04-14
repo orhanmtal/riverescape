@@ -3537,9 +3537,9 @@ function draw(dt) {
                 ctx.strokeStyle = "rgba(255, 255, 255, 0.4)";
                 ctx.stroke();
 
-                // Balon Gövdesi
+                // Balon Gövdesi (v1.99.14.89: Fixed Color Selection)
                 const colors = ["#ff5252", "#448aff", "#ffeb3b", "#e040fb"];
-                const colorIdx = (obs.phase || 0) % colors.length;
+                const colorIdx = Math.floor((obs.phase || 0) % colors.length);
                 ctx.fillStyle = colors[colorIdx];
                 ctx.beginPath();
                 ctx.ellipse(0, 0, obs.width / 2.2, obs.height / 2.5, 0, 0, Math.PI * 2);
