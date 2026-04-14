@@ -1832,6 +1832,7 @@ function spawnObstacle() {
                 speedX: (Math.random() < 0.5) ? 120 : -120
             });
         } else if (selectedType === 'rock' || selectedType === 'iceBerg') {
+            if (isEliteLethal) return; // v1.99.15.13: Rocks/Ice are forbidden in Elite biomes
             let isIce = selectedType === 'iceBerg';
             let rockSize = isIce ? (45 + Math.random() * 20) : (40 + Math.random() * 20);
             obstacles.push({
