@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>RiverEscape Mobil</title>
     <link rel="stylesheet" href="style.css?v=1.99.14.33">
-    <!-- MASTER UI OVERRIDE// RİVER ESCAPE PRESTIGE - v1.99.14.73 (ELITE PROGRESS ENGINE) -->
+    <!-- MASTER UI OVERRIDE// RİVER ESCAPE PRESTIGE - v1.99.14.74 (ELITE PROGRESS ENGINE) -->
 
     <style>
         .master-play-btn {
@@ -108,7 +108,7 @@
                     </div>
                 </div>
                 <button id="open-settings-btn" class="elite-btn-square"
-                    style="width: 12vmin; height: 12vmin; font-size: 6vmin; display: none;">⚙️</button>
+                    style="width: 11.5vmin; height: 11.5vmin; font-size: 4.1.5vmin; display: none;">⚙️</button>
             </div>
 
             <!-- ELITE MASTERPIECE TITLE v1.99.14.0 -->
@@ -135,7 +135,7 @@
                     font-weight: bold; margin-top: 15px; letter-spacing: 0.8vmin; opacity: 0.9;
                     text-shadow: 0 0 15px rgba(255,215,0,0.4);
                     pointer-events: none;
-                " version="1.99.14.0">PRESTIGE v1.99.14.73</div>
+                " version="1.99.14.0">PRESTIGE v1.99.14.74</div>
             </div>
 
             <!-- CENTRAL INTERACTION ZONE -->
@@ -150,7 +150,7 @@
                 </div>
 
                 <!-- SECONDARY ACTION ROW -->
-                <div style="display: flex; gap: 6vmin; align-items: center; justify-content: center;">
+                <div style="display: flex; gap: 4.1.5vmin; align-items: center; justify-content: center;">
                     <button id="open-shop-btn" class="elite-btn-square"
                         style="width: 18vmin; height: 18vmin; font-size: 8vmin; display: none;">🛒</button>
                     <button id="leaderboard-btn" class="elite-btn-square"
@@ -169,7 +169,7 @@
             <h2
                 style="font-family: 'Outfit'; font-weight: 900; color: white; font-size: 8vmin; margin-bottom: 5vmin; letter-spacing: 1vmin;">
                 DURAKLATILDI</h2>
-            <div style="display: flex; flex-direction: column; gap: 4vmin; width: 65%; max-width: 300px;">
+            <div style="display: flex; flex-direction: column; gap: 2.8vmin; width: 65%; max-width: 300px;">
                 <button id="resume-btn" class="elite-btn-large"
                     style="background: linear-gradient(135deg, #00e5ff, #004d40);">DEVAM ET</button>
                 <button id="open-shop-btn-pause" class="elite-btn-large"
@@ -222,20 +222,20 @@
                 </div>
                 <div
                     style="font-family: 'Outfit'; font-size: 7px; color: rgba(0, 229, 255, 0.5); text-align: right; margin-top: 2px; font-weight: 900; letter-spacing: 0.5px;">
-                    v1.99.14.73</div>
+                    v1.99.14.74</div>
             </div>
         </div>
 
-        <div id="armor-ui-indicator" style="
+        <div id="armor-ui-indicator" onclick="openShop()" style="
             position: absolute; 
-            bottom: calc(30px + env(safe-area-inset-bottom)); 
-            left: calc(30px + env(safe-area-inset-left)); 
-            width: 15vmin; height: 15vmin;
+            bottom: calc(20px + env(safe-area-inset-bottom)); 
+            left: calc(20px + env(safe-area-inset-left)); 
+            width: 12vmin; height: 12vmin;
             display: none; align-items: center; justify-content: center;
-            z-index: 1000; pointer-events: none;
+            z-index: 1000; cursor: pointer; transition: all 0.3s ease;
         ">
             <!-- Diamond Shape Container -->
-            <div style="
+            <div id="armor-bg-diamond" style="
                 position: absolute; width: 100%; height: 100%;
                 background: rgba(155, 89, 182, 0.2);
                 border: 2px solid rgba(155, 89, 182, 0.6);
@@ -245,16 +245,16 @@
                 border-radius: 4px;
             "></div>
             <div
-                style="position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;">
-                <span style="font-size: 6vmin; filter: drop-shadow(0 0 10px #9b59b6); margin-bottom: -1vmin;">💎</span>
+                style="position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px;">
+                <span style="font-size: 3.5vmin; filter: drop-shadow(0 0 10px #9b59b6); margin-bottom: -0.5vmin;">💎</span>
                 <span id="armor-badge" style="
                     color: #fff; font-family: 'Press Start 2P', cursive; 
-                    font-size: 4vmin; text-shadow: 0 0 10px #9b59b6;
+                    font-size: 2.2vmin; text-shadow: 0 0 10px #9b59b6;
                     font-weight: bold;
                 ">0</span>
                 <span style="
                     color: rgba(155, 89, 182, 1); font-family: 'Outfit'; 
-                    font-size: 2vmin; font-weight: 900; letter-spacing: 1px;
+                    font-size: 1.25vmin; font-weight: 900; letter-spacing: 1px;
                     text-transform: uppercase;
                 ">ZIRH</span>
             </div>
@@ -272,9 +272,9 @@
 
             <div
                 style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 5vmin 10vmin; text-align: center; width: 80%; max-width: 400px;">
-                <div style="color: rgba(255,255,255,0.5); font-size: 3vmin; margin-bottom: 2vmin;">TOPLAM SKOR</div>
-                <div id="score-title-final" style="font-size: 12vmin; font-weight: 900; line-height: 1;">0</div>
-                <div style="margin-top: 4vmin; color: #FFD700; font-size: 5vmin; font-weight: 900;">+ <span
+                <div style="color: rgba(255,255,255,0.5); font-size: 3vmin; margin-bottom: 1.5vmin;">TOPLAM SKOR</div>
+                <div id="score-title-final" style="font-size: 11.5vmin; font-weight: 900; line-height: 1;">0</div>
+                <div style="margin-top: 2.8vmin; color: #FFD700; font-size: 5vmin; font-weight: 900;">+ <span
                         id="finalGoldValue">0</span> ALTIN</div>
             </div>
 
@@ -287,10 +287,10 @@
                 <button id="restart-btn" class="elite-btn-large" style="background: rgba(255,255,255,0.15);">YENİDEN
                     BAŞLA 🔄</button>
                 <button id="quit-btn-gameover"
-                    style="background: none; border: none; color: rgba(255,255,255,0.4); font-family: 'Outfit'; font-weight: bold; font-size: 3.5vmin; cursor: pointer; margin-top: 2vmin;">ANA
+                    style="background: none; border: none; color: rgba(255,255,255,0.4); font-family: 'Outfit'; font-weight: bold; font-size: 3.5vmin; cursor: pointer; margin-top: 1.5vmin;">ANA
                     MENÜYE DÖN 🏠</button>
             </div>
-            <div style="color: rgba(255,229,255,0.2); font-size: 2vmin;">v1.99.14.73</div>
+            <div style="color: rgba(255,229,255,0.2); font-size: 1.5vmin;">v1.99.14.74</div>
         </div>
 
         <!-- LEVEL UP OVERLAY (EMERGENCY FIX v1.99.14.0) -->
@@ -303,7 +303,7 @@
             <div
                 style="width: 85%; max-width: 400px; padding: calc(5vmin + env(safe-area-inset-top)) 0; display: flex; flex-direction: column; align-items: center; gap: 5vmin;">
                 <h2
-                    style="color: #FFD700; font-family: 'Outfit', sans-serif; font-weight: 900; font-size: 8vmin; letter-spacing: 0.5vmin; text-shadow: 0 0 20px rgba(255,215,0,0.3); margin-bottom: 2vmin;">
+                    style="color: #FFD700; font-family: 'Outfit', sans-serif; font-weight: 900; font-size: 8vmin; letter-spacing: 0.5vmin; text-shadow: 0 0 20px rgba(255,215,0,0.3); margin-bottom: 1.5vmin;">
                     AYARLAR</h2>
 
                 <div
@@ -327,7 +327,7 @@
                     </div>
 
                     <div
-                        style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 4vmin;">
+                        style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 2.8vmin;">
                         <span class="settings-label" id="vibration-label-text">📳 Titreşim</span>
                         <label class="switch">
                             <input type="checkbox" id="vibration-toggle" checked>
@@ -336,12 +336,12 @@
                     </div>
                 </div>
 
-                <div style="width: 100%; display: flex; flex-direction: column; gap: 3vmin; margin-top: 2vmin;">
+                <div style="width: 100%; display: flex; flex-direction: column; gap: 3vmin; margin-top: 1.5vmin;">
                     <button id="settings-close-btn"
-                        style="background: linear-gradient(135deg, #2ecc71, #27ae60); color: #fff; border: none; padding: 4vmin; border-radius: 15px; font-weight: 900; font-family: 'Outfit'; cursor: pointer; font-size: 4.5vmin; box-shadow: 0 5px 15px rgba(46, 204, 113, 0.2);">AYARLARI
+                        style="background: linear-gradient(135deg, #2ecc71, #27ae60); color: #fff; border: none; padding: 2.8vmin; border-radius: 15px; font-weight: 900; font-family: 'Outfit'; cursor: pointer; font-size: 4.5vmin; box-shadow: 0 5px 15px rgba(46, 204, 113, 0.2);">AYARLARI
                         KAYDET</button>
                     <button id="logout-btn"
-                        style="background: rgba(255,255,255,0.05); color: #fff; border: 1px solid rgba(255,255,255,0.1); padding: 3.5vmin; border-radius: 15px; font-weight: 700; font-family: 'Outfit'; cursor: pointer; font-size: 3.5vmin; display: flex; align-items: center; justify-content: center; gap: 2vmin;">🚪
+                        style="background: rgba(255,255,255,0.05); color: #fff; border: 1px solid rgba(255,255,255,0.1); padding: 3.5vmin; border-radius: 15px; font-weight: 700; font-family: 'Outfit'; cursor: pointer; font-size: 3.5vmin; display: flex; align-items: center; justify-content: center; gap: 1.5vmin;">🚪
                         OTURUMU KAPAT</button>
                     <button id="hard-reset-btn"
                         style="background: rgba(255, 68, 68, 0.05); border: 1px solid rgba(255, 68, 68, 0.2); color: #ff4444; padding: 3vmin; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 3vmin;">⚠️
@@ -349,7 +349,7 @@
                 </div>
 
                 <button id="settings-back-btn"
-                    style="background: none; border: none; color: rgba(255,255,255,0.3); font-family: 'Outfit'; font-weight: bold; font-size: 4vmin; cursor: pointer; margin-top: auto;">GERİ
+                    style="background: none; border: none; color: rgba(255,255,255,0.3); font-family: 'Outfit'; font-weight: bold; font-size: 2.8vmin; cursor: pointer; margin-top: auto;">GERİ
                     DÖN 🏠</button>
             </div>
         </div>
@@ -407,7 +407,7 @@
         <div id="shop-screen" class="screen hidden"
             style="background: linear-gradient(135deg, #050a10 0%, #0a1525 100%); overflow-y: auto;">
             <div
-                style="width: 100%; max-width: 500px; padding: calc(6vmin + env(safe-area-inset-top)) 6vmin calc(10vmin + env(safe-area-inset-bottom)) 6vmin; box-sizing: border-box; min-height: 100vh; display: flex; flex-direction: column; margin: 0 auto;">
+                style="width: 100%; max-width: 500px; padding: calc(4.1.5vmin + env(safe-area-inset-top)) 4.1.5vmin calc(10vmin + env(safe-area-inset-bottom)) 4.1.5vmin; box-sizing: border-box; min-height: 100vh; display: flex; flex-direction: column; margin: 0 auto;">
                 <div
                     style="display: flex; justify-content: center; align-items: center; margin-bottom: 3vmin; width: 100%;">
                     <h2 id="shop-title-main"
@@ -415,15 +415,15 @@
                         MAĞAZA</h2>
                 </div>
                 <div id="shop-balance-text"
-                    style="color: #fff; font-size: 4.5vmin; margin-bottom: 6vmin; font-family: 'Press Start 2P', sans-serif; opacity: 0.9; text-align: center; background: rgba(255, 215, 0, 0.05); padding: 15px; border-radius: 12px; border: 1px solid rgba(255, 215, 0, 0.2); box-shadow: 0 0 20px rgba(0,0,0,0.3);">
+                    style="color: #fff; font-size: 4.5vmin; margin-bottom: 4.1.5vmin; font-family: 'Press Start 2P', sans-serif; opacity: 0.9; text-align: center; background: rgba(255, 215, 0, 0.05); padding: 15px; border-radius: 12px; border: 1px solid rgba(255, 215, 0, 0.2); box-shadow: 0 0 20px rgba(0,0,0,0.3);">
                     BAKİYE: <span id="totalGoldValue-shop"
                         style="color: #FFD700; text-shadow: 0 0 10px rgba(255,215,0,0.5);">0</span> GOLD</div>
 
-                <div class="shop-container-elite" style="display: flex; flex-direction: column; gap: 4vmin;">
+                <div class="shop-container-elite" style="display: flex; flex-direction: column; gap: 2.8vmin;">
                     <div class="shop-item">
-                        <div style="display: flex; align-items: center; gap: 4vmin;">
+                        <div style="display: flex; align-items: center; gap: 2.8vmin;">
                             <div
-                                style="width: 14vmin; height: 14vmin; background: rgba(255, 215, 0, 0.1); border: 2px solid #FFD700; border-radius: 18px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);">
+                                style="width: 12.8vmin; height: 12.8vmin; background: rgba(255, 215, 0, 0.1); border: 2px solid #FFD700; border-radius: 18px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);">
                                 <span style="font-size: 8vmin;">🧲</span>
                             </div>
                             <div>
@@ -436,9 +436,9 @@
                     </div>
 
                     <div class="shop-item">
-                        <div style="display: flex; align-items: center; gap: 4vmin;">
+                        <div style="display: flex; align-items: center; gap: 2.8vmin;">
                             <div
-                                style="width: 14vmin; height: 14vmin; background: rgba(0, 229, 255, 0.1); border: 2px solid #00e5ff; border-radius: 18px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 15px rgba(0, 229, 255, 0.2);">
+                                style="width: 12.8vmin; height: 12.8vmin; background: rgba(0, 229, 255, 0.1); border: 2px solid #00e5ff; border-radius: 18px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 15px rgba(0, 229, 255, 0.2);">
                                 <span style="font-size: 8vmin;">🛡️</span>
                             </div>
                             <div>
@@ -451,9 +451,9 @@
                     </div>
 
                     <div id="shop-weapon-row" class="shop-item">
-                        <div style="display: flex; align-items: center; gap: 4vmin;">
+                        <div style="display: flex; align-items: center; gap: 2.8vmin;">
                             <div
-                                style="width: 14vmin; height: 14vmin; background: rgba(255, 61, 0, 0.1); border: 2px solid #ff3d00; border-radius: 18px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 15px rgba(255, 61, 0, 0.2);">
+                                style="width: 12.8vmin; height: 12.8vmin; background: rgba(255, 61, 0, 0.1); border: 2px solid #ff3d00; border-radius: 18px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 15px rgba(255, 61, 0, 0.2);">
                                 <span style="font-size: 8vmin;">📡</span>
                             </div>
                             <div>
@@ -465,9 +465,9 @@
                     </div>
 
                     <div id="shop-ammo-row" class="shop-item">
-                        <div style="display: flex; align-items: center; gap: 4vmin;">
+                        <div style="display: flex; align-items: center; gap: 2.8vmin;">
                             <div
-                                style="width: 14vmin; height: 14vmin; background: rgba(255, 140, 0, 0.1); border: 2px solid #ff8c00; border-radius: 18px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 15px rgba(255, 140, 0, 0.3);">
+                                style="width: 12.8vmin; height: 12.8vmin; background: rgba(255, 140, 0, 0.1); border: 2px solid #ff8c00; border-radius: 18px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 15px rgba(255, 140, 0, 0.3);">
                                 <span style="font-size: 8vmin;">☄️</span>
                             </div>
                             <div>
@@ -483,9 +483,9 @@
                     </div>
 
                     <div id="shop-armor-row" class="shop-item">
-                        <div style="display: flex; align-items: center; gap: 4vmin;">
+                        <div style="display: flex; align-items: center; gap: 2.8vmin;">
                             <div
-                                style="width: 14vmin; height: 14vmin; background: rgba(0, 172, 193, 0.1); border: 2px solid #00acc1; border-radius: 18px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 15px rgba(0, 172, 193, 0.2);">
+                                style="width: 12.8vmin; height: 12.8vmin; background: rgba(0, 172, 193, 0.1); border: 2px solid #00acc1; border-radius: 18px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 15px rgba(0, 172, 193, 0.2);">
                                 <span style="font-size: 8vmin;">💎</span>
                             </div>
                             <div>
@@ -497,34 +497,34 @@
                     </div>
 
                     <button id="ad-gold-btn" class="elite-ad-btn"
-                        style="background: rgba(255,215,0,0.1); border: 2px dashed #FFD700; color: #FFD700; padding: 4vmin; border-radius: 20px; font-weight: 900; cursor: pointer; margin-top: 1vmin; font-size: 3.5vmin;">+100
+                        style="background: rgba(255,215,0,0.1); border: 2px dashed #FFD700; color: #FFD700; padding: 2.8vmin; border-radius: 20px; font-weight: 900; cursor: pointer; margin-top: 1vmin; font-size: 3.5vmin;">+100
                         ALTIN (REKLAM)</button>
 
                     <!-- ALTIN MARKET 💰 v1.99.14.0 -->
                     <div style="margin-top: 8vmin; padding-bottom: 10vmin;">
                         <h3
-                            style="color: #FFD700; font-family: 'Outfit'; font-weight: 900; font-size: 6vmin; text-align: center; margin-bottom: 4vmin;">
+                            style="color: #FFD700; font-family: 'Outfit'; font-weight: 900; font-size: 4.1.5vmin; text-align: center; margin-bottom: 2.8vmin;">
                             ALTIN MARKET 💰</h3>
                         <div class="gold-market-grid"
                             style="display: grid; grid-template-columns: 1fr 1fr; gap: 3vmin;">
                             <button onclick="GameStore.buy('gold_pack_1')" class="gold-market-btn"
-                                style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,215,0,0.3); padding: 4vmin; border-radius: 15px; color: #fff; display: flex; flex-direction: column; align-items: center; cursor: pointer;">
+                                style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,215,0,0.3); padding: 2.8vmin; border-radius: 15px; color: #fff; display: flex; flex-direction: column; align-items: center; cursor: pointer;">
                                 <span style="font-size: 5vmin; font-weight: 900;">5.000</span>
                                 <span style="font-size: 3.5vmin; color: #FFD700;">$0.99</span>
                             </button>
                             <button onclick="GameStore.buy('gold_pack_2')" class="gold-market-btn"
-                                style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,215,0,0.3); padding: 4vmin; border-radius: 15px; color: #fff; display: flex; flex-direction: column; align-items: center; cursor: pointer;">
+                                style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,215,0,0.3); padding: 2.8vmin; border-radius: 15px; color: #fff; display: flex; flex-direction: column; align-items: center; cursor: pointer;">
                                 <span style="font-size: 5vmin; font-weight: 900;">10.000</span>
                                 <span style="font-size: 3.5vmin; color: #FFD700;">$1.49</span>
                             </button>
                             <button onclick="GameStore.buy('gold_pack_3')" class="gold-market-btn"
-                                style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,215,0,0.3); padding: 4vmin; border-radius: 15px; color: #fff; display: flex; flex-direction: column; align-items: center; cursor: pointer;">
+                                style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,215,0,0.3); padding: 2.8vmin; border-radius: 15px; color: #fff; display: flex; flex-direction: column; align-items: center; cursor: pointer;">
                                 <span style="font-size: 5vmin; font-weight: 900;">25.000</span>
                                 <span style="font-size: 3.5vmin; color: #FFD700;">$2.99</span>
                             </button>
                             <button onclick="GameStore.buy('gold_pack_4')" class="gold-market-btn"
-                                style="background: rgba(255,215,0,0.1); border: 2px solid #FFD700; padding: 4vmin; border-radius: 15px; color: #fff; display: flex; flex-direction: column; align-items: center; cursor: pointer; box-shadow: 0 0 15px rgba(255,215,0,0.2);">
-                                <span style="font-size: 6vmin; font-weight: 900; color: #FFD700;">50.000</span>
+                                style="background: rgba(255,215,0,0.1); border: 2px solid #FFD700; padding: 2.8vmin; border-radius: 15px; color: #fff; display: flex; flex-direction: column; align-items: center; cursor: pointer; box-shadow: 0 0 15px rgba(255,215,0,0.2);">
+                                <span style="font-size: 4.1.5vmin; font-weight: 900; color: #FFD700;">50.000</span>
                                 <span style="font-size: 3.5vmin;">$4.99</span>
                             </button>
                         </div>
@@ -533,7 +533,7 @@
 
                 <button id="shop-close-btn" style="
                     background: rgba(255,255,255,0.05); color: #FFD700; 
-                    border: 1px solid rgba(255,215,0,0.3); padding: 4vmin; 
+                    border: 1px solid rgba(255,215,0,0.3); padding: 2.8vmin; 
                     border-radius: 20px; font-weight: 900; font-family: 'Outfit'; 
                     cursor: pointer; margin-top: 8vmin; font-size: 4.5vmin; 
                     box-shadow: 0 10px 30px rgba(0,0,0,0.3); width: 100%;

@@ -796,11 +796,35 @@ function saveGame() {
 function updateArmorUI() {
     let aBadge = document.getElementById('armor-badge');
     let aIndi = document.getElementById('armor-ui-indicator');
+    let aBG = document.getElementById('armor-bg-diamond');
+    
     if (aBadge) aBadge.innerText = armorCharge;
+    
     if (aIndi) {
-        if (ownsArmorLicense && armorCharge > 0) {
+        // v1.99.14.74: Persistent visibility for licensed players
+        if (ownsArmorLicense) {
             aIndi.style.display = 'flex';
-            aIndi.style.filter = "none";
+            
+            if (armorCharge > 0) {
+                aIndi.style.opacity = "1";
+                aIndi.style.filter = "none";
+            } else {
+                // Dimmed look when out of armor
+                aIndi.style.opacity = "0.5";
+                aIndi.style.filter = "grayscale(1) brightness(0.7)";
+            }
+
+            // Cycle Highlighting: Glowing only on recharge cycles (multiples of 6)
+            const isCycle = (currentLevel > 0 && currentLevel % 6 === 0);
+            if (isCycle && aBG) {
+                aBG.style.boxShadow = "0 0 40px #9b59b6, inset 0 0 20px #9b59b6";
+                aBG.style.border = "2px solid #fff";
+                aIndi.style.opacity = "1"; // Brighten during cycle even if 0
+                aIndi.style.filter = "none";
+            } else if (aBG) {
+                aBG.style.boxShadow = "0 0 30px rgba(155, 89, 182, 0.3)";
+                aBG.style.border = "2px solid rgba(155, 89, 182, 0.6)";
+            }
         } else {
             aIndi.style.display = 'none';
         }
