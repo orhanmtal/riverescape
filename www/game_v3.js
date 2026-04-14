@@ -1,4 +1,4 @@
-// RİVER ESCAPE PRESTIGE - v1.99.14.32 (TRUE GOLDEN SHINE)
+// RİVER ESCAPE PRESTIGE - v1.99.14.42 (WINTER BALANCE)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -712,7 +712,7 @@ const levelAssets = [
     { threshold: 0, bgKey: 'ilkbahar', speed: 140, spawn: 1.60, titleEN: translations.en.l1Title, titleTR: translations.tr.l1Title, color: "#64dd17", pKey: "ilkbahar", margin: 0.35 },
     { threshold: 1000, bgKey: 'yaz', speed: 160, spawn: 1.55, titleEN: translations.en.l2Title, titleTR: translations.tr.l2Title, color: "#ffd600", pKey: "ilkbahar", margin: 0.33 },
     { threshold: 2500, bgKey: 'sonbahar', speed: 220, spawn: 1.15, titleEN: translations.en.l3Title, titleTR: translations.tr.l3Title, color: "#ff6d00", pKey: "ilkbahar", margin: 0.35 },
-    { threshold: 4500, bgKey: 'kis', speed: 260, spawn: 1.00, titleEN: translations.en.l4Title, titleTR: translations.tr.l4Title, color: "#00e5ff", pKey: "ilkbahar", margin: 0.35 },
+    { threshold: 4500, bgKey: 'kis', speed: 260, spawn: 1.40, titleEN: translations.en.l4Title, titleTR: translations.tr.l4Title, color: "#00e5ff", pKey: "ilkbahar", margin: 0.35 },
     { threshold: 7000, bgKey: 'lava', speed: 285, spawn: 0.70, titleEN: translations.en.lavaRiver, titleTR: translations.tr.lavaRiver, color: "#ff4500", pKey: "lava", margin: 0.34 },
     { threshold: 10000, bgKey: 'void', speed: 190, spawn: 1.40, titleEN: translations.en.voidLevel, titleTR: translations.tr.voidLevel, color: "#9b59b6", pKey: "void", margin: 0.32 },
     { threshold: 14000, bgKey: 'lagoon', speed: 310, spawn: 0.65, titleEN: translations.en.l7Title, titleTR: translations.tr.l7Title, color: "#00e5ff", pKey: "ilkbahar", margin: 0.15 }
@@ -1669,7 +1669,7 @@ function spawnObstacle() {
             });
         } else if (selectedType === 'whirlpool') {
             const isL4 = currentLevel === 4;
-            const size = isL4 ? (60 + Math.random() * 30) : (80 + Math.random() * 40);
+            const size = isL4 ? (50 + Math.random() * 20) : (80 + Math.random() * 40);
             obstacles.push({
                 type: 'whirlpool',
                 x: spawnX,
@@ -1788,7 +1788,7 @@ function spawnObstacle() {
             });
         } else if (selectedType === 'rock' || selectedType === 'iceBerg') {
             let isIce = selectedType === 'iceBerg';
-            let rockSize = isIce ? (60 + Math.random() * 30) : (40 + Math.random() * 20);
+            let rockSize = isIce ? (45 + Math.random() * 20) : (40 + Math.random() * 20);
             obstacles.push({
                 type: selectedType,
                 x: spawnX,
