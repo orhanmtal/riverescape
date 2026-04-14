@@ -1645,7 +1645,7 @@ function spawnObstacle() {
         allowedSpecialTypes.push('asteroid', 'asteroid', 'comet', 'fireball', 'blackHole');
         // CROC/HIPPO/LOGS ARE FORBIDDEN
     } else if (biomeIndex === 6) { // Nostalji (L7, L14...)
-        allowedSpecialTypes.push('toyBalloon', 'paperPlane', 'kite');
+        allowedSpecialTypes.push('toyBalloon', 'paperPlane', 'paperPlane', 'kite');
     }
 
     // EXTRA LAYER: Ensure crocodiles/logs NEVER appear in Lava/Void levels
@@ -2739,8 +2739,8 @@ function update(dt) {
             obs.x = getRiverShift(obs.y) + obs.relativeX;
         } else if (obs.type === 'toyBalloon') {
             obs.time += (dt || 0.016);
-            const driftX = Math.sin(obs.time * 2) * 50;
-            const driftY = Math.cos(obs.time * 3) * 15;
+            const driftX = Math.sin(obs.time * 3) * 80;
+            const driftY = Math.cos(obs.time * 4) * 25;
             obs.relativeX = (obs.relativeX || (obs.x - getRiverShift(obs.y))) + driftX * dt; 
             obs.x = getRiverShift(obs.y) + obs.relativeX; // v1.99.14.88: VİSİUAL SYNC
             obs.speedY += driftY * dt;
