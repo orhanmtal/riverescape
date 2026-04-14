@@ -721,7 +721,7 @@ const levelAssets = [
 // v1.96.6.6: Ölüm Vadisi (DZ) Durumunu Merkezi Olarak Belirle
 // v1.99.13.1: Ölüm Vadisi (DZ) Tetikleyicisi - Seviye Süresinin Son %10'unda Başlar
 function getDZStatus() {
-    // Sanal ilerleme puanı (Zaman bazlı: 5 puan/sn) - v1.99.14.0: 18k Cycle
+    // v1.99.14.9: ELITE DYNAMIC DZ - Triggers at last 20% of CURRENT level progress
     let p = Math.floor(levelProgressTime * 5) % 18000;
     
     for (let i = 0; i < levelAssets.length; i++) {
@@ -730,7 +730,7 @@ function getDZStatus() {
         
         if (p >= start && p < end) {
             let duration = end - start;
-            let dzStartPoint = end - (duration * 0.10); // Son %10 dilimi
+            let dzStartPoint = end - (duration * 0.20); // Daha agresif: Son %20 dilimi
             return p >= dzStartPoint;
         }
     }
@@ -3461,26 +3461,38 @@ function draw(dt) {
     // v1.74: All Legacy Canvas HUD elements removed. Using modern HTML Glass HUD.
     // Lives and Dash are now synced to DOM.
 
-    // v1.96.6.7: Ölüm Vadisi Boyunca Yazı (Daha Güçlü ve Görünür)
-    // v1.96.6.13: ÖLÜM VADİSİ TEHLİKE İKONU (Modern Soft Breathe Efekti)
+    // v1.99.14.9: ELITE DEATH ZONE WARNING (Centralized & Aggressive)
     if (getDZStatus()) {
         ctx.save();
         ctx.setTransform(1, 0, 0, 1, 0, 0);
 
-        // 1 saniyelik yumuşak döngü (Breathing effect)
-        const alpha = 0.5 + Math.sin(performance.now() / 150) * 0.5; // 0.0 ile 1.0 arası akış
-        ctx.globalAlpha = alpha;
+        const phase = performance.now() / 150;
+        const alpha = 0.4 + Math.sin(phase) * 0.4;
+        
+        // DANGER VIGNETTE (Elite Atmosphere)
+        let grad = ctx.createRadialGradient(canvas.width/2, canvas.height/2, 50, canvas.width/2, canvas.height/2, canvas.height/0.8);
+        grad.addColorStop(0, "transparent");
+        grad.addColorStop(1, `rgba(255, 0, 0, ${alpha * 0.4})`);
+        ctx.fillStyle = grad;
+        ctx.fillRect(0,0, canvas.width, canvas.height);
 
-        // Klasik Kırmızı Glow (Modern yumuşatma ile)
+        // CENTRAL SKULL & TEXT
+        ctx.globalAlpha = alpha + 0.2;
         ctx.shadowColor = "#ff1744";
-        ctx.shadowBlur = 20 * alpha;
+        ctx.shadowBlur = 25;
+        
         ctx.fillStyle = "#ff1744";
-        ctx.font = "bold 38px Arial";
-        ctx.textAlign = "right";
-
-        // Konum aynı değişmez bir "Elite" kuralı
-        ctx.fillText("☠️", canvas.width - 100, 55);
-
+        ctx.textAlign = "center";
+        
+        // Pulsing Skull
+        const scale = 1 + Math.sin(phase) * 0.1;
+        ctx.font = `bold ${48 * scale}px Arial`;
+        ctx.fillText("💀", canvas.width / 2, canvas.height * 0.35);
+        
+        // Danger Text
+        ctx.font = "900 24px 'Outfit', sans-serif";
+        ctx.fillText("DEATH ZONE", canvas.width / 2, canvas.height * 0.35 + 40);
+        
         ctx.restore();
     }
 
