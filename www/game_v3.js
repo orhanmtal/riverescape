@@ -1,4 +1,4 @@
-// RİVER ESCAPE PRESTIGE - v1.99.14.9 (LAGOON OF MEMORIES)
+// RİVER ESCAPE PRESTIGE - v1.99.14.10 (LAGOON OF MEMORIES)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -1700,8 +1700,8 @@ function spawnObstacle() {
                     x: bx,
                     relativeX: bx - riverShift,
                     y: spawnY - (idx * 160), // Vertical scatter
-                    width: 48,
-                    height: 68,
+                    width: 65,
+                    height: 92,
                     speedY: baseSpeed * 0.9,
                     speedX: (Math.random() - 0.5) * 40,
                     oscillation: Math.random() * Math.PI,
