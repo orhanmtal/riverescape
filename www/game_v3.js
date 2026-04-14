@@ -831,15 +831,15 @@ function updateArmorUI() {
     }
 }
 
-// v1.99.14.76: GLOBAL SHOP TRIGGER (Fixing ReferenceError)
+// v1.99.14.77: GLOBAL SHOP TRIGGER (Fixing ReferenceError)
 function openShop() {
     const sScr = document.getElementById('shop-screen');
     const pScr = document.getElementById('pause-screen');
     const startScr = document.getElementById('start-screen');
     
-    // Eğer oyundaysak duraklat
-    if (gameState === 'playing' && typeof pauseGame === 'function') {
-        pauseGame();
+    // v1.99.14.77 FIX: Use 'isPlaying' instead of 'gameState'
+    if (isPlaying && !isPaused && typeof togglePause === 'function') {
+        togglePause();
     }
     
     if (sScr) {
