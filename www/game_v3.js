@@ -1941,8 +1941,9 @@ function spawnObstacle() {
         return;
     }
 
-    // v152: LAV VE BOŞLUK SEVİYELERİNDEKİ KÜTÜKLERİ (LOGS) İPTAL ET!
-    if (currentLevel === 5 || currentLevel === 6 || currentLevel === 7) return;
+    // v1.99.14.86: ELITE BIOME PURITY (No logs in Lava, Void, or Nostalgia)
+    const isEliteTheme = (biomeIndex === 4 || biomeIndex === 5 || biomeIndex === 6);
+    if (isEliteTheme) return;
 
     // Bütün Kütükler Dikey (Vertical) Gelsin
     let logSpeedX = 0;
