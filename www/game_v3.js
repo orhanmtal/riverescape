@@ -3112,8 +3112,9 @@ function draw(dt) {
     if (currentLevel === 5 && (!currentBgTex || currentBgTex.width <= 0)) {
         currentBgTex = null;
     }
-    // LEVEL 6 tamamen procedural çizilecek, resme gerek yok!
-    if (currentLevel === 6) {
+    // LEVEL 6 ve LEVEL 8 tamamen procedural çizilecek, resme gerek yok!
+    const biomeIndexForBg = (currentLevel - 1) % levelAssets.length;
+    if (currentLevel === 6 || biomeIndexForBg === 7) {
         currentBgTex = null;
     }
 
@@ -3192,6 +3193,40 @@ function draw(dt) {
             }
 
 
+            ctx.shadowBlur = 0; // Reset
+        } else if (biomeIndexForBg === 7) {
+            // --- v1.99.15.12: PROCEDURAL CYBER CITY BACKGROUND ---
+            ctx.fillStyle = "#00050a"; // Ultra Koyu Cyber Siyah
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            const cyberMargin = canvas.width * 0.18;
+            const cyberPulse = (Math.sin(performance.now() / 400) * 0.3 + 0.7);
+
+            // Nehir Yatağı Akan Neon Izgara (Grid)
+            ctx.strokeStyle = `rgba(0, 229, 255, ${0.1 * cyberPulse})`; 
+            ctx.lineWidth = 1;
+            for (let gy = 0; gy < canvas.height; gy += 40) {
+                let off = (performance.now() / 8) % 40;
+                ctx.beginPath();
+                ctx.moveTo(cyberMargin, gy + off);
+                ctx.lineTo(canvas.width - cyberMargin, gy + off);
+                ctx.stroke();
+            }
+
+            // Dikey Neon Hatlar (Sınırlar)
+            ctx.lineWidth = 3;
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = "#ff00ff";
+            ctx.strokeStyle = `rgba(255, 0, 255, ${cyberPulse})`;
+
+            ctx.beginPath();
+            ctx.moveTo(cyberMargin, 0); ctx.lineTo(cyberMargin, canvas.height);
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(canvas.width - cyberMargin, 0); ctx.lineTo(canvas.width - cyberMargin, canvas.height);
+            ctx.stroke();
+            
             ctx.shadowBlur = 0; // Reset
         } else {
             // Hiçbir şey yoksa Spring gör - Ama Lav'da asla Spring görme!
