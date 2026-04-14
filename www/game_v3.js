@@ -1751,53 +1751,6 @@ function spawnObstacle() {
                     isElite: true
                 });
             }
-        } else if (selectedType === 'toyBalloon') {
-            // v1.99.14.9: AGGRESSIVE BALLOON BARRAGE (6 Balloons per cluster)
-            const colors = ['balloon_red', 'balloon_blue', 'balloon_yellow', 'balloon_red', 'balloon_blue', 'balloon_yellow'];
-            colors.forEach((cType, idx) => {
-                let bx = riverLeft + 30 + (Math.random() * (riverRight - riverLeft - 60));
-                obstacles.push({
-                    type: cType,
-                    x: bx,
-                    relativeX: bx - riverShift,
-                    y: spawnY - (idx * 160), // Vertical scatter
-                    width: 65,
-                    height: 92,
-                    speedY: baseSpeed * 0.9,
-                    speedX: (Math.random() - 0.5) * 40,
-                    oscillation: Math.random() * Math.PI,
-                    oscillationSpeed: 2 + Math.random() * 2,
-                    oscillationRange: 40 + Math.random() * 40
-                });
-            });
-            return;
-        } else if (selectedType === 'kite' || selectedType === 'kite_elite') {
-            let ox = riverLeft + 50 + (Math.random() * (riverRight - riverLeft - 100));
-            obstacles.push({
-                type: 'kite_elite',
-                x: ox,
-                relativeX: ox - riverShift,
-                y: spawnY,
-                width: 65,
-                height: 95,
-                speedY: baseSpeed * 0.7,
-                speedX: (Math.random() - 0.5) * 60,
-                oscillation: Math.random() * Math.PI,
-                oscillationSpeed: 2 + Math.random() * 2,
-                oscillationRange: 60 + Math.random() * 40
-            });
-            return;
-        } else if (selectedType === 'paperPlane') {
-            obstacles.push({
-                type: 'paper_plane',
-                x: (Math.random() < 0.5) ? -50 : canvas.width + 50,
-                relativeX: undefined,
-                y: spawnY + 200, width: 45, height: 45,
-                speedY: baseSpeed * 0.8,
-                speedX: (Math.random() < 0.5) ? 120 : -120, // Kavisli çapraz uçuş
-                oscillationRange: 60 + Math.random() * 40
-            });
-            return;
         } else if (selectedType === 'fireball') {
             const isL5 = currentLevel === 5;
             if (isL5) {
