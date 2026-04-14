@@ -1601,7 +1601,7 @@ function spawnObstacle() {
         allowedSpecialTypes.push('asteroid', 'comet');
         // CROC/HIPPO/LOGS ARE FORBIDDEN
     } else if (biomeIndex === 6) { // Nostalji (L7, L14...)
-        allowedSpecialTypes.push('rubberDuck', 'toyBalloon', 'paperPlane');
+        allowedSpecialTypes.push('rubberDuck', 'toyBalloon', 'paperPlane', 'kite');
     }
 
     // EXTRA LAYER: Ensure crocodiles/logs NEVER appear in Lava/Void levels
@@ -1713,6 +1713,19 @@ function spawnObstacle() {
                 relativeX: spawnX - riverShift,
                 y: spawnY, width: 85, height: 125,
                 speedY: baseSpeed * 0.85, speedX: 0
+            });
+        } else if (selectedType === 'kite') {
+            obstacles.push({
+                type: 'kite',
+                x: spawnX,
+                relativeX: spawnX - riverShift,
+                y: spawnY, width: 60, height: 90,
+                speedY: baseSpeed * 0.75, // Biraz daha yavaş süzülür
+                speedX: 0, 
+                oscillation: 0,
+                oscillationSpeed: 2 + Math.random() * 2,
+                oscillationRange: 40 + Math.random() * 40,
+                isElite: true
             });
         } else if (selectedType === 'paperPlane') {
             obstacles.push({
@@ -2565,6 +2578,14 @@ function update(dt) {
             // Kağıt uçaklar çapraz ve kavisli uçar
             if (!obs.rotation) obs.rotation = 0;
             obs.rotation += 5 * dt; 
+        } else if (obs.type === 'kite') {
+            // Uçurtmalar sağa sola salınır
+            obs.oscillation += obs.oscillationSpeed * dt;
+            obs.x += Math.sin(obs.oscillation) * obs.oscillationRange * dt;
+            // Nehir içinde kalsın (Elite Drift Sync)
+            if (currentLevel === 5 || currentLevel === 7) {
+                 obs.relativeX = obs.x - getRiverShift(obs.y);
+            }
         }
 
         // v1.99.5.0: STRAIGHT MOVEMENT PROTOCOL (No edge drifting for logs/rocks) 🛣️
@@ -3107,6 +3128,19 @@ function draw(dt) {
                     ctx.drawImage(obsTiles['plane_elite'], -obs.width / 2, -obs.height / 2, obs.width, obs.height);
                 } else {
                     ctx.fillStyle = "white"; 
+                    ctx.fillRect(-obs.width / 2, -obs.height / 2, obs.width, obs.height);
+                }
+                ctx.restore();
+                drawSuccess = true;
+            } else if (obs.type === 'kite') {
+                ctx.save();
+                ctx.translate(obs.x + obs.width / 2, obs.y + obs.height / 2);
+                // Uçurtma hafifçe yalpalasın
+                ctx.rotate(Math.sin(obs.oscillation) * 0.2);
+                if (obsTiles['kite_elite']) {
+                    ctx.drawImage(obsTiles['kite_elite'], -obs.width / 2, -obs.height / 2, obs.width, obs.height);
+                } else {
+                    ctx.fillStyle = "red"; // Fallback
                     ctx.fillRect(-obs.width / 2, -obs.height / 2, obs.width, obs.height);
                 }
                 ctx.restore();

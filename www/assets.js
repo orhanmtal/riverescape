@@ -153,6 +153,9 @@ loadIndividualTiles('lava', 'assets/rock_elite_lava.png', 'assets/Kutuk.png', 'a
 safeLoad('lava_geyser', 'assets/lava_geyser.png', (img) => {
     obsTiles['lava_geyser'] = makeWhiteTransparent(img, true);
 });
+safeLoad('kite_elite', 'assets/kite_elite.png', (img) => {
+    obsTiles['kite_elite'] = makeWhiteTransparent(img, false);
+});
 loadIndividualTiles('void', '', 'assets/Kutuk.png', 'assets/Timsah.png', 'assets/Hippo.png');
 loadIndividualTiles('lagoon', 'assets/duck_elite.png', 'assets/balloon_elite.png', 'assets/Timsah.png', 'assets/Hippo.png');
 safeLoad('plane_elite', 'assets/plane_elite.png', (img) => {
