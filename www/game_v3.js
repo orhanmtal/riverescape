@@ -882,10 +882,19 @@ window.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') {
         activateDash();
     }
-    // --- TEMPORARY TEST MAGIC: LEVEL SKIP (Press 'L') ---
+    // --- v1.99.16.02: FORCED LEVEL SKIP (Press 'L' to Jump) ---
     if (e.key === 'l' || e.key === 'L') {
-        levelProgressTime += 200; // Artık biyomlar arası saniyeler içinde zıplar
-        score += 2000;
+        let currentP = (levelProgressTime * 5) % 27500;
+        let nextT = 27500;
+        for (let i = 0; i < levelAssets.length; i++) {
+            if (levelAssets[i].threshold > currentP) {
+                nextT = levelAssets[i].threshold;
+                break;
+            }
+        }
+        levelProgressTime = (nextT / 5) + 5; // +5 saniye tampon ile kesin geçiş
+        score = levelProgressTime * 5;
+        console.log("Forced Skip to Progress:", nextT, "Next Level Active.");
     }
 });
 
