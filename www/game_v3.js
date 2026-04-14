@@ -1897,6 +1897,30 @@ function spawnObstacle() {
                 maxHealth: 2,
                 speedY: bgScrollSpeed, speedX: 0
             });
+        } else if (selectedType === 'toyBalloon' || selectedType === 'paperPlane' || selectedType === 'kite') {
+            const isL7 = currentLevel === 7 || (currentLevel > 0 && (currentLevel - 1) % levelAssets.length === 6);
+            let w = 50, h = 50, sY = baseSpeed;
+            
+            if (selectedType === 'toyBalloon') {
+                w = 45; h = 65; sY *= 0.85; // Balonlar biraz daha yavaş
+            } else if (selectedType === 'paperPlane') {
+                w = 40; h = 40; sY *= 1.4; // Kağıt uçaklar hızlı
+            } else if (selectedType === 'kite') {
+                w = 80; h = 110; sY *= 0.95; // Uçurtmalar geniş
+            }
+
+            obstacles.push({
+                type: selectedType,
+                x: spawnX,
+                relativeX: spawnX - riverShift,
+                y: spawnY, width: w, height: h,
+                speedY: sY * (0.9 + Math.random() * 0.2),
+                speedX: 0,
+                hp: 1,
+                maxHp: 1,
+                time: Math.random() * Math.PI * 2, // Hareket varyasyonu için
+                phase: Math.random() * 1000
+            });
         } else if (selectedType === 'magmaSerpent') {
             // v1.99.14.70: NEW MAGMA SERPENT (Sine Wave Movement)
             const sX = riverLeft + (riverRight - riverLeft) / 2;
@@ -2750,18 +2774,24 @@ function update(dt) {
             obs.time += dt;
             obs.relativeX = (obs.baseX - getRiverShift(obs.y)) + Math.sin(obs.time * obs.frequency) * obs.amplitude;
             obs.x = getRiverShift(obs.y) + obs.relativeX;
-        } else if (obs.type === 'paper_plane') {
-            // Kağıt uçaklar çapraz ve kavisli uçar
-            if (!obs.rotation) obs.rotation = 0;
-            obs.rotation += 5 * dt; 
+        } else if (obs.type === 'toyBalloon') {
+            // Balonlar hafifçe sağa sola ve yukarı aşağı salınır
+            obs.time += (dt || 0.016);
+            const driftX = Math.sin(obs.time * 2) * 40;
+            const driftY = Math.cos(obs.time * 3) * 15;
+            obs.relativeX = (obs.relativeX || (obs.x - getRiverShift(obs.y))) + driftX * dt; 
+            obs.speedY += driftY * dt;
+        } else if (obs.type === 'paperPlane') {
+            // Kağıt uçaklar hızlı zikzaklar çizer
+            obs.time += (dt || 0.016);
+            const zigzag = Math.sin(obs.time * 8) * 180;
+            obs.speedX = zigzag;
         } else if (obs.type === 'kite') {
-            // Uçurtmalar sağa sola salınır
-            obs.oscillation += obs.oscillationSpeed * dt;
-            obs.x += Math.sin(obs.oscillation) * obs.oscillationRange * dt;
-            // Nehir içinde kalsın (Elite Drift Sync)
-            if (currentLevel === 5 || currentLevel === 7) {
-                 obs.relativeX = obs.x - getRiverShift(obs.y);
-            }
+            // Uçurtmalar geniş kavisler çizer
+            obs.time += (dt || 0.016);
+            const windSweep = Math.sin(obs.time * 1.5) * 100;
+            obs.speedX = windSweep;
+            obs.rotation = Math.sin(obs.time * 2) * 0.2; // Hafif yatış
         }
 
         // v1.99.5.0: STRAIGHT MOVEMENT PROTOCOL (No edge drifting for logs/rocks) 🛣️
@@ -3534,6 +3564,82 @@ function draw(dt) {
                     ctx.stroke();
                 }
                 
+                ctx.restore();
+                drawSuccess = true;
+            } else if (obs.type === 'toyBalloon') {
+                // --- v1.99.14.85: NOSTALGIC TOY BALLOONS ---
+                ctx.save();
+                ctx.translate(obs.x + obs.width / 2, obs.y + obs.height / 2);
+                
+                // Balon İpi (Sallanan)
+                ctx.beginPath();
+                ctx.moveTo(0, obs.height / 2.5);
+                ctx.bezierCurveTo(Math.sin(performance.now()/200)*10, obs.height/2, -Math.sin(performance.now()/200)*10, obs.height*0.8, 0, obs.height);
+                ctx.strokeStyle = "rgba(255, 255, 255, 0.4)";
+                ctx.stroke();
+
+                // Balon Gövdesi
+                const colors = ["#ff5252", "#448aff", "#ffeb3b", "#e040fb"];
+                const colorIdx = (obs.phase || 0) % colors.length;
+                ctx.fillStyle = colors[colorIdx];
+                ctx.beginPath();
+                ctx.ellipse(0, 0, obs.width / 2.2, obs.height / 2.5, 0, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Parlama (HighLight)
+                ctx.fillStyle = "rgba(255,255,255,0.3)";
+                ctx.beginPath();
+                ctx.ellipse(-obs.width/8, -obs.height/8, obs.width/6, obs.width/8, 0, 0, Math.PI*2);
+                ctx.fill();
+
+                ctx.restore();
+                drawSuccess = true;
+            } else if (obs.type === 'paperPlane') {
+                // --- v1.99.14.85: RETRO PAPER PLANE ---
+                ctx.save();
+                ctx.translate(obs.x + obs.width / 2, obs.y + obs.height / 2);
+                ctx.rotate(Math.atan2(obs.speedY, obs.speedX) + Math.PI/2);
+                
+                ctx.fillStyle = "#ffffff";
+                ctx.strokeStyle = "#dddddd";
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(0, -obs.height / 2); // Burun
+                ctx.lineTo(obs.width / 2, obs.height / 2); // Sağ kanat
+                ctx.lineTo(0, obs.height / 4); // Kuyruk içi
+                ctx.lineTo(-obs.width / 2, obs.height / 2); // Sol kanat
+                ctx.closePath();
+                ctx.fill();
+                ctx.stroke();
+                
+                ctx.restore();
+                drawSuccess = true;
+            } else if (obs.type === 'kite') {
+                // --- v1.99.14.85: HIGH FLYING KITE ---
+                ctx.save();
+                ctx.translate(obs.x + obs.width / 2, obs.y + obs.height / 2);
+                ctx.rotate(obs.rotation || 0);
+                
+                // Uçurtma İskeleti
+                ctx.fillStyle = "#ff5722";
+                ctx.beginPath();
+                ctx.moveTo(0, -obs.height / 2);
+                ctx.lineTo(obs.width / 2, 0);
+                ctx.lineTo(0, obs.height / 2);
+                ctx.lineTo(-obs.width / 2, 0);
+                ctx.closePath();
+                ctx.fill();
+                
+                // Kuyruk (Renkli Kurdeleler)
+                ctx.strokeStyle = "#ffeb3b";
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.moveTo(0, obs.height / 2);
+                for(let i=0; i<3; i++) {
+                    ctx.lineTo(Math.sin(performance.now()/150 + i)*20, obs.height/2 + (i+1)*25);
+                }
+                ctx.stroke();
+
                 ctx.restore();
                 drawSuccess = true;
             } else if (obs.type === 'lavaGeyser') {
