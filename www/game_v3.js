@@ -1644,6 +1644,13 @@ function spawnObstacle() {
     }
 
     let biomeIndex = (currentLevel - 1) % levelAssets.length;
+    const currentAsset = levelAssets[biomeIndex];
+    const sMargin = currentAsset ? currentAsset.margin : 0.35;
+    const spawnY = -100;
+    const riverShift = getRiverShift(spawnY);
+    const riverLeft = (canvas.width * sMargin) + riverShift;
+    const riverRight = (canvas.width * (1 - sMargin)) + riverShift;
+
     let allowedSpecialTypes = (biomeIndex === 4 || biomeIndex === 5 || biomeIndex === 6 || biomeIndex === 7 || biomeIndex === 8) ? [] : ['rock'];
 
     // --- v1.99.13.0: THE ELITE CYCLE (Strict Biome Filtering) ---
