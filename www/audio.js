@@ -1,4 +1,4 @@
-// River Escape - Ses Motoru (Audio Engine) - v1.99.14.30 (AUDIO UNIFIED)
+// River Escape - Ses Motoru (Audio Engine) - v1.99.14.31 (GOLDEN SHINE)
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 let audioCtx;
 
@@ -73,18 +73,29 @@ function playMelodyNote(noteIndex, time, isPanic = false) {
 
 function playCoinSound() {
     if(!audioCtx) return;
-    const osc = audioCtx.createOscillator();
-    const gainNode = audioCtx.createGain();
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(800, audioCtx.currentTime); 
-    osc.frequency.exponentialRampToValueAtTime(1400, audioCtx.currentTime + 0.1); 
+    const now = audioCtx.currentTime;
     
-    let finalGain = 0.5 * isSFXVolume;
-    gainNode.gain.setValueAtTime(finalGain, audioCtx.currentTime);
-    gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
-    
-    osc.connect(gainNode); gainNode.connect(audioCtx.destination);
-    osc.start(); osc.stop(audioCtx.currentTime + 0.1);
+    // v1.99.14.31: Elite Golden Shine (Two-tone crystal chime)
+    // Layer 1: Fundamental "Ping"
+    const osc1 = audioCtx.createOscillator();
+    const gain1 = audioCtx.createGain();
+    osc1.type = 'triangle';
+    osc1.frequency.setValueAtTime(987.77, now); // B5 note
+    osc1.frequency.exponentialRampToValueAtTime(1318.51, now + 0.1); // E6 note
+    gain1.gain.setValueAtTime(0.3 * isSFXVolume, now);
+    gain1.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
+    osc1.connect(gain1); gain1.connect(audioCtx.destination);
+    osc1.start(now); osc1.stop(now + 0.15);
+
+    // Layer 2: High-frequency "Sparkle"
+    const osc2 = audioCtx.createOscillator();
+    const gain2 = audioCtx.createGain();
+    osc2.type = 'sine';
+    osc2.frequency.setValueAtTime(1975.53, now + 0.05); // B6 note
+    gain2.gain.setValueAtTime(0.15 * isSFXVolume, now + 0.05);
+    gain2.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+    osc2.connect(gain2); gain2.connect(audioCtx.destination);
+    osc2.start(now + 0.05); osc2.stop(now + 0.2);
 }
 
 function playCrashSound() {

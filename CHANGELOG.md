@@ -1,6 +1,9 @@
 # River Escape - Versiyon Günlükleri (CHANGELOG)
 Bu dosya, oyun motorunun ve özelliklerin versiyon versiyon nasıl geliştiğini mühürleyip saklamak için Antigravity tarafından oluşturulmuştur.
 
+## [v1.99.14.31] "GOLDEN SHINE" - 2026-04-14
+- **Crystal Gold Chime**: Redesigned `playCoinSound` to use a high-fidelity two-tone crystal chime effect. This includes a fundamental "ping" layer and high-frequency sparkles for a more satisfying gold collection experience.
+
 ## [v1.99.14.30] "AUDIO UNIFIED" - 2026-04-14
 - **Unified Elite Sounds**: Upgraded `playCrashSound` (used for single-life loss) to follow the new "Elite" audio style. It now features a punchy, low-frequency sawtooth impact (0.3s) that matches the theme of the full death effect.
 - **Full Death Consistency**: Ensured both partial and total failures share the updated audio aesthetic for a professional, consistent experience.

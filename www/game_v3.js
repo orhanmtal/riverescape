@@ -1,4 +1,4 @@
-// RİVER ESCAPE PRESTIGE - v1.99.14.29 (EXTREME AUDIO)
+// RİVER ESCAPE PRESTIGE - v1.99.14.31 (GOLDEN SHINE)
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
