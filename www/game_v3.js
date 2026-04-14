@@ -1671,7 +1671,7 @@ function spawnObstacle() {
         // v1.99.15.21: Lazerler baskın engel haline getirildi (Triple frequency)
         allowedSpecialTypes.push('laserGate', 'laserGate', 'laserGate', 'cyberDrone', 'glitchStream', 'cyberSpear');
     } else if (biomeIndex === 8) { // Toxic Wasteland (L9, L17...)
-        allowedSpecialTypes.push('toxicRat', 'toxicRat', 'toxicBarrel', 'toxicDebris');
+        allowedSpecialTypes.push('toxicRat', 'toxicRat', 'toxicBarrel');
     }
 
     // EXTRA LAYER: Ensure crocodiles/logs NEVER appear in Lava/Void/Lagoon/Cyber levels
