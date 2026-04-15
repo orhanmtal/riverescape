@@ -3472,10 +3472,12 @@ function draw(dt) {
                     ctx.rotate(Math.PI / 2 + (obs.rotation || 0)); // v2.04: Rotation Support
                     ctx.drawImage(tile, sx + margin, sy + margin, sw - margin * 2, sh - margin * 2, -obs.height / 2, -obs.width / 2, obs.height, obs.width);
                     ctx.restore();
-                } else {
-                    ctx.drawImage(tile, sx + margin, sy + margin, sw - margin * 2, sh - margin * 2, obs.x, obs.y, obs.width, obs.height);
                 }
-                drawSuccess = true;
+                
+                // v1.99.16.80: ONLY set drawSuccess if we actually drew a supported tileset type
+                if (obs.type === 'rock' || obs.type === 'vertical' || obs.type === 'croc' || obs.type === 'hippo') {
+                    drawSuccess = true;
+                }
             }
         }
 
