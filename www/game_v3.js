@@ -1,5 +1,5 @@
-// RİVER ESCAPE PRESTIGE - v1.99.16.12 (GHOST PURGE)
-console.log("%c TOXIC PROTOCOL ACTIVE - v1.99.16.12 ", "background: #222; color: #adff2f; font-size: 20px; font-weight: bold;");
+// RİVER ESCAPE PRESTIGE - v1.99.17.03 (THE TOTAL OVERHAUL)
+console.log("%c TOXIC PROTOCOL ACTIVE - v1.99.17.03 ", "background: #222; color: #adff2f; font-size: 20px; font-weight: bold;");
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -752,7 +752,15 @@ let transitionTimer = 0;
 // ----------------------------------------------------
 let isPlaying = false, isGameOver = false, isPaused = false;
 let score = 0, goldCount = 0, lastTime = 0, levelProgressTime = 0, lastSpawnTime = 0;
-let obstacles = [], golds = [], particles = [], powerups = []; // v1.99.16.93: LEGACY SYNC
+// v1.99.17.03: GLOBAL STATE MAPPING (Force Window Bind)
+window.obstacles = [];
+window.golds = [];
+window.particles = [];
+window.powerups = [];
+let obstacles = window.obstacles; 
+let golds = window.golds;
+let particles = window.particles;
+let powerups = window.powerups;
 let currentLevel = 1;
 let bgY = 0; let bgScrollSpeed = 100;
 let screenFlash = 0; // Seviye geçişi parlaması v132
@@ -1725,8 +1733,8 @@ function spawnObstacle() {
     let currentSpawnChance = 0.45;
     if (currentLevel === 7) currentSpawnChance = 0.90;
     else if (biomeIndex === 5) currentSpawnChance = 0.65; // Boşluk Yoğunluğu
-    else if (biomeIndex === 7) currentSpawnChance = 0.85; // Cyber Yoğunluğu (v1.99.17.01)
-    else if (biomeIndex === 8) currentSpawnChance = 0.90; // Toxic Yoğunluğu (v1.99.17.01)
+    else if (biomeIndex === 7) currentSpawnChance = 0.85; // Cyber Yoğunluğu
+    else if (biomeIndex === 8) currentSpawnChance = 0.95; // Toxic Yoğunluğu (v1.99.17.03 Force)
     
     if (Math.random() < currentSpawnChance && allowedSpecialTypes.length > 0) {
         let selectedType = allowedSpecialTypes[Math.floor(Math.random() * allowedSpecialTypes.length)];
@@ -2011,16 +2019,17 @@ function spawnObstacle() {
                 speedY: bgScrollSpeed, speedX: 0
             });
         } else if (selectedType === 'toxicSerpent') {
-            // v1.99.17.00: THE FINAL MANIFESTO (Stable River Centering)
-            const riverCenter = riverLeft + (riverRight - riverLeft) / 2;
-            obstacles.push({
+            // v1.99.17.03: ABSOLUTE CENTER ENFORCEMENT
+            const centerX = canvas.width / 2;
+            window.obstacles.push({
                 type: 'toxicSerpent',
-                x: riverCenter,
-                relativeX: riverCenter - riverShift,
-                y: spawnY, width: 44, height: 140, // Devasa gövde
+                x: centerX,
+                relativeX: centerX - riverShift,
+                y: spawnY, width: 44, height: 140,
                 speedY: bgScrollSpeed * 1.05, speedX: 0,
                 time: Math.random() * 10
             });
+            console.error("!!! ELITE SPAWN: TOXIC SERPENT MANIFESTED AT CENTER !!!");
         }
         return;
     }
