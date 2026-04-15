@@ -1,5 +1,5 @@
-// RİVER ESCAPE PRESTIGE - v1.99.17.03 (THE TOTAL OVERHAUL)
-console.log("%c TOXIC PROTOCOL ACTIVE - v1.99.17.03 ", "background: #222; color: #adff2f; font-size: 20px; font-weight: bold;");
+// RİVER ESCAPE PRESTIGE - v1.99.18.00 (VISUAL PROOF MODE)
+console.log("%c TOXIC PROTOCOL ACTIVE - v1.99.18.00 - RED SQUARE ACTIVE ", "background: #ff0000; color: #fff; font-size: 20px; font-weight: bold;");
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -3978,46 +3978,27 @@ function draw(dt) {
                 ctx.restore();
                 drawSuccess = true;
             } else if (obs.type === 'toxicSerpent') {
-                // --- v1.99.16.40: GIANT SEGMENTED SERPENT (Elite Rendering) ---
+                // v1.99.18.00: DEBUG DRAW - RED SQUARE + BARREL LOGIC
                 ctx.save();
                 ctx.translate(obs.x + obs.width / 2, obs.y + obs.height / 2);
 
-                const segmentCount = 6;
-                const segmentDist = 20;
+                // 1. ZORUNLU GÖRÜNÜRLÜK: DEV KIRMIZI KARE
+                ctx.fillStyle = "red";
+                ctx.fillRect(-obs.width, -obs.height, obs.width * 2, obs.height * 2);
 
-                for (let i = segmentCount - 1; i >= 0; i--) {
-                    // Her segment bir önceki segmenti takip eden bir sine-wave gecikmesine sahip
-                    const sOffset = Math.sin(obs.time * 5 + i * 0.6) * 25;
-                    const sY = i * segmentDist - (obs.height / 2);
-                    const sSize = (obs.width / 2) * (1 - (i / (segmentCount + 2)));
+                // 2. VARİL GÖRÜNÜMÜ (Kullanıcı Talebi)
+                ctx.fillStyle = "#fff"; ctx.font = "bold 20px Arial";
+                ctx.textAlign = "center"; ctx.fillText("SNAKE", 0, 0);
 
-                    ctx.fillStyle = i === 0 ? "#222" : "#1a1a1a"; // Kafa daha belirgin
-                    ctx.beginPath();
-                    ctx.arc(sOffset, sY, sSize, 0, Math.PI * 2);
-                    ctx.fill();
-
-                    // Radyoaktif Desenler (Bioluminescence)
-                    if (i % 2 === 0) {
-                        ctx.fillStyle = "#adff2f";
-                        ctx.beginPath();
-                        ctx.arc(sOffset - sSize/3, sY, 2, 0, Math.PI * 2);
-                        ctx.arc(sOffset + sSize/3, sY, 2, 0, Math.PI * 2);
-                        ctx.fill();
-                    }
-
-                    // Kafa Detayları
-                    if (i === 0) {
-                        // Parlayan Gözler (Neon Sarı)
-                        ctx.fillStyle = "#ffff00";
-                        ctx.shadowBlur = 15;
-                        ctx.shadowColor = "yellow";
-                        ctx.beginPath();
-                        ctx.arc(sOffset - 6, sY - 4, 4, 0, Math.PI * 2);
-                        ctx.arc(sOffset + 6, sY - 4, 4, 0, Math.PI * 2);
-                        ctx.fill();
-                        ctx.shadowBlur = 0;
-                    }
-                }
+                // Varil Çizimi (Kopyalandı)
+                ctx.fillStyle = "#2c2c2c";
+                ctx.beginPath();
+                ctx.moveTo(-obs.width/2 + 2, -obs.height/2);
+                ctx.quadraticCurveTo(0, -obs.height/2 - 3, obs.width/2 - 2, -obs.height/2);
+                ctx.lineTo(obs.width/2, obs.height/2);
+                ctx.quadraticCurveTo(0, obs.height/2 + 3, -obs.width/2, obs.height/2);
+                ctx.closePath();
+                ctx.fill();
 
                 ctx.restore();
                 drawSuccess = true;
