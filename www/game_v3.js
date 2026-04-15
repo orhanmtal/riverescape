@@ -717,8 +717,8 @@ const levelAssets = [
     { threshold: 7000, bgKey: 'lava', speed: 315, spawn: 0.55, titleEN: translations.en.lavaRiver, titleTR: translations.tr.lavaRiver, color: "#ff4500", pKey: "lava", margin: 0.34 },
     { threshold: 10000, bgKey: 'void', speed: 190, spawn: 1.40, titleEN: translations.en.voidLevel, titleTR: translations.tr.voidLevel, color: "#9b59b6", pKey: "void", margin: 0.32 },
     { threshold: 14000, bgKey: 'lagoon', speed: 310, spawn: 0.65, titleEN: translations.en.l7Title, titleTR: translations.tr.l7Title, color: "#00e5ff", pKey: "ilkbahar", margin: 0.15 },
-    { threshold: 18500, bgKey: 'cyber', speed: 340, spawn: 0.50, titleEN: "CYBER CITY", titleTR: "SİBER ŞEHİR", color: "#ff00ff", pKey: "void", margin: 0.18 },
-    { threshold: 22500, bgKey: 'toxic', speed: 320, spawn: 0.85, titleEN: "TOXIC WASTELAND", titleTR: "ZEHİRLİ ATIK", color: "#32CD32", pKey: "lava", margin: 0.30 }
+    { threshold: 18500, bgKey: 'cyber', speed: 340, spawn: 0.50, titleEN: "CYBER CITY", titleTR: "SİBER ŞEHİR", color: "#ff00ff", pKey: "void", margin: 0.18, scrollSpeed: 1.0 },
+    { threshold: 22500, bgKey: 'toxic', speed: 320, spawn: 0.85, titleEN: "TOXIC WASTELAND", titleTR: "ZEHİRLİ ATIK", color: "#32CD32", pKey: "lava", margin: 0.30, scrollSpeed: 1.0 }
 ];
 
 // v1.96.6.6: Ölüm Vadisi (DZ) Durumunu Merkezi Olarak Belirle
@@ -1646,7 +1646,8 @@ function spawnObstacle() {
 
     let biomeIndex = (currentLevel - 1) % levelAssets.length;
     const currentAsset = levelAssets[biomeIndex];
-    const bgScrollSpeed = baseSpeed * (currentAsset ? currentAsset.scrollSpeed : 1.0);
+    // v1.99.16.94: ELITE NaN PROTECTION (Safe fallback for missing scrollSpeed)
+    const bgScrollSpeed = baseSpeed * (currentAsset && currentAsset.scrollSpeed ? currentAsset.scrollSpeed : 1.0);
 
     let allowedSpecialTypes = (biomeIndex === 4 || biomeIndex === 5 || biomeIndex === 6 || biomeIndex === 7 || biomeIndex === 8) ? [] : ['rock'];
 
