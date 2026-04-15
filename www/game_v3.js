@@ -94,7 +94,7 @@ function updateWheelForWeapon() {
 }
 
 // --- GÖRSEL EFEKT SİSTEMİ v126 ---
-let particles = [];
+// particles moved to global block at line 755 for v1.99.16.92
 let totalLoops = 0; // v153: SONSUL DÖNGÜ SİSTEMİ
 
 // v1.68: NATIVE HAPTIC ENGINE (Capacitor)
@@ -752,7 +752,7 @@ let transitionTimer = 0;
 // ----------------------------------------------------
 let isPlaying = false, isGameOver = false, isPaused = false;
 let score = 0, goldCount = 0, lastTime = 0, levelProgressTime = 0, lastSpawnTime = 0;
-let obstacles = [], golds = [], clouds = []; // v1.99.16.91: VARIABLE SYNC
+let obstacles = [], golds = [], particles = [], clouds = [], powerups = []; // v1.99.16.92: UNIVERSAL SYNC
 let currentLevel = 1;
 let bgY = 0; let bgScrollSpeed = 100;
 let screenFlash = 0; // Seviye geçişi parlaması v132
@@ -1553,7 +1553,7 @@ canvas.addEventListener('mousedown', initAudio); // PC için güvenlik kırma
 
 
 // SPAWNERLAR (Artık Yatay ve Dikey var)
-let obstacles = [], golds = [], powerups = [];
+// obstacles/golds/powerups moved to top for v1.99.16.92
 let spawnInterval = 3.0, spawnTimer = 0; // v2.03: Başlangıçta kayaların arasını çok açtık
 let goldSpawnInterval = 8.0, goldTimer = 0; // v1.99.3.31.0: Kıtlık ve Hardcore Ekonomi
 
