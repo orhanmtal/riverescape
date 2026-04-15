@@ -2007,14 +2007,14 @@ function spawnObstacle() {
                 speedY: bgScrollSpeed, speedX: 0
             });
         } else if (selectedType === 'toxicSerpent') {
-            // v1.99.16.99: ABSOLUTE SCREEN CENTERING (Lock to middle of the screen)
-            const absoluteCenter = canvas.width / 2;
+            // v1.99.17.00: THE FINAL MANIFESTO (Stable River Centering)
+            const riverCenter = riverLeft + (riverRight - riverLeft) / 2;
             obstacles.push({
                 type: 'toxicSerpent',
-                x: absoluteCenter,
-                relativeX: absoluteCenter - riverShift,
-                y: spawnY, width: 40, height: 130, // Long body
-                speedY: bgScrollSpeed * 1.1, speedX: 0,
+                x: riverCenter,
+                relativeX: riverCenter - riverShift,
+                y: spawnY, width: 44, height: 140, // Devasa gövde
+                speedY: bgScrollSpeed * 1.05, speedX: 0,
                 time: Math.random() * 10
             });
         }
