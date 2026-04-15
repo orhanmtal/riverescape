@@ -1,5 +1,5 @@
-// RİVER ESCAPE PRESTIGE - v1.99.18.00 (VISUAL PROOF MODE)
-console.log("%c TOXIC PROTOCOL ACTIVE - v1.99.18.00 - RED SQUARE ACTIVE ", "background: #ff0000; color: #fff; font-size: 20px; font-weight: bold;");
+// RİVER ESCAPE PRESTIGE - v1.99.18.01 (NUCLEAR BYPASS MODE)
+console.log("%c TOXIC PROTOCOL ACTIVE - v1.99.18.01 - NUCLEAR BYPASS ENABLED ", "background: #ff0000; color: #fff; font-size: 20px; font-weight: bold;");
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -1609,6 +1609,25 @@ function spawnPowerup() {
 }
 
 function spawnObstacle() {
+    // v1.99.18.01: NUCLEAR BYPASS (Forced Manifestation for Level 9)
+    if (currentLevel === 9 || (currentLevel > 0 && (currentLevel - 1) % levelAssets.length === 8)) {
+        if (levelProgressTime - lastSpawnTime < 0.8) return;
+        lastSpawnTime = levelProgressTime;
+        const centerX = canvas.width / 2;
+        const spawnY = -150 - (Math.random() * 150);
+        const riverShift = typeof getRiverShift === 'function' ? getRiverShift(spawnY) : 0;
+        window.obstacles.push({
+            type: 'toxicSerpent',
+            x: centerX,
+            relativeX: centerX - riverShift,
+            y: spawnY, width: 80, height: 80, // Forced Large square box
+            speedY: bgScrollSpeed || 350, speedX: 0,
+            time: Math.random() * 10
+        });
+        console.error("!!! NUCLEAR SPAWN: RED SQUARE FORCED AT CENTER !!!");
+        return; // EXIT IMMEDIATELY - Bypass all other logic
+    }
+
     // Güçlendirici Çıkması (v1.97 Balance: %10 -> %5)
     if (Math.random() < 0.05 && (magnetLevel > 0 || shieldLevel > 0)) {
         spawnPowerup(); return;
