@@ -1864,10 +1864,11 @@ function spawnObstacle() {
                 isElite: true
             });
         } else if (selectedType === 'slidingIce') {
+            const startX = (Math.random() < 0.5) ? riverLeft - 50 : riverRight + 50;
             obstacles.push({
                 type: 'slidingIce',
-                x: (Math.random() < 0.5) ? riverLeft - 50 : riverRight + 50,
-                relativeX: undefined,
+                x: startX,
+                relativeX: startX - riverShift,
                 y: spawnY, width: 80, height: 40,
                 speedY: baseSpeed * 0.6,
                 speedX: (Math.random() < 0.5) ? 120 : -120
@@ -1990,10 +1991,11 @@ function spawnObstacle() {
         } else if (selectedType === 'toxicRat') {
             // v1.99.16.00: MUTATED GIANT RAT - Swims across
             const moveDir = Math.random() < 0.5 ? 1 : -1;
+            const startX = (moveDir === 1) ? riverLeft - 60 : riverRight + 20;
             obstacles.push({
                 type: 'toxicRat',
-                x: (moveDir === 1) ? riverLeft - 60 : riverRight + 20,
-                relativeX: undefined,
+                x: startX,
+                relativeX: startX - riverShift,
                 y: spawnY, width: 70, height: 45,
                 speedY: baseSpeed * 0.9,
                 speedX: moveDir * 125,
