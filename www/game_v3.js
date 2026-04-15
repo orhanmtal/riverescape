@@ -1725,6 +1725,8 @@ function spawnObstacle() {
     let currentSpawnChance = 0.45;
     if (currentLevel === 7) currentSpawnChance = 0.90;
     else if (biomeIndex === 5) currentSpawnChance = 0.65; // Boşluk Yoğunluğu
+    else if (biomeIndex === 7) currentSpawnChance = 0.85; // Cyber Yoğunluğu (v1.99.17.01)
+    else if (biomeIndex === 8) currentSpawnChance = 0.90; // Toxic Yoğunluğu (v1.99.17.01)
     
     if (Math.random() < currentSpawnChance && allowedSpecialTypes.length > 0) {
         let selectedType = allowedSpecialTypes[Math.floor(Math.random() * allowedSpecialTypes.length)];
