@@ -1,5 +1,5 @@
-// RİVER ESCAPE PRESTIGE - v1.99.18.01 (NUCLEAR BYPASS MODE)
-console.log("%c TOXIC PROTOCOL ACTIVE - v1.99.18.01 - NUCLEAR BYPASS ENABLED ", "background: #ff0000; color: #fff; font-size: 20px; font-weight: bold;");
+// RİVER ESCAPE PRESTIGE - v1.99.18.02 (NUCLEAR BYPASS MODE)
+console.log("%c TOXIC PROTOCOL ACTIVE - v1.99.18.02 - NUCLEAR BYPASS ENABLED ", "background: #ff0000; color: #fff; font-size: 20px; font-weight: bold;");
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -1609,7 +1609,7 @@ function spawnPowerup() {
 }
 
 function spawnObstacle() {
-    // v1.99.18.01: NUCLEAR BYPASS (Forced Manifestation for Level 9)
+    // v1.99.18.02: NUCLEAR BYPASS (Forced Manifestation for Level 9)
     if (currentLevel === 9 || (currentLevel > 0 && (currentLevel - 1) % levelAssets.length === 8)) {
         if (levelProgressTime - lastSpawnTime < 0.8) return;
         lastSpawnTime = levelProgressTime;
@@ -1621,7 +1621,7 @@ function spawnObstacle() {
             x: centerX,
             relativeX: centerX - riverShift,
             y: spawnY, width: 80, height: 80, // Forced Large square box
-            speedY: bgScrollSpeed || 350, speedX: 0,
+            speedY: (typeof bgScrollSpeed !== 'undefined' ? bgScrollSpeed : 350), speedX: 0,
             time: Math.random() * 10
         });
         console.error("!!! NUCLEAR SPAWN: RED SQUARE FORCED AT CENTER !!!");
