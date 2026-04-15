@@ -1662,7 +1662,7 @@ function spawnObstacle() {
         allowedSpecialTypes.push('hippo', 'croc', 'vertical', 'horizontal', 'leafTornado');
         allowedSpecialTypes.push('whirlpool'); // L3 special
     } else if (biomeIndex === 3) { // Winter (L4, L10...)
-        allowedSpecialTypes.push('iceBerg', 'whirlpool', 'slidingIce', 'vertical', 'horizontal');
+        allowedSpecialTypes.push('rock', 'iceBerg', 'whirlpool', 'slidingIce', 'vertical', 'horizontal');
     } else if (biomeIndex === 4) { // Lava (L5, L11...)
         allowedSpecialTypes.push('rock', 'lavaGeyser', 'burningPillar', 'burningPillar', 'fireball', 'fireball', 'fireball', 'magmaSerpent');
         // CROC/HIPPO/LOGS ARE FORBIDDEN
@@ -1673,11 +1673,9 @@ function spawnObstacle() {
     } else if (biomeIndex === 6) { // Nostalji (L7, L14...)
         allowedSpecialTypes.push('toyBalloon', 'paperPlane', 'paperPlane', 'kite');
     } else if (biomeIndex === 7) { // Cyber City (L8, L16...)
-        // v1.99.15.21: Lazerler baskın engel haline getirildi (Triple frequency)
-        allowedSpecialTypes.push('laserGate', 'laserGate', 'laserGate', 'cyberDrone', 'glitchStream', 'cyberSpear');
+        allowedSpecialTypes.push('rock', 'laserGate', 'laserGate', 'cyberDrone', 'glitchStream', 'cyberSpear');
     } else if (biomeIndex === 8) { // Toxic Wasteland (L9, L17...)
-        // v1.99.16.42: TEMP 100% SERPENT SPAWN FOR TESTING
-        allowedSpecialTypes.push('toxicSerpent', 'toxicSerpent', 'toxicSerpent');
+        allowedSpecialTypes.push('rock', 'toxicSerpent', 'toxicRat', 'toxicBarrel');
     }
 
     // EXTRA LAYER: Ensure crocodiles/logs NEVER appear in Lava/Void/Lagoon/Cyber levels
@@ -1732,7 +1730,17 @@ function spawnObstacle() {
         // v1.99.16.42: VERIFICATION LOG
         if (biomeIndex === 8) console.log("%c FORCE SPAWN: " + selectedType, "background: #222; color: #adff2f; font-weight: bold;");
 
-        if (selectedType === 'hippo') {
+        if (selectedType === 'rock') {
+            // v1.99.16.95: RESTORED ROCK PUSH LOGIC
+            obstacles.push({
+                type: 'rock',
+                x: spawnX,
+                relativeX: spawnX - riverShift,
+                y: spawnY + 50,
+                width: 48, height: 48,
+                speedY: bgScrollSpeed, speedX: 0
+            });
+        } else if (selectedType === 'hippo') {
             obstacles.push({
                 type: 'hippo',
                 x: spawnX,
