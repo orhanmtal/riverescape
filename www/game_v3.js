@@ -751,7 +751,8 @@ let transitionTimer = 0;
 // OYUN SİSTEMİ 
 // ----------------------------------------------------
 let isPlaying = false, isGameOver = false, isPaused = false;
-let score = 0, goldCount = 0, lastTime = 0, levelProgressTime = 0, lastSpawnTime = 0; // v1.99.13.1 ELITE MAPPING
+let score = 0, goldCount = 0, lastTime = 0, levelProgressTime = 0, lastSpawnTime = 0;
+let obstacles = [], golds = [], particles = [], clouds = []; // v1.99.16.90: VARIABLE REBIRTH
 let currentLevel = 1;
 let bgY = 0; let bgScrollSpeed = 100;
 let screenFlash = 0; // Seviye geçişi parlaması v132
