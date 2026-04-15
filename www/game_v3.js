@@ -2007,11 +2007,13 @@ function spawnObstacle() {
                 speedY: bgScrollSpeed, speedX: 0
             });
         } else if (selectedType === 'toxicSerpent') {
-            // v1.99.16.40: GIANT TOXIC SERPENT
+            // v1.99.16.98: SERPENT CENTERING (Move closer to middle of the river)
+            const centerX = riverLeft + (riverRight - riverLeft) / 2;
+            const finalX = centerX + (Math.random() * 60 - 30); // Center with +/- 30px jitter
             obstacles.push({
                 type: 'toxicSerpent',
-                x: spawnX,
-                relativeX: spawnX - riverShift,
+                x: finalX,
+                relativeX: finalX - riverShift,
                 y: spawnY, width: 40, height: 130, // Long body
                 speedY: bgScrollSpeed * 1.1, speedX: 0,
                 time: Math.random() * 10
