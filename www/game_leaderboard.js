@@ -149,6 +149,8 @@ const Leaderboard = {
                     if (securityLoginBtn) {
                         securityLoginBtn.style.display = 'flex';
                         securityLoginBtn.onclick = () => this.loginWithGoogle();
+                        const loginTxt = document.getElementById('google-login-text');
+                        if (loginTxt) loginTxt.innerText = t.googleLogin || "Google ile devam et";
                     }
                 } else {
                     // ALL SECURE - REMOVE LOCK
