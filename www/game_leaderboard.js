@@ -112,9 +112,6 @@ const Leaderboard = {
         }
 
         console.log("🏁 [ELITE INIT] Initialization Finished. Player:", this.playerName);
-        
-        // v1.99.4.1.5: Açılışta bekleyen rekor varsa fırlat!
-        setTimeout(() => this.checkPendingSync(), 3000);
     },
 
     handleNoAuth() {
