@@ -229,7 +229,8 @@ const Leaderboard = {
                 welcomeMsg.innerText = isOffline ? `MOD: ÇEVRİMDIŞI 📡` : `HOŞ GELDİN, ${displayName.toUpperCase()}! 🏛️`;
                 welcomeMsg.classList.remove('hidden');
             }
-        } catch (e) { console.warn("UI Update missing elements - skipping.", e); }
+        }
+    } catch (e) { console.warn("UI Update missing elements - skipping.", e); }
     },
 
     bindEvents() {
