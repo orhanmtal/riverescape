@@ -79,10 +79,10 @@ const translations = {
         armorReloaded: "+3 ZIRH ŞARJI MÜHİMMATI",
         armorEmpty: "ZIRH TÜKENDİ!",
         armorDeactivated: "VOID ZIRHI DEVRE DIŞI!",
-        securityInternetRequired: "ELITE SUNUCU BAĞLANTISI GEREKLİ! 📶",
+        securityInternetRequired: "ELITE SUNUCU BAĞLANTISI GEREKLİ!",
         securityAuthRequired: "ERİŞİM İÇİN GİRİŞ YAPIN! 🔏",
         googleLogin: "Google ile devam et",
-        securityNoInternet: "Lütfen internet bağlantınızı kontrol edin. 📶"
+        securityNoInternet: "Lütfen internet bağlantınızı kontrol edin."
     },
     en: {
         startDesc: "",
@@ -163,9 +163,9 @@ const translations = {
         armorReloaded: "+3 ARMOR CHARGES ADDED",
         armorEmpty: "ARMOR DEPLETED!",
         armorDeactivated: "VOID ARMOR DEACTIVATED!",
-        securityInternetRequired: "ELITE SERVER CONNECTION REQUIRED! 📶",
+        securityInternetRequired: "ELITE SERVER CONNECTION REQUIRED!",
         securityAuthRequired: "PLEASE SIGN IN TO ACCESS! 🔏",
         googleLogin: "Continue with Google",
-        securityNoInternet: "Please check your internet connection. 📶"
+        securityNoInternet: "Please check your internet connection."
     }
 };

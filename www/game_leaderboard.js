@@ -136,14 +136,19 @@ const Leaderboard = {
                 if (!isOnline) {
                     securityOverlay.style.visibility = 'visible';
                     securityOverlay.style.opacity = '1';
-                    securityTitle.innerText = t.securityInternetRequired || "İNTERNET GEREKLİ! 📶";
+                    securityTitle.innerText = t.securityInternetRequired || "İNTERNET GEREKLİ!";
                     if (securityBody) {
                         securityBody.style.display = 'block';
                         securityBody.style.opacity = '0.7';
                         securityBody.innerText = t.securityNoInternet || "Lütfen internet bağlantınızı kontrol edin.";
                     }
                     if (securityIcon) {
-                        securityIcon.innerHTML = "";
+                        securityIcon.innerHTML = `
+                            <svg viewBox="0 0 24 24" style="width: 80px; height: 80px; fill: none; stroke: #EA4335; stroke-width: 1.5; filter: drop-shadow(0 0 15px rgba(234,67,53,0.4));">
+                                <circle cx="12" cy="12" r="10" stroke-dasharray="4 4"></circle>
+                                <path d="M12 8v4M12 16h.01"></path>
+                            </svg>
+                        `;
                     }
                     if (securityLoginBtn) securityLoginBtn.style.display = 'none';
                 } else if (!isLoggedIn) {
