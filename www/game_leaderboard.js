@@ -229,8 +229,57 @@ const Leaderboard = {
                 welcomeMsg.innerText = isOffline ? `MOD: ÇEVRİMDIŞI 📡` : `HOŞ GELDİN, ${displayName.toUpperCase()}! 🏛️`;
                 welcomeMsg.classList.remove('hidden');
             }
+
+            // v1.99.22.00: IDENTITY MODAL TRIGGER
+            const profileBanner = document.getElementById('player-profile-elite');
+            if (profileBanner && isLoggedIn) {
+                profileBanner.style.cursor = 'pointer';
+                profileBanner.onclick = () => {
+                    const modal = document.getElementById('identity-modal');
+                    const input = document.getElementById('player-name-input');
+                    if (modal && input) {
+                        input.value = (this.auth.currentUser.displayName || "ELITE PLAYER").toUpperCase();
+                        modal.classList.add('active');
+                    }
+                };
+            }
+        } catch (e) { console.warn("UI Update missing elements - skipping.", e); }
+    },
+
+    // v1.99.22.00: CLOUD IDENTITY SYNC
+    async updatePlayerName(newName) {
+        if (!newName || newName.length < 3) {
+            if (typeof showToast === 'function') showToast("İSİM EN AZ 3 KARAKTER OLMALI!", false);
+            return;
         }
-    } catch (e) { console.warn("UI Update missing elements - skipping.", e); }
+        if (!this.db || !this.auth.currentUser) return;
+
+        console.log("🛰️ [ELITE IDENTITY] Syncing new name to Cloud:", newName);
+        try {
+            const user = this.auth.currentUser;
+            const cleanName = newName.trim().toUpperCase();
+
+            // 1. Firebase Auth Profili Güncelle
+            await user.updateProfile({ displayName: cleanName });
+
+            // 2. Firestore Leaderboard Dökümanını Güncelle (ROP RIDERS Sync)
+            await this.db.collection('leaderboard').doc(user.uid).set({
+                name: cleanName
+            }, { merge: true });
+
+            // 3. Yerel Hafızayı Güncelle
+            this.playerName = cleanName;
+            localStorage.setItem('riverEscapeName', cleanName);
+
+            // 4. UI'yi Yenile
+            this.updateAuthUI(true, cleanName, false, user.photoURL);
+            
+            if (typeof showToast === 'function') showToast("KİMLİĞİNİZ BULUTA MÜHÜRLENDİ! 🏛️", true);
+            document.getElementById('identity-modal').classList.remove('active');
+        } catch (e) {
+            console.error("❌ [ELITE IDENTITY] Sync Error:", e);
+            if (typeof showToast === 'function') showToast("KİMLİK MÜHÜRLENİRKEN HATA OLUŞTU!", false);
+        }
     },
 
     bindEvents() {
@@ -238,7 +287,12 @@ const Leaderboard = {
             'google-login-btn': () => this.loginWithGoogle(),
             'google-recover-btn': () => this.loginWithGoogle(),
             'save-name-btn': () => this.handleManualNameSave(),
-            'logout-btn': () => this.logout()
+            'logout-btn': () => this.logout(),
+            'close-identity-btn': () => document.getElementById('identity-modal').classList.remove('active'),
+            'save-identity-btn': () => {
+                const newName = document.getElementById('player-name-input').value;
+                this.updatePlayerName(newName);
+            }
         };
         for (let id in elements) {
             const el = document.getElementById(id);
