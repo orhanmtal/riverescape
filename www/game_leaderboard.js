@@ -137,7 +137,11 @@ const Leaderboard = {
                     securityOverlay.style.visibility = 'visible';
                     securityOverlay.style.opacity = '1';
                     securityTitle.innerText = t.securityInternetRequired || "İNTERNET GEREKLİ! 📶";
-                    securityBody.innerText = "Yüksek güvenlikli sunucu bağlantısı kurulamadı.";
+                    if (securityBody) {
+                        securityBody.style.display = 'block';
+                        securityBody.style.opacity = '0.7';
+                        securityBody.innerText = t.securityNoInternet || "Lütfen internet bağlantınızı kontrol edin.";
+                    }
                     if (securityIcon) {
                         securityIcon.innerHTML = `
                             <svg viewBox="0 0 24 24" style="width: 80px; height: 80px; fill: none; stroke: #EA4335; stroke-width: 1.5; filter: drop-shadow(0 0 15px rgba(234,67,53,0.4));">
@@ -151,7 +155,7 @@ const Leaderboard = {
                     securityOverlay.style.visibility = 'visible';
                     securityOverlay.style.opacity = '1';
                     securityTitle.innerText = t.securityAuthRequired || "GİRİŞ GEREKLİ! 🔏";
-                    securityBody.innerText = "Verilerinizin mühürlenmesi için Gmail oturumu zorunludur.";
+                    if (securityBody) securityBody.style.display = 'none';
                     if (securityIcon) {
                         securityIcon.innerHTML = `
                             <svg viewBox="0 0 24 24" style="width: 80px; height: 80px; fill: none; stroke: rgba(255, 215, 0, 0.8); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.4)); animation: elitePulse 2.3s infinite ease-in-out;">

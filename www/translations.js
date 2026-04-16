@@ -81,7 +81,8 @@ const translations = {
         armorDeactivated: "VOID ZIRHI DEVRE DIŞI!",
         securityInternetRequired: "ELITE SUNUCU BAĞLANTISI GEREKLİ! 📶",
         securityAuthRequired: "ERİŞİM İÇİN GİRİŞ YAPIN! 🔏",
-        googleLogin: "Google ile devam et"
+        googleLogin: "Google ile devam et",
+        securityNoInternet: "Lütfen internet bağlantınızı kontrol edin. 📶"
     },
     en: {
         startDesc: "",
@@ -164,6 +165,7 @@ const translations = {
         armorDeactivated: "VOID ARMOR DEACTIVATED!",
         securityInternetRequired: "ELITE SERVER CONNECTION REQUIRED! 📶",
         securityAuthRequired: "PLEASE SIGN IN TO ACCESS! 🔏",
-        googleLogin: "Continue with Google"
+        googleLogin: "Continue with Google",
+        securityNoInternet: "Please check your internet connection. 📶"
     }
 };
