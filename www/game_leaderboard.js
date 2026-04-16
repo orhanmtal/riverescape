@@ -1,11 +1,11 @@
 /**
- * RİVER ESCAPE ELİTE - v1.99.9.0 (PURE DIAMOND SYNC)
+ * RİVER ESCAPE ELİTE - v1.99.23.00 (IDENTITY SYNC)
  * Firebase Firestore Global Sıralama ve Profil Senkronizasyon Sistemi
- * v1.99.9.0
+ * v1.99.23.00
  */
 
 const Leaderboard = {
-    // FIREBASE YAPILANDIRMASI (CONNECTED v1.99.1.4!)
+    // FIREBASE YAPILANDIRMASI (CONNECTED v1.99.23.00!)
     firebaseConfig: {
         apiKey: "AIzaSyBVLsQ9I8UAzBYRqWcRYkHUHTQz5xrTHgs",
         authDomain: "riverescapeglobal.firebaseapp.com",
@@ -36,12 +36,12 @@ const Leaderboard = {
                 this.auth = firebase.auth();
                 console.log("🔥 [ELITE INIT] Firestore & Auth Connected.");
 
-                // v1.99.3.30: [ELITE SECURITY] Oturum kalıcılığını yerel hafızaya kilitle
+                // v1.99.23.00: [ELITE SECURITY] Oturum kalıcılığını yerel hafızaya kilitle
                 this.auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
                     .then(() => console.log("🔐 [ELITE AUTH] Persistence set to LOCAL"))
                     .catch(e => console.warn("🔐 [ELITE AUTH] Persistence Error:", e));
 
-                // v1.99.4.1.11: [ELITE REDIRECT] Gelişmiş yönlendirme yakalayıcı (Fast-Sync)
+                // v1.99.23.00: [ELITE REDIRECT] Gelişmiş yönlendirme yakalayıcı (Fast-Sync)
                 try {
                     this.auth.getRedirectResult().then(result => {
                         if (result && result.user) {
@@ -58,7 +58,7 @@ const Leaderboard = {
                         }
                     }).catch(err => {
                         console.error("❌ [ELITE AUTH] Redirect Hatası Yakalandı:", err);
-                        // v1.99.4.1.11: Hata kodlarını kullanıcı için anlaşılır kıl
+                        // v1.99.23.00: Safe Overlay Initializationıcı için anlaşılır kıl
                         const errorMap = {
                             'auth/internal-error': "DAHİLİ BAĞLANTI HATASI! 🌐",
                             'auth/network-request-failed': "İNTERNET BAĞLANTINI KONTROL ET! 📶",

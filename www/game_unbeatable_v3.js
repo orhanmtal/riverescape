@@ -1,5 +1,5 @@
-// RİVER ESCAPE PRESTIGE - v1.99.19.09 (TOXIC SWARM RESTORED)
-console.log("%c TOXIC PROTOCOL ACTIVE - v1.99.19.09 - CROC PURGED ", "background: #00ff00; color: #000; font-size: 20px; font-weight: bold;");
+// RİVER ESCAPE PRESTIGE - v1.99.23.00 (IDENTITY SYNC)
+console.log("%c IDENTITY SYNC ACTIVE - v1.99.23.00 - CROC PURGED ", "background: #00ff00; color: #000; font-size: 20px; font-weight: bold;");
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
