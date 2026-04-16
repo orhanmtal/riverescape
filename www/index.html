@@ -9,34 +9,58 @@
     <!-- MASTER UI OVERRIDE// RİVER ESCAPE PRESTIGE - v1.99.19.09 (GHOST PURGE) -->
 
     <style>
-        .master-play-btn {
-            position: relative;
-            width: 48vmin !important;
-            height: 48vmin !important;
-            border-radius: 50% !important;
-            background: linear-gradient(135deg, #00e5ff 0%, #12c2e9 50%, #c471ed 100%) !important;
-            border: 1.5vmin solid rgba(255, 255, 255, 0.95) !important;
-            color: white !important;
-            font-family: 'Press Start 2P', sans-serif !important;
-            font-weight: 900 !important;
-            font-size: 5vmin !important;
-            cursor: pointer !important;
-            letter-spacing: -1px !important;
-            box-shadow: 0 20px 70px rgba(0, 229, 255, 0.7), inset 0 0 25px rgba(255, 255, 255, 0.5) !important;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            z-index: 100 !important;
-            text-shadow: 0 5px 20px rgba(0, 0, 0, 0.4) !important;
-            margin: 0 auto !important;
-            pointer-events: auto !important;
-            text-transform: uppercase !important;
-        }
+/* MASTER UI OVERRIDE// RİVER ESCAPE PRESTIGE - v1.99.21.00 (MENU EVOLUTION) */
+.master-start-v21 {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: calc(20px + env(safe-area-inset-top)) 6vmin calc(20px + env(safe-area-inset-bottom)) 6vmin !important;
+    background: radial-gradient(circle at center, rgba(5, 15, 30, 0.7) 0%, rgba(0, 0, 0, 0.95) 100%) !important;
+}
 
-        .master-play-btn:active {
-            transform: scale(0.9) !important;
-        }
+.elite-menu-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+}
+
+.elite-action-row {
+    display: flex !important;
+    gap: 5vmin !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin-top: 2vh !important;
+    width: 100% !important;
+}
+
+.master-play-btn {
+    position: relative;
+    width: 48vmin;
+    height: 48vmin;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #00e5ff 0%, #12c2e9 50%, #c471ed 100%);
+    border: 1.5vmin solid rgba(255, 255, 255, 0.9);
+    color: white;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 900;
+    font-size: 6vmin;
+    cursor: pointer;
+    box-shadow: 0 0 60px rgba(0, 229, 255, 0.5), inset 0 0 30px rgba(255, 255, 255, 0.4);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    text-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.master-play-btn:active { transform: scale(0.92); }
+
 
         .elite-btn-square {
             background: rgba(255, 255, 255, 0.1) !important;
@@ -82,90 +106,42 @@
             style="position: absolute; top: calc(20px + env(safe-area-inset-top)); right: calc(20px + env(safe-area-inset-right)); display: none; background: rgba(0,0,0,0.4); color: white; border: 1px solid rgba(255,229,255,0.4); padding: 8px; font-family: 'Outfit', sans-serif; font-size: 18px; z-index: 1001; border-radius: 50%; width: 45px; height: 45px; pointer-events: auto; cursor: pointer; backdrop-filter: blur(4px); line-height: 1;">⏸</button>
 
         <!-- ELITE FULL-SCREEN UI v1.99.19.09 -->
-        <div id="start-screen" class="screen">
-            <!-- Top Row: Profile & Settings -->
-            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; z-index: 100;">
-                <div id="player-profile-elite" class="account-info-elite">
-                    <button id="google-login-btn" style="
-                        position: absolute; top:0; left:0; width:100%; height:100%;
-                        background: transparent; border: none; cursor: pointer; z-index: 10;
-                    "></button>
-
-                    <div id="player-photo-container" style="
-                        width: 45px; height: 45px; border-radius: 50%;
-                        background: linear-gradient(135deg, #FFD700, #ff8c00);
-                        display: flex; align-items: center; justify-content: center;
-                        font-weight: 900; color: #000; font-size: 18px;
-                        box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
-                        overflow: hidden;
-                    ">
+        <div id="start-screen" class="screen master-start-v21">
+            <!-- TOP ROW: PROFILE & SETTINGS -->
+            <div class="elite-menu-header">
+                <div id="player-profile-elite" class="account-info-elite" style="position: relative;">
+                    <button id="google-login-btn" style="position: absolute; top:0; left:0; width:100%; height:100%; background: transparent; border: none; cursor: pointer; z-index: 10;"></button>
+                    <div id="player-photo-container" style="width: 45px; height: 45px; border-radius: 50%; background: linear-gradient(135deg, #FFD700, #ff8c00); display: flex; align-items: center; justify-content: center; font-weight: 900; color: #000; font-size: 18px; box-shadow: 0 0 15px rgba(255, 215, 0, 0.3); overflow: hidden;">
                         <img id="player-pfp-img" src="" style="width: 100%; height: 100%; object-fit: cover; display: none;">
-                        <span id="player-pfp-initial">A</span>
+                        <span id="player-pfp-initial">?</span>
                     </div>
                     <div style="display: flex; flex-direction: column;">
-                        <div
-                            style="font-family: 'Outfit'; font-weight: 900; font-size: 16px; letter-spacing: 0.5px; line-height: 1.1;">
-                            ELITE PLAYER</div>
-                        <div id="auth-status-text"
-                            style="font-size: 9px; color: #FFD700; font-weight: bold; opacity: 0.8;">DOĞRULANIYOR... 🛰️
-                        </div>
+                        <div style="font-family: 'Outfit'; font-weight: 900; font-size: 16px; letter-spacing: 0.5px; line-height: 1.1;">ELITE PLAYER</div>
+                        <div id="auth-status-text" style="font-size: 9px; color: #FFD700; font-weight: bold; opacity: 0.8;">DOĞRULANIYOR... 🛰️</div>
                     </div>
                 </div>
-                <button id="open-settings-btn" class="elite-btn-square"
-                    style="width: 11.5vmin; height: 11.5vmin; font-size: 4.1.5vmin; display: none;">⚙️</button>
+                <button id="open-settings-btn" class="elite-btn-square" style="width: 11.5vmin; height: 11.5vmin; font-size: 5vmin; display: none;">⚙️</button>
             </div>
 
-            <!-- ELITE MASTERPIECE TITLE v1.99.19.09 -->
-            <div
-                style="text-align: center; position: relative; width: 100%; margin-top: 5vh; display: flex; flex-direction: column; justify-content: center; align-items: center; pointer-events: none;">
-                <div style="
-                    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-                    width: 100%; height: 100%; background: radial-gradient(circle, rgba(0,229,255,0.08) 0%, transparent 70%);
-                    filter: blur(50px); z-index: -1;
-                "></div>
-                <h1 class="floating-logo" style="
-                    font-family: 'Outfit', sans-serif; font-weight: 900; color: white; font-size: 13vmin; 
-                    letter-spacing: -2px; margin: 0; line-height: 0.85;
-                    background: linear-gradient(135deg, #fff 20%, #00e5ff 100%);
-                    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-                    filter: drop-shadow(0 15px 30px rgba(0,229,255,0.3));
-                    text-transform: uppercase;
-                    pointer-events: none;
-                ">RIVER<br><span
-                        style="background: linear-gradient(135deg, #00e5ff 0%, #00897b 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; pointer-events: none;">ESCAPE</span>
-                </h1>
-                <div style="
-                    color: #FFD700; font-family: 'Press Start 2P', cursive; font-size: 1.8vmin; 
-                    font-weight: bold; margin-top: 15px; letter-spacing: 0.8vmin; opacity: 0.9;
-                    text-shadow: 0 0 15px rgba(255,215,0,0.4);
-                    pointer-events: none;
-                " version="1.99.14.0">PRESTIGE v1.99.19.09</div>
-            </div>
+            <!-- CENTER ZONE: LOGO & PLAY -->
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 4vh; width: 100%;">
+                <div style="text-align: center; position: relative; width: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; pointer-events: none;">
+                    <h1 class="floating-logo" style="font-family: 'Outfit', sans-serif; font-weight: 900; color: white; font-size: 13vmin; letter-spacing: -2px; margin: 0; line-height: 0.85; background: linear-gradient(135deg, #fff 20%, #00e5ff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 15px 30px rgba(0,229,255,0.3)); text-transform: uppercase;">RIVER<br><span style="background: linear-gradient(135deg, #00e5ff 0%, #00897b 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">ESCAPE</span></h1>
+                    <div style="color: #FFD700; font-family: 'Press Start 2P', cursive; font-size: 1.8vmin; font-weight: bold; margin-top: 15px; letter-spacing: 0.8vmin; opacity: 0.9; text-shadow: 0 0 15px rgba(255,215,0,0.4);" version="1.99.14.0">PRESTIGE v1.99.21.00</div>
+                </div>
 
-            <!-- CENTRAL INTERACTION ZONE -->
-            <div
-                style="flex: 2; display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; gap: 8vh; z-index: 100;">
-                <!-- MAIN PLAY BUTTON -->
-                <div style="position: relative; display: flex; justify-content: center; align-items: center;">
-                    <button id="start-btn" class="master-play-btn" style="display: none;">
-                        OYNA 🌊
-                    </button>
+                <div style="position: relative; margin-top: 2vh;">
+                    <button id="start-btn" class="master-play-btn" style="display: none;">OYNA 🌊</button>
                     <div class="pulse-ring"></div>
                 </div>
-
-                <!-- SECONDARY ACTION ROW -->
-                <div style="display: flex; gap: 4.1.5vmin; align-items: center; justify-content: center;">
-                    <button id="open-shop-btn" class="elite-btn-square"
-                        style="width: 18vmin; height: 18vmin; font-size: 8vmin; display: none;">🛒</button>
-                    <button id="leaderboard-btn" class="elite-btn-square"
-                        style="width: 18vmin; height: 18vmin; font-size: 8vmin; border-color: rgba(255, 215, 0, 0.4); background: rgba(255, 215, 0, 0.05); box-shadow: 0 0 20px rgba(255, 215, 0, 0.2); display: none;">🏆</button>
-                    <button id="spin-btn" class="elite-btn-square"
-                        style="width: 18vmin; height: 18vmin; font-size: 8vmin; display: none;">🎡</button>
-                </div>
             </div>
 
-            <!-- BOTTOM PADDING (Safe Area Support) -->
-            <div style="height: env(safe-area-inset-bottom); width: 100%;"></div>
+            <!-- BOTTOM ROW: ACTIONS -->
+            <div class="elite-action-row">
+                <button id="open-shop-btn" class="elite-btn-square" style="width: 18vmin; height: 18vmin; font-size: 8vmin; display: none;">🛒</button>
+                <button id="leaderboard-btn" class="elite-btn-square" style="width: 18vmin; height: 18vmin; font-size: 8vmin; border-color: rgba(255, 215, 0, 0.4); background: rgba(255, 215, 0, 0.05); box-shadow: 0 0 20px rgba(255, 215, 0, 0.2); display: none;">🏆</button>
+                <button id="spin-btn" class="elite-btn-square" style="width: 18vmin; height: 18vmin; font-size: 8vmin; display: none;">🎡</button>
+            </div>
         </div>
 
         <!-- PAUSE SCREEN (ELITE FULL-SCREEN v1.99.19.09) -->
