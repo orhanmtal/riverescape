@@ -188,10 +188,18 @@ const Leaderboard = {
                 }
             }
             
-            // v1.99.20.01: PROFILE PHOTO RECOGNITION
+            // v1.99.21.01: DYNAMIC IDENTITY MAPPING
             const pfpImg = document.getElementById('player-pfp-img');
             const pfpInitial = document.getElementById('player-pfp-initial');
-            if (isLoggedIn && photoURL) {
+            const eliteNameDisplay = document.getElementById('player-name-elite');
+            const hudNameDisplay = document.getElementById('playerName-hud');
+
+            if (isLoggedIn) {
+                const finalName = (displayName || "ELITE PLAYER").toUpperCase();
+                if (eliteNameDisplay) eliteNameDisplay.innerText = finalName;
+                if (hudNameDisplay) hudNameDisplay.innerText = finalName;
+                
+                if (photoURL) {
                 if (pfpImg) {
                     pfpImg.src = photoURL;
                     pfpImg.style.display = 'block';
