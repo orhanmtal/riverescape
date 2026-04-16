@@ -143,12 +143,7 @@ const Leaderboard = {
                         securityBody.innerText = t.securityNoInternet || "Lütfen internet bağlantınızı kontrol edin.";
                     }
                     if (securityIcon) {
-                        securityIcon.innerHTML = `
-                            <svg viewBox="0 0 24 24" style="width: 80px; height: 80px; fill: none; stroke: #EA4335; stroke-width: 1.5; filter: drop-shadow(0 0 15px rgba(234,67,53,0.4));">
-                                <circle cx="12" cy="12" r="10" stroke-dasharray="4 4"></circle>
-                                <path d="M12 8v4M12 16h.01"></path>
-                            </svg>
-                        `;
+                        securityIcon.innerHTML = "";
                     }
                     if (securityLoginBtn) securityLoginBtn.style.display = 'none';
                 } else if (!isLoggedIn) {
