@@ -91,13 +91,17 @@
                         background: transparent; border: none; cursor: pointer; z-index: 10;
                     "></button>
 
-                    <div style="
+                    <div id="player-photo-container" style="
                         width: 45px; height: 45px; border-radius: 50%;
                         background: linear-gradient(135deg, #FFD700, #ff8c00);
                         display: flex; align-items: center; justify-content: center;
                         font-weight: 900; color: #000; font-size: 18px;
                         box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
-                    ">A</div>
+                        overflow: hidden;
+                    ">
+                        <img id="player-pfp-img" src="" style="width: 100%; height: 100%; object-fit: cover; display: none;">
+                        <span id="player-pfp-initial">A</span>
+                    </div>
                     <div style="display: flex; flex-direction: column;">
                         <div
                             style="font-family: 'Outfit'; font-weight: 900; font-size: 16px; letter-spacing: 0.5px; line-height: 1.1;">
@@ -628,6 +632,29 @@
                     style="position: absolute; top: -5px; right: -5px; background: #f12711; color: white; font-size: 13px; font-weight: 900; padding: 3px 8px; border-radius: 12px; border: 2px solid #fff;">
                     0</div>
             </div>
+        </div>
+
+        <!-- v1.99.20.01: ULTIMATE SECURITY LOCK OVERLAY -->
+        <div id="security-lock-overlay" style="
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            z-index: 100000;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            gap: 20px; text-align: center; color: white;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        ">
+            <div id="security-icon-box" style="font-size: 70px; filter: drop-shadow(0 0 20px rgba(0, 229, 255, 0.4));">🛰️</div>
+            <h2 id="security-msg-title" style="font-family: 'Outfit'; font-weight: 900; font-size: 26px; margin: 0; letter-spacing: 1px; color: #00e5ff;">EMNIYET KİLİDİ AKTİF</h2>
+            <p id="security-msg-body" style="font-family: 'Outfit'; font-size: 16px; width: 80%; opacity: 0.8; line-height: 1.5;">Sunucu bağlantısı ve doğrulama bekleniyor...</p>
+            
+            <!-- Login trigger inside the lock screen if needed -->
+            <button id="security-retry-btn" onclick="location.reload()" style="
+                background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.3);
+                color: white; padding: 12px 25px; border-radius: 12px; font-weight: bold; cursor: pointer;
+                margin-top: 10px; display: none;
+            ">YENİDEN DENE</button>
+            <button id="security-login-trigger" class="elite-btn-large" style="display: none; width: auto; padding: 15px 40px; background: #fff; color: #000;">GMAIL İLE BAĞLAN 📧</button>
         </div>
     </div>
 

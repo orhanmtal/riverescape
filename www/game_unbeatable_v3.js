@@ -230,13 +230,14 @@ function updateLanguageUI() {
     updateSpinButtonText();
 }
 
-// ARKA PLANA ALINCA SESİ KES v123
+// ARKA PLANA ALINCA SENKRONİZE ET v1.99.20.01
 document.addEventListener('visibilitychange', () => {
     if (audioCtx) {
         if (document.hidden) {
             audioCtx.suspend();
-            if (typeof Leaderboard !== 'undefined' && Leaderboard.forceSync) {
-                Leaderboard.forceSync();
+            if (typeof Leaderboard !== 'undefined' && Leaderboard.submitProgress) {
+                console.log("📡 [ELITE SYNC] App backgrounded. Forcing Cloud Sync...");
+                Leaderboard.submitProgress();
             }
         } else {
             audioCtx.resume();
@@ -2397,9 +2398,10 @@ window.triggerEliteEconomySync = function () {
     try {
         saveGame();
 
-        // 🛰️ Bulut Mührü (Firestore ForceSync)
-        if (typeof Leaderboard !== 'undefined' && Leaderboard.forceSync) {
-            Leaderboard.forceSync();
+        // 🛰️ Bulut Mührü (v1.99.20.01: Absolute Online Sync)
+        if (typeof Leaderboard !== 'undefined' && Leaderboard.submitProgress) {
+            console.log("🏙️ [ELITE SYNC] Triggering Mapped Cloud Backup...");
+            Leaderboard.submitProgress();
         }
 
         // ✨ Ekran Parlatma (UI Sync)

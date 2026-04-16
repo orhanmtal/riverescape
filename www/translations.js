@@ -78,7 +78,9 @@ const translations = {
         armorActivated: "ZIRH JENERATÖRÜ AKTİF! 🛡️",
         armorReloaded: "+3 ZIRH ŞARJI MÜHİMMATI",
         armorEmpty: "ZIRH TÜKENDİ!",
-        armorDeactivated: "VOID ZIRHI DEVRE DIŞI!"
+        armorDeactivated: "VOID ZIRHI DEVRE DIŞI!",
+        securityInternetRequired: "ELITE SUNUCU BAĞLANTISI GEREKLİ! 📶",
+        securityAuthRequired: "ERİŞİM İÇİN GİRİŞ YAPIN! 🔏"
     },
     en: {
         startDesc: "",
@@ -158,6 +160,8 @@ const translations = {
         armorActivated: "ARMOR GENERATOR ACTIVE! 🛡️",
         armorReloaded: "+3 ARMOR CHARGES ADDED",
         armorEmpty: "ARMOR DEPLETED!",
-        armorDeactivated: "VOID ARMOR DEACTIVATED!"
+        armorDeactivated: "VOID ARMOR DEACTIVATED!",
+        securityInternetRequired: "ELITE SERVER CONNECTION REQUIRED! 📶",
+        securityAuthRequired: "PLEASE SIGN IN TO ACCESS! 🔏"
     }
 };

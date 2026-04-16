@@ -80,7 +80,7 @@ const Leaderboard = {
                             localStorage.setItem('riverEscapeName', this.playerName);
                             localStorage.setItem('riverEscapeID', this.playerID);
                             
-                            this.updateAuthUI(true, user.displayName);
+                            this.updateAuthUI(true, user.displayName, false, user.photoURL);
                             this.restoreFromCloud();
                         } else {
                             console.log("👤 [ELITE AUTH] Authentication Required.");
@@ -90,6 +90,10 @@ const Leaderboard = {
                         console.error("❌ [ELITE AUTH] Error in State Change:", authErr);
                     }
                 });
+
+                // v1.99.20.01: Online/Offline Heartbeat
+                window.addEventListener('online', () => this.updateAuthUI(this.auth.currentUser !== null, this.playerName, false, this.auth.currentUser ? this.auth.currentUser.photoURL : null));
+                window.addEventListener('offline', () => this.updateAuthUI(this.auth.currentUser !== null, this.playerName, true));
             }
         } catch (e) {
             console.error("❌ [ELITE INIT] Critical Error during Firebase Setup:", e);
@@ -118,9 +122,44 @@ const Leaderboard = {
         this.updateAuthUI(false);
     },
 
-    updateAuthUI(isLoggedIn, displayName, isOffline = false) {
+    updateAuthUI(isLoggedIn, displayName, isOffline = false, photoURL = null) {
         try {
+            // v1.99.20.01: HARD GATE ENFORCEMENT
+            const securityOverlay = document.getElementById('security-lock-overlay');
+            const securityTitle = document.getElementById('security-msg-title');
+            const securityBody = document.getElementById('security-msg-body');
+            const securityIcon = document.getElementById('security-icon-box');
+            const securityLoginBtn = document.getElementById('security-login-trigger');
             const statusText = document.getElementById('auth-status-text');
+            const t = translations[currentLang];
+
+            const isOnline = navigator.onLine;
+
+            if (securityOverlay) {
+                if (!isOnline) {
+                    securityOverlay.style.visibility = 'visible';
+                    securityOverlay.style.opacity = '1';
+                    securityTitle.innerText = t.securityInternetRequired || "İNTERNET GEREKLİ! 📶";
+                    securityBody.innerText = "Yüksek güvenlikli sunucu bağlantısı kurulamadı.";
+                    securityIcon.innerText = "📶";
+                    if (securityLoginBtn) securityLoginBtn.style.display = 'none';
+                } else if (!isLoggedIn) {
+                    securityOverlay.style.visibility = 'visible';
+                    securityOverlay.style.opacity = '1';
+                    securityTitle.innerText = t.securityAuthRequired || "GİRİŞ GEREKLİ! 🔏";
+                    securityBody.innerText = "Verilerinizin mühürlenmesi için Gmail oturumu zorunludur.";
+                    securityIcon.innerText = "🔐";
+                    if (securityLoginBtn) {
+                        securityLoginBtn.style.display = 'flex';
+                        securityLoginBtn.onclick = () => this.loginWithGoogle();
+                    }
+                } else {
+                    // ALL SECURE - REMOVE LOCK
+                    securityOverlay.style.opacity = '0';
+                    setTimeout(() => { securityOverlay.style.visibility = 'hidden'; }, 500);
+                }
+            }
+
             if (statusText) {
                 if (isLoggedIn) {
                     statusText.innerText = isOffline ? "ELİTE BİLGİ 📡" : "ELİTE HESAP 🏛️";
@@ -131,6 +170,20 @@ const Leaderboard = {
                 }
             }
             
+            // v1.99.20.01: PROFILE PHOTO RECOGNITION
+            const pfpImg = document.getElementById('player-pfp-img');
+            const pfpInitial = document.getElementById('player-pfp-initial');
+            if (isLoggedIn && photoURL) {
+                if (pfpImg) {
+                    pfpImg.src = photoURL;
+                    pfpImg.style.display = 'block';
+                }
+                if (pfpInitial) pfpInitial.style.display = 'none';
+            } else if (pfpInitial) {
+                pfpInitial.style.display = 'block';
+                if (pfpImg) pfpImg.style.display = 'none';
+            }
+
             const loginBtn = document.getElementById('google-login-btn');
             if (loginBtn) {
                 loginBtn.style.display = isLoggedIn ? 'none' : 'flex';
@@ -141,17 +194,16 @@ const Leaderboard = {
             eliteButtons.forEach(id => {
                 const btn = document.getElementById(id);
                 if (btn) {
-                    // v1.99.5.93: Flex display mühürlendi (Tiny button fix)
-                    btn.style.display = isLoggedIn ? 'flex' : 'none';
+                    btn.style.display = (isLoggedIn && isOnline) ? 'flex' : 'none';
                 }
             });
- 
+  
             const welcomeMsg = document.getElementById('auth-welcome-msg');
             if (welcomeMsg && isLoggedIn) {
                 welcomeMsg.innerText = isOffline ? `MOD: ÇEVRİMDIŞI 📡` : `HOŞ GELDİN, ${displayName.toUpperCase()}! 🏛️`;
                 welcomeMsg.classList.remove('hidden');
             }
-        } catch (e) { console.warn("UI Update missing elements - skipping."); }
+        } catch (e) { console.warn("UI Update missing elements - skipping.", e); }
     },
 
     bindEvents() {
@@ -247,54 +299,39 @@ const Leaderboard = {
         return String.fromCodePoint(...codePoints);
     },
 
-    // Skoru ve İlerlemeyi Buluta Gönder (Firestore)
+    // v1.99.20.01: MAPPED PROGRESS SYNC (FireStore Schema Enforcement)
     async submitProgress(score, level) {
-        const finalScore = Math.floor(score);
-        
-        // v1.99.4.1.8: OFFLINE ECONOMY SYNC - Full Asset Protection
-        if (!navigator.onLine || !this.db) {
-            console.log("📡 [ELITE OFFLINE] Economy change cached for pending sync.");
-            localStorage.setItem('riverEscapePendingSync', 'true');
-            localStorage.setItem('riverEscapePendingScore', finalScore);
-            localStorage.setItem('riverEscapePendingLevel', level || 1);
-            localStorage.setItem('riverEscapePendingGold', window.totalGold || 0);
+        if (!navigator.onLine || !this.db || !this.playerID) {
+            console.warn("📡 [ELITE SYNC] Blocked: Offline or Unauthenticated.");
             return;
         }
+
+        const finalScore = Math.floor(score || window.score || 0);
         
         try {
-            // 1. Mevcut skoru kontrol et (High Score Protection)
-            const doc = await this.db.collection('leaderboard').doc(this.playerID).get();
-            if (doc.exists) {
-                const existingData = doc.data();
-                if (existingData.score >= finalScore) {
-                    console.log(`ℹ️ [LEADERBOARD] Progress skipped. Existing high score (${existingData.score}) is better than current (${finalScore}).`);
-                    return;
-                }
-            }
-
-            console.log(`🚀 [LEADERBOARD] New High Score! Submitting: ${finalScore}`);
+            console.log(`🚀 [ELITE SYNC] Mapped Syncing for ${this.playerName}...`);
             const payload = {
                 id: this.playerID,
                 name: this.playerName,
                 score: finalScore,
-                totalGold: window.totalGold || 0, // v1.99.4.1.3: Kalıcı Bakiye
+                totalGold: Math.floor(window.totalGold || 0),
                 magnetLevel: window.magnetLevel || 0,
                 shieldLevel: window.shieldLevel || 0,
                 bombCount: window.bombCount || 0,
-                ownsArmorLicense: window.ownsArmorLicense || false,
-                hasWeapon: window.hasWeapon || false,
+                ownsArmorLicense: !!window.ownsArmorLicense,
+                hasWeapon: !!window.hasWeapon,
                 armorCharge: window.armorCharge || 0,
-                level: level || 1,
+                level: level || window.currentLevel || 1,
                 country: this.playerCountry,
                 flag: this.playerFlag,
                 lastSeen: firebase.firestore.FieldValue.serverTimestamp()
             };
 
             await this.db.collection('leaderboard').doc(this.playerID).set(payload, { merge: true });
-            console.log("✅ [LEADERBOARD] Cloud High Score Updated!");
-            if (typeof showToast === 'function') showToast("YENİ REKOR! SIRALAMA GÜNCELLENDİ! 🏆", true);
+            console.log("✅ [ELITE SYNC] Cloud Mapped Update Complete!");
+            if (typeof showToast === 'function' && score > 0) showToast("VERİLER BULUTA MÜHÜRLENDİ! 🏛️", true);
         } catch (e) {
-            console.error("❌ [LEADERBOARD] Firestore Progress Error:", e);
+            console.error("❌ [ELITE SYNC] Firestore Sync Error:", e);
         }
     },
 
