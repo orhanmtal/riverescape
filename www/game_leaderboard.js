@@ -138,14 +138,29 @@ const Leaderboard = {
                     securityOverlay.style.opacity = '1';
                     securityTitle.innerText = t.securityInternetRequired || "İNTERNET GEREKLİ! 📶";
                     securityBody.innerText = "Yüksek güvenlikli sunucu bağlantısı kurulamadı.";
-                    securityIcon.innerText = "📶";
+                    if (securityIcon) {
+                        securityIcon.innerHTML = `
+                            <svg viewBox="0 0 24 24" style="width: 80px; height: 80px; fill: none; stroke: #EA4335; stroke-width: 1.5; filter: drop-shadow(0 0 15px rgba(234,67,53,0.4));">
+                                <circle cx="12" cy="12" r="10" stroke-dasharray="4 4"></circle>
+                                <path d="M12 8v4M12 16h.01"></path>
+                            </svg>
+                        `;
+                    }
                     if (securityLoginBtn) securityLoginBtn.style.display = 'none';
                 } else if (!isLoggedIn) {
                     securityOverlay.style.visibility = 'visible';
                     securityOverlay.style.opacity = '1';
                     securityTitle.innerText = t.securityAuthRequired || "GİRİŞ GEREKLİ! 🔏";
                     securityBody.innerText = "Verilerinizin mühürlenmesi için Gmail oturumu zorunludur.";
-                    securityIcon.innerText = "🔐";
+                    if (securityIcon) {
+                        securityIcon.innerHTML = `
+                            <svg viewBox="0 0 24 24" style="width: 80px; height: 80px; fill: none; stroke: rgba(255, 215, 0, 0.8); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.4)); animation: elitePulse 2.3s infinite ease-in-out;">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                                <circle cx="12" cy="16" r="1"></circle>
+                            </svg>
+                        `;
+                    }
                     if (securityLoginBtn) {
                         securityLoginBtn.style.display = 'flex';
                         securityLoginBtn.onclick = () => this.loginWithGoogle();
