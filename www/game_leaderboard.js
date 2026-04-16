@@ -243,7 +243,8 @@ const Leaderboard = {
                     }
                 };
             }
-        } catch (e) { console.warn("UI Update missing elements - skipping.", e); }
+        }
+    } catch (e) { console.warn("UI Update missing elements - skipping.", e); }
     },
 
     // v1.99.22.00: CLOUD IDENTITY SYNC
