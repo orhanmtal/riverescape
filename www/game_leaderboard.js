@@ -394,11 +394,9 @@ const Leaderboard = {
     },
 
     // v1.99.3.30: TÜM VERİLERİ ZORLA EŞİTLE (Cloud Backup)
+    // v1.99.20.02: ELITE SYNC BRIDGE (Logic Merge)
     async forceSync() {
-        if (!this.db || !navigator.onLine) return;
-        const s = typeof window.score !== 'undefined' ? window.score : 0;
-        const l = typeof window.currentLevel !== 'undefined' ? window.currentLevel : 1;
-        await this.submitProgress(s, l);
+        return this.submitProgress();
     },
 
     // v1.99.3.30: BULUTTAN VERİLERİ KURTAR (Restore Assets)
@@ -447,29 +445,12 @@ const Leaderboard = {
         }
     },
 
-    async checkPendingSync() {
-        if (!navigator.onLine || !this.db || !this.playerID) return;
-        
-        const hasPending = localStorage.getItem('riverEscapePendingSync');
-        if (hasPending === 'true') {
-            console.log("🚀 [ELITE SYNC] Pending record found. Syncing to cloud...");
-            
-            // Eğer offline iken altın veya level değiştiyse, en güncel hali push et
-            const pScore = parseInt(localStorage.getItem('riverEscapePendingScore')) || 0;
-            const pLevel = parseInt(localStorage.getItem('riverEscapePendingLevel')) || 1;
-            const pGold = parseInt(localStorage.getItem('riverEscapePendingGold')) || window.totalGold || 0;
-            
-            // Veri bütünlüğü için globali güncelle (eğer yereldeki daha yüksekse)
-            if (pGold > (window.totalGold || 0)) window.totalGold = pGold;
-            
-            await this.submitProgress(pScore, pLevel);
-            
-            localStorage.removeItem('riverEscapePendingSync');
-            localStorage.removeItem('riverEscapePendingScore');
-            localStorage.removeItem('riverEscapePendingLevel');
-            localStorage.removeItem('riverEscapePendingGold');
-            console.log("✅ [ELITE SYNC] Pending record synced successfully!");
-        }
+    // v1.99.20.02: ELITE AUDIT - PURGED OFFLINE CALIBRATION (Trash Cleaned)
+    clearLocalSyncPending() {
+        localStorage.removeItem('riverEscapePendingSync');
+        localStorage.removeItem('riverEscapePendingScore');
+        localStorage.removeItem('riverEscapePendingLevel');
+        localStorage.removeItem('riverEscapePendingGold');
     },
 
     // v1.99.4.1.7: TAM TEMİZLİK (Deep Wipe - No Inheritance)
@@ -578,7 +559,7 @@ const Leaderboard = {
                     display: flex; justify-content: space-between; align-items: center;
                     background: rgba(255,255,255,0.05); padding: 12px 15px; border-radius: 12px;
                     border: 1px solid ${rider.id === this.playerID ? '#FFD700' : 'rgba(255,255,255,0.1)'};
-                    transition: transform 0.2s;
+                    transition: opacity 0.2s ease, visibility 0.2s ease;
                 `;
                 item.innerHTML = `
                     <div style="display:flex; align-items:center; gap:12px;">

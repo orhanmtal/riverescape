@@ -1469,24 +1469,6 @@ window.addEventListener('keydown', (e) => {
     if ((key === 'p' || e.key === 'escape') && isPlaying && !isGameOver) {
         togglePause();
     }
-    // v1.99.19.09: DEBUG - Kesin Seviye Atlama (L Tuşu)
-    if (key === 'l' && isPlaying && !isGameOver) {
-        var p = (levelProgressTime * 5) % 18000;
-        var currentIdx = 0;
-        for(var i=levelAssets.length-1; i>=0; i--) {
-            if(p >= levelAssets[i].threshold) { currentIdx = i; break; }
-        }
-        
-        // Bir sonraki seviyeye geç (Döngüsel)
-        var nextIdx = (currentIdx + 1) % levelAssets.length;
-        levelProgressTime = (levelAssets[nextIdx].threshold) / 5;
-
-        if (typeof showToast === 'function') showToast(`DEBUG: SKIP TO LEVEL ${nextIdx + 1}! 🚀`, true);
-    }
-    // v1.99.19.09: DEBUG - Hassas Süre Artışı (J Tuşu)
-    if (key === 'j' && isPlaying && !isGameOver) {
-        levelProgressTime += 100;
-        if (typeof showToast === 'function') showToast("DEBUG: +100 SECONDS! ⚡", true);
     }
 });
 window.addEventListener('keyup', (e) => {
