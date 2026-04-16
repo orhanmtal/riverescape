@@ -1469,7 +1469,6 @@ window.addEventListener('keydown', (e) => {
     if ((key === 'p' || e.key === 'escape') && isPlaying && !isGameOver) {
         togglePause();
     }
-    }
 });
 window.addEventListener('keyup', (e) => {
     var key = e.key.toLowerCase();
