@@ -84,7 +84,7 @@ const GameStore = {
                 Leaderboard.reportPurchase(product.priceVal || 0);
             }
             
-            if (typeof triggerEliteEconomySync === 'function') triggerEliteEconomySync();
+            if (typeof triggerEliteEconomySync === 'function') triggerEliteEconomySync(true); // v1.99.27.05: Instant IAP Sync Mührü!
             
             const msg = (translations[currentLang] && translations[currentLang].purchaseSuccess) 
                         ? `${translations[currentLang].purchaseSuccess} +${product.amount} GOLD! 💰`
@@ -93,8 +93,10 @@ const GameStore = {
             if (typeof showToast === 'function') showToast(msg, true);
         }
         
-        // Ses Efekti
-        for(let i=0; i<3; i++) setTimeout(() => { if (typeof playCoinSound === 'function') playCoinSound(); }, i*200);
+        // Ses Efekti (v1.99.27.10 Elite Synergy)
+        if (typeof initAudio === 'function') initAudio();
+        if (typeof playPowerupSound === 'function') playPowerupSound();
+        for(let i=0; i<5; i++) setTimeout(() => { if (typeof playCoinSound === 'function') playCoinSound(); }, 200 + (i*150));
     }
 };
 

@@ -3,16 +3,21 @@
 
 <head><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0">
     <meta charset="UTF-8">
+<!DOCTYPE html>
+<html lang="tr">
+
+<head><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>RiverEscape Mobil</title>
-    <link rel="stylesheet" href="style.css?v=1.99.23.00">
-    <!-- MASTER UI OVERRIDE// RİVER ESCAPE PRESTIGE - v1.99.23.00 (GHOST PURGE) -->
+    <link rel="stylesheet" href="style.css?v=1.99.25.00">
+    <!-- MASTER UI OVERRIDE// RİVER ESCAPE PRESTIGE - v1.99.25.00 (GHOST PURGE) -->
 
     <style>
 /* MASTER UI OVERRIDE//
- * RİVER ESCAPE ELİTE - v1.99.23.00 (IDENTITY SYNC)
+ * RİVER ESCAPE ELİTE - v1.99.25.00 (IDENTITY SYNC)
  * Firebase Firestore Global Sıralama ve Profil Senkronizasyon Sistemi
- * v1.99.23.00
+ * v1.99.25.00
  */
 .master-start-v21 {
     display: flex !important;
@@ -65,11 +70,11 @@
 
 .master-play-btn:active { transform: scale(0.92); }
 
-/* IDENTITY MODAL v1.99.23.00 */
+/* IDENTITY MODAL v1.99.27.03 (POLISHED LAYERING) */
 .elite-modal-overlay {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(15px);
-    display: none; align-items: center; justify-content: center; z-index: 2000;
+    display: none; align-items: center; justify-content: center; z-index: 999999;
     opacity: 0; transition: opacity 0.4s ease;
 }
 .elite-modal-content {
@@ -113,8 +118,255 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
             pointer-events: auto !important;
         }
+
+        /* v1.99.27.08: ELITE AESTHETIC SEAL (Remove Yellow Focus Outlines) */
+        * {
+            -webkit-tap-highlight-color: transparent !important;
+            outline: none !important;
+        }
+        button:focus, div:focus, a:focus {
+            outline: none !important;
+        }
+
+        /* --- v1.99.27.09: GOLD MARKET PREMIUM STYLES --- */
+        .gold-market-container {
+            margin-top: 5vh;
+            padding-bottom: 3vh;
+            width: 100%;
+        }
+        .gold-market-title {
+            color: #FFD700;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 900;
+            font-size: 5vmin;
+            text-align: center;
+            margin-bottom: 3vmin;
+            letter-spacing: 2px;
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+        }
+        .gold-market-grid-elite {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2.5vmin;
+            width: 100%;
+        }
+        .gold-card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            padding: 2.2vmin 2vmin;
+            border-radius: 16px;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+        .gold-card:hover {
+            background: rgba(255, 215, 0, 0.08);
+            border-color: rgba(255, 215, 0, 0.6);
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(255, 215, 0, 0.15);
+        }
+        .gold-card:active { transform: scale(0.95); }
+        .gold-card .amount {
+            font-size: 5.5vmin;
+            font-weight: 800;
+            margin-bottom: 2px;
+            font-family: 'Outfit', sans-serif;
+        }
+        .gold-card .price {
+            font-size: 3.2vmin;
+            color: #FFD700;
+            font-weight: bold;
+            opacity: 0.9;
+        }
+        .gold-card-best {
+            border: 2px solid #FFD700;
+            background: rgba(255, 215, 0, 0.08);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.1);
+            animation: bestValuePulse 3s infinite ease-in-out;
+        }
+        @keyframes bestValuePulse {
+            0%, 100% { box-shadow: 0 0 15px rgba(255, 215, 0, 0.2); border-color: #FFD700; }
+            50% { box-shadow: 0 0 30px rgba(255, 215, 0, 0.5); border-color: #fff; }
+        }
+        .elite-ad-gold-btn {
+            width: 100%;
+            background: rgba(255, 215, 0, 0.05);
+            border: 1px solid #FFD700;
+            color: #FFD700;
+            padding: 3.5vmin;
+            border-radius: 20px;
+            font-weight: 900;
+            font-family: 'Outfit', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            margin-top: 2vmin;
+            font-size: 4vmin;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.1);
+            animation: adButtonFloat 4s infinite ease-in-out;
+        }
+        @keyframes adButtonFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        .elite-ad-gold-btn:hover {
+            background: rgba(255, 215, 0, 0.15);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
+        }
+        /* --- v1.99.27.11: ELITE SHOWROOM REDESIGN --- */
+        .elite-balance-pill {
+            background: rgba(20, 30, 45, 0.7);
+            backdrop-filter: blur(15px) saturate(180%);
+            -webkit-backdrop-filter: blur(15px) saturate(180%);
+            border: 1px solid rgba(255, 215, 0, 0.4);
+            border-radius: 50px;
+            padding: 8px 25px;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 0 25px rgba(255, 215, 0, 0.15), inset 0 0 10px rgba(0,0,0,0.5);
+            font-family: 'Outfit', sans-serif;
+            margin-bottom: 5vmin;
+        }
+        .elite-balance-label {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .elite-balance-value {
+            color: #FFD700;
+            font-weight: 900;
+            font-size: 18px;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+        }
+        .showroom-item {
+            background: linear-gradient(145deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 24px;
+            padding: 18px 22px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 3vmin;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 35px rgba(0,0,0,0.4);
+            position: relative;
+            overflow: hidden;
+            animation: showroomItemEntry 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+        }
+        @keyframes showroomItemEntry {
+            from { opacity: 0; transform: translateX(-30px); filter: blur(10px); }
+            to { opacity: 1; transform: translateX(0); filter: blur(0); }
+        }
+        .showroom-item:nth-child(1) { animation-delay: 0.1s; }
+        .showroom-item:nth-child(2) { animation-delay: 0.2s; }
+        .showroom-item:nth-child(3) { animation-delay: 0.3s; }
+        .showroom-item:nth-child(4) { animation-delay: 0.4s; }
+        .showroom-item:nth-child(5) { animation-delay: 0.5s; }
+        .showroom-item:hover {
+            transform: translateY(-6px) scale(1.01);
+            border-color: rgba(255,255,255,0.2);
+            background: linear-gradient(145deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.04) 100%);
+        }
+        
+        .shop-sticky-header {
+            background: rgba(5, 10, 20, 0.85);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            padding-top: calc(4.15vmin + env(safe-area-inset-top));
+            padding-bottom: 3vmin;
+            width: 100%;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            z-index: 10;
+        }
+        .shop-scroll-area {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 4vmin;
+            padding-bottom: calc(10vmin + env(safe-area-inset-bottom));
+            width: 100%;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        .shop-scroll-area::-webkit-scrollbar { display: none; }
+        .item-aura-box {
+            width: 58px;
+            height: 58px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            flex-shrink: 0;
+            box-shadow: inset 0 0 15px rgba(255,255,255,0.05);
+        }
+        .aura-gold { border: 2px solid rgba(255, 215, 0, 0.8); box-shadow: 0 0 20px rgba(255, 215, 0, 0.3); }
+        .aura-cyan { border: 2px solid rgba(0, 229, 255, 0.8); box-shadow: 0 0 20px rgba(0, 229, 255, 0.3); }
+        .aura-red { border: 2px solid rgba(255, 61, 0, 0.8); box-shadow: 0 0 20px rgba(255, 61, 0, 0.3); }
+        .aura-orange { border: 2px solid rgba(255, 140, 0, 0.8); box-shadow: 0 0 20px rgba(255, 140, 0, 0.3); }
+        .aura-teal { border: 2px solid rgba(0, 172, 193, 0.8); box-shadow: 0 0 20px rgba(0, 172, 193, 0.3); }
+        
+        .showroom-info {
+            flex: 1;
+            margin: 0 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .showroom-title {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 19px;
+            color: #fff;
+            letter-spacing: 0.5px;
+        }
+        .showroom-desc {
+            font-family: 'Outfit', sans-serif;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.5);
+            font-weight: 500;
+        }
+        .elite-upgrade-btn {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 1) 0%, rgba(255, 140, 0, 1) 100%);
+            border: none;
+            color: #000;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 900;
+            font-size: 13px;
+            padding: 10px 18px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+            text-transform: uppercase;
+            min-width: 100px;
+        }
+        .elite-upgrade-btn:hover { transform: scale(1.05); filter: brightness(1.1); }
+        .elite-upgrade-btn:active { transform: scale(0.95); }
+        .elite-upgrade-btn:disabled {
+            background: rgba(255,255,255,0.05) !important;
+            color: rgba(255,255,255,0.2) !important;
+            box-shadow: none !important;
+            cursor: not-allowed;
+            filter: grayscale(1);
+            opacity: 0.6;
+        }
     </style>
-    <!-- EMERGENCY ON-SCREEN DEBUGGER v1.99.23.00 -->
+    <!-- EMERGENCY ON-SCREEN DEBUGGER v1.99.25.00 -->
     <script>
         window.onerror = function (msg, url, line) {
             var div = document.createElement('div');
@@ -144,7 +396,7 @@
         <button id="pause-btn"
             style="position: absolute; top: calc(20px + env(safe-area-inset-top)); right: calc(20px + env(safe-area-inset-right)); display: none; background: rgba(0,0,0,0.4); color: white; border: 1px solid rgba(255,229,255,0.4); padding: 8px; font-family: 'Outfit', sans-serif; font-size: 18px; z-index: 1001; border-radius: 50%; width: 45px; height: 45px; pointer-events: auto; cursor: pointer; backdrop-filter: blur(4px); line-height: 1;">⏸</button>
 
-        <!-- ELITE FULL-SCREEN UI v1.99.23.00 -->
+        <!-- ELITE FULL-SCREEN UI v1.99.25.00 -->
         <div id="start-screen" class="screen master-start-v21">
             <!-- TOP ROW: PROFILE & SETTINGS -->
             <div class="elite-menu-header">
@@ -166,7 +418,7 @@
             <div style="display: flex; flex-direction: column; align-items: center; gap: 4vh; width: 100%;">
                 <div style="text-align: center; position: relative; width: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; pointer-events: none;">
                     <h1 class="floating-logo" style="font-family: 'Outfit', sans-serif; font-weight: 900; color: white; font-size: 13vmin; letter-spacing: -2px; margin: 0; line-height: 0.85; background: linear-gradient(135deg, #fff 20%, #00e5ff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 15px 30px rgba(0,229,255,0.3)); text-transform: uppercase;">RIVER<br><span style="background: linear-gradient(135deg, #00e5ff 0%, #00897b 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">ESCAPE</span></h1>
-                    <div style="color: #FFD700; font-family: 'Press Start 2P', cursive; font-size: 1.8vmin; font-weight: bold; margin-top: 15px; letter-spacing: 0.8vmin; opacity: 0.9; text-shadow: 0 0 15px rgba(255,215,0,0.4);" version="1.99.23.00">PRESTIGE v1.99.23.00</div>
+                    <div style="color: #FFD700; font-family: 'Press Start 2P', cursive; font-size: 1.8vmin; font-weight: bold; margin-top: 15px; letter-spacing: 0.8vmin; opacity: 0.9; text-shadow: 0 0 15px rgba(255,215,0,0.4);" version="1.99.27.10">PRESTIGE v1.99.27.10</div>
                 </div>
 
                 <div style="position: relative; margin-top: 2vh;">
@@ -183,7 +435,7 @@
             </div>
         </div>
 
-        <!-- IDENTITY MODAL v1.99.23.00 -->
+        <!-- IDENTITY MODAL v1.99.25.00 -->
         <div id="identity-modal" class="elite-modal-overlay">
             <div class="elite-modal-content">
                 <div style="font-size: 21px; font-weight: 900; color: #FFD700; letter-spacing: 1px;">KULLANICI ADI DÜZENLEME</div>
@@ -196,7 +448,7 @@
             </div>
         </div>
 
-        <!-- PAUSE SCREEN (ELITE FULL-SCREEN v1.99.23.00) -->
+        <!-- PAUSE SCREEN (ELITE FULL-SCREEN v1.99.25.00) -->
         <div id="pause-screen" class="screen hidden">
             <h2
                 style="font-family: 'Outfit'; font-weight: 900; color: white; font-size: 8vmin; margin-bottom: 5vmin; letter-spacing: 1vmin;">
@@ -212,7 +464,7 @@
             </div>
         </div>
 
-        <!-- MODERN GLASS HUD v1.99.23.00 -->
+        <!-- MODERN GLASS HUD v1.99.25.00 -->
         <div id="modern-hud" style="
             position: absolute; 
             top: calc(15px + env(safe-area-inset-top)); 
@@ -254,7 +506,7 @@
                 </div>
                 <div
                     style="font-family: 'Outfit'; font-size: 7px; color: rgba(0, 229, 255, 0.5); text-align: right; margin-top: 2px; font-weight: 900; letter-spacing: 0.5px;">
-                    v1.99.23.00</div>
+                    v1.99.27.10</div>
             </div>
         </div>
 
@@ -292,7 +544,7 @@
             </div>
         </div>
 
-        <!-- GAME OVER SCREEN (ELITE FULL-SCREEN v1.99.23.00) -->
+        <!-- GAME OVER SCREEN (ELITE FULL-SCREEN v1.99.25.00) -->
         <div id="game-over-screen" class="screen hidden">
             <div style="text-align: center;">
                 <h2
@@ -322,14 +574,14 @@
                     style="background: none; border: none; color: rgba(255,255,255,0.4); font-family: 'Outfit'; font-weight: bold; font-size: 3.5vmin; cursor: pointer; margin-top: 1.5vmin;">ANA
                     MENÜYE DÖN 🏠</button>
             </div>
-            <div style="color: rgba(255,229,255,0.2); font-size: 1.5vmin;">v1.99.23.00</div>
+            <div id="version-display">v1.99.27.10</div>
         </div>
 
-        <!-- LEVEL UP OVERLAY (EMERGENCY FIX v1.99.23.00) -->
+        <!-- LEVEL UP OVERLAY (EMERGENCY FIX v1.99.25.00) -->
         <div id="level-up-overlay" class="screen hidden"
             style="z-index: 16000; background: rgba(0,0,0,0.85); pointer-events: none;"></div>
 
-        <!-- MODERN ELITE AYARLAR (v1.99.23.00) -->
+        <!-- MODERN ELITE AYARLAR (v1.99.25.00) -->
         <div id="settings-screen" class="screen hidden"
             style="z-index: 15000; background: linear-gradient(160deg, #050a15 0%, #0a1020 100%); width: 100vw; height: 100vh; max-width: 100%; border-radius: 0;">
             <div
@@ -386,7 +638,7 @@
             </div>
         </div>
 
-        <!-- MODERN LOGOUT CONFIRM MODAL (v1.99.23.00) -->
+        <!-- MODERN LOGOUT CONFIRM MODAL (v1.99.25.00) -->
         <div id="logout-confirm-screen" class="screen hidden"
             style="z-index: 20000; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);">
             <div
@@ -410,7 +662,7 @@
             </div>
         </div>
 
-        <!-- MODERN RESET CONFIRM MODAL (v1.99.23.00) -->
+        <!-- MODERN RESET CONFIRM MODAL (v1.99.25.00) -->
         <div id="reset-confirm-overlay" class="screen hidden"
             style="z-index: 25000; background: rgba(183, 28, 28, 0.4); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);">
             <div
@@ -435,143 +687,114 @@
             </div>
         </div>
 
-        <!-- MODERN ELITE MAĞAZA (GOLD MARKET DAHİL) -->
+        <!-- MODERN ELITE MAĞAZA (FIXED HEADER + SCROLL BODY) -->
         <div id="shop-screen" class="screen hidden"
-            style="background: linear-gradient(135deg, #050a10 0%, #0a1525 100%); overflow-y: auto;">
-            <div
-                style="width: 100%; max-width: 500px; padding: calc(4.1.5vmin + env(safe-area-inset-top)) 4.1.5vmin calc(10vmin + env(safe-area-inset-bottom)) 4.1.5vmin; box-sizing: border-box; min-height: 100vh; display: flex; flex-direction: column; margin: 0 auto;">
-                <div
-                    style="display: flex; justify-content: center; align-items: center; margin-bottom: 3vmin; width: 100%;">
-                    <h2 id="shop-title-main"
-                        style="color: #FFD700; font-family: 'Outfit'; font-weight: 900; font-size: 8vmin; margin: 0; letter-spacing: 0.5vmin; text-shadow: 0 0 15px rgba(255,215,0,0.3); text-align: center;">
-                        MAĞAZA</h2>
+            style="background: linear-gradient(135deg, #050a10 0%, #0a1525 100%); display: flex; flex-direction: column; overflow: hidden; padding: 0;">
+            
+            <!-- FIXED HEADER AREA -->
+            <div class="shop-sticky-header">
+                <h2 id="shop-title-main"
+                    style="color: #FFD700; font-family: 'Outfit'; font-weight: 900; font-size: 9vmin; margin: 0; margin-bottom: 2vmin; letter-spacing: 1px; text-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+                    MAĞAZA</h2>
+                <div id="shop-balance-pill" class="elite-balance-pill" style="margin-bottom: 0;">
+                    <span class="elite-balance-label">BAKİYE</span>
+                    <span id="totalGoldValue-shop" class="elite-balance-value">0</span>
+                    <span style="color: #FFD700; font-size: 14px;">GOLD</span>
                 </div>
-                <div id="shop-balance-text"
-                    style="color: #fff; font-size: 4.5vmin; margin-bottom: 4.1.5vmin; font-family: 'Press Start 2P', sans-serif; opacity: 0.9; text-align: center; background: rgba(255, 215, 0, 0.05); padding: 15px; border-radius: 12px; border: 1px solid rgba(255, 215, 0, 0.2); box-shadow: 0 0 20px rgba(0,0,0,0.3);">
-                    BAKİYE: <span id="totalGoldValue-shop"
-                        style="color: #FFD700; text-shadow: 0 0 10px rgba(255,215,0,0.5);">0</span> GOLD</div>
+            </div>
 
-                <div class="shop-container-elite" style="display: flex; flex-direction: column; gap: 2.8vmin;">
-                    <div class="shop-item">
-                        <div style="display: flex; align-items: center; gap: 2.8vmin;">
-                            <div
-                                style="width: 12.8vmin; height: 12.8vmin; background: rgba(255, 215, 0, 0.1); border: 2px solid #FFD700; border-radius: 18px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);">
-                                <span style="font-size: 8vmin;">🧲</span>
-                            </div>
-                            <div>
-                                <div id="shop-mag-title" class="shop-item-title">Mıknatıs</div>
-                                <div id="shop-mag-desc" class="shop-item-desc"><span id="magnet-duration"></span> <span
-                                        id="magnet-lvl"></span></div>
-                            </div>
+            <!-- SCROLLABLE CONTENT AREA -->
+            <div class="shop-scroll-area">
+                <div style="width: 100%; max-width: 500px; margin: 0 auto; display: flex; flex-direction: column;">
+                    <div class="showroom-container" style="display: flex; flex-direction: column; width: 100%;">
+                    <!-- Mıknatıs -->
+                    <div class="showroom-item">
+                        <div class="item-aura-box aura-gold">
+                            <span style="font-size: 32px;">🧲</span>
                         </div>
-                        <button id="buy-magnet-btn" class="shop-upgrade-btn">GELİŞTİR</button>
+                        <div class="showroom-info">
+                            <div class="showroom-title">MIKNATIS 🧲</div>
+                            <div class="showroom-desc"><span id="magnet-duration"></span> <span id="magnet-lvl"></span></div>
+                        </div>
+                        <button id="buy-magnet-btn" class="elite-upgrade-btn">GELİŞTİR</button>
                     </div>
 
-                    <div class="shop-item">
-                        <div style="display: flex; align-items: center; gap: 2.8vmin;">
-                            <div
-                                style="width: 12.8vmin; height: 12.8vmin; background: rgba(0, 229, 255, 0.1); border: 2px solid #00e5ff; border-radius: 18px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 15px rgba(0, 229, 255, 0.2);">
-                                <span style="font-size: 8vmin;">🛡️</span>
-                            </div>
-                            <div>
-                                <div id="shop-shd-title" class="shop-item-title">Kalkan</div>
-                                <div id="shop-shd-desc" class="shop-item-desc"><span id="shield-chance"></span> <span
-                                        id="shield-lvl"></span></div>
-                            </div>
+                    <!-- Kalkan -->
+                    <div class="showroom-item">
+                        <div class="item-aura-box aura-cyan">
+                            <span style="font-size: 32px;">🛡️</span>
                         </div>
-                        <button id="buy-shield-btn" class="shop-upgrade-btn">GELİŞTİR</button>
+                        <div class="showroom-info">
+                            <div class="showroom-title">KALKAN 🛡️</div>
+                            <div class="showroom-desc"><span id="shield-chance"></span> <span id="shield-lvl"></span></div>
+                        </div>
+                        <button id="buy-shield-btn" class="elite-upgrade-btn" style="background: linear-gradient(135deg, #00e5ff 0%, #12c2e9 100%);">GELİŞTİR</button>
                     </div>
 
-                    <div id="shop-weapon-row" class="shop-item">
-                        <div style="display: flex; align-items: center; gap: 2.8vmin;">
-                            <div
-                                style="width: 12.8vmin; height: 12.8vmin; background: rgba(255, 61, 0, 0.1); border: 2px solid #ff3d00; border-radius: 18px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 15px rgba(255, 61, 0, 0.2);">
-                                <span style="font-size: 8vmin;">📡</span>
-                            </div>
-                            <div>
-                                <div id="shop-wpn-title" class="shop-item-title">Nehir Topu</div>
-                                <div id="shop-wpn-desc" class="shop-item-desc">Silah Sistemini Geliştir</div>
-                            </div>
+                    <!-- Nehir Topu -->
+                    <div class="showroom-item">
+                        <div class="item-aura-box aura-red">
+                            <span style="font-size: 32px;">📡</span>
                         </div>
-                        <button id="buy-weapon-btn" class="shop-upgrade-btn">GELİŞTİR</button>
+                        <div class="showroom-info">
+                            <div class="showroom-title">NEHİR TOPU 📡</div>
+                            <div class="showroom-desc">Elite Silah Bataryası</div>
+                        </div>
+                        <button id="buy-weapon-btn" class="elite-upgrade-btn" style="background: linear-gradient(135deg, #ff3d00 0%, #d84315 100%);">GELİŞTİR</button>
                     </div>
 
-                    <div id="shop-ammo-row" class="shop-item">
-                        <div style="display: flex; align-items: center; gap: 2.8vmin;">
-                            <div
-                                style="width: 12.8vmin; height: 12.8vmin; background: rgba(255, 140, 0, 0.1); border: 2px solid #ff8c00; border-radius: 18px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 15px rgba(255, 140, 0, 0.3);">
-                                <span style="font-size: 8vmin;">☄️</span>
-                            </div>
-                            <div>
-                                <div class="shop-item-title"
-                                    style="color: #ff8c00; text-shadow: 0 0 10px rgba(255,140,0,0.3);">Lav Topu (Magma)
-                                </div>
-                                <div id="shop-wpn-desc" class="shop-item-desc">+10 Atış Hakkı</div>
-                            </div>
+                    <!-- Lav Topu -->
+                    <div class="showroom-item">
+                        <div class="item-aura-box aura-orange">
+                            <span style="font-size: 32px;">☄️</span>
                         </div>
-                        <button id="buy-ammo-btn" class="shop-upgrade-btn"
-                            style="background: linear-gradient(135deg, #ff8c00 0%, #ff4500 100%); color: #000;">SATIN
-                            AL</button>
+                        <div class="showroom-info">
+                            <div class="showroom-title" style="color: #ff8c00;">MAGMA TOPU ☄️</div>
+                            <div class="showroom-desc">Mevcut: <span id="shop-bomb-count" style="color: #fff; font-weight: 800;">0</span> | +10 Lav Atış Hakkı</div>
+                        </div>
+                        <button id="buy-ammo-btn" class="elite-upgrade-btn" style="background: linear-gradient(135deg, #ff8c00 0%, #ff4500 100%);">SATIN AL</button>
                     </div>
 
-                    <div id="shop-armor-row" class="shop-item">
-                        <div style="display: flex; align-items: center; gap: 2.8vmin;">
-                            <div
-                                style="width: 12.8vmin; height: 12.8vmin; background: rgba(0, 172, 193, 0.1); border: 2px solid #00acc1; border-radius: 18px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 15px rgba(0, 172, 193, 0.2);">
-                                <span style="font-size: 8vmin;">💎</span>
-                            </div>
-                            <div>
-                                <div id="shop-arm-title" class="shop-item-title">Gemi Zırhı</div>
-                                <div id="shop-arm-desc" class="shop-item-desc">Maksimum Koruma</div>
-                            </div>
+                    <!-- Gemi Zırhı -->
+                    <div class="showroom-item">
+                        <div class="item-aura-box aura-teal">
+                            <span style="font-size: 32px;">💎</span>
                         </div>
-                        <button id="buy-armor-btn" class="shop-upgrade-btn">LİSANS AL</button>
+                        <div class="showroom-info">
+                            <div class="showroom-title">VOİD ZIRHI 💎</div>
+                            <div class="showroom-desc">Gelişmiş Koruma Modülü</div>
+                        </div>
+                        <button id="buy-armor-btn" class="elite-upgrade-btn" style="background: linear-gradient(135deg, #00acc1 0%, #00838f 100%);">LİSANS AL</button>
                     </div>
 
-                    <button id="ad-gold-btn" class="elite-ad-btn"
-                        style="background: rgba(255,215,0,0.1); border: 2px dashed #FFD700; color: #FFD700; padding: 2.8vmin; border-radius: 20px; font-weight: 900; cursor: pointer; margin-top: 1vmin; font-size: 3.5vmin;">+100
-                        ALTIN (REKLAM)</button>
-
-                    <!-- ALTIN MARKET 💰 v1.99.23.00 -->
-                    <div style="margin-top: 8vmin; padding-bottom: 10vmin;">
-                        <h3
-                            style="color: #FFD700; font-family: 'Outfit'; font-weight: 900; font-size: 4.1.5vmin; text-align: center; margin-bottom: 2.8vmin;">
-                            ALTIN MARKET 💰</h3>
-                        <div class="gold-market-grid"
-                            style="display: grid; grid-template-columns: 1fr 1fr; gap: 3vmin;">
-                            <button onclick="GameStore.buy('gold_pack_1')" class="gold-market-btn"
-                                style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,215,0,0.3); padding: 2.8vmin; border-radius: 15px; color: #fff; display: flex; flex-direction: column; align-items: center; cursor: pointer;">
-                                <span style="font-size: 5vmin; font-weight: 900;">5.000</span>
-                                <span style="font-size: 3.5vmin; color: #FFD700;">$0.99</span>
+                    <button id="ad-gold-btn" class="elite-ad-gold-btn">+100 ALTIN (REKLAM)</button>
+    
+                    <!-- ALTIN MARKET 💰 v1.99.27.09 PRESTIGE UI -->
+                    <div class="gold-market-container">
+                        <h3 class="gold-market-title">ALTIN MARKET 💰</h3>
+                        <div class="gold-market-grid-elite">
+                            <button onclick="GameStore.buy('gold_pack_1')" class="gold-card">
+                                <span class="amount">5.000</span>
+                                <span class="price">$0.99</span>
                             </button>
-                            <button onclick="GameStore.buy('gold_pack_2')" class="gold-market-btn"
-                                style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,215,0,0.3); padding: 2.8vmin; border-radius: 15px; color: #fff; display: flex; flex-direction: column; align-items: center; cursor: pointer;">
-                                <span style="font-size: 5vmin; font-weight: 900;">10.000</span>
-                                <span style="font-size: 3.5vmin; color: #FFD700;">$1.49</span>
+                            <button onclick="GameStore.buy('gold_pack_2')" class="gold-card">
+                                <span class="amount">10.000</span>
+                                <span class="price">$1.49</span>
                             </button>
-                            <button onclick="GameStore.buy('gold_pack_3')" class="gold-market-btn"
-                                style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,215,0,0.3); padding: 2.8vmin; border-radius: 15px; color: #fff; display: flex; flex-direction: column; align-items: center; cursor: pointer;">
-                                <span style="font-size: 5vmin; font-weight: 900;">25.000</span>
-                                <span style="font-size: 3.5vmin; color: #FFD700;">$2.99</span>
+                            <button onclick="GameStore.buy('gold_pack_3')" class="gold-card">
+                                <span class="amount">25.000</span>
+                                <span class="price">$2.99</span>
                             </button>
-                            <button onclick="GameStore.buy('gold_pack_4')" class="gold-market-btn"
-                                style="background: rgba(255,215,0,0.1); border: 2px solid #FFD700; padding: 2.8vmin; border-radius: 15px; color: #fff; display: flex; flex-direction: column; align-items: center; cursor: pointer; box-shadow: 0 0 15px rgba(255,215,0,0.2);">
-                                <span style="font-size: 4.1.5vmin; font-weight: 900; color: #FFD700;">50.000</span>
-                                <span style="font-size: 3.5vmin;">$4.99</span>
+                            <button onclick="GameStore.buy('gold_pack_4')" class="gold-card gold-card-best">
+                                <span class="amount" style="color: #FFD700;">50.000</span>
+                                <span class="price">$4.99</span>
                             </button>
                         </div>
                     </div>
                 </div>
-
-                <button id="shop-close-btn" style="
-                    background: rgba(255,255,255,0.05); color: #FFD700; 
-                    border: 1px solid rgba(255,215,0,0.3); padding: 2.8vmin; 
-                    border-radius: 20px; font-weight: 900; font-family: 'Outfit'; 
-                    cursor: pointer; margin-top: 8vmin; font-size: 4.5vmin; 
-                    box-shadow: 0 10px 30px rgba(0,0,0,0.3); width: 100%;
-                    text-transform: uppercase; letter-spacing: 2px;
-                    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-                ">GERİ DÖN</button>
+    
+                <button id="shop-close-btn" class="elite-btn-large" style="background: rgba(255,255,255,0.05); color: #FFD700; border: 1px solid rgba(255,215,0,0.4); margin-top: 2vh;">GERİ DÖN</button>
+                </div>
             </div>
         </div>
 
@@ -595,7 +818,7 @@
             </div>
         </div>
 
-        <!-- LUCKY SPIN (ŞANS ÇARKI) EKRANI v1.99.23.00 -->
+        <!-- LUCKY SPIN (ŞANS ÇARKI) EKRANI v1.99.25.00 -->
         <div id="spin-screen" class="screen hidden"
             style="z-index: 17000; background: rgba(0,0,0,0.92); width: 100vw; height: 100vh; max-width: 100%; border-radius: 0;">
             <div id="spin-container">
@@ -656,13 +879,13 @@
                     <circle cx="12" cy="12" r="3"></circle>
                     <path d="M3 12h3m12 0h3M12 3v3m0 12v3"></path>
                 </svg>
-                <div id="bomb-badge"
+                                <div id="bomb-badge"
                     style="position: absolute; top: -5px; right: -5px; background: #f12711; color: white; font-size: 13px; font-weight: 900; padding: 3px 8px; border-radius: 12px; border: 2px solid #fff;">
                     0</div>
             </div>
         </div>
 
-        <!-- v1.99.23.00: ULTIMATE SECURITY LOCK OVERLAY -->
+        <!-- v1.99.27.08: ULTIMATE SECURITY LOCK OVERLAY -->
         <div id="security-lock-overlay" style="
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background: rgba(0, 0, 0, 0.85);
@@ -720,13 +943,14 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
 
-    <!-- Scriptleri Yükle (v1.99.23.00 Cache Buster) -->
-    <script src="translations.js?v=1.99.23.00"></script>
-    <script src="audio.js?v=1.99.23.00"></script>
-    <script src="assets.js?v=1.99.23.00"></script>
-    <script src="game_leaderboard.js?v=1.99.23.00"></script>
-    <script src="game_store.js?v=1.99.23.00"></script>
-    <script src="game_unbeatable_v3.js?v=1.99.23.00"></script>
+    <!-- Scriptleri Yükle (v1.99.27.08 Cache Buster) -->
+    <script src="translations.js?v=1.99.27.09"></script>
+    <script src="audio.js?v=1.99.27.09"></script>
+    <script src="assets.js?v=1.99.27.09"></script>
+    <script src="game_leaderboard.js?v=1.99.27.09"></script>
+    <!-- v1.99.27.08 ELITE BATCH SYNC ENGINE -->
+    <script src="game_store.js?v=1.99.27.09"></script>
+    <script src="game_unbeatable_v3.js?v=1.99.27.09"></script>
 </body>
 
 </html>

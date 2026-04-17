@@ -1,6 +1,18 @@
 # River Escape - Versiyon Günlükleri (CHANGELOG)
 Bu dosya, oyun motorunun ve özelliklerin versiyon versiyon nasıl geliştiğini mühürleyip saklamak için Antigravity tarafından oluşturulmuştur.
 
+## [v1.99.27.10] "ELITE SHOP REBORN" - 2026-04-17
+- **Gold Market Overhaul**: Completely redesigned the Golden Market UI with premium glassmorphism, interactive gold cards, and a new pulsing "Best Value" highlight for the 50K pack.
+- **Ad Button Upgrade**: Removed dashed borders on the ad-gold button, replacing them with a sleek neon outline and a smooth "Floating" animation.
+- **Level 5 Visual Upgrade**: Replaced the basic rectangular "Burning Pillars" with procedurally drawn, jagged "Magma Spires" featuring pulsing internal veins and an absolute glow effect.
+- **Level 9 Normalization**:
+    - **Spawn Logic**: Fixed the "center-forcing" bug for Toxic Serpents; they now spawn randomly across the river.
+    - **Physics**: Smoothed out serpent oscillation (lowered freq/amp) to match other biomes.
+    - **Barrel Movement**: Corrected the "free-float" bug by increasing barrel speed (safeSpeed * 1.5) to ensure they approach the player as active hazards.
+    - **Barrel Visuals**: Simplified the Toxic Barrel design by removing procedural gas and liquid for a cleaner look.
+- **Versioning**: Sealed the release v1.99.27.10.
+
+
 ## [v1.99.14.31] "GOLDEN SHINE" - 2026-04-14
 - **Crystal Gold Chime**: Redesigned `playCoinSound` to use a high-fidelity two-tone crystal chime effect. This includes a fundamental "ping" layer and high-frequency sparkles for a more satisfying gold collection experience.
 

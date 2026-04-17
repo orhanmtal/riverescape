@@ -677,7 +677,6 @@ input:checked + .toggle-slider:before {
 
 #settings-screen {
     background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-    border: 3px solid #FFD700;
     border-radius: 25px;
     max-width: 350px;
 }

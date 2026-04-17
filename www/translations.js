@@ -169,3 +169,6 @@ const translations = {
         securityNoInternet: "Please check your internet connection."
     }
 };
+
+// v1.99.27.11: Global Language Initialization
+var currentLang = localStorage.getItem('riverEscapeLang') || 'tr';

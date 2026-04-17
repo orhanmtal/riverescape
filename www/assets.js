@@ -102,7 +102,7 @@ let bgImgYaz = loadBg('yaz', 'assets/ArkaPlan_Yaz.png');
 let bgImgSonbahar = loadBg('sonbahar', 'assets/ArkaPlan_Sonbahar.png');
 let bgImgKis = loadBg('kis', 'assets/ArkaPlan_Kis.png');
 let bgImgLava = loadBg('lava', 'assets/ArkaPlan_Lav.png');
-let bgImgVoid = loadBg('void', 'assets/ArkaPlan_Lav.png'); // v1.97.2.3: ArkaPlan_Void eksik olduğu için Lav ofsetli kullanıldı.
+let bgImgVoid = loadBg('void', 'assets/ArkaPlan_Lav.png'); // v1.99.27.09: ELITE VOID FALLBACK
 let bgImgLagoon = loadBg('lagoon', 'assets/ArkaPlan_Lagoon.png'); // v1.99.14.0: ELITE LAGOON
 
 let iPI = safeLoad('Kayik_Spring', 'assets/Kayik.png', (img) => { 

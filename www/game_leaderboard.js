@@ -230,18 +230,35 @@ const Leaderboard = {
                 welcomeMsg.classList.remove('hidden');
             }
 
-            // v1.99.22.00: IDENTITY MODAL TRIGGER
+            // v1.99.27.00: ELITE IDENTITY TRIGGER (ZERO-LAG)
             const profileBanner = document.getElementById('player-profile-elite');
             if (profileBanner && isLoggedIn) {
                 profileBanner.style.cursor = 'pointer';
-                profileBanner.onclick = () => {
+                profileBanner.style.pointerEvents = 'auto'; // Force interaction
+
+                const openModal = (e) => {
+                    if (e) {
+                        if (e.cancelable) e.preventDefault();
+                        e.stopPropagation();
+                    }
+                    console.log("👤 [IDENTITY] Elite Trigger - Opening Modal Immediately...");
                     const modal = document.getElementById('identity-modal');
                     const input = document.getElementById('player-name-input');
                     if (modal && input) {
-                        input.value = (this.auth.currentUser.displayName || "ELITE PLAYER").toUpperCase();
+                        input.value = (this.playerName || "ELITE PLAYER").toUpperCase();
+                        modal.style.display = 'flex';
+                        modal.style.opacity = '0';
                         modal.classList.add('active');
+                        // v1.99.27.01: Yıldırım hızıyla göster!
+                        requestAnimationFrame(() => {
+                            modal.style.opacity = '1';
+                        });
+                        input.focus();
                     }
                 };
+
+                profileBanner.onclick = openModal;
+                profileBanner.ontouchstart = openModal; 
             }
         }
     } catch (e) { console.warn("UI Update missing elements - skipping.", e); }
@@ -276,7 +293,12 @@ const Leaderboard = {
             this.updateAuthUI(true, cleanName, false, user.photoURL);
             
             if (typeof showToast === 'function') showToast("KİMLİĞİNİZ BULUTA MÜHÜRLENDİ! 🏛️", true);
-            document.getElementById('identity-modal').classList.remove('active');
+            const modal = document.getElementById('identity-modal');
+            if (modal) {
+                modal.classList.remove('active');
+                modal.style.opacity = '0';
+                setTimeout(() => { modal.style.display = 'none'; }, 300);
+            }
         } catch (e) {
             console.error("❌ [ELITE IDENTITY] Sync Error:", e);
             if (typeof showToast === 'function') showToast("KİMLİK MÜHÜRLENİRKEN HATA OLUŞTU!", false);
@@ -289,10 +311,19 @@ const Leaderboard = {
             'google-recover-btn': () => this.loginWithGoogle(),
             'save-name-btn': () => this.handleManualNameSave(),
             'logout-btn': () => this.logout(),
-            'close-identity-btn': () => document.getElementById('identity-modal').classList.remove('active'),
+            'close-identity-btn': () => {
+                const modal = document.getElementById('identity-modal');
+                if (modal) {
+                    modal.classList.remove('active');
+                    modal.style.opacity = '0';
+                    setTimeout(() => { modal.style.display = 'none'; }, 300);
+                }
+            },
             'save-identity-btn': () => {
-                const newName = document.getElementById('player-name-input').value;
-                this.updatePlayerName(newName);
+                const input = document.getElementById('player-name-input');
+                if (input) {
+                    this.updatePlayerName(input.value);
+                }
             }
         };
         for (let id in elements) {
