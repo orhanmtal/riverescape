@@ -907,25 +907,39 @@ window.addEventListener('keydown', (e) => {
     }
     // --- v1.99.19.09: ULTIMATE SYNC LEVEL SKIP (Press 'L') ---
     if (e.key === 'l' || e.key === 'L') {
-        var cycleLimit = 27500;
-        var p = (levelProgressTime * 5) % cycleLimit;
-        var nextT = cycleLimit;
-        var nextIdx = 0;
+        // v1.99.30.04: MASTER SKIP SYNC (Infinite Loop Support)
+        const CYCLE_LIMIT = 27500;
+        const totalProgress = levelProgressTime * 5;
+        const currentLoop = Math.floor(totalProgress / CYCLE_LIMIT);
+        const progressInLoop = totalProgress % CYCLE_LIMIT;
+        
+        let nextT = CYCLE_LIMIT;
+        let nextIdx = 0;
+        let loopAdd = 0;
 
-        for (var i = 0; i < levelAssets.length; i++) {
-            if (levelAssets[i].threshold > p) {
+        for (let i = 0; i < levelAssets.length; i++) {
+            if (levelAssets[i].threshold > progressInLoop) {
                 nextT = levelAssets[i].threshold;
                 nextIdx = i;
                 break;
             }
         }
 
+        // Son seviyeden sonraki tura atla
+        if (nextT === CYCLE_LIMIT) {
+            loopAdd = 1;
+            nextT = 0;
+            nextIdx = 0;
+        }
+
         // --- ZORUNLU SENKRONİZASYON ---
-        levelProgressTime = (nextT / 5) + 5; 
-        score = Math.floor(levelProgressTime * 5);
-        currentLevel = nextIdx + 1; // Manuel Override
+        const newTotal = ((currentLoop + loopAdd) * CYCLE_LIMIT) + nextT + 5;
+        levelProgressTime = newTotal / 5;
+        score = Math.floor(newTotal);
+        currentLevel = ((currentLoop + loopAdd) * levelAssets.length) + nextIdx + 1;
         
-        console.log("MASTER SKIP EXECUTED: Level Index", nextIdx, "Target Threshold:", nextT);
+        console.log("🚀 MASTER SKIP [ELITE]:", { currentLevel, loop: currentLoop + loopAdd, threshold: nextT });
+        if (typeof showToast === 'function') showToast(`SKIP: LVL ${currentLevel} ⚡️`, true);
     }
 });
 

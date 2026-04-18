@@ -1,6 +1,20 @@
 # River Escape - Versiyon Günlükleri (CHANGELOG)
 Bu dosya, oyun motorunun ve özelliklerin versiyon versiyon nasıl geliştiğini mühürleyip saklamak için Antigravity tarafından oluşturulmuştur.
 
+## [v1.99.30.04] - 2026-04-18
+### Fixed
+- **Master Skip Synchronization**: Refactored the 'L' key algorithm to perfectly match the core game engine. Now supports consistent level skipping across infinite loop cycles (Level 10, 19, etc.).
+- **Cycle-Aware Logic**: Corrected threshold detection for seamless transitions from Level 9 to Level 10.
+
+## [v1.99.30.02] - 2026-04-18
+
+## [v1.99.30.01] - 2026-04-18
+
+## [v1.99.30] "ELITE BILLING CORE" - 2026-04-18
+- **Google Play Billing Integration**: Installed `cordova-plugin-purchase` (v13+) and provisioned the native Android layer with `com.android.vending.BILLING` permissions.
+- **Unified Economy Sync**: Connected the IAP success handlers to the `totalGold` global variable and Firebase cloud sync for instant revenue synchronization.
+- **Project-Wide Versioning**: Synchronized all manifest files (`build.gradle`, `package.json`, `index.html`) to the new production version `v1.99.30`.
+
 ## [v1.99.27.10] "ELITE SHOP REBORN" - 2026-04-17
 - **Gold Market Overhaul**: Completely redesigned the Golden Market UI with premium glassmorphism, interactive gold cards, and a new pulsing "Best Value" highlight for the 50K pack.
 - **Ad Button Upgrade**: Removed dashed borders on the ad-gold button, replacing them with a sleek neon outline and a smooth "Floating" animation.

@@ -9,3 +9,5 @@ gradle/
 .gradle/
 build/
 captures/
+# v1.99.30: Elite Signing Config
+android/app/signing.properties

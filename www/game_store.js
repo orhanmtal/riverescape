@@ -1,7 +1,7 @@
 /**
  * RİVER ESCAPE ELİTE - game_store.js
  * Google Play Satın Alma (In-App Purchases - IAP) Modülü
- * v1.99.3.30
+ * v1.99.30.04
  */
 
 const IAP_PACKS = [
@@ -12,85 +12,127 @@ const IAP_PACKS = [
 ];
 
 const GameStore = {
-    // Ürün Tanımları (Google Play Console ID'leri buraya gelecek)
-    // Fiyatlandırma: 0.99$ - 1.49$ - 2.99$ - 4.99$
-    PRODUCTS: IAP_PACKS.map(p => ({ id: p.id, title: p.label, amount: p.amount, priceVal: p.priceVal, type: 'consumable' })),
+    PRODUCTS: IAP_PACKS,
+    isReady: false,
 
     init() {
+        console.log("🛒 [STORE] Initializing Elite Billing Core...");
+        
+        document.addEventListener('deviceready', () => {
+            this.setupStore();
+        }, false);
+
+        // Browser simülasyonu için hazırla (Mobil değilse)
+        if (!window.cordova) {
+            console.log("🛒 [STORE] Browser environment detected. Simulation mode ready.");
+            this.isReady = true;
+        }
+    },
+
+    setupStore() {
         if (!window.CdvPurchase) {
-            console.warn("IAP Store Plugin Not Found. (CdvPurchase)");
-            return; 
+            console.error("Purchase plugin not found.");
+            return;
         }
 
         const { store, ProductType, Platform } = window.CdvPurchase;
 
-        // Ürünleri Kaydet v13+
+        // Ürünleri Kaydet
         this.PRODUCTS.forEach(p => {
             store.register({
-                id:    p.id,
-                type:  p.type === 'consumable' ? ProductType.CONSUMABLE : ProductType.NON_CONSUMABLE,
+                id: p.id,
+                type: ProductType.CONSUMABLE,
                 platform: Platform.GOOGLE_PLAY
             });
         });
 
-        // Satın Alma Onaylandığında
-        store.when().approved(p => {
-            console.log("Purchase Approved:", p.id);
-            this.handleFinalizePurchase(p);
-            p.verify().then(() => p.finish()); 
+        // Event Listeners
+        store.when().approved(transaction => {
+            // v1.99.30.02: FIX - Get productId from transaction products array (v13 API)
+            const productId = transaction.products && transaction.products[0] ? transaction.products[0].id : null;
+            
+            if (productId) {
+                console.log("✅ Purchase Approved for Product:", productId);
+                this.handleFinalizePurchase(productId);
+                
+                // Onay ve Bitirme (Consume)
+                transaction.verify().then(() => transaction.finish());
+            } else {
+                console.warn("⚠️ Approved transaction has no product info.");
+            }
         });
 
-        // Hata Yönetimi
-        store.error(e => {
-            console.error("Store Error:", e);
-        });
-
-        // Mağazayı Başlat
-        store.initialize([Platform.GOOGLE_PLAY]);
-        console.log("IAP Store v13+ Initialized.");
+        store.initialize();
+        this.isReady = true;
     },
 
     // Satın Alma İşlemini Başlat
     buy(productId) {
         if (!window.CdvPurchase) {
             console.error("Store not ready.");
-            // Simülasyon (Sadece Test modunda/Browserda parayı ekle)
-            if (window.location.protocol === 'file:') this.handleFinalizePurchase({ id: productId });
+            // v1.99.30.02: Simulation Support
+            if (window.location.protocol === 'file:' || window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost') {
+                console.log("🛠️ Simulation Mode: Adding gold locally...");
+                this.handleFinalizePurchase(productId);
+            }
             return;
         }
         
-        const p = window.CdvPurchase.store.get(productId);
-        if (p) {
-            console.log("Ordering Product:", productId);
-            p.order();
+        const { store } = window.CdvPurchase;
+        const p = store.get(productId);
+
+        if (p && p.canPurchase) {
+            const offer = p.getOffer();
+            if (offer) {
+                console.log("Ordering Product Offer:", productId);
+                store.order(offer);
+            } else {
+                console.error("No Offer found for product:", productId);
+                if (typeof showToast === 'function') showToast("Teklif Bulunamadı!", false);
+            }
         } else {
-            console.error("Product not found in Store:", productId);
-            if (typeof showToast === 'function') showToast("Ürün Bulunamadı! Konsol ID Kontrol Et.", false);
+            console.error("Product not available for purchase:", productId);
+            if (typeof showToast === 'function') showToast("Ürün Marketten Çekilemedi!", false);
         }
     },
 
-    // Satın Almayı Oyuna Uygula (Altın Ekleme vb.)
-    handleFinalizePurchase(p) {
-        const product = this.PRODUCTS.find(item => item.id === p.id);
-        if (!product) return;
+    // Altın Teslimatı ve Firebase Senkronizasyonu
+    handleFinalizePurchase(productId) {
+        const product = this.PRODUCTS.find(item => item.id === productId);
+        if (!product) {
+            console.error("Invalid Product ID for Finalize:", productId);
+            return;
+        }
 
         if (product.id.includes('gold')) {
-            // v1.99.3.31.3: Doğrudan global değişkeni güncelle (Shared Scope)
-            totalGold += product.amount; 
-            if (typeof saveGame === 'function') saveGame();
+            // 1. Yerel Bakiye Güncelle (Global Scope Protection)
+            if (typeof window.totalGold !== 'undefined') {
+                window.totalGold += product.amount;
+                console.log(`💰 [STORE] Local balance updated: ${window.totalGold}`);
+            }
+
+            // 2. Yerel Kayıt
+            if (typeof window.saveGame === 'function') window.saveGame();
             
-            // v1.99.4.1.10: Harcamayı Firebase'e Raporla (Revenue Tracking) 🏦📊
+            // 3. Firebase Raporu (Revenue)
             if (typeof Leaderboard !== 'undefined' && Leaderboard.reportPurchase) {
+                console.log("📊 [STORE] Reporting revenue to Firebase:", product.priceVal);
                 Leaderboard.reportPurchase(product.priceVal || 0);
             }
             
-            if (typeof triggerEliteEconomySync === 'function') triggerEliteEconomySync(true); // v1.99.27.05: Instant IAP Sync Mührü!
+            // 4. Bulut Senkronu (Total Gold)
+            if (typeof triggerEliteEconomySync === 'function') {
+                console.log("🛰️ [STORE] Triggering Instant Cloud Sync...");
+                triggerEliteEconomySync(true); 
+            }
             
-            const msg = (translations[currentLang] && translations[currentLang].purchaseSuccess) 
-                        ? `${translations[currentLang].purchaseSuccess} +${product.amount} GOLD! 💰`
-                        : `PURCHASE SUCCESSFUL! +${product.amount} GOLD! 💰`;
-                        
-            if (typeof showToast === 'function') showToast(msg, true);
+            // 5. Verileri Yenile (UI)
+            if (typeof updateShopUI === 'function') updateShopUI();
+
+            // 6. Başarı Bildirimi
+            if (typeof showToast === 'function') {
+                showToast(`BAŞARILI! +${product.amount} ALTIN EKLENDİ! 🏛️`, true);
+            }
         }
         
         // Ses Efekti (v1.99.27.10 Elite Synergy)
@@ -100,5 +142,18 @@ const GameStore = {
     }
 };
 
-// Sistemi Başlat
-GameStore.init();
+// v1.99.30: Sabırlı Başlatma (Device Ready Bekle)
+document.addEventListener('deviceready', () => {
+    console.log("🚀 Billing System: Device Ready. Initializing Store...");
+    GameStore.init();
+}, false);
+
+// Browser Fallback (Geliştirme modu için)
+if (window.location.protocol !== 'file:' && !window.Capacitor) {
+    setTimeout(() => {
+        if (!window.CdvPurchase) {
+            console.log("🌐 Web Environment Detected: Initializing GameStore in Simulation Mode.");
+            GameStore.init();
+        }
+    }, 1000);
+}
