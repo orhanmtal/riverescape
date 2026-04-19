@@ -82,7 +82,8 @@ const translations = {
         securityInternetRequired: "ELITE SUNUCU BAĞLANTISI GEREKLİ!",
         securityAuthRequired: "ERİŞİM İÇİN GİRİŞ YAPIN! 🔏",
         googleLogin: "Google ile devam et",
-        securityNoInternet: "Lütfen internet bağlantınızı kontrol edin."
+        securityNoInternet: "Lütfen internet bağlantınızı kontrol edin.",
+        licenseRequired: "ÖNCE LİSANS ALMALISIN! 🛡️"
     },
     en: {
         startDesc: "",
@@ -166,9 +167,10 @@ const translations = {
         securityInternetRequired: "ELITE SERVER CONNECTION REQUIRED!",
         securityAuthRequired: "PLEASE SIGN IN TO ACCESS! 🔏",
         googleLogin: "Continue with Google",
-        securityNoInternet: "Please check your internet connection."
+        securityNoInternet: "Please check your internet connection.",
+        licenseRequired: "LICENSE REQUIRED FIRST! 🛡️"
     }
 };
 
-// v1.99.27.11: Global Language Initialization
+// v1.99.30.06: Global Language Initialization
 var currentLang = localStorage.getItem('riverEscapeLang') || 'tr';

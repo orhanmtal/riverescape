@@ -309,6 +309,133 @@ function updateAmbientWind(level, isPlaying) {
         windFilter.frequency.setTargetAtTime(fMod, now, 0.5);
     }
 }
+// --- v1.99.30.06: DYNAMIC ENGINE GENERATOR (MASTER RUMBLE) ---
+let engineSource, engineGain, engineFilter, engineOsc;
+function initEngineAudio() {
+    if(!audioCtx || engineOsc) return;
+    
+    engineOsc = audioCtx.createOscillator();
+    engineOsc.type = 'sawtooth';
+    engineOsc.frequency.value = 40; // Base rumble
+    
+    engineFilter = audioCtx.createBiquadFilter();
+    engineFilter.type = 'lowpass';
+    engineFilter.frequency.value = 300; // Muffle the engine
+    
+    engineGain = audioCtx.createGain();
+    engineGain.gain.value = 0; // Off initially
+    
+    engineOsc.connect(engineFilter);
+    engineFilter.connect(engineGain);
+    engineGain.connect(audioCtx.destination);
+    engineOsc.start();
+}
+
+function updateEngineAudio(speed, isPlaying) {
+    if(!audioCtx) return;
+    if(!engineOsc) initEngineAudio();
+    
+    const now = audioCtx.currentTime;
+    const targetGain = (isPlaying && !isPaused) ? (0.12 * isSFXVolume) : 0;
+    const targetFreq = 40 + (speed / 10); // Dynamic pitch based on speed
+    
+    if(engineGain) engineGain.gain.setTargetAtTime(targetGain, now, 0.2);
+    if(engineOsc) engineOsc.frequency.setTargetAtTime(targetFreq, now, 0.2);
+}
+
+// --- v1.99.30.06: VOID & LAGOON AMBIENCE ---
+let voidSource, voidGain, lagoonSource, lagoonGain;
+
+function initVoidAmbience() {
+    if(!audioCtx || voidGain) return;
+    voidGain = audioCtx.createGain();
+    voidGain.gain.value = 0;
+    
+    const osc = audioCtx.createOscillator();
+    osc.type = 'sine';
+    osc.frequency.value = 55;
+    const mod = audioCtx.createOscillator();
+    mod.type = 'square';
+    mod.frequency.value = 4;
+    const modG = audioCtx.createGain();
+    modG.gain.value = 8;
+    
+    mod.connect(modG);
+    modG.connect(osc.frequency);
+    osc.connect(voidGain);
+    voidGain.connect(audioCtx.destination);
+    osc.start(); mod.start();
+}
+
+function initLagoonAmbience() {
+    if(!audioCtx || lagoonGain) return;
+    lagoonGain = audioCtx.createGain();
+    lagoonGain.gain.value = 0;
+    
+    const osc = audioCtx.createOscillator();
+    osc.type = 'triangle';
+    osc.frequency.value = 110;
+    const lfo = audioCtx.createOscillator();
+    lfo.frequency.value = 0.5;
+    const lfoG = audioCtx.createGain();
+    lfoG.gain.value = 0.1;
+    
+    lfo.connect(lfoG);
+    lfoG.connect(lagoonGain.gain);
+    osc.connect(lagoonGain);
+    lagoonGain.connect(audioCtx.destination);
+    osc.start(); lfo.start();
+}
+
+function updateAmbientVoid(level, isPlaying) {
+    if(!audioCtx) return;
+    if(!voidGain) initVoidAmbience();
+    const targetGain = (level === 6 && isPlaying) ? (0.18 * isSFXVolume) : 0;
+    voidGain.gain.setTargetAtTime(targetGain, audioCtx.currentTime, 1.0);
+}
+
+function updateAmbientLagoon(level, isPlaying) {
+    if(!audioCtx) return;
+    if(!lagoonGain) initLagoonAmbience();
+    const targetGain = (level === 7 && isPlaying) ? (0.14 * isSFXVolume) : 0;
+    lagoonGain.gain.setTargetAtTime(targetGain, audioCtx.currentTime, 1.0);
+}
+
+function playWhooshSound() {
+    if(!audioCtx) return;
+    const now = audioCtx.currentTime;
+    const noise = audioCtx.createBufferSource();
+    const bSize = audioCtx.sampleRate * 0.25;
+    const buffer = audioCtx.createBuffer(1, bSize, audioCtx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for(let i=0; i<bSize; i++) data[i] = Math.random()*2-1;
+    noise.buffer = buffer;
+    
+    const f = audioCtx.createBiquadFilter();
+    f.type = 'bandpass';
+    f.frequency.setValueAtTime(3000, now);
+    f.frequency.exponentialRampToValueAtTime(500, now + 0.2);
+    const g = audioCtx.createGain();
+    g.gain.setValueAtTime(0, now);
+    g.gain.linearRampToValueAtTime(0.2 * isSFXVolume, now + 0.05);
+    g.gain.linearRampToValueAtTime(0, now + 0.25);
+    noise.connect(f); f.connect(g); g.connect(audioCtx.destination);
+    noise.start(now); noise.stop(now + 0.25);
+}
+
+function playUIClick() {
+    if(!audioCtx) return;
+    const osc = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(1200, audioCtx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.05);
+    g.gain.setValueAtTime(0.12 * isSFXVolume, audioCtx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+    osc.connect(g); g.connect(audioCtx.destination);
+    osc.start(); osc.stop(audioCtx.currentTime + 0.1);
+}
+
 // --- v1.96.9.5: ARKA PLAN SES GÜVENLİĞİ (Elite Safe) ---
 document.addEventListener('visibilitychange', () => {
     if(!audioCtx) return;
