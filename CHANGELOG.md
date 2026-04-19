@@ -1,6 +1,60 @@
 # River Escape - Versiyon Günlükleri (CHANGELOG)
 Bu dosya, oyun motorunun ve özelliklerin versiyon versiyon nasıl geliştiğini mühürleyip saklamak için Antigravity tarafından oluşturulmuştur.
 
+### [v1.99.33.61] - 2026-04-19
+#### Modern Boat & Prestige Perk Update
+- **Boat Collection Modernized**: Replaced placeholder assets with premium 'Elite' boat skins (Magma Overlord, Pixel Phantom, Nebula Zenith).
+- **Gameplay Perks Integrated**: 
+    - **Magma Overlord (Armor Regen)**: Restores 1 armor every 20s.
+    - **Pixel Phantom (Ghosting)**: 10% chance to phase through obstacle collisions.
+    - **Nebula Zenith (Elite Magnet)**: Permanent 220px gold attraction radius.
+- **Auto-Activation**: Boats are now automatically selected and equipped immediately upon purchase.
+- **Version Bump**: Project version updated to v1.99.33.61.
+
+### [v1.99.33.50] - 2026-04-19
+#### Minimalist Purge & Audio Restoration
+-   **Feature Removal**: Completely stripped the Combo and Ascension systems. The game is now focused purely on distance and skill survival without distracting multipliers or "god modes".
+-   **Audio Cleanup**: Removed procedural "howling" wind, engine rumbles, and environmental drones (`audio.js`). Restored the classic, clean 8-bit sound profile.
+-   **Bug Fixes**: Fixed a `SyntaxError` (Illegal continue) in the collision detection engine.
+-   **Version Bump**: Incremented project version to v1.99.33.50.
+
+### [v1.99.33.00] - 2026-04-19
+#### Infinite Stages & Visual Evolution
+- **Infinite Stage System**: The 9-biome structure has been expanded into a 27-stage cycle. Each biome now consists of 3 distinct difficulty stages (e.g., Lvl 1, 2, 3 = Spring).
+- **Prestige Loops**: Implemented "Visual Evolution". After Level 27, biomes undergo hue-rotation and saturation shifts to keep the visuals evolving indefinitely.
+- **Elite Scaling**: Difficulty (speed and obstacle density) now scales with every full 27-stage loop.
+- **Infinite Leveling**: HUD now displays absolute level numbers (1, 2, 3... 100+) for competitive depth.
+- **Bug Fixes**: Fixed biome indexing in HUD icons, start-screen previews, and armor cycle highlighting.
+
+### [v1.99.32.13] - 2026-04-19
+#### Wheel Reward Restore
+- **Reversion**: Restored "Lucky Spin" wheel rewards to their original values (50G-200G) per user request while maintaining other economic nerfs.
+
+### [v1.99.32.12] - 2026-04-19
+#### Elite Economy Rebalance
+- **Gold Reduction:** Reduced "generous" gold rewards by 60% across all systems to align with Elite standards.
+- **Spin Wheel:** Gold rewards adjusted from 50-200G to 20-80G.
+- **River Spawns:** Blue coins reduced from 5G to 2G; Purple coins reduced from 10G to 4G.
+- **Mission Overhaul:** Slashed base mission rewards by 60% (e.g., 500G -> 200G) and forced a recalculation for the current session.
+
+### [v1.99.32.11] - 2026-04-19
+#### Game Over UI Cleanup
+- **UI Refinement**: Removed the version badge from the Game Over screen to reduce visual clutter as requested.
+
+### [v1.99.32.10] - 2026-04-19
+#### Elite Polish & Rendering Stability
+- **Rendering Loop Fix:** Resolved 250+ console errors related to `NaN` coordinate calculations in the `magmaSerpent` rendering logic.
+- **Physics Robustness:** Added `baseRelX` initialization for `magmaSerpent` and `cyberDrone` obstacles to ensure consistent oscillation physics.
+- **Localization Refine:** Changed "Ascension" notification to **"YÜCELİŞ: DURDURULAMAZ! ⚡"** (Turkish) for a more professional "Elite" feel.
+- **UI Spacing:** Improved Game Over screen layout to prevent "Main Menu" button overlap with the version badge.
+- **Safety Guards:** Implemented `NaN` prevention guards in the global obstacle drawing loop.
+
+### [v1.99.32.09] - 2026-04-19
+#### Elite Trap Sync Fix
+- **ReferenceError Resolution:** Fixed a critical crash `ReferenceError: speedX is not defined` in `spawnGold` function.
+- **Trap Angular Chaos:** Synchronized gold chest trap obstacles with the new "Elite Angular Chaos" physics system by properly defining local scope variables.
+- **Global Manifest Sync:** Unified v1.99.32.09 across project manifests, UI labels, and file headers.
+
 ### [v1.99.32.08] - 2026-04-19
 #### Elite Scope Protection Update
 - **Syntax Error Resolution:** Renamed the global `version` variable in `game_unbeatable_v3.js` to `currentVersion` to resolve a name collision with `assets.js`.

@@ -42,10 +42,10 @@ window.MissionManager = (function() {
         // Orijinal değerleri korumak için baseTarget gibi bir yapıya ihtiyaç var ama basitlik için direkt çarpalım
         // Not: Bu basit uygulama her seferinde baz değerden hesaplamalı.
         const baseValues = {
-            near_miss_10: { t: 10, r: 500 },
-            dash_5: { t: 5, r: 300 },
-            destroy_obstacle_20: { t: 20, r: 600 },
-            gold_100: { t: 100, r: 400 }
+            near_miss_10: { t: 10, r: 200 },
+            dash_5: { t: 5, r: 120 },
+            destroy_obstacle_20: { t: 20, r: 240 },
+            gold_100: { t: 100, r: 160 }
         };
         
         if (baseValues[mission.id]) {
@@ -175,4 +175,3 @@ window.MissionManager = (function() {
 
 // Initialize on load
 window.MissionManager.init();
-window.addEventListener('load', () => { setTimeout(window.MissionManager.renderMissions, 500); });
