@@ -1,4 +1,4 @@
-// River Escape - Ses Motoru (Audio Engine) - v1.99.32.03 (PRECISION TUNE)
+// River Escape - Ses Motoru (Audio Engine) - v1.99.32.04 (DIFFICULTY RESTORED)
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 let audioCtx;
 

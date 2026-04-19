@@ -1,4 +1,4 @@
-// RİVER ESCAPE ELITE - v1.99.32.02 (SPAWN RECOVERY)
+// RİVER ESCAPE ELITE - v1.99.32.04 (DIFFICULTY RESTORED)
 console.log("%c IDENTITY SYNC ACTIVE - v1.99.23.00 - CROC PURGED ", "background: #00ff00; color: #000; font-size: 20px; font-weight: bold;");
 
 const canvas = document.getElementById('gameCanvas');
@@ -3072,19 +3072,19 @@ function update(dt) {
     var effectiveSpawnInterval = spawnInterval;
     // SEVİYE SONU %80 BARAJLARI: AGRESİF mod! (Ölümcül Hız) ama artık daha insaflı
     if (isDZ) {
-        effectiveSpawnInterval = 0.85; // v2.03: Mesafeleri çok daha açtık (Eskiden 0.50'ydi)
+        effectiveSpawnInterval = 0.62; // v2.04: Zorluk tekrar RESTORE EDİLDİ! (Eski adrenalin geri geldi)
     }
 
     if (spawnTimer >= effectiveSpawnInterval) {
         spawnObstacle();
         spawnTimer = 0;
 
-        // Seviye içi kademeli zorlaşma (Kullanıcı talebiyle aralıklar İYİCE açıldı)
-        var minSpawnInterval = 2.5 - (currentLevel * 0.2); // Lv1 min: 2.3, Lv2 min: 2.1 vs.
-        if (minSpawnInterval < 0.9) minSpawnInterval = 0.9; // Mutlak alt sınır, kayalar arası en az 0.9sn mesafe
+        // Seviye içi kademeli zorlaşma (v1.99.32.04: Elite Adrenalin Geri Geldi)
+        var minSpawnInterval = 1.9 - (currentLevel * 0.15); // Lv1 min: 1.75, Lv2 min: 1.6 vs.
+        if (minSpawnInterval < 0.75) minSpawnInterval = 0.75; // Mutlak alt sınır, kayalar arası en az 0.75sn mesafe
 
         if (spawnInterval > minSpawnInterval) {
-            spawnInterval -= (currentLevel === 1 ? 0.005 : 0.010);
+            spawnInterval -= (currentLevel === 1 ? 0.015 : 0.025);
         }
     }
 

@@ -1,5 +1,5 @@
-// River Escape - Varlık Yükleyici (Asset Loader) - v1.99.32.03 (PRECISION TUNE)
-const version = "1.99.32.03";
+// River Escape - Varlık Yükleyici (Asset Loader) - v1.99.32.04 (DIFFICULTY RESTORED)
+const version = "1.99.32.04";
 const players = { ilkbahar: null, yaz: null, sonbahar: null, kis: null, lava: null, void: null, nostalji: null };
 var iPI = null; // v1.99.31.00: Universal Default Ship Identifier
 var playerImg = null;

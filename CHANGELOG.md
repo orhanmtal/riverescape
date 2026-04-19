@@ -1,6 +1,13 @@
 # River Escape - Versiyon Günlükleri (CHANGELOG)
 Bu dosya, oyun motorunun ve özelliklerin versiyon versiyon nasıl geliştiğini mühürleyip saklamak için Antigravity tarafından oluşturulmuştur.
 
+### [v1.99.32.04] - 2026-04-19
+#### Elite Difficulty Restoration Update
+- **Spawn Tightening:** Reduced DZ obstacle intervals from 0.85s to 0.62s for intense biome conclusions.
+- **Aggressive Pacing:** Updated `minSpawnInterval` logic (Lv1: 1.75s, Lv5: 1.15s) to ensure the river never feels empty.
+- **Difficulty Ramp-up:** Increased obstacle spawn acceleration by 3x, forcing players to adapt faster to rising speed.
+- **Global Sync:** Unified all version labels to v1.99.32.04 across all project assets and manifests.
+
 ### [v1.99.32.03] - 2026-04-19
 #### Audio Precision Tune Update
 - **Engine Richness:** Refined high-pass filter from 45Hz to 35Hz, restoring the foundational depth of the boat's engine.
