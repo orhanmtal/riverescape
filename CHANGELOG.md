@@ -1,6 +1,13 @@
 # River Escape - Versiyon Günlükleri (CHANGELOG)
 Bu dosya, oyun motorunun ve özelliklerin versiyon versiyon nasıl geliştiğini mühürleyip saklamak için Antigravity tarafından oluşturulmuştur.
 
+### [v1.99.32.07] - 2026-04-19
+#### Elite Balance Update
+- **Boat Stability Fix:** Resolved a critical rendering context leak that caused the player boat to rotate with obstacles.
+- **Matrix Restoration:** Properly implemented `ctx.restore()` in the obstacle rendering loop to ensure global state isolation.
+- **Angular Chaos Persistence:** Maintained the requested diagonal physics and rotation for logs while isolating the player.
+- **Global Manifest Sync:** Unified v1.99.32.07 across project manifests and headers.
+
 ### [v1.99.32.06] - 2026-04-19
 #### Elite Angular Chaos Update
 - **Diagonal Physics:** Obstacles can now spawn with random horizontal velocities (speedX) and rotation speeds.

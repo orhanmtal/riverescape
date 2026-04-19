@@ -1,4 +1,4 @@
-// River Escape - Ses Motoru (Audio Engine) - v1.99.32.06 (ANGULAR CHAOS)
+// River Escape - Ses Motoru (Audio Engine) - v1.99.32.07 (BOAT STABILITY FIX)
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 let audioCtx;
 

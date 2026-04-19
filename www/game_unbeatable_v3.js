@@ -1,4 +1,4 @@
-// RİVER ESCAPE ELITE - v1.99.32.06 (ANGULAR CHAOS)
+// RİVER ESCAPE ELITE - v1.99.32.07 (BOAT STABILITY FIX)
 console.log("%c IDENTITY SYNC ACTIVE - v1.99.23.00 - CROC PURGED ", "background: #00ff00; color: #000; font-size: 20px; font-weight: bold;");
 
 const canvas = document.getElementById('gameCanvas');
@@ -908,7 +908,7 @@ var hasWeapon = false;
 var lastShotTime = 0;
 var bullets = [];
 
-var currentVersion = "v1.99.27.05"; // Elite Lockdown & Physics Freeze
+var version = "1.99.32.07"; // Elite Lockdown & Physics Freeze
 
 function saveGame() {
     const data = {
@@ -2784,7 +2784,7 @@ function syncEliteHUD() {
 // --- v1.99.30.06: ELITE PERK SYSTEM ---
 function getActivePerk() {
     if (!window.ELITE_COLLECTIONS || !window.ELITE_COLLECTIONS.boats) return null;
-    // v1.99.30.06: currentAsset.pKey aktif kayığın ID'sidir
+    // v1.99.30.06: currentAsset.pKey aktif kayığın ID'idir
     const activeId = (typeof currentAsset !== 'undefined') ? currentAsset.pKey : 'ilkbahar';
     return window.ELITE_COLLECTIONS.boats.find(b => b.id === activeId)?.perk || null;
 }
@@ -4692,6 +4692,7 @@ function draw(dt) {
                 drawSuccess = true;
             }
         }
+        ctx.restore(); // v1.99.32.07: ELITE MATRIX BALANCE
     });
 
     // --- PARÇACIKLARIN (Particles) ÇİZİMİ v126 ---

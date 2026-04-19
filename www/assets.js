@@ -1,5 +1,5 @@
-// River Escape - Varlık Yükleyici (Asset Loader) - v1.99.32.06 (ANGULAR CHAOS)
-const version = "1.99.32.06";
+// River Escape - Varlık Yükleyici (Asset Loader) - v1.99.32.07 (BOAT STABILITY FIX)
+const version = "1.99.32.07";
 const players = { ilkbahar: null, yaz: null, sonbahar: null, kis: null, lava: null, void: null, nostalji: null };
 var iPI = null; // v1.99.31.00: Universal Default Ship Identifier
 var playerImg = null;
@@ -24,7 +24,7 @@ function makeWhiteTransparent(imageElement, isAggressive = false) {
 
         for (var i = 0; i < data.length; i += 4) {
             let r = data[i], g = data[i + 1], b = data[i + 2];
-            // ELITE v1.99.3.31.9.5: Daha agresif beyaz temizliği (210+)
+            // ELITE v1.99.31.9.5: Daha agresif beyaz temizliği (210+)
             if (r > 210 && g > 210 && b > 210) {
                 data[i + 3] = 0;
             } else if (isAggressive) {
