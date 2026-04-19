@@ -1,4 +1,4 @@
-// River Escape - Ses Motoru (Audio Engine) - v1.99.14.31 (GOLDEN SHINE)
+// River Escape - Ses Motoru (Audio Engine) - v1.99.32.01 (AUDIO POLISH)
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 let audioCtx;
 
@@ -255,13 +255,19 @@ function initLavaGenerator() {
     
     lavaFilter = audioCtx.createBiquadFilter();
     lavaFilter.type = 'lowpass';
-    lavaFilter.frequency.value = 100; // Çok derin uğultu
+    lavaFilter.frequency.value = 100; // Deep rumble
+    
+    // v1.99.32.01: High-pass to remove muddy humming
+    const lavaHP = audioCtx.createBiquadFilter();
+    lavaHP.type = 'highpass';
+    lavaHP.frequency.value = 50; 
     
     lavaGain = audioCtx.createGain();
     lavaGain.gain.value = 0;
     
     lavaRumble.connect(lavaFilter);
-    lavaFilter.connect(lavaGain);
+    lavaFilter.connect(lavaHP);
+    lavaHP.connect(lavaGain);
     lavaGain.connect(audioCtx.destination);
     lavaRumble.start();
 }
@@ -270,7 +276,7 @@ function updateAmbientLava(level, isPlaying) {
     if(!audioCtx) return;
     if(!lavaRumble) initLavaGenerator();
     
-    const targetGain = (level === 5 && isPlaying) ? (0.25 * isSFXVolume) : 0;
+    const targetGain = (level === 5 && isPlaying) ? (0.18 * isSFXVolume) : 0;
     const now = audioCtx.currentTime;
     
     lavaGain.gain.setTargetAtTime(targetGain, now, 0.5);
@@ -310,23 +316,29 @@ function updateAmbientWind(level, isPlaying) {
     }
 }
 // --- v1.99.30.06: DYNAMIC ENGINE GENERATOR (MASTER RUMBLE) ---
-let engineSource, engineGain, engineFilter, engineOsc;
+let engineSource, engineGain, engineFilter, engineOsc, engineHP;
 function initEngineAudio() {
     if(!audioCtx || engineOsc) return;
     
     engineOsc = audioCtx.createOscillator();
-    engineOsc.type = 'sawtooth';
-    engineOsc.frequency.value = 40; // Base rumble
+    engineOsc.type = 'triangle'; // v1.99.32.01: Softer waveform
+    engineOsc.frequency.value = 40; 
     
     engineFilter = audioCtx.createBiquadFilter();
     engineFilter.type = 'lowpass';
-    engineFilter.frequency.value = 300; // Muffle the engine
+    engineFilter.frequency.value = 280; // Muffle
+    
+    // v1.99.32.01: High-pass to remove low-end mud (the strange hum)
+    engineHP = audioCtx.createBiquadFilter();
+    engineHP.type = 'highpass';
+    engineHP.frequency.value = 45;
     
     engineGain = audioCtx.createGain();
-    engineGain.gain.value = 0; // Off initially
+    engineGain.gain.value = 0;
     
     engineOsc.connect(engineFilter);
-    engineFilter.connect(engineGain);
+    engineFilter.connect(engineHP);
+    engineHP.connect(engineGain);
     engineGain.connect(audioCtx.destination);
     engineOsc.start();
 }
@@ -336,8 +348,8 @@ function updateEngineAudio(speed, isPlaying) {
     if(!engineOsc) initEngineAudio();
     
     const now = audioCtx.currentTime;
-    const targetGain = (isPlaying && !isPaused) ? (0.12 * isSFXVolume) : 0;
-    const targetFreq = 40 + (speed / 10); // Dynamic pitch based on speed
+    const targetGain = (isPlaying && !isPaused) ? (0.09 * isSFXVolume) : 0;
+    const targetFreq = 40 + (speed / 12); 
     
     if(engineGain) engineGain.gain.setTargetAtTime(targetGain, now, 0.2);
     if(engineOsc) engineOsc.frequency.setTargetAtTime(targetFreq, now, 0.2);
@@ -390,7 +402,7 @@ function initLagoonAmbience() {
 function updateAmbientVoid(level, isPlaying) {
     if(!audioCtx) return;
     if(!voidGain) initVoidAmbience();
-    const targetGain = (level === 6 && isPlaying) ? (0.18 * isSFXVolume) : 0;
+    const targetGain = (level === 6 && isPlaying) ? (0.12 * isSFXVolume) : 0;
     voidGain.gain.setTargetAtTime(targetGain, audioCtx.currentTime, 1.0);
 }
 

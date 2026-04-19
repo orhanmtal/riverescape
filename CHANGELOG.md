@@ -1,6 +1,12 @@
 # River Escape - Versiyon Günlükleri (CHANGELOG)
 Bu dosya, oyun motorunun ve özelliklerin versiyon versiyon nasıl geliştiğini mühürleyip saklamak için Antigravity tarafından oluşturulmuştur.
 
+### [v1.99.32.01] - 2026-04-19
+#### Audio Polish & Clarity Update
+- **Softer Engine:** Switched engine oscillators from sawtooth to triangle for a more natural rumble.
+- **Mud Cleanup:** Implemented high-pass filters on all engine and ambient channels to remove "strange humming" and low-end distortion.
+- **Ambient Rebalance:** Carefully tuned Lava and Void gains for a more harmonious audio experience.
+
 ### [v1.99.32.00] - 2026-04-19
 #### Stage 5: The Living World & Survival Recovery
 - **Living World:** Birds with animated wings and underwater shadows.
