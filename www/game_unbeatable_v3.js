@@ -1,4 +1,4 @@
-// RİVER ESCAPE ELITE - v1.99.32.04 (DIFFICULTY RESTORED)
+// RİVER ESCAPE ELITE - v1.99.32.05 (EXTREME MODE)
 console.log("%c IDENTITY SYNC ACTIVE - v1.99.23.00 - CROC PURGED ", "background: #00ff00; color: #000; font-size: 20px; font-weight: bold;");
 
 const canvas = document.getElementById('gameCanvas');
@@ -819,15 +819,15 @@ resizeCanvas();
 
 
 const levelAssets = [
-    { threshold: 0, bgKey: 'ilkbahar', speed: 140, spawn: 1.60, titleEN: translations.en.l1Title, titleTR: translations.tr.l1Title, color: "#64dd17", pKey: "ilkbahar", margin: 0.35 },
-    { threshold: 1000, bgKey: 'yaz', speed: 160, spawn: 1.55, titleEN: translations.en.l2Title, titleTR: translations.tr.l2Title, color: "#ffd600", pKey: "ilkbahar", margin: 0.33 },
-    { threshold: 2500, bgKey: 'sonbahar', speed: 220, spawn: 1.15, titleEN: translations.en.l3Title, titleTR: translations.tr.l3Title, color: "#ff6d00", pKey: "ilkbahar", margin: 0.35 },
-    { threshold: 4500, bgKey: 'kis', speed: 260, spawn: 1.40, titleEN: translations.en.l4Title, titleTR: translations.tr.l4Title, color: "#00e5ff", pKey: "ilkbahar", margin: 0.35 },
-    { threshold: 7000, bgKey: 'lava', speed: 315, spawn: 0.55, titleEN: translations.en.lavaRiver, titleTR: translations.tr.lavaRiver, color: "#ff4500", pKey: "lava", margin: 0.34 },
-    { threshold: 10000, bgKey: 'void', speed: 190, spawn: 1.40, titleEN: translations.en.voidLevel, titleTR: translations.tr.voidLevel, color: "#9b59b6", pKey: "void", margin: 0.32 },
-    { threshold: 14000, bgKey: 'lagoon', speed: 310, spawn: 0.65, titleEN: translations.en.l7Title, titleTR: translations.tr.l7Title, color: "#00e5ff", pKey: "ilkbahar", margin: 0.15 },
-    { threshold: 18500, bgKey: 'cyber', speed: 340, spawn: 0.50, titleEN: "CYBER CITY", titleTR: "SİBER ŞEHİR", color: "#ff00ff", pKey: "void", margin: 0.18, scrollSpeed: 1.0 },
-    { threshold: 22500, bgKey: 'toxic', speed: 320, spawn: 0.85, titleEN: "TOXIC WASTELAND", titleTR: "ZEHİRLİ ATIK", color: "#32CD32", pKey: "lava", margin: 0.30, scrollSpeed: 1.0 }
+    { threshold: 0, bgKey: 'ilkbahar', speed: 140, spawn: 1.15, titleEN: translations.en.l1Title, titleTR: translations.tr.l1Title, color: "#64dd17", pKey: "ilkbahar", margin: 0.35 },
+    { threshold: 1000, bgKey: 'yaz', speed: 160, spawn: 1.05, titleEN: translations.en.l2Title, titleTR: translations.tr.l2Title, color: "#ffd600", pKey: "ilkbahar", margin: 0.33 },
+    { threshold: 2500, bgKey: 'sonbahar', speed: 220, spawn: 0.85, titleEN: translations.en.l3Title, titleTR: translations.tr.l3Title, color: "#ff6d00", pKey: "ilkbahar", margin: 0.35 },
+    { threshold: 4500, bgKey: 'kis', speed: 260, spawn: 0.95, titleEN: translations.en.l4Title, titleTR: translations.tr.l4Title, color: "#00e5ff", pKey: "ilkbahar", margin: 0.35 },
+    { threshold: 7000, bgKey: 'lava', speed: 315, spawn: 0.48, titleEN: translations.en.lavaRiver, titleTR: translations.tr.lavaRiver, color: "#ff4500", pKey: "lava", margin: 0.34 },
+    { threshold: 10000, bgKey: 'void', speed: 190, spawn: 0.95, titleEN: translations.en.voidLevel, titleTR: translations.tr.voidLevel, color: "#9b59b6", pKey: "void", margin: 0.32 },
+    { threshold: 14000, bgKey: 'lagoon', speed: 310, spawn: 0.55, titleEN: translations.en.l7Title, titleTR: translations.tr.l7Title, color: "#00e5ff", pKey: "ilkbahar", margin: 0.15 },
+    { threshold: 18500, bgKey: 'cyber', speed: 340, spawn: 0.42, titleEN: "CYBER CITY", titleTR: "SİBER ŞEHİR", color: "#ff00ff", pKey: "void", margin: 0.18, scrollSpeed: 1.0 },
+    { threshold: 22500, bgKey: 'toxic', speed: 320, spawn: 0.70, titleEN: "TOXIC WASTELAND", titleTR: "ZEHİRLİ ATIK", color: "#32CD32", pKey: "lava", margin: 0.30, scrollSpeed: 1.0 }
 ];
 
 // v1.96.6.6: Ölüm Vadisi (DZ) Durumunu Merkezi Olarak Belirle
@@ -3072,19 +3072,19 @@ function update(dt) {
     var effectiveSpawnInterval = spawnInterval;
     // SEVİYE SONU %80 BARAJLARI: AGRESİF mod! (Ölümcül Hız) ama artık daha insaflı
     if (isDZ) {
-        effectiveSpawnInterval = 0.62; // v2.04: Zorluk tekrar RESTORE EDİLDİ! (Eski adrenalin geri geldi)
+        effectiveSpawnInterval = 0.42; // v1.99.32.05: EXTREME MODE SWARM (Kaosun Zirvesi)
     }
 
     if (spawnTimer >= effectiveSpawnInterval) {
         spawnObstacle();
         spawnTimer = 0;
 
-        // Seviye içi kademeli zorlaşma (v1.99.32.04: Elite Adrenalin Geri Geldi)
-        var minSpawnInterval = 1.9 - (currentLevel * 0.15); // Lv1 min: 1.75, Lv2 min: 1.6 vs.
-        if (minSpawnInterval < 0.75) minSpawnInterval = 0.75; // Mutlak alt sınır, kayalar arası en az 0.75sn mesafe
+        // Seviye içi kademeli zorlaşma (v1.99.32.05: EXTREME RAMP-UP)
+        var minSpawnInterval = 1.3 - (currentLevel * 0.12); // Lv1 min: 1.18, Lv5 min: 0.70 vs.
+        if (minSpawnInterval < 0.45) minSpawnInterval = 0.45; // Extreme Floor (Hiç bu kadar daralmamıştı!)
 
         if (spawnInterval > minSpawnInterval) {
-            spawnInterval -= (currentLevel === 1 ? 0.015 : 0.025);
+            spawnInterval -= (currentLevel === 1 ? 0.035 : 0.055);
         }
     }
 

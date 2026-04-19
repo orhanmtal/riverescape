@@ -1,6 +1,14 @@
 # River Escape - Versiyon Günlükleri (CHANGELOG)
 Bu dosya, oyun motorunun ve özelliklerin versiyon versiyon nasıl geliştiğini mühürleyip saklamak için Antigravity tarafından oluşturulmuştur.
 
+### [v1.99.32.05] - 2026-04-19
+#### Elite Extreme Mode Update
+- **Extreme Spawning:** Slashed baseline spawn intervals across all levels (Lv1: 1.15s, Cyber: 0.42s).
+- **Chaos Swarm:** Reduced DZ interval to a record 0.42s for an absolute wall of obstacles.
+- **Turbo Ramp-up:** Difficulty scaling speed increased by 200% to ensure an immediate challenge.
+- **Elite Floor:** Lowered absolute minimum spawn buffer to 0.45s.
+- **Global Sync:** Unified v1.99.32.05 version across all manifests and scripts.
+
 ### [v1.99.32.04] - 2026-04-19
 #### Elite Difficulty Restoration Update
 - **Spawn Tightening:** Reduced DZ obstacle intervals from 0.85s to 0.62s for intense biome conclusions.

@@ -1,4 +1,4 @@
-// River Escape - Ses Motoru (Audio Engine) - v1.99.32.04 (DIFFICULTY RESTORED)
+// River Escape - Ses Motoru (Audio Engine) - v1.99.32.05 (EXTREME MODE)
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 let audioCtx;
 
