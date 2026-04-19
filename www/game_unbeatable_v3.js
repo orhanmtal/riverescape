@@ -1,4 +1,4 @@
-// RİVER ESCAPE ELITE - v1.99.32.07 (BOAT STABILITY FIX)
+// RİVER ESCAPE ELITE - v1.99.32.08 (SCOPE PROTECTION)
 console.log("%c IDENTITY SYNC ACTIVE - v1.99.23.00 - CROC PURGED ", "background: #00ff00; color: #000; font-size: 20px; font-weight: bold;");
 
 const canvas = document.getElementById('gameCanvas');
@@ -908,7 +908,7 @@ var hasWeapon = false;
 var lastShotTime = 0;
 var bullets = [];
 
-var version = "1.99.32.07"; // Elite Lockdown & Physics Freeze
+var currentVersion = "1.99.32.08"; // Elite Lockdown & Physics Freeze
 
 function saveGame() {
     const data = {

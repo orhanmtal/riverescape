@@ -1,6 +1,12 @@
 # River Escape - Versiyon Günlükleri (CHANGELOG)
 Bu dosya, oyun motorunun ve özelliklerin versiyon versiyon nasıl geliştiğini mühürleyip saklamak için Antigravity tarafından oluşturulmuştur.
 
+### [v1.99.32.08] - 2026-04-19
+#### Elite Scope Protection Update
+- **Syntax Error Resolution:** Renamed the global `version` variable in `game_unbeatable_v3.js` to `currentVersion` to resolve a name collision with `assets.js`.
+- **Global Manifest Sync:** Unified v1.99.32.08 across project manifests, audio headers, and site UI.
+- **Loading Stability:** Restored game initialization by preventing identifier re-declaration errors.
+
 ### [v1.99.32.07] - 2026-04-19
 #### Elite Balance Update
 - **Boat Stability Fix:** Resolved a critical rendering context leak that caused the player boat to rotate with obstacles.

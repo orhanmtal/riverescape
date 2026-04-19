@@ -1,4 +1,4 @@
-// River Escape - Ses Motoru (Audio Engine) - v1.99.32.07 (BOAT STABILITY FIX)
+// River Escape - Ses Motoru (Audio Engine) - v1.99.32.08 (SCOPE PROTECTION)
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 let audioCtx;
 
