@@ -1,6 +1,13 @@
 # River Escape - Versiyon Günlükleri (CHANGELOG)
 Bu dosya, oyun motorunun ve özelliklerin versiyon versiyon nasıl geliştiğini mühürleyip saklamak için Antigravity tarafından oluşturulmuştur.
 
+### [v1.99.32.03] - 2026-04-19
+#### Audio Precision Tune Update
+- **Engine Richness:** Refined high-pass filter from 45Hz to 35Hz, restoring the foundational depth of the boat's engine.
+- **Ambient Harmony:** Optimized Lava bubbling (35Hz HP) and Void hum gains for the perfect acoustic balance.
+- **Boosted Gain:** Increased base engine volume by 20% to compensate for the softer triangle waveform.
+- **Global Sync:** Unified all visual and technical version stamps to v1.99.32.03.
+
 ### [v1.99.32.02] - 2026-04-19
 #### Level 1 Spawn Recovery Update
 - **Obstacle Ignition:** Fixed a critical bug where `isTransitioningLevel` and `spawnInterval` were not reset in `startGame`, causing empty Level 1 screens.

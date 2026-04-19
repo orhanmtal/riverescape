@@ -1,5 +1,5 @@
-// River Escape - Varlık Yükleyici (Asset Loader) - v1.99.32.02 (SPAWN RECOVERY)
-const version = "1.99.32.02";
+// River Escape - Varlık Yükleyici (Asset Loader) - v1.99.32.03 (PRECISION TUNE)
+const version = "1.99.32.03";
 const players = { ilkbahar: null, yaz: null, sonbahar: null, kis: null, lava: null, void: null, nostalji: null };
 var iPI = null; // v1.99.31.00: Universal Default Ship Identifier
 var playerImg = null;
@@ -71,7 +71,7 @@ function loadBg(key, src) {
     return img;
 }
 
-// ASSETS YÜKLEME SİSTEMİ v1.99.3.30C (ZIRHLI BAŞLATMA)
+// RİVER ESCAPE ELITE - v1.99.32.03 (PRECISION TUNE)
 console.log("🎨 [ELITE ASSETS] Başlatılıyor...");
 
 let assetsLoadedCount = 0;

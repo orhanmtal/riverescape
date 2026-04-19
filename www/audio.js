@@ -1,4 +1,4 @@
-// River Escape - Ses Motoru (Audio Engine) - v1.99.32.02 (SPAWN RECOVERY)
+// River Escape - Ses Motoru (Audio Engine) - v1.99.32.03 (PRECISION TUNE)
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 let audioCtx;
 
@@ -260,7 +260,7 @@ function initLavaGenerator() {
     // v1.99.32.01: High-pass to remove muddy humming
     const lavaHP = audioCtx.createBiquadFilter();
     lavaHP.type = 'highpass';
-    lavaHP.frequency.value = 50; 
+    lavaHP.frequency.value = 35; 
     
     lavaGain = audioCtx.createGain();
     lavaGain.gain.value = 0;
@@ -331,7 +331,7 @@ function initEngineAudio() {
     // v1.99.32.01: High-pass to remove low-end mud (the strange hum)
     engineHP = audioCtx.createBiquadFilter();
     engineHP.type = 'highpass';
-    engineHP.frequency.value = 45;
+    engineHP.frequency.value = 35;
     
     engineGain = audioCtx.createGain();
     engineGain.gain.value = 0;
@@ -348,7 +348,7 @@ function updateEngineAudio(speed, isPlaying) {
     if(!engineOsc) initEngineAudio();
     
     const now = audioCtx.currentTime;
-    const targetGain = (isPlaying && !isPaused) ? (0.09 * isSFXVolume) : 0;
+    const targetGain = (isPlaying && !isPaused) ? (0.11 * isSFXVolume) : 0;
     const targetFreq = 40 + (speed / 12); 
     
     if(engineGain) engineGain.gain.setTargetAtTime(targetGain, now, 0.2);
