@@ -138,7 +138,7 @@ class Particle {
         if (this.targetX !== undefined) {
             const dx = this.targetX - this.x;
             const dy = this.targetY - this.y;
-            const dist = Math.sqrt(dx*dx + dy*dy);
+            const dist = Math.sqrt(dx * dx + dy * dy);
             if (dist > 5) {
                 this.x += (dx / dist) * 800 * dt;
                 this.y += (dy / dist) * 800 * dt;
@@ -151,7 +151,7 @@ class Particle {
         this.x += this.speedX;
         this.y += this.speedY;
         this.angle += this.rotSpeed;
-        
+
         if (this.type === 'ember') {
             this.speedX += Math.sin(performance.now() / 500) * 0.1;
             this.life -= dt * 0.3;
@@ -173,10 +173,10 @@ class Particle {
         if (this.type === 'glitch') {
             ctx.translate(this.x, this.y);
             ctx.rotate(this.angle);
-            ctx.fillRect(-this.size/2, -this.size/2, this.size, this.size);
+            ctx.fillRect(-this.size / 2, -this.size / 2, this.size, this.size);
         } else if (this.type === 'ember') {
             ctx.shadowBlur = 15; ctx.shadowColor = "#ff4500";
-            ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI*2); ctx.fill();
+            ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
         } else {
             ctx.beginPath();
             ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
@@ -220,20 +220,20 @@ class AmbientLife {
             ctx.lineWidth = 1.8;
             ctx.lineCap = 'round';
             const wingOffset = Math.sin(performance.now() * this.wingSpeed) * (this.size * 0.7);
-            
+
             // Draw Body Point
             ctx.beginPath();
-            ctx.arc(this.x, this.y, 1.5, 0, Math.PI*2);
+            ctx.arc(this.x, this.y, 1.5, 0, Math.PI * 2);
             ctx.fill();
 
             // Draw Curved Wings
             ctx.beginPath();
             // Left Wing
             ctx.moveTo(this.x, this.y);
-            ctx.quadraticCurveTo(this.x - this.size/2, this.y - wingOffset - 5, this.x - this.size, this.y - wingOffset);
+            ctx.quadraticCurveTo(this.x - this.size / 2, this.y - wingOffset - 5, this.x - this.size, this.y - wingOffset);
             // Right Wing
             ctx.moveTo(this.x, this.y);
-            ctx.quadraticCurveTo(this.x + this.size/2, this.y - wingOffset - 5, this.x + this.size, this.y - wingOffset);
+            ctx.quadraticCurveTo(this.x + this.size / 2, this.y - wingOffset - 5, this.x + this.size, this.y - wingOffset);
             ctx.stroke();
             ctx.restore();
         } else if (this.type === 'shadow' && layer === 'bottom') {
@@ -835,11 +835,11 @@ const levelAssets = [
 function getDZStatus() {
     // v1.99.19.09: ELITE DYNAMIC DZ - Triggers at last 20% of CURRENT level progress
     var p = Math.floor(levelProgressTime * 5) % 27500;
-    
+
     for (var i = 0; i < levelAssets.length; i++) {
         var start = levelAssets[i].threshold;
-        var end = (i < levelAssets.length - 1) ? levelAssets[i+1].threshold : 27500;
-        
+        var end = (i < levelAssets.length - 1) ? levelAssets[i + 1].threshold : 27500;
+
         if (p >= start && p < end) {
             var duration = end - start;
             var dzStartPoint = end - (duration * 0.10); // v1.99.19.09: Elite DZ Threshold (Last 10%)
@@ -866,7 +866,7 @@ window.obstacles = [];
 window.golds = [];
 window.particles = [];
 window.powerups = [];
-var obstacles = window.obstacles; 
+var obstacles = window.obstacles;
 var golds = window.golds;
 var particles = window.particles;
 var powerups = window.powerups;
@@ -891,7 +891,7 @@ var comboTimer = 0; // Kombo zaman aşımı için eklendi
 var isAscending = false;
 var ascensionTimer = 0;
 const ASCENSION_DURATION = 3.0; // 3 saniye Tanrı Modu
-var cameraZoom = 1.0; 
+var cameraZoom = 1.0;
 var targetCameraZoom = 1.0;
 
 
@@ -941,14 +941,14 @@ function updateArmorUI() {
     var aBadge = document.getElementById('armor-badge');
     var aIndi = document.getElementById('armor-ui-indicator');
     var aBG = document.getElementById('armor-bg-diamond');
-    
+
     if (aBadge) aBadge.innerText = armorCharge;
-    
+
     if (aIndi) {
         // v1.99.19.09: Persistent visibility for licensed players
         if (ownsArmorLicense) {
             aIndi.style.display = 'flex';
-            
+
             if (armorCharge > 0) {
                 aIndi.style.opacity = "1";
                 aIndi.style.filter = "none";
@@ -980,15 +980,15 @@ function openShop() {
     const sScr = document.getElementById('shop-screen');
     const pScr = document.getElementById('pause-screen');
     const startScr = document.getElementById('start-screen');
-    
+
     if (isPlaying && !isPaused && typeof togglePause === 'function') {
         togglePause();
     }
-    
+
     if (sScr) {
         if (pScr) pScr.classList.add('hidden');
         if (startScr) startScr.classList.add('hidden');
-        
+
         sScr.classList.remove('hidden');
         sScr.classList.add('active');
         sScr.style.display = 'flex';
@@ -1000,12 +1000,12 @@ function openShop() {
         if (sArea) {
             sArea.scrollTop = 0;
             // Browser paint sync reset
-            requestAnimationFrame(() => { 
-                sArea.scrollTop = 0; 
+            requestAnimationFrame(() => {
+                sArea.scrollTop = 0;
                 setTimeout(() => { sArea.scrollTop = 0; }, 50);
             });
         }
-        
+
         if (typeof updateShopUI === 'function') updateShopUI();
     }
 }
@@ -1046,7 +1046,7 @@ window.addEventListener('keydown', (e) => {
         const totalProgress = levelProgressTime * 5;
         const currentLoop = Math.floor(totalProgress / CYCLE_LIMIT);
         const progressInLoop = totalProgress % CYCLE_LIMIT;
-        
+
         let nextT = CYCLE_LIMIT;
         let nextIdx = 0;
         let loopAdd = 0;
@@ -1071,7 +1071,7 @@ window.addEventListener('keydown', (e) => {
         levelProgressTime = newTotal / 5;
         score = Math.floor(newTotal);
         currentLevel = ((currentLoop + loopAdd) * levelAssets.length) + nextIdx + 1;
-        
+
         console.log("🚀 MASTER SKIP [ELITE]:", { currentLevel, loop: currentLoop + loopAdd, threshold: nextT });
         if (typeof showToast === 'function') showToast(`SKIP: LVL ${currentLevel} ⚡️`, true);
     }
@@ -1473,18 +1473,18 @@ function updateShopUI() {
                 // LEVEL 6+: ŞARJ VEYA LİSANS AKTİF
                 if (ownsArmorLicense) {
                     const price = 1000;
-                    if(iconSpan) iconSpan.innerText = "💎"; 
+                    if (iconSpan) iconSpan.innerText = "💎";
                     buyABtn.innerText = `ŞARJ ET (${armorCharge})\n${price} G`;
                     buyABtn.disabled = (totalGold < price || armorCharge >= 10);
                     if (document.getElementById('shop-arm-title')) document.getElementById('shop-arm-title').innerText = "Zırh Şarjı (Mühimmat)";
                 } else {
-                    if(iconSpan) iconSpan.innerText = "🔒";
+                    if (iconSpan) iconSpan.innerText = "🔒";
                     buyABtn.innerText = "LİSANS AL\n5000 G";
                     buyABtn.disabled = (totalGold < 5000);
                 }
             } else {
                 // LEVEL 6 DIŞINDA: KİLİTLİ VE ŞARJ GİZLİ
-                if(iconSpan) iconSpan.innerText = "🔒";
+                if (iconSpan) iconSpan.innerText = "🔒";
                 buyABtn.innerText = "KİLİTLİ\n(LVL 6+)";
                 buyABtn.disabled = true;
                 if (document.getElementById('shop-arm-title')) document.getElementById('shop-arm-title').innerText = "Gemi Zırhı (Void)";
@@ -1497,7 +1497,7 @@ function updateShopUI() {
         if (bBadge) bBadge.innerText = bombCount;
         var sBCount = document.getElementById('shop-bomb-count');
         if (sBCount) sBCount.innerText = bombCount;
-        
+
         // AMMO BUY BUTTON SYNC (v1.99.27.10)
         const ammoBuyBtn = document.getElementById('buy-ammo-btn');
         if (ammoBuyBtn) {
@@ -1532,11 +1532,11 @@ function renderBoatShop() {
     window.ELITE_COLLECTIONS.boats.forEach(boat => {
         const isOwned = window.ownedBoats && window.ownedBoats.includes(boat.id);
         const isActive = currentAsset && currentAsset.pKey === boat.id;
-        
+
         const card = document.createElement('div');
         card.className = 'showroom-item';
         card.style.border = isActive ? '2px solid #00e5ff' : '1px solid rgba(255,255,255,0.1)';
-        
+
         const perkDesc = currentLang === 'tr' ? boat.perk.descTR : boat.perk.descEN;
         const name = currentLang === 'tr' ? boat.nameTR : boat.nameEN;
 
@@ -1553,16 +1553,16 @@ function renderBoatShop() {
         const btn = document.createElement('button');
         btn.className = 'elite-upgrade-btn';
         if (!isOwned && totalGold < boat.price) btn.disabled = true;
-        
+
         btn.style.background = isOwned ? (isActive ? '#2ecc71' : 'rgba(255,255,255,0.1)') : 'linear-gradient(135deg, #ffd700, #ff8c00)';
         btn.innerText = isOwned ? (isActive ? 'SEÇİLDİ' : 'SEÇ') : boat.price + ' G';
-        
+
         btn.addEventListener('click', () => {
-             if (isOwned) {
-                 selectBoat(boat.id);
-             } else {
-                 buyBoat(boat.id);
-             }
+            if (isOwned) {
+                selectBoat(boat.id);
+            } else {
+                buyBoat(boat.id);
+            }
         });
 
         card.appendChild(btn);
@@ -1595,7 +1595,7 @@ function buyBoat(id) {
 
 if (buyAmmoBtn) buyAmmoBtn.addEventListener('click', () => {
     const t = translations[currentLang];
-    
+
     // v1.99.30.06: Security Check - License Required
     if (!hasWeapon) {
         showToast(t.licenseRequired || "Önce Lisans Almalısın!", false);
@@ -1743,7 +1743,7 @@ canvas.addEventListener('touchstart', (e) => {
             moveTouchId = touch.identifier;
             touchX = tx;
             touchY = ty;
-            
+
             // DOUBLE TAP DASH (Sadece yönlendirme parmağı için)
             var now = performance.now();
             if (window.lastTap && (now - window.lastTap) < 300) {
@@ -1844,13 +1844,13 @@ function spawnObstacle() {
         if (!hasWeapon) hasWeapon = true; // v1.99.19.05: Combat Support (Free Weapon for L9)
         if (levelProgressTime - lastSpawnTime < 0.7) return; // HARD MODE: 0.7s interval
         lastSpawnTime = levelProgressTime;
-        
+
         const lAsset = levelAssets[8];
         const pMargin = lAsset ? lAsset.margin : 0.30;
         const spawnY = -150 - (Math.random() * 150);
         const riverShift = typeof getRiverShift === 'function' ? getRiverShift(spawnY) : 0;
         const riverWidth = canvas.width * (1 - 2 * pMargin);
-        
+
         // Kenarlarda doğma eğilimini artır (Confusion logic)
         const sideBias = (Math.random() < 0.6) ? (Math.random() < 0.5 ? 0.05 : 0.95) : Math.random();
         const randomX = (canvas.width * pMargin) + riverShift + (sideBias * riverWidth);
@@ -1860,15 +1860,15 @@ function spawnObstacle() {
         var toxicType = 'toxicSerpent';
         var rand = Math.random();
         if (rand < 0.35) toxicType = 'toxicSerpent';
-        else if (rand < 0.50) toxicType = 'magmaSerpent'; 
-        else toxicType = 'toxicBarrel'; 
+        else if (rand < 0.50) toxicType = 'magmaSerpent';
+        else toxicType = 'toxicBarrel';
 
         window.obstacles.push({
             type: toxicType,
             x: randomX,
             baseRelX: randomX - riverShift,
             relativeX: randomX - riverShift,
-            y: spawnY, 
+            y: spawnY,
             width: (toxicType === 'toxicSerpent' ? 32 : (toxicType === 'toxicBarrel' ? 39 : 50)),
             height: (toxicType === 'toxicSerpent' ? 100 : (toxicType === 'toxicBarrel' ? 56 : 60)),
             speedY: (toxicType === 'toxicBarrel' ? safeSpeed * 1.5 : safeSpeed * 0.8), // v19.09: Faster serpents, Fixed barrel flow
@@ -1878,7 +1878,7 @@ function spawnObstacle() {
             frequency: 1.5, amplitude: 65 // v1.99.27.09: Normalized snake movement
         });
         console.log("!!! TOXIC HARD MODE ACTIVE: " + toxicType + " !!!");
-        return; 
+        return;
     }
 
     // Güçlendirici Çıkması (v1.97 Balance: %10 -> %5)
@@ -1903,8 +1903,8 @@ function spawnObstacle() {
 
     // v1.99.19.09: ELITE SPAWN COOLDOWN (Anti-Cluster System)
     // Ölüm Vadisi'nde 0.5s, Normal zamanda 0.8s emniyet payı
-    var currentCooldown = isDZ ? 0.5 : 0.8; 
-    if (currentLevel === 7) currentCooldown = 0.4; 
+    var currentCooldown = isDZ ? 0.5 : 0.8;
+    if (currentLevel === 7) currentCooldown = 0.4;
     if (levelProgressTime - lastSpawnTime < currentCooldown) return;
 
     // Ölüm Vadisi Hız Bonusu (Elite Seviye)
@@ -1914,14 +1914,14 @@ function spawnObstacle() {
 
     // v1.99.19.09: ELITE LEVEL 1 DENSITY CAP (Max 3 obstacles)
     if (currentLevel === 1 && obstacles.length >= 3) return;
-    
+
     lastSpawnTime = levelProgressTime; // Doğumu mühürle
 
     if (currentLevel === 1 && obstacles.length >= 3) return; // v1.99.19.09: L1 Starter Balance
 
     // v1.99.19.09: ELITE VERTICAL SPACING GUARD (Anti-Wall System)
     for (var obs of obstacles) {
-        if (Math.abs(spawnY - obs.y) < 250) return; 
+        if (Math.abs(spawnY - obs.y) < 250) return;
     }
 
     var biomeIndex = (currentLevel - 1) % levelAssets.length;
@@ -1978,9 +1978,9 @@ function spawnObstacle() {
     var spawnGap = player.width + 75; // Kayıktan biraz daha geniş "güvenli şerit"
 
     // v1.99.19.09: L7 EXCLUSIVE EDGE BUFFER - Strictly exclusive to Lagoon
-    const dynamicObsBuffer = (currentLevel === 7) ? 65 : 15; 
-    const leftLimitRel = (canvas.width * spawnMargin) + dynamicObsBuffer;  
-    const rightLimitRel = (canvas.width * (1 - spawnMargin)) - (dynamicObsBuffer + 45); 
+    const dynamicObsBuffer = (currentLevel === 7) ? 65 : 15;
+    const leftLimitRel = (canvas.width * spawnMargin) + dynamicObsBuffer;
+    const rightLimitRel = (canvas.width * (1 - spawnMargin)) - (dynamicObsBuffer + 45);
 
 
     while (isBlocked && maxAttempts > 0) {
@@ -2002,16 +2002,16 @@ function spawnObstacle() {
         if (relSpawnX > rightLimitRel) relSpawnX = rightLimitRel;
     }
     spawnX = relSpawnX + riverShift;
-    window.lastObsRelX = relSpawnX; 
+    window.lastObsRelX = relSpawnX;
     var currentSpawnChance = 0.45;
     if (currentLevel === 7) currentSpawnChance = 0.90;
     else if (biomeIndex === 5) currentSpawnChance = 0.65; // Boşluk Yoğunluğu
     else if (biomeIndex === 7) currentSpawnChance = 0.85; // Cyber Yoğunluğu
     else if (biomeIndex === 8) currentSpawnChance = 0.95; // Toxic Yoğunluğu (v1.99.19.09 Force)
-    
+
     if (Math.random() < currentSpawnChance && allowedSpecialTypes.length > 0) {
         var selectedType = allowedSpecialTypes[Math.floor(Math.random() * allowedSpecialTypes.length)];
-        
+
         // v1.99.19.09: VERIFICATION LOG
         if (biomeIndex === 8) console.log("%c FORCE SPAWN: " + selectedType, "background: #222; color: #adff2f; font-weight: bold;");
 
@@ -2181,7 +2181,7 @@ function spawnObstacle() {
         } else if (selectedType === 'toyBalloon' || selectedType === 'paperPlane' || selectedType === 'kite') {
             const isL7 = currentLevel === 7 || (currentLevel > 0 && (currentLevel - 1) % levelAssets.length === 6);
             var w = 50, h = 50, sY = baseSpeed;
-            
+
             if (selectedType === 'toyBalloon') {
                 w = 45; h = 65; sY *= 0.85; // Balonlar biraz daha yavaş
             } else if (selectedType === 'paperPlane') {
@@ -2268,7 +2268,7 @@ function spawnObstacle() {
                 relativeX: spawnX - riverShift,
                 y: spawnY,
                 width: 25, height: 110,
-                speedY: baseSpeed * 2.1, 
+                speedY: baseSpeed * 2.1,
                 speedX: sx,
                 time: 0,
                 rotation: Math.atan2(sx, baseSpeed * 2.1)
@@ -2728,7 +2728,7 @@ function syncEliteHUD() {
             const cycleMax = 18000;
             const absoluteProgress = levelProgressTime * 5;
             const currentVal = absoluteProgress % cycleMax;
-            
+
             // Find the actual level tier this currentVal belongs to
             var activeIdx = 0;
             for (var i = levelAssets.length - 1; i >= 0; i--) {
@@ -2737,15 +2737,15 @@ function syncEliteHUD() {
                     break;
                 }
             }
-            
+
             const isLastInCycle = (activeIdx === levelAssets.length - 1);
             const nextThreshold = isLastInCycle ? cycleMax : levelAssets[activeIdx + 1].threshold;
             const prevThreshold = levelAssets[activeIdx].threshold;
-            
+
             // Calculate progress WITHIN the detected level tier
             const tierProgress = ((currentVal - prevThreshold) / (nextThreshold - prevThreshold)) * 100;
             const smoothWidth = Math.min(100, Math.max(0, tierProgress));
-            
+
             cachedHud.progress.style.width = smoothWidth.toFixed(2) + '%';
         }
 
@@ -2761,13 +2761,13 @@ function syncEliteHUD() {
 function getActivePerk() {
     if (!window.ELITE_COLLECTIONS || !window.ELITE_COLLECTIONS.boats) return null;
     // v1.99.30.06: currentAsset.pKey aktif kayığın ID'sidir
-    const activeId = (typeof currentAsset !== 'undefined') ? currentAsset.pKey : 'ilkbahar'; 
+    const activeId = (typeof currentAsset !== 'undefined') ? currentAsset.pKey : 'ilkbahar';
     return window.ELITE_COLLECTIONS.boats.find(b => b.id === activeId)?.perk || null;
 }
 
 function update(dt) {
     if (!isPlaying) return;
-    
+
     // Perk çarpanlarını hesapla
     let scoreMult = 1.0;
     let comboMult = 1.0;
@@ -2795,12 +2795,12 @@ function update(dt) {
     // v1.99.31.00: AMBIENT LIFE SPAWNER (Birds & Shadows)
     if (isPlaying && !isPaused) {
         if (Math.random() < 0.005) ambientEntities.push(new AmbientLife('bird'));
-        if (Math.random() * (bgScrollSpeed/200) < 0.008) ambientEntities.push(new AmbientLife('shadow'));
+        if (Math.random() * (bgScrollSpeed / 200) < 0.008) ambientEntities.push(new AmbientLife('shadow'));
     }
     ambientEntities.forEach(ae => ae.update(dt));
     ambientEntities = ambientEntities.filter(ae => ae.life > 0);
 
-    score += dt * 5 * scoreMult; 
+    score += dt * 5 * scoreMult;
 
     // --- v1.99.30.06: ASCENSION TIMER & ZOOM LERP (RESTORED) ---
     if (isAscending) {
@@ -2838,8 +2838,8 @@ function update(dt) {
     }
     var calculatedLevel = (loopCount * levelAssets.length) + targetIndex + 1;
     if (calculatedLevel > currentLevel) {
-        score += 500; 
-        
+        score += 500;
+
         const lAsset = levelAssets[(calculatedLevel - 1) % levelAssets.length];
 
         // --- v1.99.30.05: START SEAMLESS MORPHING ---
@@ -2848,25 +2848,25 @@ function update(dt) {
         transitionAlpha = 0;
         nextLevelAsset = lAsset;
         nextBgImg = bgImgs[lAsset.bgKey] || bgImgLava;
-        
+
         currentLevel = calculatedLevel; // Level resmi olarak değişir (Spawners uyum sağlar)
 
         // v1.99.27.09: Sarsılmaz Hız ve Varlık Senkronizasyonu
-        if (lAsset) window.targetLevelSpeed = lAsset.speed; 
+        if (lAsset) window.targetLevelSpeed = lAsset.speed;
 
         // v1.98.x: Void Zırhı Kısıtlaması (Sadece Level 6 ve katlarında geçerli)
         var isVoidLevel = (currentLevel % 6 === 0);
         if (!isVoidLevel && armorCharge > 0) {
             armorCharge = 0;
-            if(typeof showToast === 'function') showToast(translations[currentLang].armorDeactivated, false);
+            if (typeof showToast === 'function') showToast(translations[currentLang].armorDeactivated, false);
             saveGame();
-            if(typeof updateArmorUI === 'function') updateArmorUI();
-            if(typeof updateShopUI === 'function') updateShopUI();
+            if (typeof updateArmorUI === 'function') updateArmorUI();
+            if (typeof updateShopUI === 'function') updateShopUI();
         }
 
         // --- ADRENALİN PATLAMASI (Checkpoint Leap) v1.99.19.09 ---
         // Seviye geçişi hızı (Parallax ile daha belirgin olacak)
-        bgScrollSpeed = 450; 
+        bgScrollSpeed = 450;
         spawnInterval = lAsset.spawn;
 
         if (currentLevel > 1) {
@@ -2874,7 +2874,7 @@ function update(dt) {
             for (var i = 0; i < 3; i++) setTimeout(playCoinSound, i * 150);
         }
 
-        if(typeof showLevelUp === 'function') showLevelUp(currentLevel);
+        if (typeof showLevelUp === 'function') showLevelUp(currentLevel);
         saveGame();
     }
 
@@ -2941,7 +2941,7 @@ function update(dt) {
         if (isDashing) {
             targetScaleX = 0.72; targetScaleY = 1.38; targetSkew = 0;
         } else if (Math.abs(player.dx) > 0.05) { // Deadzone check
-            targetScaleX = 0.85; targetScaleY = 1.15; 
+            targetScaleX = 0.85; targetScaleY = 1.15;
             targetSkew = (player.dx > 0 ? 0.08 : -0.08); // Reduced Skew
         } else {
             targetScaleX = 1; targetScaleY = 1; targetSkew = 0;
@@ -2980,8 +2980,8 @@ function update(dt) {
     const riverShift = getRiverShift(player.y);
     // v1.99.19.09: L7 EXCLUSIVE PLAYER BUFFER - Strictly exclusive to Lagoon
     const dynamicPlayBuffer = (currentLevel === 7) ? 40 : (currentLevel === 6 ? 8 : (currentLevel >= 4 ? 25 : 10));
-    const playRiverLeft = (canvas.width * pMargin) + riverShift + dynamicPlayBuffer; 
-    const playRiverRight = (canvas.width * (1 - pMargin)) + riverShift - player.width - dynamicPlayBuffer; 
+    const playRiverLeft = (canvas.width * pMargin) + riverShift + dynamicPlayBuffer;
+    const playRiverRight = (canvas.width * (1 - pMargin)) + riverShift - player.width - dynamicPlayBuffer;
 
 
     // PLAYER X CLAMP: Karaya çıkışı fiziksel olarak da engelle!
@@ -3006,7 +3006,7 @@ function update(dt) {
         if (transitionTimer <= 0) {
             isTransitioningLevel = false;
             // v1.99.27.09: Sarsılmaz Hız Restorasyonu (Level 6 ve sonrası için mühürlendi)
-            bgScrollSpeed = window.targetLevelSpeed || (currentLAsset ? currentLAsset.speed : 200); 
+            bgScrollSpeed = window.targetLevelSpeed || (currentLAsset ? currentLAsset.speed : 200);
         }
     }
 
@@ -3046,14 +3046,14 @@ function update(dt) {
     // v1.99.30.06: BIOME-SPECIFIC AMBIENT PARTICLES
     if (isPlaying && !isPaused) {
         if (currentLevel === 5 && Math.random() < 0.08) { // Lava Embers
-            particles.push(new Particle(Math.random()*canvas.width, canvas.height + 20, "#ff4500", 'ember'));
+            particles.push(new Particle(Math.random() * canvas.width, canvas.height + 20, "#ff4500", 'ember'));
         }
         if (currentLevel === 6 && Math.random() < 0.12) { // Void Glitches
             const gColor = Math.random() > 0.5 ? "#00fbff" : "#ff00ff";
-            particles.push(new Particle(Math.random()*canvas.width, Math.random()*canvas.height, gColor, 'glitch'));
+            particles.push(new Particle(Math.random() * canvas.width, Math.random() * canvas.height, gColor, 'glitch'));
         }
         if (currentLevel === 7 && Math.random() < 0.05) { // Lagoon Bubbles
-            particles.push(new Particle(Math.random()*canvas.width, canvas.height + 20, "rgba(255,255,255,0.4)", 'bubble'));
+            particles.push(new Particle(Math.random() * canvas.width, canvas.height + 20, "rgba(255,255,255,0.4)", 'bubble'));
         }
     }
 
@@ -3100,8 +3100,8 @@ function update(dt) {
     // Kayığın Çarpışma Kutusu (Hitbox) - v1.99.32.00: DYNAMİC JUİCE SYNC
     var pw = (player.width - 8) * pScaleX;
     var ph = (player.height - 20) * pScaleY;
-    var px = player.x + player.width/2 - pw/2;
-    var py = player.y + player.height/2 - ph/2;
+    var px = player.x + player.width / 2 - pw / 2;
+    var py = player.y + player.height / 2 - ph / 2;
 
     if (powerupTimer > 0) powerupTimer -= dt;
 
@@ -3109,7 +3109,7 @@ function update(dt) {
     for (var i = powerups.length - 1; i >= 0; i--) {
         var p = powerups[i];
         p.y += p.speed * dt;
-        
+
         // Level 5 Bonus collection radius
         var pRadius = p.radius * (currentLevel === 5 ? 1.25 : 1.0);
 
@@ -3132,7 +3132,7 @@ function update(dt) {
 
         // v1.99.32.00: PASSIVE ELITE MAGNET (Level 5 Only)
         var magnetRange = (powerupTimer > 0) ? 400 : (currentLevel === 5 ? 120 : 0);
-        
+
         if (magnetRange > 0) {
             var dxM = cx - g.x;
             var dyM = cy - g.y;
@@ -3165,10 +3165,10 @@ function update(dt) {
             totalGold += collected;
             score += collected * 100; // v1.199.13.0: SKOR ARTIK DEĞERLİ! (x100 Bonus)
             saveGame();
-            
+
             // --- v1.99.30.06: MISSION HOOK & JUICY VFX ---
             if (window.MissionManager) window.MissionManager.notify('gold', goldCount);
-            
+
             // Flying gold effect
             const gp = new Particle(g.x, g.y, "#FFD700");
             gp.targetX = 40; gp.targetY = 40; // HUD position
@@ -3209,10 +3209,10 @@ function update(dt) {
             const rShift = (typeof getRiverShift === 'function') ? getRiverShift(obs.y) : 0;
             const bLeft = (canvas.width * cMargin) + rShift + 10;
             const bRight = (canvas.width * (1 - cMargin)) + rShift - obs.width - 10;
-            
+
             // Eğer karaya çok yaklaşırsa hızı ve konumu sınırla
-            if (obs.x < bLeft) { obs.x = bLeft; if(obs.speedX < 0) obs.speedX = 0; }
-            if (obs.x > bRight) { obs.x = bRight; if(obs.speedX > 0) obs.speedX = 0; }
+            if (obs.x < bLeft) { obs.x = bLeft; if (obs.speedX < 0) obs.speedX = 0; }
+            if (obs.x > bRight) { obs.x = bRight; if (obs.speedX > 0) obs.speedX = 0; }
         } else if (obs.type === 'whirlpool' || obs.type === 'leafTornado' || obs.type === 'blackHole') {
             obs.rotation += dt * (obs.type === 'blackHole' ? 120 : 300); // Görsel dönüş hızı
 
@@ -3255,7 +3255,7 @@ function update(dt) {
                     // %15 Chance for INSTANT BURST (0.2s warning) - v1.99.19.09 Surprise
                     const isInstant = Math.random() < 0.15;
                     obs.state = 'warning';
-                    obs.stateTimer = isInstant ? 0.2 : (0.6 + Math.random() * 0.4); 
+                    obs.stateTimer = isInstant ? 0.2 : (0.6 + Math.random() * 0.4);
                 } else if (obs.state === 'warning') {
                     obs.state = 'erupting';
                     obs.stateTimer = 1.0 + Math.random() * 0.8; // Değişken patlama süresi
@@ -3286,7 +3286,7 @@ function update(dt) {
             const trackingSpeed = obs.type === 'asteroid' ? 65 : 95; // Asteroidler daha kütleli, daha yavaş döner
             if (player.x > obs.x + obs.width / 2) obs.x += trackingSpeed * dt;
             else obs.x -= trackingSpeed * dt;
-            
+
             // Update relativeX for Elite Drift consistency
             if (typeof getRiverShift === 'function') {
                 obs.relativeX = obs.x - getRiverShift(obs.y);
@@ -3332,7 +3332,7 @@ function update(dt) {
             obs.x += (obs.speedX + swimWiggle) * dt;
             // Nehir kaymasına (drift) uyum sağla (Opsiyonel: Sıçanlar nehirden bağımsız yüzebilir ama senkronizasyon için ekledik)
             if (obs.relativeX === undefined) obs.relativeX = obs.x - getRiverShift(obs.y);
-            obs.relativeX += (obs.speedX + swimWiggle) * dt; 
+            obs.relativeX += (obs.speedX + swimWiggle) * dt;
             obs.x = getRiverShift(obs.y) + obs.relativeX;
         } else if (obs.type === 'toxicSerpent') {
             // v1.99.19.09: SLITHER AROUND ORIGIN (Fix Centering Pull)
@@ -3345,7 +3345,7 @@ function update(dt) {
             obs.time += (dt || 0.016);
             const driftX = Math.sin(obs.time * 3) * 80;
             const driftY = Math.cos(obs.time * 4) * 25;
-            obs.relativeX = (obs.relativeX || (obs.x - getRiverShift(obs.y))) + driftX * dt; 
+            obs.relativeX = (obs.relativeX || (obs.x - getRiverShift(obs.y))) + driftX * dt;
             obs.x = getRiverShift(obs.y) + obs.relativeX; // v1.99.19.09: VİSİUAL SYNC
             obs.speedY += driftY * dt;
         } else if (obs.type === 'paperPlane') {
@@ -3378,9 +3378,9 @@ function update(dt) {
         if (currentLevel === 5 || (currentLevel > 1 && currentLevel !== 5)) { // currentLevel 1'de drifti tamamen devre dışı bırak
             // Eğer nesne ilk defa güncelleniyorsa ve relativeX yoksa ata (Eski nesnelerle uyum)
             if (obs.relativeX === undefined) obs.relativeX = obs.x - getRiverShift(obs.y - obs.speedY * dt);
-            
+
             // v1.99.25.00: Level 1'de nehir kıvrımı etkisini sıfırla
-            if (currentLevel === 1) obs.relativeX = obs.x - getRiverShift(obs.y); 
+            if (currentLevel === 1) obs.relativeX = obs.x - getRiverShift(obs.y);
 
             // Düşman hareketini (speedX) relativeX üzerinden uygula
             if (obs.speedX) obs.relativeX += obs.speedX * dt;
@@ -3447,9 +3447,9 @@ function update(dt) {
                 if (other.type === 'rock') {
                     if (obs.x < other.x + other.width && obs.x + obs.width > other.x &&
                         obs.y < other.y + other.height && obs.y + obs.height > other.y) {
-                        
+
                         // Hinlik Başlasın: Kütük dönmeye ve yana kaymaya başlar
-                        obs.rotSpeed = (obs.rotSpeed || 0) + 5; 
+                        obs.rotSpeed = (obs.rotSpeed || 0) + 5;
                         obs.speedX = (obs.x < other.x) ? -100 : 100; // Çarptığı yöne fırlar
                         obs.x += obs.speedX * dt * 2;
                         break;
@@ -3476,20 +3476,20 @@ function update(dt) {
 
         // --- v1.99.30.06: NEAR MISS DETECTION (ELITE FLOW) ---
         var isColliding = (px < ox + ow && px + pw > ox && py < oy + oh && py + ph > oy);
-        
+
         // Genişletilmiş 'Yakın Geçiş' kutusu (40px buffer)
         var nearMargin = 40;
         var isNear = (px < ox + ow + nearMargin && px + pw > ox - nearMargin &&
-                      py < oy + oh + nearMargin && py + ph > oy - nearMargin);
+            py < oy + oh + nearMargin && py + ph > oy - nearMargin);
 
         if (isNear && !isColliding && !obs.nearMissCounted && !isAscending) {
             obs.nearMissCounted = true;
             eliteCombo++;
             comboTimer = 0; // Her yeni combo süreyi sıfırlar
-            
+
             // Görsel Geri Bildirim (Kıl Payı!)
-            for (var p = 0; p < 8; p++) particles.push(new Particle(px + pw/2, py + ph/2, "#00e5ff"));
-            
+            for (var p = 0; p < 8; p++) particles.push(new Particle(px + pw / 2, py + ph / 2, "#00e5ff"));
+
             if (eliteCombo >= 3) {
                 isAscending = true;
                 ascensionTimer = ASCENSION_DURATION;
@@ -3498,7 +3498,7 @@ function update(dt) {
                 if (typeof showToast === 'function') showToast("ASCENSION: UNSTOPPABLE! ⚡", true);
                 if (typeof triggerVibration === 'function') triggerVibration([50, 30, 100]);
             }
-            
+
             // --- v1.99.30.06: MISSION HOOK & ELITE WHOOSH ---
             if (window.MissionManager) window.MissionManager.notify('near_miss');
             if (typeof playWhooshSound === 'function') playWhooshSound();
@@ -3510,7 +3510,7 @@ function update(dt) {
                 obstacles.splice(i, 1);
                 score += 100;
                 if (window.MissionManager) window.MissionManager.notify('destroy_obstacle');
-                for (var p = 0; p < 15; p++) particles.push(new Particle(ox + ow/2, oy + oh/2, "#fff"));
+                for (var p = 0; p < 15; p++) particles.push(new Particle(ox + ow / 2, oy + oh / 2, "#fff"));
                 continue;
             }
 
@@ -3594,7 +3594,7 @@ function update(dt) {
                     bullets.splice(i, 1);
                     // Hit Effect (Flashes white)
                     for (var p = 0; p < 5; p++) particles.push(new Particle(b.x, b.y, "#fff"));
-                    shakeTimer = 0.1; 
+                    shakeTimer = 0.1;
                 } else {
                     obstacles.splice(j, 1);
                     bullets.splice(i, 1);
@@ -3765,9 +3765,9 @@ function draw(dt) {
         ctx.save();
         ctx.globalAlpha = 0.3 * (isMorphing ? (1 - transitionAlpha) : 1.0);
         // Yumuşak Sis Katmanı (Procedural)
-        for(var i=0; i<3; i++) {
-            var fy = (parallaxFogY + i * canvas.height/3) % canvas.height;
-            var fx = Math.sin(performance.now()/1000 + i) * 50;
+        for (var i = 0; i < 3; i++) {
+            var fy = (parallaxFogY + i * canvas.height / 3) % canvas.height;
+            var fx = Math.sin(performance.now() / 1000 + i) * 50;
             ctx.fillStyle = currentLevel === 5 ? "rgba(255, 100, 0, 0.1)" : "rgba(255, 255, 255, 0.1)";
             ctx.fillRect(fx, fy, canvas.width, 150);
         }
@@ -3864,7 +3864,7 @@ function draw(dt) {
                     ctx.drawImage(tile, sx + margin, sy + margin, sw - margin * 2, sh - margin * 2, -obs.height / 2, -obs.width / 2, obs.height, obs.width);
                     ctx.restore();
                 }
-                
+
                 // v1.99.19.09: ONLY set drawSuccess if we actually drew a supported tileset type
                 if (obs.type === 'rock' || obs.type === 'vertical' || obs.type === 'croc' || obs.type === 'hippo') {
                     drawSuccess = true;
@@ -3960,7 +3960,7 @@ function draw(dt) {
                 if (obsTiles['plane_elite']) {
                     ctx.drawImage(obsTiles['plane_elite'], -obs.width / 2, -obs.height / 2, obs.width, obs.height);
                 } else {
-                    ctx.fillStyle = "white"; 
+                    ctx.fillStyle = "white";
                     ctx.fillRect(-obs.width / 2, -obs.height / 2, obs.width, obs.height);
                 }
                 ctx.restore();
@@ -4151,18 +4151,18 @@ function draw(dt) {
                 // --- v1.99.19.09: ELITE BLACK HOLE RENDERING ---
                 ctx.save();
                 ctx.translate(obs.x + obs.width / 2, obs.y + obs.height / 2);
-                
+
                 // Event Horizon (Pulsing Glow)
                 var pulse = 0.85 + Math.sin(performance.now() / 200) * 0.15;
                 ctx.shadowBlur = 40 * pulse;
                 ctx.shadowColor = "#9b59b6"; // Forbidden Void Purple
-                
+
                 // Inner Void
                 ctx.fillStyle = "#000000";
                 ctx.beginPath();
                 ctx.arc(0, 0, (obs.width / 2.2) * pulse, 0, Math.PI * 2);
                 ctx.fill();
-                
+
                 // Distortion Ring
                 ctx.strokeStyle = "rgba(155, 89, 182, 0.6)";
                 ctx.lineWidth = 4;
@@ -4173,14 +4173,14 @@ function draw(dt) {
                     ctx.arc(obs.width / 3, 0, obs.width / 4, 0, Math.PI);
                     ctx.stroke();
                 }
-                
+
                 ctx.restore();
                 drawSuccess = true;
             } else if (obs.type === 'laserGate') {
                 // --- v1.99.19.09: NEON LASER BARRIER ---
                 ctx.save();
                 ctx.translate(obs.x + obs.width / 2, obs.y + obs.height / 2);
-                
+
                 if (obs.state === 'warning') {
                     // Titreyen Pembe Uyarı Işığı
                     var blink = Math.sin(performance.now() / 50) > 0 ? 0.8 : 0.2;
@@ -4200,7 +4200,7 @@ function draw(dt) {
                     ctx.moveTo(-obs.width / 2, 0);
                     ctx.lineTo(obs.width / 2, 0);
                     ctx.stroke();
-                    
+
                     // İç Beyaz Çizgi (Core)
                     ctx.strokeStyle = "#ffffff";
                     ctx.lineWidth = 2;
@@ -4213,7 +4213,7 @@ function draw(dt) {
                 ctx.save();
                 ctx.translate(obs.x + obs.width / 2, obs.y + obs.height / 2);
                 ctx.rotate(obs.time * 2);
-                
+
                 // Drone Gövdesi (Üçgen)
                 ctx.shadowBlur = 10;
                 ctx.shadowColor = "#ff00ff";
@@ -4224,20 +4224,20 @@ function draw(dt) {
                 ctx.lineTo(-obs.width / 2, obs.height / 2);
                 ctx.closePath();
                 ctx.fill();
-                
+
                 // Core
                 ctx.fillStyle = "#fff";
                 ctx.beginPath();
                 ctx.arc(0, 0, 8, 0, Math.PI * 2);
                 ctx.fill();
-                
+
                 ctx.restore();
                 drawSuccess = true;
             } else if (obs.type === 'glitchStream') {
                 // --- v1.99.19.09: DIGITAL GLITCH STREAM ---
                 ctx.save();
                 ctx.translate(obs.x, obs.y);
-                
+
                 // Parazit parçacıkları
                 for (var i = 0; i < 5; i++) {
                     var rx = Math.random() * obs.width;
@@ -4246,18 +4246,18 @@ function draw(dt) {
                     ctx.fillStyle = i % 2 === 0 ? "rgba(0, 229, 255, 0.4)" : "rgba(255, 0, 255, 0.4)";
                     ctx.fillRect(rx, ry, rw, 4);
                 }
-                
+
                 ctx.restore();
                 drawSuccess = true;
             } else if (obs.type === 'toxicRat') {
                 // --- v1.99.19.09: ELITE MUTATED RAT (Redesign) ---
                 ctx.save();
                 ctx.translate(obs.x + obs.width / 2, obs.y + obs.height / 2);
-                
+
                 // 1. Su üstünde sülfürlü yeşil iz (Toxic Wake)
                 ctx.fillStyle = "rgba(50, 205, 50, 0.2)";
                 ctx.beginPath();
-                ctx.arc(-obs.width/2, 5, 10 + Math.sin(obs.time*10)*5, 0, Math.PI*2);
+                ctx.arc(-obs.width / 2, 5, 10 + Math.sin(obs.time * 10) * 5, 0, Math.PI * 2);
                 ctx.fill();
 
                 // 2. Gövde (Paslı Gri)
@@ -4265,15 +4265,15 @@ function draw(dt) {
                 ctx.beginPath();
                 ctx.ellipse(0, 0, obs.width / 2, obs.height / 2.3, 0, 0, Math.PI * 2);
                 ctx.fill();
-                
+
                 // 3. Animatif Kuyruk (Yılan gibi kıvrılan)
                 ctx.strokeStyle = "#5a3a3a";
                 ctx.lineWidth = 3;
                 ctx.beginPath();
                 ctx.moveTo(-obs.width / 2, 2);
-                for(var i=0; i<15; i++) {
-                    var tx = -obs.width/2 - i*3;
-                    var ty = Math.sin(obs.time * 8 + i*0.5) * 8;
+                for (var i = 0; i < 15; i++) {
+                    var tx = -obs.width / 2 - i * 3;
+                    var ty = Math.sin(obs.time * 8 + i * 0.5) * 8;
                     ctx.lineTo(tx, ty);
                 }
                 ctx.stroke();
@@ -4286,55 +4286,55 @@ function draw(dt) {
                 ctx.arc(obs.width / 3, -5, 3, 0, Math.PI * 2);
                 ctx.arc(obs.width / 3, 5, 3, 0, Math.PI * 2);
                 ctx.fill();
-                
+
                 ctx.restore();
                 drawSuccess = true;
             } else if (obs.type === 'toxicBarrel') {
                 // v1.99.27.09: Simplified Barrel Design
                 ctx.save();
                 ctx.translate(obs.x + obs.width / 2, obs.y + obs.height / 2);
-                
+
                 // 3. Paslı Varil Gövdesi (Kavisli Silindir Formu)
                 ctx.fillStyle = "#2c2c2c";
                 // Ana Gövde
                 ctx.beginPath();
-                ctx.moveTo(-obs.width/2 + 2, -obs.height/2);
-                ctx.quadraticCurveTo(0, -obs.height/2 - 3, obs.width/2 - 2, -obs.height/2);
-                ctx.lineTo(obs.width/2, obs.height/2);
-                ctx.quadraticCurveTo(0, obs.height/2 + 3, -obs.width/2, obs.height/2);
+                ctx.moveTo(-obs.width / 2 + 2, -obs.height / 2);
+                ctx.quadraticCurveTo(0, -obs.height / 2 - 3, obs.width / 2 - 2, -obs.height / 2);
+                ctx.lineTo(obs.width / 2, obs.height / 2);
+                ctx.quadraticCurveTo(0, obs.height / 2 + 3, -obs.width / 2, obs.height / 2);
                 ctx.closePath();
                 ctx.fill();
-                
+
                 // Varil Boğumları (Ribs)
                 ctx.strokeStyle = "#1a1a1a";
                 ctx.lineWidth = 2;
-                for(var i=-1; i<=1; i++) {
+                for (var i = -1; i <= 1; i++) {
                     ctx.beginPath();
-                    var ry = i * (obs.height/3.5);
-                    ctx.moveTo(-obs.width/2, ry);
-                    ctx.quadraticCurveTo(0, ry + 2, obs.width/2, ry);
+                    var ry = i * (obs.height / 3.5);
+                    ctx.moveTo(-obs.width / 2, ry);
+                    ctx.quadraticCurveTo(0, ry + 2, obs.width / 2, ry);
                     ctx.stroke();
                 }
 
                 // Pas Lekeleri
                 ctx.fillStyle = "#8b4513"; ctx.globalAlpha = 0.5;
-                ctx.fillRect(-obs.width/4, -obs.height/3, 6, 12); ctx.globalAlpha = 1.0;
+                ctx.fillRect(-obs.width / 4, -obs.height / 3, 6, 12); ctx.globalAlpha = 1.0;
 
                 // 4. İkon (Kuşak üzerinde)
-                ctx.fillStyle = "#ffcc00"; ctx.fillRect(-obs.width/2 + 2, -4, obs.width - 4, 10);
-                
+                ctx.fillStyle = "#ffcc00"; ctx.fillRect(-obs.width / 2 + 2, -4, obs.width - 4, 10);
+
                 ctx.restore();
                 drawSuccess = true;
             } else if (obs.type === 'toxicSerpent') {
                 // --- v1.99.19.09: PROCEDURAL TOXIC SERPENT (Restored High Fidelity) ---
                 ctx.save();
                 ctx.translate(obs.x + obs.width / 2, obs.y + obs.height / 2);
-                
+
                 // 1. Su üstünde toksik dalgalanma (Toxic Wake)
                 const wakePulse = Math.sin(obs.time * 4) * 5;
                 ctx.fillStyle = "rgba(0, 255, 127, 0.15)";
                 ctx.beginPath();
-                ctx.ellipse(0, obs.height/2, obs.width*1.5, 20 + wakePulse, 0, 0, Math.PI*2);
+                ctx.ellipse(0, obs.height / 2, obs.width * 1.5, 20 + wakePulse, 0, 0, Math.PI * 2);
                 ctx.fill();
 
                 // 2. Yılanın Boğumlu Gövdesi (7 Segments)
@@ -4359,7 +4359,7 @@ function draw(dt) {
                         ctx.arc(waveX - 8, segmentY - 5, 4, 0, Math.PI * 2);
                         ctx.arc(waveX + 8, segmentY - 5, 4, 0, Math.PI * 2);
                         ctx.fill();
-                        
+
                         // Neon pupil
                         ctx.fillStyle = "#fff";
                         ctx.beginPath();
@@ -4368,7 +4368,7 @@ function draw(dt) {
                         ctx.fill();
                     }
                 }
-                
+
                 ctx.restore();
                 drawSuccess = true;
             } else if (obs.type === 'cyberSpear') {
@@ -4376,19 +4376,19 @@ function draw(dt) {
                 ctx.save();
                 ctx.translate(obs.x + obs.width / 2, obs.y + obs.height / 2);
                 ctx.rotate(obs.rotation);
-                
+
                 // Mızrak Gövdesi - Neon Yeşil
                 ctx.shadowBlur = 18;
                 ctx.shadowColor = "#39ff14";
                 ctx.fillStyle = "#39ff14";
-                
+
                 ctx.beginPath();
                 ctx.moveTo(0, -obs.height / 2); // Keskin uç (tip)
                 ctx.lineTo(obs.width / 2, obs.height / 2);
                 ctx.lineTo(-obs.width / 2, obs.height / 2);
                 ctx.closePath();
                 ctx.fill();
-                
+
                 // İç Işık (Core)
                 ctx.fillStyle = "#ffff";
                 ctx.beginPath();
@@ -4397,18 +4397,18 @@ function draw(dt) {
                 ctx.lineTo(-5, obs.height / 2 - 5);
                 ctx.closePath();
                 ctx.fill();
-                
+
                 ctx.restore();
                 drawSuccess = true;
             } else if (obs.type === 'toyBalloon') {
                 // --- v1.99.19.09: NOSTALGIC TOY BALLOONS ---
                 ctx.save();
                 ctx.translate(obs.x + obs.width / 2, obs.y + obs.height / 2);
-                
+
                 // Balon İpi (Sallanan)
                 ctx.beginPath();
                 ctx.moveTo(0, obs.height / 2.5);
-                ctx.bezierCurveTo(Math.sin(performance.now()/200)*10, obs.height/2, -Math.sin(performance.now()/200)*10, obs.height*0.8, 0, obs.height);
+                ctx.bezierCurveTo(Math.sin(performance.now() / 200) * 10, obs.height / 2, -Math.sin(performance.now() / 200) * 10, obs.height * 0.8, 0, obs.height);
                 ctx.strokeStyle = "rgba(255, 255, 255, 0.4)";
                 ctx.stroke();
 
@@ -4419,11 +4419,11 @@ function draw(dt) {
                 ctx.beginPath();
                 ctx.ellipse(0, 0, obs.width / 2.2, obs.height / 2.5, 0, 0, Math.PI * 2);
                 ctx.fill();
-                
+
                 // Parlama (HighLight)
                 ctx.fillStyle = "rgba(255,255,255,0.3)";
                 ctx.beginPath();
-                ctx.ellipse(-obs.width/8, -obs.height/8, obs.width/6, obs.width/8, 0, 0, Math.PI*2);
+                ctx.ellipse(-obs.width / 8, -obs.height / 8, obs.width / 6, obs.width / 8, 0, 0, Math.PI * 2);
                 ctx.fill();
 
                 ctx.restore();
@@ -4432,8 +4432,8 @@ function draw(dt) {
                 // --- v1.99.19.09: RETRO PAPER PLANE ---
                 ctx.save();
                 ctx.translate(obs.x + obs.width / 2, obs.y + obs.height / 2);
-                ctx.rotate(Math.atan2(obs.speedY, obs.speedX) + Math.PI/2);
-                
+                ctx.rotate(Math.atan2(obs.speedY, obs.speedX) + Math.PI / 2);
+
                 ctx.fillStyle = "#ffffff";
                 ctx.strokeStyle = "#dddddd";
                 ctx.lineWidth = 1;
@@ -4445,7 +4445,7 @@ function draw(dt) {
                 ctx.closePath();
                 ctx.fill();
                 ctx.stroke();
-                
+
                 ctx.restore();
                 drawSuccess = true;
             } else if (obs.type === 'kite') {
@@ -4453,7 +4453,7 @@ function draw(dt) {
                 ctx.save();
                 ctx.translate(obs.x + obs.width / 2, obs.y + obs.height / 2);
                 ctx.rotate(obs.rotation || 0);
-                
+
                 // Uçurtma İskeleti
                 ctx.fillStyle = "#ff5722";
                 ctx.beginPath();
@@ -4463,14 +4463,14 @@ function draw(dt) {
                 ctx.lineTo(-obs.width / 2, 0);
                 ctx.closePath();
                 ctx.fill();
-                
+
                 // Kuyruk (Renkli Kurdeleler)
                 ctx.strokeStyle = "#ffeb3b";
                 ctx.lineWidth = 3;
                 ctx.beginPath();
                 ctx.moveTo(0, obs.height / 2);
-                for(var i=0; i<3; i++) {
-                    ctx.lineTo(Math.sin(performance.now()/150 + i)*20, obs.height/2 + (i+1)*25);
+                for (var i = 0; i < 3; i++) {
+                    ctx.lineTo(Math.sin(performance.now() / 150 + i) * 20, obs.height / 2 + (i + 1) * 25);
                 }
                 ctx.stroke();
 
@@ -4496,11 +4496,11 @@ function draw(dt) {
                         ctx.lineWidth = 4;
                         ctx.stroke();
                         // Shake effect for the vent
-                        ctx.translate((Math.random()-0.5)*5, (Math.random()-0.5)*5);
+                        ctx.translate((Math.random() - 0.5) * 5, (Math.random() - 0.5) * 5);
                     }
                 } else if (obs.state === 'erupting') {
                     // --- v1.99.19.09 ULTRA ELITE SURPRISE ERUPTION ---
-                    const grad = ctx.createLinearGradient(0, obs.height/2, 0, -obs.height * 2.5);
+                    const grad = ctx.createLinearGradient(0, obs.height / 2, 0, -obs.height * 2.5);
                     grad.addColorStop(0, "rgba(255, 60, 0, 0.95)");
                     grad.addColorStop(0.3, "rgba(255, 165, 0, 0.9)");
                     grad.addColorStop(0.6, "rgba(255, 255, 0, 0.7)");
@@ -4509,18 +4509,18 @@ function draw(dt) {
                     ctx.shadowBlur = 50;
                     ctx.shadowColor = "#ff4500";
                     ctx.fillStyle = grad;
-                    
+
                     // Main Pillar (Dynamic width based on eruption peak)
                     ctx.beginPath();
-                    ctx.moveTo(-obs.width/2, obs.height/2);
-                    ctx.quadraticCurveTo(0, -obs.height * 2.2, obs.width/2, obs.height/2);
+                    ctx.moveTo(-obs.width / 2, obs.height / 2);
+                    ctx.quadraticCurveTo(0, -obs.height * 2.2, obs.width / 2, obs.height / 2);
                     ctx.fill();
 
                     // Magma Sparks (Increased count for v1.99.19.09 Surprise)
-                    for(var k=0; k<8; k++) {
-                        var sx = (Math.random()-0.5) * obs.width;
-                        var sy = (Math.random()-1) * obs.height * 2;
-                        particles.push(new Particle(obs.x + obs.width/2 + sx, obs.y + obs.height/2 + sy, "#ffaa00"));
+                    for (var k = 0; k < 8; k++) {
+                        var sx = (Math.random() - 0.5) * obs.width;
+                        var sy = (Math.random() - 1) * obs.height * 2;
+                        particles.push(new Particle(obs.x + obs.width / 2 + sx, obs.y + obs.height / 2 + sy, "#ffaa00"));
                     }
                 }
                 ctx.restore();
@@ -4540,7 +4540,7 @@ function draw(dt) {
                 ctx.lineTo(obs.width / 2, obs.height / 4);
                 ctx.lineTo(obs.width * 0.4, obs.height / 2);
                 ctx.closePath();
-                
+
                 ctx.fillStyle = "#1a0f0f"; // Obsidian Black/Deep Red
                 ctx.fill();
 
@@ -4548,7 +4548,7 @@ function draw(dt) {
                 const pulse = 0.5 + Math.sin(performance.now() / 300) * 0.5;
                 ctx.strokeStyle = `rgba(255, 69, 0, ${0.4 + pulse * 0.6})`;
                 ctx.lineWidth = 2 + (pulse * 2);
-                
+
                 // Jagged Magma Vein 1
                 ctx.beginPath();
                 ctx.moveTo(-obs.width * 0.2, obs.height * 0.4);
@@ -4567,7 +4567,7 @@ function draw(dt) {
                 ctx.shadowColor = "#ff4500";
                 ctx.strokeStyle = `rgba(255, 69, 0, ${0.8})`;
                 ctx.lineWidth = 3;
-                
+
                 // Re-draw path for glow stroke
                 ctx.beginPath();
                 ctx.moveTo(-obs.width * 0.4, obs.height / 2);
@@ -4595,38 +4595,38 @@ function draw(dt) {
                 const isToxic = (currentLevel === 9);
                 const serpentGlow = isToxic ? "#39ff14" : "#ff4500";
                 const serpentColor = isToxic ? "#1a4d1a" : "#331100";
-                
+
                 // Head Section
                 const headGlow = 0.7 + Math.sin(performance.now() / 150) * 0.3;
                 ctx.shadowBlur = 25 * headGlow;
                 ctx.shadowColor = serpentGlow;
-                
-                ctx.fillStyle = serpentColor; 
+
+                ctx.fillStyle = serpentColor;
                 ctx.beginPath();
                 ctx.arc(0, 0, obs.width / 2, 0, Math.PI * 2);
                 ctx.fill();
-                
+
                 // Eyes / Core (Always glowing yellow/white)
                 ctx.fillStyle = "#ffcc00";
                 ctx.beginPath();
-                ctx.arc(-obs.width/4, -obs.height/6, 6, 0, Math.PI * 2);
-                ctx.arc(obs.width/4, -obs.height/6, 6, 0, Math.PI * 2);
+                ctx.arc(-obs.width / 4, -obs.height / 6, 6, 0, Math.PI * 2);
+                ctx.arc(obs.width / 4, -obs.height / 6, 6, 0, Math.PI * 2);
                 ctx.fill();
-                
+
                 // Body Segments (Lagging behind slightly for snake effect)
                 ctx.restore(); // Exit head local space
-                
+
                 for (var i = 1; i <= 3; i++) {
                     ctx.save();
                     // Lag the segments along the sine wave
                     const lagTime = obs.time - (i * 0.15);
-                    const segRelX = (obs.baseRelX - getRiverShift(obs.y + i*25)) + Math.sin(lagTime * obs.frequency) * obs.amplitude;
-                    const segX = getRiverShift(obs.y + i*25) + segRelX;
+                    const segRelX = (obs.baseRelX - getRiverShift(obs.y + i * 25)) + Math.sin(lagTime * obs.frequency) * obs.amplitude;
+                    const segX = getRiverShift(obs.y + i * 25) + segRelX;
                     const segY = obs.y + i * 28; // Spacing
-                    
-                    ctx.translate(segX + obs.width/2, segY + obs.height/2);
+
+                    ctx.translate(segX + obs.width / 2, segY + obs.height / 2);
                     const sSize = (obs.width / 2) * (1 - (i * 0.15));
-                    
+
                     ctx.shadowBlur = 10;
                     ctx.shadowColor = serpentGlow;
                     ctx.fillStyle = (i % 2 === 0) ? (isToxic ? "#2e8b57" : "#ff4500") : (isToxic ? "#0a2d0a" : "#442200");
@@ -4736,7 +4736,7 @@ function draw(dt) {
     if (isImgReady) {
         ctx.save();
         ctx.translate(player.x + player.width / 2, player.y + player.height / 2);
-        
+
         // v1.99.31.00: Apply Juice Transforms
         ctx.scale(pScaleX, (pScaleY || 1.0));
         ctx.rotate(pSkew);
@@ -4799,31 +4799,31 @@ function draw(dt) {
 
         const phase = performance.now() / 150;
         const alpha = 0.4 + Math.sin(phase) * 0.4;
-        
+
         // DANGER VIGNETTE (Elite Atmosphere)
-        var grad = ctx.createRadialGradient(canvas.width/2, canvas.height/2, 50, canvas.width/2, canvas.height/2, canvas.height/0.8);
+        var grad = ctx.createRadialGradient(canvas.width / 2, canvas.height / 2, 50, canvas.width / 2, canvas.height / 2, canvas.height / 0.8);
         grad.addColorStop(0, "transparent");
         grad.addColorStop(1, `rgba(255, 0, 0, ${alpha * 0.4})`);
         ctx.fillStyle = grad;
-        ctx.fillRect(0,0, canvas.width, canvas.height);
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
 
         // CENTRAL SKULL & TEXT
         ctx.globalAlpha = alpha + 0.2;
         ctx.shadowColor = "#ff1744";
         ctx.shadowBlur = 25;
-        
+
         ctx.fillStyle = "#ff1744";
         ctx.textAlign = "center";
-        
+
         // Pulsing Skull
         const scale = 1 + Math.sin(phase) * 0.1;
         ctx.font = `bold ${48 * scale}px Arial`;
         ctx.fillText("💀", canvas.width / 2, canvas.height * 0.35);
-        
+
         // Danger Text
         ctx.font = "900 24px 'Outfit', sans-serif";
         ctx.fillText("DEATH ZONE", canvas.width / 2, canvas.height * 0.35 + 40);
-        
+
         ctx.restore();
     }
 
@@ -4931,7 +4931,7 @@ function drawProceduralWater(dt) {
             ctx.fillStyle = grad;
             ctx.fillRect(rLeft + sizzle, ly, rRight - rLeft, 25);
         }
-        
+
         // Heat Haze (Subtle distortion effect)
         ctx.save();
         ctx.globalCompositeOperation = 'overlay';
@@ -4979,7 +4979,7 @@ function gameLoop(timestamp) {
     bgY += ambientSpeed * dt;
     parallaxSkyY += (ambientSpeed * 0.2) * dt; // Layer 1 (Uzak)
     parallaxFogY += (ambientSpeed * 1.5) * dt; // Layer 3 (Yakın)
-    
+
     var totalBgHeight = Math.ceil(canvas.height) * 2;
     if (bgY >= totalBgHeight) bgY -= totalBgHeight;
     if (parallaxSkyY >= totalBgHeight) parallaxSkyY -= totalBgHeight;
@@ -5017,7 +5017,7 @@ if (startBtn) startBtn.addEventListener('click', startGame);
 // v1.99.27.07: MASTER ZERO-LAG MENU TRANSITION
 function goToMainMenu() {
     console.log("🏙️ [ELITE SPEED] Zero-Lag Transition to Main Menu...");
-    
+
     // v1.99.30.06: ELITE SESSION SUSPEND (Do not reset if voluntary exit)
     if (!isGameOver) {
         window.resumeLevel = currentLevel;
@@ -5253,7 +5253,7 @@ if (resetYes) resetYes.addEventListener('click', () => {
     // 4. Bulut Mührü (Firebase Sync) - Force=true
     if (typeof triggerEliteEconomySync === 'function') {
         console.log("🏙️ [ELITE RESET] Forced Cloud Wipe Initiated...");
-        triggerEliteEconomySync(true); 
+        triggerEliteEconomySync(true);
     }
 
     // 4. Yerel Hafıza Temizliği (Hassas Dosyalar)
