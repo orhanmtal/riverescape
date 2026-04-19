@@ -1,4 +1,4 @@
-// RİVER ESCAPE ELITE - v1.99.32.05 (EXTREME MODE)
+// RİVER ESCAPE ELITE - v1.99.32.06 (ANGULAR CHAOS)
 console.log("%c IDENTITY SYNC ACTIVE - v1.99.23.00 - CROC PURGED ", "background: #00ff00; color: #000; font-size: 20px; font-weight: bold;");
 
 const canvas = document.getElementById('gameCanvas');
@@ -1968,11 +1968,21 @@ function spawnObstacle() {
     }
 
     var spawnX = Math.random() * (riverRight - riverLeft) + riverLeft;
+    var relSpawnX = spawnX - riverShift;
+
+    // v1.99.32.06: ELITE ANGULAR CHAOS (Diagonal & Rotating Obstacles)
+    var speedX = 0;
+    var angle = 0;
+    var rotationSpeed = 0;
+    
+    // Kütükler, kayalar ve bazı biyom engelleri açısal gelebilir (%45 şans)
+    if (Math.random() < 0.45) {
+        speedX = (Math.random() - 0.5) * (baseSpeed * 0.55); // Yatay savrulma
+        angle = Math.random() * Math.PI * 2; // Rastgele açıyla başlar
+        rotationSpeed = (Math.random() - 0.5) * 4.5; // Kendi etrafında döner
+    }
 
     // OYUNCUYA UMUT PAYI VER (0% İHTİMALİNİ BİTİR!) v146 (Elite Drift Synced)
-    // --- v1.97.2.2: ELITE LANE JUSTICE (Stacked Obstacle Prevent) ---
-    // Sadece sonuncuya değil, ekranın üstündeki tüm engellere bak!
-    var relSpawnX = spawnX - riverShift;
     var maxAttempts = 10;
     var isBlocked = true;
     var spawnGap = player.width + 75; // Kayıktan biraz daha geniş "güvenli şerit"
@@ -2023,7 +2033,10 @@ function spawnObstacle() {
                 relativeX: spawnX - riverShift,
                 y: spawnY + 50,
                 width: 48, height: 48,
-                speedY: bgScrollSpeed, speedX: 0
+                speedY: bgScrollSpeed, 
+                speedX: speedX,
+                angle: angle,
+                rotationSpeed: rotationSpeed
             });
         } else if (selectedType === 'hippo') {
             obstacles.push({
@@ -2163,7 +2176,10 @@ function spawnObstacle() {
                 x: spawnX,
                 relativeX: spawnX - riverShift,
                 y: spawnY + 50, width: rockSize, height: rockSize * 0.8,
-                speedY: bgScrollSpeed * (0.95 + Math.random() * 0.1), speedX: 0
+                speedY: bgScrollSpeed * (0.95 + Math.random() * 0.1), 
+                speedX: speedX,
+                angle: angle,
+                rotationSpeed: rotationSpeed
             });
         } else if (selectedType === 'burningPillar') {
             // v1.99.19.09: RESTORED LOST PILLAR (2-Shot Health Specific to L5)
@@ -2334,14 +2350,14 @@ function spawnObstacle() {
     obstacles.push({
         type: 'vertical',
         x: spawnX,
-        relativeX: spawnX - riverShift, // v1.97.0.3: Elite Drift Support
+        relativeX: spawnX - riverShift,
         y: spawnY + 50,
-        width: 40,  // İnce
-        height: 55, // Boyu bir daha kırpıldı (toplamda 100'den 55'e)
+        width: 40,
+        height: 55,
         speedY: baseSpeed,
-        speedX: logSpeedX,
-        rotation: logRot,
-        rotSpeed: logRotSpeed
+        speedX: speedX, // v1.99.32.06: Elite Angular Chaos
+        angle: angle,
+        rotationSpeed: rotationSpeed
     });
 }
 
@@ -2381,12 +2397,14 @@ function spawnGold() {
         obstacles.push({
             type: 'vertical',
             x: trapX1,
-            relativeX: trapX1 - getRiverShift(trapY1), // v1.97.0.3: Trap Drift
+            relativeX: trapX1 - getRiverShift(trapY1),
             y: trapY1,
             width: 40,
             height: 55,
             speedY: speed,
-            speedX: 0
+            speedX: speedX,
+            angle: angle,
+            rotationSpeed: rotationSpeed
         });
 
         gx += trapDir * 75;
@@ -3190,6 +3208,28 @@ function update(dt) {
     for (var i = obstacles.length - 1; i >= 0; i--) {
         var obs = obstacles[i];
 
+        // v1.99.32.06: ELITE PHYSICS ENGINE (Diagonal & Bouncing)
+        if (obs.speedX !== undefined) {
+            obs.x += (obs.speedX || 0) * dt;
+            obs.angle = (obs.angle || 0) + (obs.rotationSpeed || 0) * dt;
+            
+            // NEHİR SINIRI VE SEKMESİ (Relative bazda kontrol)
+            const margin = (currentLAsset && typeof currentLAsset.margin === 'number') ? currentLAsset.margin : 0.32;
+            const rShift = getRiverShift(obs.y);
+            const rLeft = (canvas.width * margin) + rShift;
+            const rRight = (canvas.width * (1 - margin)) + rShift - (obs.width || 40);
+            
+            if (obs.x < rLeft) {
+                obs.x = rLeft;
+                obs.speedX = Math.abs(obs.speedX || 0) * 0.9; // Sekince biraz enerji kaybet
+                obs.rotationSpeed *= -1; // Ters yöne dönmeye başla
+            } else if (obs.x > rRight) {
+                obs.x = rRight;
+                obs.speedX = -Math.abs(obs.speedX || 0) * 0.9;
+                obs.rotationSpeed *= -1;
+            }
+        }
+
         // YAPAY ZEKA: Düşman Mantıkları
         if (obs.type === 'croc') {
             var cx = obs.x + obs.width / 2;
@@ -3817,6 +3857,14 @@ function draw(dt) {
     obstacles.forEach(obs => {
         const currentLAsset = levelAssets[(currentLevel - 1) % levelAssets.length];
         const tile = currentLAsset ? obsTiles[currentLAsset.bgKey] : null;
+
+        ctx.save();
+        // v1.99.32.06: DYNAMIC MATRIX ROTATION SUPPORT
+        if (obs.angle) {
+            ctx.translate(obs.x + obs.width / 2, obs.y + obs.height / 2);
+            ctx.rotate(obs.angle);
+            ctx.translate(-(obs.x + obs.width / 2), -(obs.y + obs.height / 2));
+        }
 
         // v2.00 UNIFIED ASSET SYSTEM (Support Individual & Grid)
         var drawSuccess = false;

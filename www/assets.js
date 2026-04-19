@@ -1,5 +1,5 @@
-// River Escape - Varlık Yükleyici (Asset Loader) - v1.99.32.05 (EXTREME MODE)
-const version = "1.99.32.05";
+// River Escape - Varlık Yükleyici (Asset Loader) - v1.99.32.06 (ANGULAR CHAOS)
+const version = "1.99.32.06";
 const players = { ilkbahar: null, yaz: null, sonbahar: null, kis: null, lava: null, void: null, nostalji: null };
 var iPI = null; // v1.99.31.00: Universal Default Ship Identifier
 var playerImg = null;

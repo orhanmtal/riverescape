@@ -1,6 +1,14 @@
 # River Escape - Versiyon Günlükleri (CHANGELOG)
 Bu dosya, oyun motorunun ve özelliklerin versiyon versiyon nasıl geliştiğini mühürleyip saklamak için Antigravity tarafından oluşturulmuştur.
 
+### [v1.99.32.06] - 2026-04-19
+#### Elite Angular Chaos Update
+- **Diagonal Physics:** Obstacles can now spawn with random horizontal velocities (speedX) and rotation speeds.
+- **Bouncing Mechanics:** Dynamic obstacles now rebound elastically off river boundaries for a "pinball" chaos effect.
+- **Rotational Rendering:** Implemented matrix rotation (ctx.rotate) to sync visual rotation with physical angles.
+- **Tactical Depth:** Shifted gameplay from linear avoid-only to ballistics prediction.
+- **Global Sync:** Unified v1.99.32.06 version across all manifests and scripts.
+
 ### [v1.99.32.05] - 2026-04-19
 #### Elite Extreme Mode Update
 - **Extreme Spawning:** Slashed baseline spawn intervals across all levels (Lv1: 1.15s, Cyber: 0.42s).
