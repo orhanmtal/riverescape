@@ -1,5 +1,5 @@
-// River Escape - Varlık Yükleyici (Asset Loader) - v1.99.31.00 (ATMOSPHERIC MASTER)
-const version = "1.99.32.00";
+// River Escape - Varlık Yükleyici (Asset Loader) - v1.99.32.02 (SPAWN RECOVERY)
+const version = "1.99.32.02";
 const players = { ilkbahar: null, yaz: null, sonbahar: null, kis: null, lava: null, void: null, nostalji: null };
 var iPI = null; // v1.99.31.00: Universal Default Ship Identifier
 var playerImg = null;

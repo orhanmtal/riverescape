@@ -1,4 +1,4 @@
-// RİVER ESCAPE ELITE - v1.99.32.00 (SURVIVAL RECOVERY)
+// RİVER ESCAPE ELITE - v1.99.32.02 (SPAWN RECOVERY)
 console.log("%c IDENTITY SYNC ACTIVE - v1.99.23.00 - CROC PURGED ", "background: #00ff00; color: #000; font-size: 20px; font-weight: bold;");
 
 const canvas = document.getElementById('gameCanvas');
@@ -2507,6 +2507,12 @@ function startGame() {
     // v1.99.19.09: Dinamik Kayık Sistemi (Skin Fallback) ⛵
     playerImg = players[currentAsset.pKey] || players.ilkbahar;
     bgScrollSpeed = currentAsset.speed;
+    
+    // v1.99.32.02: SPAWN ENGINE IGNITION (Ensures L1 has obstacles)
+    isTransitioningLevel = false;
+    spawnInterval = currentAsset.spawn;
+    lastSpawnTime = 0;
+
     lastTime = performance.now();
 
     startScreen.classList.remove('active'); startScreen.classList.add('hidden');

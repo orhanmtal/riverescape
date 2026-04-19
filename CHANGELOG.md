@@ -1,6 +1,12 @@
 # River Escape - Versiyon Günlükleri (CHANGELOG)
 Bu dosya, oyun motorunun ve özelliklerin versiyon versiyon nasıl geliştiğini mühürleyip saklamak için Antigravity tarafından oluşturulmuştur.
 
+### [v1.99.32.02] - 2026-04-19
+#### Level 1 Spawn Recovery Update
+- **Obstacle Ignition:** Fixed a critical bug where `isTransitioningLevel` and `spawnInterval` were not reset in `startGame`, causing empty Level 1 screens.
+- **Engine Reset:** Explicitly forced spawners to restart upon game initiation to ensure immediate gameplay flow.
+- **Visual Sync:** Unified all version labels to v1.99.32.02 and corrected corrupted file headers.
+
 ### [v1.99.32.01] - 2026-04-19
 #### Audio Polish & Clarity Update
 - **Softer Engine:** Switched engine oscillators from sawtooth to triangle for a more natural rumble.

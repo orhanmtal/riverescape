@@ -1,4 +1,4 @@
-// River Escape - Ses Motoru (Audio Engine) - v1.99.32.01 (AUDIO POLISH)
+// River Escape - Ses Motoru (Audio Engine) - v1.99.32.02 (SPAWN RECOVERY)
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 let audioCtx;
 
