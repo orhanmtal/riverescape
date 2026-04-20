@@ -1,5 +1,5 @@
-// RİVER ESCAPE PRESTİGE - v1.99.33.65 (MODERN BOAT UPDATE)
-const VERSION = "1.99.33.70";
+// RİVER ESCAPE PRESTİGE - v1.99.33.74 (ENGINE RESTORATION)
+const VERSION = "1.99.33.74";
 console.log("%c INFINITE EVOLUTION ACTIVE - v1.99.33.65 - ELITE PROGRESSION ", "background: #ff00ff; color: #fff; font-size: 20px; font-weight: bold;");
 
 const canvas = document.getElementById('gameCanvas');
@@ -824,7 +824,7 @@ const levelAssets = [
     { threshold: 1000, bgKey: 'summer', speed: 200, spawn: 1.05, titleEN: translations.en.summerRiver, titleTR: translations.tr.summerRiver, color: "#1e90ff", pKey: "yaz", margin: 0.35, visuals: { hideAmbients: false, isProcedural: false } }, // Index 1
     { threshold: 2500, bgKey: 'autumn', speed: 230, spawn: 0.95, titleEN: translations.en.autumnRiver, titleTR: translations.tr.autumnRiver, color: "#ff8c00", pKey: "sonbahar", margin: 0.35, visuals: { hideAmbients: false, isProcedural: false } }, // Index 2
     { threshold: 4500, bgKey: 'winter', speed: 220, spawn: 1.00, titleEN: translations.en.winterRiver, titleTR: translations.tr.winterRiver, color: "#add8e6", pKey: "kis", margin: 0.35, visuals: { hideAmbients: false, isProcedural: false } }, // Index 3
-    { threshold: 7000, bgKey: 'lava', speed: 250, spawn: 0.85, titleEN: translations.en.lavaRiver, titleTR: translations.tr.lavaRiver, color: "#ff4500", pKey: "lava", margin: 0.34, visuals: { hideAmbients: true, isProcedural: true } }, // Index 4
+    { threshold: 7000, bgKey: 'lava', speed: 250, spawn: 0.85, titleEN: translations.en.lavaRiver, titleTR: translations.tr.lavaRiver, color: "#ff4500", pKey: "lava", margin: 0.34, visuals: { hideAmbients: true, isProcedural: false } }, // Index 4
     { threshold: 10000, bgKey: 'void', speed: 190, spawn: 0.95, titleEN: translations.en.voidLevel, titleTR: translations.tr.voidLevel, color: "#9b59b6", pKey: "void", margin: 0.32, visuals: { hideAmbients: true, isProcedural: true, neonBorders: true, auraColor: "#9b59b6" } }, // Index 5
     { threshold: 14000, bgKey: 'lagoon', speed: 310, spawn: 0.55, titleEN: translations.en.l7Title, titleTR: translations.tr.l7Title, color: "#00e5ff", pKey: "ilkbahar", margin: 0.15, visuals: { hideAmbients: true, isProcedural: false } }, // Index 6
     { threshold: 18500, bgKey: 'cyber', speed: 340, spawn: 0.42, titleEN: "CYBER CITY", titleTR: "SİBER ŞEHİR", color: "#ff00ff", pKey: "void", margin: 0.18, scrollSpeed: 1.0, visuals: { hideAmbients: true, isProcedural: true } }, // Index 7
@@ -876,14 +876,14 @@ var currentLevel = 1;
 // v1.99.19.09: Armor and Leveling
 var armorCharge = 0;
 var ownsArmorLicense = false;
-var bgY = 0; var bgScrollSpeed = 100;
+var bgY = 0; var bgScrollSpeed = 200; window.targetLevelSpeed = 200;
 var screenFlash = 0; // Seviye geçişi parlaması v132
 var gameLoopRequestId = null; // v1.98.1.4: LOOP CONTROL
 
 // --- v1.99.30.05: ELITE OVERHAUL (Visuals & Transition) ---
 var isMorphing = false;
 var morphTimer = 0;
-const STAGES_PER_BIOME = 3;
+const STAGES_PER_BIOME = 5;
 const LOOP_THRESHOLD = 27500;
 const MORPH_DURATION = 1500;
  // 5 saniye Yavaş Geçiş!
@@ -896,7 +896,8 @@ var parallaxSkyY = 0; // Layer 1 (Background) scroll
 
 var cameraZoom = 1.0;
 var targetCameraZoom = 1.0;
-var currentAsset = levelAssets[0]; // v1.99.33.71: Global Asset Reference Restored
+var currentAsset = levelAssets[0];
+var currentLAsset = currentAsset;
 
 
 var totalGold = 0;
@@ -3261,6 +3262,13 @@ function update(dt) {
     // Kütükler ve Düşmanlar
     for (var i = obstacles.length - 1; i >= 0; i--) {
         var obs = obstacles[i];
+        // --- CRITICAL GRAVITY RESTORATION (v1.99.33.73) ---
+        var currentSpeedY = obs.speedY;
+        if (isNaN(currentSpeedY) || currentSpeedY === undefined) {
+             currentSpeedY = (typeof window.bgScrollSpeed !== 'undefined' ? window.bgScrollSpeed : 200);
+             if (isNaN(currentSpeedY)) currentSpeedY = 200;
+        }
+        obs.y += currentSpeedY * dt;
 
         // v1.99.32.06: ELITE PHYSICS ENGINE (Diagonal & Bouncing)
         if (obs.speedX !== undefined) {
@@ -3343,12 +3351,14 @@ function update(dt) {
                 player.y += (pullDirY / distToPlayer) * pullStr * dt;
             }
         } else if (obs.type === 'hippo') {
+            // Su aygırı suyun altından gelir, oyuncuya 220px yaklaştığında aniden yüzeye çıkar!
             if (obs.isSubmerged && obs.y > player.y - 220) {
                 obs.isSubmerged = false;
+                // v1.99.19.09: Hippo emergence sound removed per user request
             }
         }
-
-        // --- RESTORED ELITE HITBOX BASE (Critical Fix) ---
+        
+        // --- RESTORED ELITE HITBOX BASE (v1.99.33.73 Fix) ---
         var ox = obs.x + (obs.width * 0.25);
         var oy = obs.y + (obs.height * 0.25);
         var ow = obs.width * 0.5;
