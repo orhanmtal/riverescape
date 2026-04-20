@@ -5,7 +5,6 @@
 
 window.MissionManager = (function() {
     let missions = [
-        { id: 'near_miss_10', labelTR: 'Kıl Payı Ustası', labelEN: 'Near-Miss Master', descTR: '10 kez kıl payı geçiş yap.', descEN: 'Perform 10 near-misses.', target: 10, current: 0, reward: 500, type: 'near_miss', completed: false },
         { id: 'dash_5', labelTR: 'Hızlı Gidiş', labelEN: 'Speedster', descTR: '5 kez Dash kullan.', descEN: 'Use Dash 5 times.', target: 5, current: 0, reward: 300, type: 'dash', completed: false },
         { id: 'destroy_obstacle_20', labelTR: 'Engel Avcısı', labelEN: 'Obstacle Destroyer', descTR: '20 engeli bomba veya kalkanla yok et.', descEN: 'Destroy 20 obstacles with bombs or shield.', target: 20, current: 0, reward: 600, type: 'destroy_obstacle', completed: false },
         { id: 'gold_100', labelTR: 'Altın Avcısı', labelEN: 'Gold Hunter', descTR: 'Tek seferde 100 altın topla.', descEN: 'Collect 100 gold in one run.', target: 100, current: 0, reward: 400, type: 'gold', completed: false }
@@ -42,7 +41,6 @@ window.MissionManager = (function() {
         // Orijinal değerleri korumak için baseTarget gibi bir yapıya ihtiyaç var ama basitlik için direkt çarpalım
         // Not: Bu basit uygulama her seferinde baz değerden hesaplamalı.
         const baseValues = {
-            near_miss_10: { t: 10, r: 200 },
             dash_5: { t: 5, r: 120 },
             destroy_obstacle_20: { t: 20, r: 240 },
             gold_100: { t: 100, r: 160 }

@@ -1,6 +1,6 @@
-// RİVER ESCAPE PRESTİGE - v1.99.33.61 (MODERN BOAT UPDATE)
-const VERSION = "1.99.33.61";
-console.log("%c INFINITE EVOLUTION ACTIVE - v1.99.33.61 - ELITE PROGRESSION ", "background: #ff00ff; color: #fff; font-size: 20px; font-weight: bold;");
+// RİVER ESCAPE PRESTİGE - v1.99.33.65 (MODERN BOAT UPDATE)
+const VERSION = "1.99.33.65";
+console.log("%c INFINITE EVOLUTION ACTIVE - v1.99.33.65 - ELITE PROGRESSION ", "background: #ff00ff; color: #fff; font-size: 20px; font-weight: bold;");
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -3574,22 +3574,7 @@ function update(dt) {
             oh = obs.height * 0.8;
         }
 
-        // Genişletilmiş 'Yakın Geçiş' kutusu (40px buffer)
-        var nearMargin = 40;
-        var isNear = (px < ox + ow + nearMargin && px + pw > ox - nearMargin &&
-            py < oy + oh + nearMargin && py + ph > oy - nearMargin);
-
-        var isColliding = (px < ox + ow && px + pw > ox && py < oy + oh && py + ph > oy);
-
-        if (isNear && !isColliding && !obs.nearMissCounted) {
-            obs.nearMissCounted = true;
-            // Görsel Geri Bildirim (Kıl Payı!)
-            for (var p = 0; p < 8; p++) particles.push(new Particle(px + pw / 2, py + ph / 2, "#00e5ff"));
-
-            // --- v1.99.30.06: MISSION HOOK & ELITE WHOOSH ---
-            if (window.MissionManager) window.MissionManager.notify('near_miss');
-            if (typeof playWhooshSound === 'function') playWhooshSound();
-        }
+        
 
         if (isColliding) {
 
