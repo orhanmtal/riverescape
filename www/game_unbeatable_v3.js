@@ -3343,12 +3343,18 @@ function update(dt) {
                 player.y += (pullDirY / distToPlayer) * pullStr * dt;
             }
         } else if (obs.type === 'hippo') {
-            // Su aygırı suyun altından gelir, oyuncuya 220px yaklaştığında aniden yüzeye çıkar!
             if (obs.isSubmerged && obs.y > player.y - 220) {
                 obs.isSubmerged = false;
-                // v1.99.19.09: Hippo emergence sound removed per user request
             }
-        } else if (obs.type === 'lavaGeyser') {
+        }
+
+        // --- RESTORED ELITE HITBOX BASE (Critical Fix) ---
+        var ox = obs.x + (obs.width * 0.25);
+        var oy = obs.y + (obs.height * 0.25);
+        var ow = obs.width * 0.5;
+        var oh = obs.height * 0.5;
+
+        if (obs.type === 'lavaGeyser') {
             ox = obs.x + (obs.width * 0.1); // Hitbox genişletildi
             ow = obs.width * 0.8;
             oy = obs.y + (obs.height * 0.1);
