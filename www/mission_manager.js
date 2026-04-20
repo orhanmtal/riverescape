@@ -4,7 +4,6 @@
  */
 
 window.MissionManager = (function() {
-window.MissionManager = (function() {
     let missions = [
         { id: 'destroy_obstacle_100', labelTR: 'Engel Avcısı', labelEN: 'Obstacle Destroyer', descTR: '100 engeli bomba veya kalkanla yok et.', descEN: 'Destroy 100 obstacles with bombs or shield.', target: 100, current: 0, reward: 500, type: 'destroy_obstacle', completed: false },
         { id: 'gold_200', labelTR: 'Altın Avcısı', labelEN: 'Gold Hunter', descTR: '200 altın topla.', descEN: 'Collect 200 gold in one run.', target: 200, current: 0, reward: 500, type: 'gold', completed: false }
