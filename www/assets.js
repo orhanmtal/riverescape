@@ -1,6 +1,6 @@
 // River Escape - Varlık Yükleyici (Asset Loader) - v1.99.32.08 (SCOPE PROTECTION)
 const version = "1.99.32.08";
-const players = { ilkbahar: null, yaz: null, sonbahar: null, kis: null, lava: null, void: null, nostalji: null };
+window.players = { ilkbahar: null, yaz: null, sonbahar: null, kis: null, lava: null, void: null, nostalji: null };
 var iPI = null; // v1.99.31.00: Universal Default Ship Identifier
 var playerImg = null;
 
@@ -105,7 +105,7 @@ let bgImgYaz = loadBg('yaz', 'assets/ArkaPlan_Yaz.png');
 let bgImgSonbahar = loadBg('sonbahar', 'assets/ArkaPlan_Sonbahar.png');
 let bgImgKis = loadBg('kis', 'assets/ArkaPlan_Kis.png');
 let bgImgLava = loadBg('lava', 'assets/ArkaPlan_Lav.png');
-let bgImgVoid = loadBg('void', 'assets/ArkaPlan_Lav.png'); // v1.99.27.09: ELITE VOID FALLBACK
+let bgImgVoid = null; // v1.99.33.62: Restore Procedural Starfield (User Sync)
 let bgImgLagoon = loadBg('lagoon', 'assets/ArkaPlan_Lagoon.png'); // v1.99.14.0: ELITE LAGOON
 
 // v1.99.30.06: MODULAR COLLECTION LOADER
