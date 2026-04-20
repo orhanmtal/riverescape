@@ -100,10 +100,10 @@ function safeLoad(name, src, processor = null) {
 }
 
 // ASSETS YÜKLEME
-let bgImgIlkbahar = loadBg('ilkbahar', 'assets/ArkaPlan_Elite_Spring_Straight.png');
-let bgImgYaz = loadBg('yaz', 'assets/ArkaPlan_Yaz.png');
-let bgImgSonbahar = loadBg('sonbahar', 'assets/ArkaPlan_Sonbahar.png');
-let bgImgKis = loadBg('kis', 'assets/ArkaPlan_Kis.png');
+let bgImgSpring = loadBg('spring', 'assets/ArkaPlan_Elite_Spring_Straight.png');
+let bgImgSummer = loadBg('summer', 'assets/ArkaPlan_Yaz.png');
+let bgImgAutumn = loadBg('autumn', 'assets/ArkaPlan_Sonbahar.png');
+let bgImgWinter = loadBg('winter', 'assets/ArkaPlan_Kis.png');
 let bgImgLava = loadBg('lava', 'assets/ArkaPlan_Lav.png');
 let bgImgVoid = null; // v1.99.33.62: Restore Procedural Starfield (User Sync)
 let bgImgLagoon = loadBg('lagoon', 'assets/ArkaPlan_Lagoon.png'); // v1.99.14.0: ELITE LAGOON
@@ -114,15 +114,15 @@ if (window.ELITE_COLLECTIONS && window.ELITE_COLLECTIONS.boats) {
         safeLoad('Boat_' + boat.id, boat.asset, (img) => {
             players[boat.id] = makeWhiteTransparent(img);
             // Default player image assignment
-            if (boat.id === 'ilkbahar') {
-                iPI = players.ilkbahar;
-                playerImg = players.ilkbahar;
+            if (boat.id === 'spring') {
+                iPI = players.spring;
+                playerImg = players.spring;
             }
         });
     });
 }
 
-let bgImg = bgImgIlkbahar;
+let bgImg = bgImgSpring;
 // playerImg initialized globally above
 
 let obsImg = safeLoad('Kutuk', 'assets/Kutuk.png', (img) => { obsImg = makeWhiteTransparent(img); });
@@ -150,11 +150,11 @@ function loadIndividualTiles(key, rockSrc, logSrc, crocSrc, hippoSrc) {
 }
 
 // Level-Specific Assets (Elite Individual System)
-loadIndividualTiles('ilkbahar', 'assets/rock_elite_spring.png', 'assets/Kutuk.png', 'assets/Timsah.png', 'assets/Hippo.png');
-loadIndividualTiles('yaz', 'assets/rock_elite_summer.png', 'assets/Kutuk.png', 'assets/Timsah.png', 'assets/Hippo.png');
-loadIndividualTiles('sonbahar', 'assets/rock_elite_autumn.png', 'assets/Kutuk.png', 'assets/Timsah.png', 'assets/Hippo.png');
+loadIndividualTiles('spring', 'assets/rock_elite_spring.png', 'assets/Kutuk.png', 'assets/Timsah.png', 'assets/Hippo.png');
+loadIndividualTiles('summer', 'assets/rock_elite_summer.png', 'assets/Kutuk.png', 'assets/Timsah.png', 'assets/Hippo.png');
+loadIndividualTiles('autumn', 'assets/rock_elite_autumn.png', 'assets/Kutuk.png', 'assets/Timsah.png', 'assets/Hippo.png');
 
-loadIndividualTiles('kis', 'assets/rock_elite_winter.png', 'assets/Kutuk.png', 'assets/Timsah.png', 'assets/Hippo.png');
+loadIndividualTiles('winter', 'assets/rock_elite_winter.png', 'assets/Kutuk.png', 'assets/Timsah.png', 'assets/Hippo.png');
 loadIndividualTiles('lava', 'assets/rock_elite_lava.png', 'assets/Kutuk.png', 'assets/Timsah.png', 'assets/Hippo.png');
 safeLoad('lava_geyser', 'assets/lava_geyser.png', (img) => {
     obsTiles['lava_geyser'] = makeWhiteTransparent(img, true);

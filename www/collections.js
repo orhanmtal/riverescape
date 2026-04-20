@@ -6,7 +6,7 @@
 window.ELITE_COLLECTIONS = {
     boats: [
         { 
-            id: 'ilkbahar', 
+            id: 'spring', 
             nameTR: 'Baharcı', nameEN: 'Spring Rider', 
             asset: 'assets/Kayik.png', 
             price: 0, 

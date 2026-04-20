@@ -820,15 +820,15 @@ resizeCanvas();
 
 
 const levelAssets = [
-    { threshold: 0, bgKey: 'ilkbahar', speed: 140, spawn: 1.15, titleEN: translations.en.l1Title, titleTR: translations.tr.l1Title, color: "#64dd17", pKey: "ilkbahar", margin: 0.35 },
-    { threshold: 1000, bgKey: 'yaz', speed: 160, spawn: 1.05, titleEN: translations.en.l2Title, titleTR: translations.tr.l2Title, color: "#ffd600", pKey: "ilkbahar", margin: 0.33 },
-    { threshold: 2500, bgKey: 'sonbahar', speed: 220, spawn: 0.85, titleEN: translations.en.l3Title, titleTR: translations.tr.l3Title, color: "#ff6d00", pKey: "ilkbahar", margin: 0.35 },
-    { threshold: 4500, bgKey: 'kis', speed: 260, spawn: 0.95, titleEN: translations.en.l4Title, titleTR: translations.tr.l4Title, color: "#00e5ff", pKey: "ilkbahar", margin: 0.35 },
-    { threshold: 7000, bgKey: 'lava', speed: 315, spawn: 0.48, titleEN: translations.en.lavaRiver, titleTR: translations.tr.lavaRiver, color: "#ff4500", pKey: "lava", margin: 0.34 },
-    { threshold: 10000, bgKey: 'void', speed: 190, spawn: 0.95, titleEN: translations.en.voidLevel, titleTR: translations.tr.voidLevel, color: "#9b59b6", pKey: "void", margin: 0.32 },
-    { threshold: 14000, bgKey: 'lagoon', speed: 310, spawn: 0.55, titleEN: translations.en.l7Title, titleTR: translations.tr.l7Title, color: "#00e5ff", pKey: "ilkbahar", margin: 0.15 },
-    { threshold: 18500, bgKey: 'cyber', speed: 340, spawn: 0.42, titleEN: "CYBER CITY", titleTR: "SİBER ŞEHİR", color: "#ff00ff", pKey: "void", margin: 0.18, scrollSpeed: 1.0 },
-    { threshold: 22500, bgKey: 'toxic', speed: 320, spawn: 0.70, titleEN: "TOXIC WASTELAND", titleTR: "ZEHİRLİ ATIK", color: "#32CD32", pKey: "lava", margin: 0.30, scrollSpeed: 1.0 }
+    { threshold: 0, bgKey: 'spring', speed: 170, spawn: 1.15, titleEN: translations.en.springRiver, titleTR: translations.tr.springRiver, color: "#00e5ff", pKey: "ilkbahar", margin: 0.35, visuals: { hideAmbients: false, isProcedural: false } }, // Index 0
+    { threshold: 1000, bgKey: 'summer', speed: 200, spawn: 1.05, titleEN: translations.en.summerRiver, titleTR: translations.tr.summerRiver, color: "#1e90ff", pKey: "yaz", margin: 0.35, visuals: { hideAmbients: false, isProcedural: false } }, // Index 1
+    { threshold: 2500, bgKey: 'autumn', speed: 230, spawn: 0.95, titleEN: translations.en.autumnRiver, titleTR: translations.tr.autumnRiver, color: "#ff8c00", pKey: "sonbahar", margin: 0.35, visuals: { hideAmbients: false, isProcedural: false } }, // Index 2
+    { threshold: 4500, bgKey: 'winter', speed: 220, spawn: 1.00, titleEN: translations.en.winterRiver, titleTR: translations.tr.winterRiver, color: "#add8e6", pKey: "kis", margin: 0.35, visuals: { hideAmbients: false, isProcedural: false } }, // Index 3
+    { threshold: 7000, bgKey: 'lava', speed: 250, spawn: 0.85, titleEN: translations.en.lavaRiver, titleTR: translations.tr.lavaRiver, color: "#ff4500", pKey: "lava", margin: 0.34, visuals: { hideAmbients: true, isProcedural: true } }, // Index 4
+    { threshold: 10000, bgKey: 'void', speed: 190, spawn: 0.95, titleEN: translations.en.voidLevel, titleTR: translations.tr.voidLevel, color: "#9b59b6", pKey: "void", margin: 0.32, visuals: { hideAmbients: true, isProcedural: true, neonBorders: true, auraColor: "#9b59b6" } }, // Index 5
+    { threshold: 14000, bgKey: 'lagoon', speed: 310, spawn: 0.55, titleEN: translations.en.l7Title, titleTR: translations.tr.l7Title, color: "#00e5ff", pKey: "ilkbahar", margin: 0.15, visuals: { hideAmbients: true, isProcedural: false } }, // Index 6
+    { threshold: 18500, bgKey: 'cyber', speed: 340, spawn: 0.42, titleEN: "CYBER CITY", titleTR: "SİBER ŞEHİR", color: "#ff00ff", pKey: "void", margin: 0.18, scrollSpeed: 1.0, visuals: { hideAmbients: true, isProcedural: true } }, // Index 7
+    { threshold: 22500, bgKey: 'toxic', speed: 320, spawn: 0.70, titleEN: "TOXIC WASTELAND", titleTR: "ZEHİRLİ ATIK", color: "#32CD32", pKey: "lava", margin: 0.30, scrollSpeed: 1.0, visuals: { hideAmbients: true, isProcedural: true } } // Index 8
 ];
 
 // v1.96.6.6: Ölüm Vadisi (DZ) Durumunu Merkezi Olarak Belirle
@@ -3722,73 +3722,12 @@ function draw(dt) {
 
     // v1.74: ARKA PLAN ÇİZİMİ (Background / Water)
     var currentLAsset = levelAssets[Math.floor((currentLevel - 1) / STAGES_PER_BIOME) % levelAssets.length];
-
-    // v1.99.31.00: BOTTOM LAYER AMBIENTS (Shadows)
     const bIdx = Math.floor((currentLevel - 1) / STAGES_PER_BIOME) % levelAssets.length;
-    if (bIdx !== 5) ambientEntities.forEach(ae => ae.draw('bottom'));
 
-    // v1.74: PROCEDURAL WATER RIPPLES (Elite Dynamic System)
-    drawProceduralWater(dt);
-
-    // v1.72.3 ELITE MODERN RIVER SURFACE FX
-    if (bIdx < 4 || bIdx === 5) {
-        const cMargin = (currentLAsset ? currentLAsset.margin : 0.35);
-        const rLeft = canvas.width * cMargin;
-        const rRight = canvas.width * (1 - cMargin);
-        const rWidth = rRight - rLeft;
-
-        // v2.02 SEVİYE BAZLI DİNAMİK SU RENGİ (Fall-back Immersion)
-        var waterColor = "rgba(0, 180, 255, 0.2)"; // Ilkbahar/Yaz: Turkuaz
-        if (bIdx === 2) waterColor = "rgba(139, 69, 19, 0.25)"; // Sonbahar: Kahverengi/Kızıl
-        if (bIdx === 3) waterColor = "rgba(173, 216, 230, 0.4)"; // Kış: Buz Mavisi
-        if (bIdx === 4 || bIdx === 8) waterColor = "rgba(255, 69, 0, 0.3)"; // Lava / Toxic
-        if (bIdx === 5) waterColor = "rgba(0, 0, 0, 0.85)";       // v1.99.33.62: Void Deep Black (User Sync)
-
-        var waterGrad = ctx.createLinearGradient(rLeft, 0, rRight, 0);
-        waterGrad.addColorStop(0.2, waterColor);  // Dynamic Water Tone
-        ctx.fillStyle = waterGrad;
-        ctx.fillRect(rLeft, 0, rWidth, canvas.height);
-
-        // 2. Layer: Specular River Glints (Daha Modern, İnce Parıltılar)
-        ctx.strokeStyle = "rgba(255, 255, 255, 0.25)";
-        ctx.lineWidth = 1.5;
-        for (var i = 0; i < 8; i++) {
-            var lx = rLeft + (rWidth * (0.1 + (i / 7) * 0.8));
-            var speedMod = (i % 2 === 0) ? 1.5 : 2.5;
-            var offset = (performance.now() / speedMod) % 600;
-            ctx.beginPath();
-            ctx.setLineDash([15, 60 + i * 10]);
-            ctx.lineDashOffset = -offset;
-            ctx.moveTo(lx, 0); ctx.lineTo(lx, canvas.height);
-            ctx.stroke();
-            ctx.setLineDash([]);
-        }
-
-        // 3. Layer: Subtle Vignette edges for immersion
-        ctx.fillStyle = "rgba(0,0,0,0.15)";
-        ctx.fillRect(rLeft, 0, 15, canvas.height);           // Sol iç gölge
-        ctx.fillRect(rRight - 15, 0, 15, canvas.height);    // Sağ iç gölge
-
-        // v1.99.33.62: NEON VOID BORDERS (User Discovery Sync)
-        if (bIdx === 5) {
-            ctx.save();
-            ctx.shadowBlur = 15;
-            ctx.shadowColor = "#9b59b6";
-            ctx.strokeStyle = "#9b59b6";
-            ctx.lineWidth = 4;
-            ctx.beginPath();
-            ctx.moveTo(rLeft, 0); ctx.lineTo(rLeft, canvas.height);
-            ctx.moveTo(rRight, 0); ctx.lineTo(rRight, canvas.height);
-            ctx.stroke();
-            ctx.restore();
-        }
-    }
-
+    // --- v1.99.30.05: ELITE BACKGROUND ENGINE (Parallax & Seamless) ---
     var currentBgTex = (currentLAsset) ? bgImgs[currentLAsset.bgKey] : null;
     var nextBgImg = (isMorphing && nextLevelAsset) ? (bgImgs[nextLevelAsset.bgKey] || null) : null;
 
-    // v151 FIX: Asset kontrolünü daha agresif yap (Broken images bypass!)
-    // --- v1.99.30.05: ELITE BACKGROUND ENGINE (Parallax & Seamless) ---
     function renderBackgroundLayer(bg, scrollY, alpha = 1.0, scale = 1.0) {
         if (!bg || bg.width <= 0) return;
         ctx.save();
@@ -3800,25 +3739,19 @@ function draw(dt) {
     }
 
     // 1. KATMAN: GÖKYÜZÜ / UZAK (Slow Parallax)
-    // Mevcut arka planı %20 hızda ve hafif soluk çizerek derinlik yarat
     renderBackgroundLayer(currentBgTex, parallaxSkyY, 0.4);
     if (isMorphing) renderBackgroundLayer(nextBgImg, parallaxSkyY, 0.4 * transitionAlpha);
 
     // 2. KATMAN: ANA ZEMİN (Normal Speed)
-    if (currentBgTex) {
-        renderBackgroundLayer(currentBgTex, bgY, isMorphing ? (1 - transitionAlpha) : 1.0);
-    }
-    if (isMorphing && nextBgImg) {
-        renderBackgroundLayer(nextBgImg, bgY, transitionAlpha);
-    }
+    if (currentBgTex) renderBackgroundLayer(currentBgTex, bgY, isMorphing ? (1 - transitionAlpha) : 1.0);
+    if (isMorphing && nextBgImg) renderBackgroundLayer(nextBgImg, bgY, transitionAlpha);
 
     // PROCEDURAL FALLBACKS (If no image)
-    if (!currentBgTex || (isMorphing && !nextBgImg)) {
-        // --- SEVİYE BAZLI ARKA PLAN FALLBACK v151 ---
+    const isProcedural = currentLAsset && currentLAsset.visuals ? currentLAsset.visuals.isProcedural : false;
+    if (!currentBgTex || isProcedural || (isMorphing && !nextBgImg)) {
         function drawProceduralBG(lvl, alpha = 1.0) {
             ctx.save();
             ctx.globalAlpha = alpha;
-
             if (lvl === 5) {
                 // v1.99.33.62: Master Void Re-Sync (Pure Black & Stars)
                 ctx.fillStyle = "#000000"; ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -3828,51 +3761,62 @@ function draw(dt) {
                     var sx = (seed * 123) % canvas.width;
                     var alphaStar = 0.3 + Math.sin(performance.now() / 350 + i) * 0.4;
                     ctx.fillStyle = `rgba(255, 255, 255, ${alphaStar})`;
-                    ctx.beginPath();
-                    ctx.arc(sx, sy, 1 + (i % 2), 0, Math.PI * 2);
-                    ctx.fill();
+                    ctx.beginPath(); ctx.arc(sx, sy, 1 + (i % 2), 0, Math.PI * 2); ctx.fill();
                 }
-            } else if (lvl === 4) {
-                ctx.fillStyle = "#1a0000"; ctx.fillRect(0, 0, canvas.width, canvas.height);
-                ctx.fillStyle = "rgba(255, 69, 0, 0.15)";
-                ctx.fillRect(canvas.width * 0.35, 0, canvas.width * 0.3, canvas.height);
-                ctx.fillStyle = "rgba(255, 140, 0, 0.6)";
-                for (var i = 0; i < 8; i++) {
-                    var bx = (Math.sin(performance.now() / 1500 + i) * 60 + (i * 70)) % canvas.width;
-                    var by = (performance.now() / 3 + i * 120) % canvas.height;
-                    ctx.beginPath(); ctx.arc(bx, by, 3, 0, Math.PI * 2); ctx.fill();
-                }
-            } else if (lvl === 7) {
-                ctx.fillStyle = "#00050a"; ctx.fillRect(0, 0, canvas.width, canvas.height);
-                const cyberM = canvas.width * 0.18;
-                const cyberP = (Math.sin(performance.now() / 400) * 0.3 + 0.7);
-                ctx.strokeStyle = `rgba(0, 229, 255, ${0.1 * cyberP})`; ctx.lineWidth = 1;
-                for (var gy = 0; gy < canvas.height; gy += 40) {
-                    var off = (performance.now() / 8) % 40;
-                    ctx.beginPath(); ctx.moveTo(cyberM, gy + off); ctx.lineTo(canvas.width - cyberM, gy + off); ctx.stroke();
-                }
-            } else if (lvl === 8) {
-                ctx.fillStyle = "#0a1a05"; ctx.fillRect(0, 0, canvas.width, canvas.height);
-                const toxicM = canvas.width * 0.30;
-                ctx.fillStyle = `rgba(50, 205, 50, 0.1)`; ctx.fillRect(toxicM, 0, canvas.width - (toxicM * 2), canvas.height);
-            } else if (lvl !== 4) {
-                ctx.fillStyle = "#1e90ff"; ctx.fillRect(0, 0, canvas.width, canvas.height);
-            }
+            } else if (lvl === 4) { ctx.fillStyle = "#1a0000"; ctx.fillRect(0, 0, canvas.width, canvas.height); }
+            else if (lvl === 7) { ctx.fillStyle = "#00050a"; ctx.fillRect(0, 0, canvas.width, canvas.height); }
+            else if (lvl === 8) { ctx.fillStyle = "#0a1a05"; ctx.fillRect(0, 0, canvas.width, canvas.height); }
+            else { ctx.fillStyle = "#1e90ff"; ctx.fillRect(0, 0, canvas.width, canvas.height); }
             ctx.restore();
         }
-
-        if (!currentBgTex) drawProceduralBG(bIdx, isMorphing ? (1 - transitionAlpha) : 1.0);
+        if (!currentBgTex || isProcedural) drawProceduralBG(bIdx, isMorphing ? (1 - transitionAlpha) : 1.0);
         if (isMorphing && !nextBgImg) {
             const nxtBIdx = Math.floor((currentLevel + STAGES_PER_BIOME - 1) / STAGES_PER_BIOME) % levelAssets.length;
             drawProceduralBG(nxtBIdx, transitionAlpha);
         }
     }
 
-    // 3. KATMAN: ÖN PLAN SİS / ATMOSFER (Fast Parallax Overlay)
+    // --- BIOME GUARD: AMBIENT ISOLATION (BOTTOM) ---
+    const showAmbients = currentLAsset && currentLAsset.visuals ? !currentLAsset.visuals.hideAmbients : true;
+    if (showAmbients) ambientEntities.forEach(ae => ae.draw('bottom'));
+
+    // v1.74: PROCEDURAL WATER RIPPLES
+    drawProceduralWater(dt);
+
+    // v1.72.3 ELITE MODERN RIVER SURFACE FX
+    if (bIdx < 4 || bIdx === 5) {
+        const cMargin = (currentLAsset ? currentLAsset.margin : 0.35);
+        const rLeft = canvas.width * cMargin;
+        const rRight = canvas.width * (1 - cMargin);
+        const rWidth = rRight - rLeft;
+        
+        var waterColor = "rgba(0, 180, 255, 0.2)";
+        if (bIdx === 2) waterColor = "rgba(139, 69, 19, 0.25)";
+        if (bIdx === 3) waterColor = "rgba(173, 216, 230, 0.4)";
+        if (bIdx === 4 || bIdx === 8) waterColor = "rgba(255, 69, 0, 0.3)";
+        if (bIdx === 5) waterColor = currentLAsset && currentLAsset.visuals && currentLAsset.visuals.riverFill ? currentLAsset.visuals.riverFill : "rgba(0, 0, 0, 0.85)";
+
+        ctx.fillStyle = waterColor; ctx.fillRect(rLeft, 0, rWidth, canvas.height);
+
+        // --- BIOME GUARD: NEON BOUNDARIES ---
+        const drawBorders = currentLAsset && currentLAsset.visuals ? currentLAsset.visuals.neonBorders : false;
+        if (drawBorders) {
+            const borderColor = currentLAsset.visuals.auraColor || "#9b59b6";
+            ctx.save();
+            ctx.shadowBlur = 15; ctx.shadowColor = borderColor;
+            ctx.strokeStyle = borderColor; ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.moveTo(rLeft, 0); ctx.lineTo(rLeft, canvas.height);
+            ctx.moveTo(rRight, 0); ctx.lineTo(rRight, canvas.height);
+            ctx.stroke();
+            ctx.restore();
+        }
+    }
+
+    // --- BIOME GUARD: ATMOSPHERIC OVERLAYS ---
     if (bIdx >= 3) {
         ctx.save();
         ctx.globalAlpha = 0.3 * (isMorphing ? (1 - transitionAlpha) : 1.0);
-        // Yumuşak Sis Katmanı (Procedural)
         for (var i = 0; i < 3; i++) {
             var fy = (parallaxFogY + i * canvas.height / 3) % canvas.height;
             var fx = Math.sin(performance.now() / 1000 + i) * 50;
@@ -3881,7 +3825,6 @@ function draw(dt) {
         }
         ctx.restore();
     }
-
 
     // YARI SAYDAM PARALLAX SİS/BULUT TABAKASI
     clouds.forEach(c => {
@@ -4708,7 +4651,7 @@ function draw(dt) {
             } else if (obs.type === 'magmaSerpent') {
                 // v1.99.19.09: DYNAMIC MAGMA SERPENT RENDERING
                 ctx.save();
-                const currentBIdx = Math.floor((currentLevel - 1) / STAGES_PER_BIOME) % levelAssets.length;
+                const currentBIdx = bIdx;
                 const isToxic = (currentBIdx === 8);
                 const serpentGlow = isToxic ? "#39ff14" : "#ff4500";
                 const serpentColor = isToxic ? "#1a4d1a" : "#331100";
@@ -4762,7 +4705,7 @@ function draw(dt) {
     particles.forEach(p => p.draw());
 
     // v1.99.33.62: Armor Aura (Requires Biome 5 - Void or later)
-    const bIdxArmor = Math.floor((currentLevel - 1) / STAGES_PER_BIOME) % levelAssets.length;
+    const bIdxArmor = bIdx;
     if (armorCharge > 0 && bIdxArmor >= 5) {
         ctx.save();
         var cx = player.x + player.width / 2;
@@ -4804,25 +4747,25 @@ function draw(dt) {
         // Mıknatıs aktif, görsel halka kaldırıldı.
     }
 
-    // --- v1.99.33.62: PROCEDURAL VOID AURA (User Sync - Enhanced) ---
-    if (bIdxArmor === 5) {
+    // --- BIOME GUARD: COSMIC AURA ---
+    const auraColor = currentLAsset && currentLAsset.visuals ? currentLAsset.visuals.auraColor : null;
+    if (auraColor) {
         ctx.save();
         ctx.shadowBlur = 20 + Math.sin(performance.now() / 150) * 10;
-        ctx.shadowColor = "#9b59b6";
-        ctx.strokeStyle = "rgba(155, 89, 182, 0.5)";
+        ctx.shadowColor = auraColor;
+        ctx.strokeStyle = auraColor + "80"; // 50% opacity
         ctx.lineWidth = 2;
         ctx.beginPath();
-        // Halka kayığın etrafında geniş ve pulsing (Nefes alan) yapıda
         ctx.ellipse(player.x + player.width / 2, player.y + player.height / 2, player.width * 0.8, player.height * 0.6, 0, 0, Math.PI * 2);
         ctx.stroke();
 
-        ctx.fillStyle = "rgba(155, 89, 182, 0.7)";
+        ctx.fillStyle = auraColor + "B3"; // 70% opacity
         for (var i = 0; i < 4; i++) {
             var auraAngle = (performance.now() / 250) + (i * Math.PI / 2);
-            var px = player.x + player.width / 2 + Math.cos(auraAngle) * (player.width * 0.82);
-            var py = player.y + player.height / 2 + Math.sin(auraAngle) * (player.height * 0.62);
+            var pxX = player.x + player.width / 2 + Math.cos(auraAngle) * (player.width * 0.82);
+            var pyY = player.y + player.height / 2 + Math.sin(auraAngle) * (player.height * 0.62);
             ctx.beginPath();
-            ctx.arc(px, py, 3, 0, Math.PI * 2); 
+            ctx.arc(pxX, pyY, 3, 0, Math.PI * 2); 
             ctx.fill();
         }
         ctx.restore();
@@ -4833,8 +4776,8 @@ function draw(dt) {
     var activePlayerImg = playerImg || iPI;
     var isImgReady = activePlayerImg && (activePlayerImg.tagName === 'CANVAS' || activePlayerImg.complete);
 
-    // v1.99.31.00: TOP LAYER AMBIENTS (Birds) - Gated for Void (Biome 5)
-    if (bIdxDraw !== 5) ambientEntities.forEach(ae => ae.draw('top'));
+    // v1.99.31.00: TOP LAYER AMBIENTS (Birds) - Gated by Biome Guard
+    if (showAmbients) ambientEntities.forEach(ae => ae.draw('top'));
 
     if (isImgReady) {
         ctx.save();
