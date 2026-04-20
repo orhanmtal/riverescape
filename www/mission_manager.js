@@ -4,10 +4,10 @@
  */
 
 window.MissionManager = (function() {
+window.MissionManager = (function() {
     let missions = [
-        { id: 'dash_5', labelTR: 'Hızlı Gidiş', labelEN: 'Speedster', descTR: '5 kez Dash kullan.', descEN: 'Use Dash 5 times.', target: 5, current: 0, reward: 300, type: 'dash', completed: false },
-        { id: 'destroy_obstacle_20', labelTR: 'Engel Avcısı', labelEN: 'Obstacle Destroyer', descTR: '20 engeli bomba veya kalkanla yok et.', descEN: 'Destroy 20 obstacles with bombs or shield.', target: 20, current: 0, reward: 600, type: 'destroy_obstacle', completed: false },
-        { id: 'gold_100', labelTR: 'Altın Avcısı', labelEN: 'Gold Hunter', descTR: 'Tek seferde 100 altın topla.', descEN: 'Collect 100 gold in one run.', target: 100, current: 0, reward: 400, type: 'gold', completed: false }
+        { id: 'destroy_obstacle_100', labelTR: 'Engel Avcısı', labelEN: 'Obstacle Destroyer', descTR: '100 engeli bomba veya kalkanla yok et.', descEN: 'Destroy 100 obstacles with bombs or shield.', target: 100, current: 0, reward: 500, type: 'destroy_obstacle', completed: false },
+        { id: 'gold_200', labelTR: 'Altın Avcısı', labelEN: 'Gold Hunter', descTR: '200 altın topla.', descEN: 'Collect 200 gold in one run.', target: 200, current: 0, reward: 500, type: 'gold', completed: false }
     ];
 
     let missionCycle = 1;
@@ -17,6 +17,7 @@ window.MissionManager = (function() {
         const cycleSaved = localStorage.getItem('riverEscapeMissionCycle');
         
         if (cycleSaved) missionCycle = parseInt(cycleSaved);
+        if (missionCycle > 5) missionCycle = 1; // v1.99.33.70: Limit protect
 
         if (saved) {
             const savedData = JSON.parse(saved);
@@ -25,30 +26,30 @@ window.MissionManager = (function() {
                 if (s) {
                     m.current = s.current;
                     m.completed = s.completed;
-                    // Ölçeklenmiş hedefleri/ödülleri uygula
-                    applyCycleScaling(m);
                 }
+                // Ölçeklenmiş hedefleri/ödülleri uygula (v1.99.33.70: Her zaman init sırasında skalalamalı)
+                applyCycleScaling(m);
             });
         } else {
-            // İlk kurulum ölçekleme
             missions.forEach(m => applyCycleScaling(m));
         }
-        console.log(`🎯 [MISSION ENGINE] System Initialized. Cycle: ${missionCycle}`);
+        console.log(`🎯 [MISSION ENGINE] System Initialized. Cycle: ${missionCycle}/5`);
     }
 
     function applyCycleScaling(mission) {
-        const multiplier = Math.pow(1.25, missionCycle - 1);
-        // Orijinal değerleri korumak için baseTarget gibi bir yapıya ihtiyaç var ama basitlik için direkt çarpalım
-        // Not: Bu basit uygulama her seferinde baz değerden hesaplamalı.
+        // v1.99.33.70: LINEAR SCALING PER USER REQUEST
+        // Target: +50% per set. Reward: +25% per set.
+        const targetMultiplier = 1 + (0.5 * (missionCycle - 1));
+        const rewardMultiplier = 1 + (0.25 * (missionCycle - 1));
+
         const baseValues = {
-            dash_5: { t: 5, r: 120 },
-            destroy_obstacle_20: { t: 20, r: 240 },
-            gold_100: { t: 100, r: 160 }
+            destroy_obstacle_100: { t: 100, r: 500 },
+            gold_200: { t: 200, r: 500 }
         };
         
         if (baseValues[mission.id]) {
-            mission.target = Math.ceil(baseValues[mission.id].t * multiplier);
-            mission.reward = Math.ceil(baseValues[mission.id].r * multiplier);
+            mission.target = Math.ceil(baseValues[mission.id].t * targetMultiplier);
+            mission.reward = Math.ceil(baseValues[mission.id].r * rewardMultiplier);
         }
     }
 
@@ -60,7 +61,7 @@ window.MissionManager = (function() {
     function notify(type, value = 1) {
         let changed = false;
         missions.forEach(m => {
-            if (m.type === type && !m.completed) {
+            if (m.id.includes(type) && !m.completed) {
                 if (type === 'gold') {
                     m.current = value;
                 } else {
@@ -86,6 +87,13 @@ window.MissionManager = (function() {
         if (allDone) {
             setTimeout(() => {
                 missionCycle++;
+                if (missionCycle > 5) {
+                    missionCycle = 1;
+                    if (typeof window.showToast === 'function') {
+                        window.showToast("💎 TÜM SETLER BİTTİ! DÖNGÜ SIFIRLANDI.", true);
+                    }
+                }
+
                 missions.forEach(m => {
                     m.completed = false;
                     m.current = 0;
@@ -93,7 +101,7 @@ window.MissionManager = (function() {
                 });
                 save();
                 if (typeof window.showToast === 'function') {
-                    window.showToast(`🔥 TÜM HEDEFLER BİTTİ! SET ${missionCycle} BAŞLADI (+%25 ZOR)`, true);
+                    window.showToast(`🔥 SET ${missionCycle}/5 BAŞLADI`, true);
                 }
                 renderMissions();
             }, 2000);
@@ -128,7 +136,10 @@ window.MissionManager = (function() {
 
         // Döngü Başlığını Ekle
         const header = panel.querySelector('h3');
-        if (header) header.innerText = `${window.currentLang === 'tr' ? 'HEDEFLER' : 'MISSIONS'} [SET ${missionCycle}] 🎯`;
+        if (header) {
+            const setLabel = window.currentLang === 'tr' ? 'SET' : 'SET';
+            header.innerText = `${window.currentLang === 'tr' ? 'HEDEFLER' : 'MISSIONS'} [${setLabel} ${missionCycle}/5] 🎯`;
+        }
 
         missions.forEach(m => {
             const pct = (m.current / m.target) * 100;

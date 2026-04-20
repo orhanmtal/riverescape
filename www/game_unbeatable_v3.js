@@ -1,5 +1,5 @@
 // RİVER ESCAPE PRESTİGE - v1.99.33.65 (MODERN BOAT UPDATE)
-const VERSION = "1.99.33.65";
+const VERSION = "1.99.33.70";
 console.log("%c INFINITE EVOLUTION ACTIVE - v1.99.33.65 - ELITE PROGRESSION ", "background: #ff00ff; color: #fff; font-size: 20px; font-weight: bold;");
 
 const canvas = document.getElementById('gameCanvas');
