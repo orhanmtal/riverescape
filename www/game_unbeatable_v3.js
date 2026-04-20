@@ -888,7 +888,7 @@ const LOOP_THRESHOLD = 27500;
 const MORPH_DURATION = 1500;
  // 5 saniye Yavaş Geçiş!
 var transitionAlpha = 0;
-var levelUpInvuln = false; // v1.99.33.62: Geçişlerde haksız ölümü engelleme
+var levelUpInvuln = false; // v1.99.33.71: Geçişlerde haksız ölümü engelleme
 var nextLevelAsset = null;
 var nextBgImg = null;
 var parallaxFogY = 0; // Layer 3 (Foreground) scroll
@@ -896,7 +896,7 @@ var parallaxSkyY = 0; // Layer 1 (Background) scroll
 
 var cameraZoom = 1.0;
 var targetCameraZoom = 1.0;
-var currentAsset = levelAssets[0]; // v1.99.33.62: Global Asset Reference Restored
+var currentAsset = levelAssets[0]; // v1.99.33.71: Global Asset Reference Restored
 
 
 var totalGold = 0;
@@ -912,7 +912,7 @@ var hasWeapon = false;
 var lastShotTime = 0;
 var bullets = [];
 
-var currentVersion = "1.99.33.62"; // Infinite Stages & Visual Evolution
+var currentVersion = "1.99.33.71"; // Infinite Stages & Visual Evolution
 
 function saveGame() {
     const data = {
@@ -1077,7 +1077,7 @@ window.addEventListener('keydown', (e) => {
         score = Math.floor(newTotal);
         currentLevel = ((currentLoop + loopAdd) * levelAssets.length) + nextIdx + 1;
 
-        // v1.99.33.62: Force Morph on Jump
+        // v1.99.33.71: Force Morph on Jump
         isMorphing = true;
         morphTimer = MORPH_DURATION;
 
@@ -1853,7 +1853,7 @@ function spawnPowerup() {
 }
 
 function spawnObstacle() {
-    // v1.99.33.62: TOXIC HARD MODE (Index 8 - Moved from index 4)
+    // v1.99.33.71: TOXIC HARD MODE (Index 8 - Moved from index 4)
     if (Math.floor((currentLevel - 1) / STAGES_PER_BIOME) % levelAssets.length === 8) { 
         if (!hasWeapon) hasWeapon = true; // v1.99.19.05: Combat Support (Free Weapon for L9)
         if (levelProgressTime - lastSpawnTime < 0.7) return; // HARD MODE: 0.7s interval
@@ -1931,7 +1931,7 @@ function spawnObstacle() {
 
     lastSpawnTime = levelProgressTime; // Doğumu mühürle
 
-    if (biomeIndex === 0 && obstacles.length >= 3) return; // v1.99.33.62: L1 Starter Balance
+    if (biomeIndex === 0 && obstacles.length >= 3) return; // v1.99.33.71: L1 Starter Balance
 
     // v1.99.19.09: ELITE VERTICAL SPACING GUARD (Anti-Wall System)
     for (var obs of obstacles) {
@@ -2209,7 +2209,7 @@ function spawnObstacle() {
                 speedY: bgScrollSpeed, speedX: 0
             });
         } else if (selectedType === 'toyBalloon' || selectedType === 'paperPlane' || selectedType === 'kite') {
-            const isL7 = Math.floor((currentLevel - 1) / STAGES_PER_BIOME) % levelAssets.length === 6; // v1.99.33.62: Lagoon Biome check
+            const isL7 = Math.floor((currentLevel - 1) / STAGES_PER_BIOME) % levelAssets.length === 6; // v1.99.33.71: Lagoon Biome check
             var w = 50, h = 50, sY = baseSpeed;
 
             if (selectedType === 'toyBalloon') {
@@ -2545,7 +2545,7 @@ function startGame() {
     goldTimer = 0;
     // levelProgressTime handle by resume logic above
 
-    // Sync Assets & UI (v1.99.33.62: STAGES_PER_BIOME Aware Mapping)
+    // Sync Assets & UI (v1.99.33.71: STAGES_PER_BIOME Aware Mapping)
     const currentAsset = levelAssets[Math.floor((currentLevel - 1) / STAGES_PER_BIOME) % levelAssets.length];
     bgImg = bgImgs[currentAsset.bgKey];
     // v1.99.19.09: Dinamik Kayık Sistemi (Skin Fallback) ⛵
@@ -2768,7 +2768,7 @@ function syncEliteHUD() {
         if (cachedHud.score) cachedHud.score.innerText = Math.max(0, Math.floor(score));
         if (cachedHud.gold) cachedHud.gold.innerText = Math.max(0, totalGold); // v1.199.3.31.10.3: BAKİYEYİ GÖSTER
         
-        // v1.99.33.62: Correct Biome Mapping for Stage-based HUD
+        // v1.99.33.71: Correct Biome Mapping for Stage-based HUD
         const STAGES_PER_BIOME_HUD = 3;
         const bIdxHUD = Math.floor((currentLevel - 1) / STAGES_PER_BIOME_HUD) % levelAssets.length;
         const currentLAsset = levelAssets[bIdxHUD];
@@ -2776,7 +2776,7 @@ function syncEliteHUD() {
             const lvlLabel = langPack.levelLabel || "LVL";
             const biomeNum = Math.floor((currentLevel - 1) / STAGES_PER_BIOME) + 1;
             const stageNum = ((currentLevel - 1) % STAGES_PER_BIOME) + 1;
-            const fullLvlText = `${lvlLabel} ${biomeNum}-${stageNum}`; // v1.99.33.62: Show Stage sub-numbers
+            const fullLvlText = `${lvlLabel} ${biomeNum}-${stageNum}`; // v1.99.33.71: Show Stage sub-numbers
             if (cachedHud.lvlName.innerText !== fullLvlText) cachedHud.lvlName.innerText = fullLvlText;
         }
 
@@ -2806,7 +2806,7 @@ function syncEliteHUD() {
 
             cachedHud.progress.style.width = Math.min(100, Math.max(0, smoothWidth)).toFixed(2) + '%';
 
-            // --- v1.99.33.62: VISUAL EVOLUTION (PRESTIGE FILTERS) ---
+            // --- v1.99.33.71: VISUAL EVOLUTION (PRESTIGE FILTERS) ---
             if (loopCount > 0) {
                 // Her turda 40 derece döndür (Aynı biyom farklı hissettirir)
                 const hueShift = (loopCount * 40) % 360;
@@ -2918,7 +2918,7 @@ function update(dt) {
     var calculatedLevel = (loopCount * levelAssets.length * STAGES_PER_BIOME) + (biomeIndex * STAGES_PER_BIOME) + stageInBiome + 1;
 
     if (calculatedLevel > currentLevel) {
-        // v1.99.33.62: Milestone reward only on actual Biome change or every level?
+        // v1.99.33.71: Milestone reward only on actual Biome change or every level?
         // Let's give a smaller reward for stages, bigger for biomes.
         const isNewBiome = (calculatedLevel - 1) % STAGES_PER_BIOME === 0;
         score += isNewBiome ? 500 : 200;
@@ -3058,7 +3058,7 @@ function update(dt) {
     const pMargin = (currentLAsset && typeof currentLAsset.margin === 'number') ? currentLAsset.margin : 0.32;
     const riverShift = getRiverShift(player.y);
     // v1.99.19.09: L7 EXCLUSIVE PLAYER BUFFER - Strictly exclusive to Lagoon
-    // v1.99.33.62: DYNAMIC PLAY BUFFER (Biome Based)
+    // v1.99.33.71: DYNAMIC PLAY BUFFER (Biome Based)
     const bIdxMove = Math.floor((currentLevel - 1) / STAGES_PER_BIOME) % levelAssets.length;
     const dynamicPlayBuffer = (bIdxMove === 6) ? 40 : (bIdxMove === 5 ? 8 : (bIdxMove >= 3 ? 25 : 10));
     const playRiverLeft = (canvas.width * pMargin) + riverShift + dynamicPlayBuffer;
@@ -3091,7 +3091,7 @@ function update(dt) {
         }
     }
 
-    // v1.99.33.62: ELITE MANUAL CONTROL (No Auto-Drift for Lava) - Biome Index 4
+    // v1.99.33.71: ELITE MANUAL CONTROL (No Auto-Drift for Lava) - Biome Index 4
     if (bIdxMove === 4) {
         player.relativeX = undefined; // Reset drift tracker
     }
@@ -3106,7 +3106,7 @@ function update(dt) {
     if (player.x < playRiverLeft) player.x = playRiverLeft;
     if (player.x > playRiverRight) player.x = playRiverRight;
 
-    // --- SU SIÇRATMA (PARTICLE) v1.99.33.62: Biome Aware Colors ---
+    // --- SU SIÇRATMA (PARTICLE) v1.99.33.71: Biome Aware Colors ---
     const bIdxUpdate = Math.floor((currentLevel - 1) / STAGES_PER_BIOME) % levelAssets.length;
     if (isPlaying && (dx !== 0 || dy !== 0 || Math.random() < 0.1)) {
         var pxL = player.x + player.width / 2 + (Math.random() - 0.5) * 20;
@@ -3117,7 +3117,7 @@ function update(dt) {
         particles.push(new Particle(pxL, pyL, pColor));
     }
     // Parçacıkları güncelle ve ömrü biteni sil
-    // --- KAR YAĞIŞI (SNOWFALL) v1.99.33.62 ---
+    // --- KAR YAĞIŞI (SNOWFALL) v1.99.33.71 ---
     if (bIdxUpdate === 3 && Math.random() < 0.1) {
         particles.push(new Particle(Math.random() * canvas.width, -50, "rgba(255, 255, 255, 0.8)"));
     }
@@ -3509,7 +3509,7 @@ function update(dt) {
             if (obs.rotSpeed) obs.rotation += obs.rotSpeed * dt;
         }
 
-        // v1.99.33.62: Bouncing Logs (Bahar haricinde aktif)
+        // v1.99.33.71: Bouncing Logs (Bahar haricinde aktif)
         if (bIdxPhysics !== 0 && obs.type === 'vertical') {
             const sMargin = currentLAsset ? currentLAsset.margin : 0.34;
             const bLeft = (canvas.width * sMargin);
@@ -3539,7 +3539,7 @@ function update(dt) {
         }
 
 
-        // v1.99.33.62: LEVEL 2 HİNLİK MEKANİZMASI (Yaz Biyomu - Index 1)
+        // v1.99.33.71: LEVEL 2 HİNLİK MEKANİZMASI (Yaz Biyomu - Index 1)
         if (bIdxPhysics === 1 && obs.type === 'vertical') {
             for (var jObs = 0; jObs < obstacles.length; jObs++) {
                 var other = obstacles[jObs];
@@ -3738,7 +3738,7 @@ function draw(dt) {
             ctx.save();
             ctx.globalAlpha = alpha;
             if (lvl === 5) {
-                // v1.99.33.62: Master Void Re-Sync (Pure Black & Stars)
+                // v1.99.33.71: Master Void Re-Sync (Pure Black & Stars)
                 ctx.fillStyle = "#000000"; ctx.fillRect(0, 0, canvas.width, canvas.height);
                 for (var i = 0; i < 60; i++) {
                     var seed = (i * 997) % 1000;
@@ -3813,7 +3813,7 @@ function draw(dt) {
 
     // YARI SAYDAM PARALLAX SİS/BULUT TABAKASI
     clouds.forEach(c => {
-        // v1.99.33.62: Shadow skip for Lava/Void/Lagoon/Cyber/Toxic
+        // v1.99.33.71: Shadow skip for Lava/Void/Lagoon/Cyber/Toxic
         if (bIdx >= 4) return;
         ctx.beginPath();
         ctx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
@@ -3821,7 +3821,7 @@ function draw(dt) {
         ctx.fill();
     });
 
-    // v1.99.33.62: BIOME ATMOSPHERIC OVERLAYS
+    // v1.99.33.71: BIOME ATMOSPHERIC OVERLAYS
     if (bIdx === 3) { if (typeof drawFrostVignette === 'function') drawFrostVignette(); }
     if (bIdx === 4) {
         if (typeof drawLavaGlow === 'function') drawLavaGlow();
@@ -4689,7 +4689,7 @@ function draw(dt) {
     // --- PARÇACIKLARIN (Particles) ÇİZİMİ v126 ---
     particles.forEach(p => p.draw());
 
-    // v1.99.33.62: Armor Aura (Requires Biome 5 - Void or later)
+    // v1.99.33.71: Armor Aura (Requires Biome 5 - Void or later)
     const bIdxArmor = bIdx;
     if (armorCharge > 0 && bIdxArmor >= 5) {
         ctx.save();
@@ -5489,13 +5489,13 @@ function showLevelUp(levelNum) {
     const stageNum = ((levelNum - 1) % STAGES_PER_BIOME) + 1;
     const formattedLvl = `${biomeNum}-${stageNum}`;
     
-    // v1.99.33.62: Show Elite Toast and Overlay
+    // v1.99.33.71: Show Elite Toast and Overlay
     if (typeof showToast === 'function') {
         const t = (translations[currentLang] || translations.tr);
         showToast(`${t.levelLabel || 'LVL'} ${formattedLvl} 🚀`, true);
     }
     
-    // v1.99.33.62: Overlay Animation
+    // v1.99.33.71: Overlay Animation
     const overlay = document.getElementById('level-up-overlay');
     if (overlay) {
         overlay.innerHTML = `
@@ -5511,7 +5511,7 @@ function showLevelUp(levelNum) {
                 }
             </style>
         `;
-        // v1.99.33.62: Transition Safety
+        // v1.99.33.71: Transition Safety
         levelUpInvuln = true;
         obstacles = []; // Temiz başla
         
@@ -5533,5 +5533,5 @@ function showLevelUp(levelNum) {
     }
 }
 
-// v1.99.33.62: Final Initialization Call (User Startup Sync)
+// v1.99.33.71: Final Initialization Call (User Startup Sync)
 goToMainMenu();

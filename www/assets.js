@@ -105,7 +105,7 @@ let bgImgSummer = loadBg('summer', 'assets/ArkaPlan_Yaz.png');
 let bgImgAutumn = loadBg('autumn', 'assets/ArkaPlan_Sonbahar.png');
 let bgImgWinter = loadBg('winter', 'assets/ArkaPlan_Kis.png');
 let bgImgLava = loadBg('lava', 'assets/ArkaPlan_Lav.png');
-let bgImgVoid = null; // v1.99.33.62: Restore Procedural Starfield (User Sync)
+let bgImgVoid = null; // v1.99.33.71: Restore Procedural Starfield (User Sync)
 let bgImgLagoon = loadBg('lagoon', 'assets/ArkaPlan_Lagoon.png'); // v1.99.14.0: ELITE LAGOON
 
 // v1.99.30.06: MODULAR COLLECTION LOADER
