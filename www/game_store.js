@@ -16,7 +16,7 @@ const GameStore = {
     isReady: false,
 
     init() {
-        console.log("🛒 [STORE] Initializing Elite Billing Core...");
+        
         
         document.addEventListener('deviceready', () => {
             this.setupStore();
@@ -24,7 +24,7 @@ const GameStore = {
 
         // Browser simülasyonu için hazırla (Mobil değilse)
         if (!window.cordova) {
-            console.log("🛒 [STORE] Browser environment detected. Simulation mode ready.");
+            
             this.isReady = true;
         }
     },
@@ -52,7 +52,7 @@ const GameStore = {
             const productId = transaction.products && transaction.products[0] ? transaction.products[0].id : null;
             
             if (productId) {
-                console.log("✅ Purchase Approved for Product:", productId);
+                
                 this.handleFinalizePurchase(productId);
                 
                 // Onay ve Bitirme (Consume)
@@ -72,7 +72,7 @@ const GameStore = {
             console.error("Store not ready.");
             // v1.99.30.02: Simulation Support
             if (window.location.protocol === 'file:' || window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost') {
-                console.log("🛠️ Simulation Mode: Adding gold locally...");
+                
                 this.handleFinalizePurchase(productId);
             }
             return;
@@ -84,7 +84,7 @@ const GameStore = {
         if (p && p.canPurchase) {
             const offer = p.getOffer();
             if (offer) {
-                console.log("Ordering Product Offer:", productId);
+                
                 store.order(offer);
             } else {
                 console.error("No Offer found for product:", productId);
@@ -108,7 +108,7 @@ const GameStore = {
             // 1. Yerel Bakiye Güncelle (Global Scope Protection)
             if (typeof window.totalGold !== 'undefined') {
                 window.totalGold += product.amount;
-                console.log(`💰 [STORE] Local balance updated: ${window.totalGold}`);
+                
             }
 
             // 2. Yerel Kayıt
@@ -116,13 +116,13 @@ const GameStore = {
             
             // 3. Firebase Raporu (Revenue)
             if (typeof Leaderboard !== 'undefined' && Leaderboard.reportPurchase) {
-                console.log("📊 [STORE] Reporting revenue to Firebase:", product.priceVal);
+                
                 Leaderboard.reportPurchase(product.priceVal || 0);
             }
             
             // 4. Bulut Senkronu (Total Gold)
             if (typeof triggerEliteEconomySync === 'function') {
-                console.log("🛰️ [STORE] Triggering Instant Cloud Sync...");
+                
                 triggerEliteEconomySync(true); 
             }
             
@@ -144,7 +144,7 @@ const GameStore = {
 
 // v1.99.30: Sabırlı Başlatma (Device Ready Bekle)
 document.addEventListener('deviceready', () => {
-    console.log("🚀 Billing System: Device Ready. Initializing Store...");
+    
     GameStore.init();
 }, false);
 
@@ -152,7 +152,7 @@ document.addEventListener('deviceready', () => {
 if (window.location.protocol !== 'file:' && !window.Capacitor) {
     setTimeout(() => {
         if (!window.CdvPurchase) {
-            console.log("🌐 Web Environment Detected: Initializing GameStore in Simulation Mode.");
+            
             GameStore.init();
         }
     }, 1000);

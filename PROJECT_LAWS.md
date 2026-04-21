@@ -23,5 +23,20 @@ Google Play Console'a yükleme yaparken `versionCode` ve `versionName` uyumu mut
 - Font: Her zaman `Outfit` veya `Press Start 2P` kullanılmalıdır.
 - Versiyon etiketi (`index.html` alt kısımdaki) her zaman güncel sürümü yansıtmalıdır.
 
+## 4. Kimlik Güvenliği ve Yerel Veri İzolasyonu (Identity Safety) 🔐🧼
+Birden fazla kullanıcının aynı cihazda (özellikle mobilde) çakışmasını önlemek "Elite" güvenliğin temelidir.
+
+### A. Veri İzolasyonu (Deep Purge)
+- **KURAL:** Bir kullanıcı çıkış yaptığında veya yeni bir kullanıcı giriş yaptığında, sadece `localStorage` değil, oyunun o anki hafızasındaki (RAM) tüm global değişkenler (`window.totalGold`, `window.ownedBoats` vb.) anında sıfırlanmalıdır.
+- Bu işlem için `Leaderboard.resetGlobalGameState()` metoduna sadık kalınmalıdır.
+
+### B. Bulut Hakimiyeti (Cloud Dominance)
+- **KURAL:** Bulut senkronu yapılırken (Restore), yerel veri ile bulut verisi `Math.max` ile **BİRLEŞTİRİLEMEZ**. 
+- Buluttaki veri, o anki oturumun tek gerçeğidir ve yerel verinin üzerine tam yazım (`=`) yapılmalıdır. Bu, verilerin kullanıcılar arasında sızmasını (Miras/Inheritance) engeller.
+
+### C. Görev ve Kayıkhale Senkronu
+- Her satın alım veya görev ilerlemesi anında `Leaderboard.submitProgress()` ile buluta mühürlenmelidir.
+- Görev döngüleri (`missionCycle`) ve sahiplikler (`ownedBoats`) kimliğe özeldir, asla paylaşılamaz.
+
 ---
-*Bu yasalar River Escape krallığının selameti için mühürlenmiştir.* 🏛️⚔️✅
+*Bu yasalar River Escape krallığının selameti ve oyuncu kimliğinin kutsallığı için mühürlenmiştir.* 🏛️⚔️✅🛡️

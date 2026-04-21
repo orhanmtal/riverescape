@@ -1,5 +1,5 @@
 /**
- * River Escape - Elite Mission Engine v1.0
+ * River Escape - Elite Mission Engine v1.99.35.00
  * Manages daily quests, milestones and rewards.
  */
 
@@ -14,25 +14,38 @@ window.MissionManager = (function() {
     function init() {
         const saved = localStorage.getItem('riverEscapeMissions');
         const cycleSaved = localStorage.getItem('riverEscapeMissionCycle');
+        const lastReset = localStorage.getItem('riverEscapeLastMissionReset');
         
-        if (cycleSaved) missionCycle = parseInt(cycleSaved);
-        if (missionCycle > 5) missionCycle = 1; // v1.99.33.70: Limit protect
+        const today = new Date().toDateString();
 
-        if (saved) {
-            const savedData = JSON.parse(saved);
-            missions.forEach(m => {
-                const s = savedData.find(dm => dm.id === m.id);
-                if (s) {
-                    m.current = s.current;
-                    m.completed = s.completed;
-                }
-                // Ölçeklenmiş hedefleri/ödülleri uygula (v1.99.33.70: Her zaman init sırasında skalalamalı)
-                applyCycleScaling(m);
-            });
+        // v1.99.33.74: 24-Hour Calendar Reset Logic
+        if (lastReset !== today) {
+            console.log("📅 [MISSION ENGINE] New day detected. Resetting missions.");
+            reset();
+            localStorage.setItem('riverEscapeLastMissionReset', today);
         } else {
-            missions.forEach(m => applyCycleScaling(m));
+            if (cycleSaved) missionCycle = parseInt(cycleSaved);
+            if (missionCycle > 5) missionCycle = 1;
+
+            if (saved) {
+                const savedData = JSON.parse(saved);
+                missions.forEach(m => {
+                    const s = savedData.find(dm => dm.id === m.id);
+                    if (s) {
+                        m.current = s.current;
+                        m.completed = s.completed;
+                    }
+                    applyCycleScaling(m);
+                });
+            } else {
+                missions.forEach(m => applyCycleScaling(m));
+            }
         }
+        
         console.log(`🎯 [MISSION ENGINE] System Initialized. Cycle: ${missionCycle}/5`);
+        
+        // Ensure UI is rendered on start screen immediately
+        setTimeout(() => renderMissions(), 500); 
     }
 
     function applyCycleScaling(mission) {
@@ -77,6 +90,7 @@ window.MissionManager = (function() {
         });
         if (changed) {
             save();
+            renderMissions(); // v1.99.33.74: Update UI live on progress
             checkAllCompleted();
         }
     }
@@ -172,14 +186,36 @@ window.MissionManager = (function() {
         console.log("♻️ [MISSION ENGINE] System Reset to defaults.");
     }
 
+    // v1.99.33.80: IDENTITY SYNC HOOK (Cloud Restoration)
+    function syncFromCloud(cloudMissions, cloudCycle) {
+        if (!cloudMissions || !Array.isArray(cloudMissions)) return;
+        
+        console.log("📥 [MISSION ENGINE] Syncing from Cloud...");
+        missionCycle = cloudCycle || 1;
+        
+        cloudMissions.forEach(cm => {
+            const m = missions.find(dm => dm.id === cm.id);
+            if (m) {
+                m.current = cm.current || 0;
+                m.completed = !!cm.completed;
+            }
+        });
+        
+        // Re-scale based on the new cycle
+        missions.forEach(m => applyCycleScaling(m));
+        save();
+        renderMissions();
+    }
+
     return {
         init,
         notify,
         getMissions,
         renderMissions,
-        reset
+        reset,
+        syncFromCloud
     };
 })();
 
-// Initialize on load
+// v1.99.33.80: Master Identity Sync Sync Version
 window.MissionManager.init();

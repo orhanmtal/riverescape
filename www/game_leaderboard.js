@@ -1,7 +1,7 @@
 /**
- * RİVER ESCAPE ELİTE - v1.99.23.00 (IDENTITY SYNC)
+ * RİVER ESCAPE ELİTE - v1.99.35.03 (ELITE SYNC)
  * Firebase Firestore Global Sıralama ve Profil Senkronizasyon Sistemi
- * v1.99.23.00
+ * v1.99.35.03
  */
 
 const Leaderboard = {
@@ -23,29 +23,29 @@ const Leaderboard = {
     playerFlag: "🌍",
 
     init() {
-        console.log("🚀 [ELITE INIT] Starting Social & Cloud Infrastructure...");
+        
         
         try {
             // Firebase Başlat (Eğer SDK yüklendiyse)
             if (typeof firebase !== 'undefined') {
                 if (!firebase.apps.length) {
                     firebase.initializeApp(this.firebaseConfig);
-                    console.log("✅ [ELITE INIT] Firebase Instance Initialized.");
+                    
                 }
                 this.db = firebase.firestore();
                 this.auth = firebase.auth();
-                console.log("🔥 [ELITE INIT] Firestore & Auth Connected.");
+                
 
                 // v1.99.23.00: [ELITE SECURITY] Oturum kalıcılığını yerel hafızaya kilitle
                 this.auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
-                    .then(() => console.log("🔐 [ELITE AUTH] Persistence set to LOCAL"))
+                    .then(() => {})
                     .catch(e => console.warn("🔐 [ELITE AUTH] Persistence Error:", e));
 
                 // v1.99.23.00: [ELITE REDIRECT] Gelişmiş yönlendirme yakalayıcı (Fast-Sync)
                 try {
                     this.auth.getRedirectResult().then(result => {
                         if (result && result.user) {
-                            console.log("🚀 [ELITE AUTH] Redirect Girişi Başarılı:", result.user.displayName);
+                            
                             this.playerID = result.user.uid;
                             this.playerName = result.user.displayName;
                             localStorage.setItem('riverEscapeName', this.playerName);
@@ -72,9 +72,10 @@ const Leaderboard = {
 
                 // AUTH STATE LISTENER (Safe Wrapper)
                 this.auth.onAuthStateChanged(user => {
+                    this.resetGlobalGameState(); // v1.99.33.79: Prevent multi-user inheritance
                     try {
                         if (user) {
-                            console.log("👤 [ELITE AUTH] Google User Detected:", user.displayName);
+                            
                             this.playerID = user.uid;
                             this.playerName = user.displayName;
                             localStorage.setItem('riverEscapeName', this.playerName);
@@ -83,7 +84,7 @@ const Leaderboard = {
                             this.updateAuthUI(true, user.displayName, false, user.photoURL);
                             this.restoreFromCloud();
                         } else {
-                            console.log("👤 [ELITE AUTH] Authentication Required.");
+                            
                             this.handleNoAuth();
                         }
                     } catch (authErr) {
@@ -111,11 +112,11 @@ const Leaderboard = {
             this.updateUI();
         }
 
-        console.log("🏁 [ELITE INIT] Initialization Finished. Player:", this.playerName);
+        
     },
 
     handleNoAuth() {
-        console.log("🔏 [ELITE AUTH] Mandatory Firebase authentication required.");
+        
         this.updateAuthUI(false);
     },
 
@@ -241,7 +242,7 @@ const Leaderboard = {
                         if (e.cancelable) e.preventDefault();
                         e.stopPropagation();
                     }
-                    console.log("👤 [IDENTITY] Elite Trigger - Opening Modal Immediately...");
+                    
                     const modal = document.getElementById('identity-modal');
                     const input = document.getElementById('player-name-input');
                     if (modal && input) {
@@ -272,7 +273,7 @@ const Leaderboard = {
         }
         if (!this.db || !this.auth.currentUser) return;
 
-        console.log("🛰️ [ELITE IDENTITY] Syncing new name to Cloud:", newName);
+        
         try {
             const user = this.auth.currentUser;
             const cleanName = newName.trim().toUpperCase();
@@ -422,7 +423,7 @@ const Leaderboard = {
         const finalScore = Math.floor(score || window.score || 0);
         
         try {
-            console.log(`🚀 [ELITE SYNC] Mapped Syncing for ${this.playerName}...`);
+            
             const payload = {
                 id: this.playerID,
                 name: this.playerName,
@@ -437,11 +438,17 @@ const Leaderboard = {
                 level: level || window.currentLevel || 1,
                 country: this.playerCountry,
                 flag: this.playerFlag,
+                ownedBoats: window.ownedBoats || ['spring'],
+                
+                // v1.99.33.80: Mission Sync
+                missionCycle: (window.MissionManager) ? window.MissionManager.getMissions()[0]?.cycle || 1 : 1, // Logic handled in manager
+                missions: (window.MissionManager) ? window.MissionManager.getMissions() : [],
+                
                 lastSeen: firebase.firestore.FieldValue.serverTimestamp()
             };
 
             await this.db.collection('leaderboard').doc(this.playerID).set(payload, { merge: true });
-            console.log("✅ [ELITE SYNC] Cloud Mapped Update Complete!");
+            
             if (typeof showToast === 'function' && score > 0) showToast("VERİLER BULUTA MÜHÜRLENDİ! 🏛️", true);
         } catch (e) {
             console.error("❌ [ELITE SYNC] Firestore Sync Error:", e);
@@ -457,7 +464,7 @@ const Leaderboard = {
             return;
         }
 
-        console.log("🌐 [LEADERBOARD] Fetching Top 10 Riders...");
+        
         try {
             const snapshot = await this.db.collection('leaderboard')
                 .orderBy('score', 'desc')
@@ -519,25 +526,36 @@ const Leaderboard = {
             const doc = await this.db.collection('leaderboard').doc(this.playerID).get();
             if (doc.exists) {
                 const data = doc.data();
-                console.log("📥 [ELITE CLOUD] All Assets Restored!");
                 
-                // 💰 Kasa Senkronu
-                if (data.totalGold !== undefined) window.totalGold = Math.max(window.totalGold || 0, data.totalGold);
-                if (data.gold !== undefined) window.totalGold = Math.max(window.totalGold || 0, data.gold);
                 
-                // 🛠️ Envanter Senkronu
-                if (data.magnetLevel !== undefined) window.magnetLevel = Math.max(window.magnetLevel || 0, data.magnetLevel);
-                if (data.shieldLevel !== undefined) window.shieldLevel = Math.max(window.shieldLevel || 0, data.shieldLevel);
-                if (data.bombCount !== undefined) window.bombCount = Math.max(window.bombCount || 0, data.bombCount);
-                if (data.armorCharge !== undefined) window.armorCharge = Math.max(window.armorCharge || 0, data.armorCharge);
+                // 💰 Kasa Senkronu (v1.99.33.79: Strict Overwrite - No inheritance)
+                if (data.totalGold !== undefined) window.totalGold = Number(data.totalGold);
+                else if (data.gold !== undefined) window.totalGold = Number(data.gold);
                 
-                if (data.ownsArmorLicense) window.ownsArmorLicense = true;
-                if (data.hasWeapon) window.hasWeapon = true;
+                // 🛠️ Envanter Senkronu (Strict Assignment)
+                if (data.magnetLevel !== undefined) window.magnetLevel = Number(data.magnetLevel);
+                if (data.shieldLevel !== undefined) window.shieldLevel = Number(data.shieldLevel);
+                if (data.bombCount !== undefined) window.bombCount = Number(data.bombCount);
+                if (data.armorCharge !== undefined) window.armorCharge = Number(data.armorCharge);
                 
-                // 🗺️ Level Senkronu
+                window.ownsArmorLicense = !!data.ownsArmorLicense;
+                window.hasWeapon = !!data.hasWeapon;
+                
                 if (data.level !== undefined) {
-                    window.currentLevel = Math.max(window.currentLevel || 1, data.level);
-                    console.log(`🗺️ [ELITE CLOUD] Level Restored: Reached Level ${window.currentLevel}`);
+                    window.currentLevel = Number(data.level);
+                    
+                }
+
+                // ⛵ Boathouse Senkronu (v1.99.33.79: Identity Isolation Fix)
+                if (data.ownedBoats && Array.isArray(data.ownedBoats)) {
+                    // v1.99.33.79: Overwrite local collection with cloud data to prevent user-leaking
+                    window.ownedBoats = data.ownedBoats.map(id => (id === 'ilkbahar') ? 'spring' : id);
+                    if (!window.ownedBoats.includes('spring')) window.ownedBoats.push('spring');
+                }
+
+                // 🎯 Mission Senkronu (v1.99.33.80)
+                if (data.missions && window.MissionManager && typeof window.MissionManager.syncFromCloud === 'function') {
+                    window.MissionManager.syncFromCloud(data.missions, data.missionCycle || 1);
                 }
                 
                 // 👤 İsim Senkronu
@@ -558,7 +576,27 @@ const Leaderboard = {
         }
     },
 
-    // v1.99.20.02: ELITE AUDIT - PURGED OFFLINE CALIBRATION (Trash Cleaned)
+    // v1.99.33.79: DEEP PURGE (No Inheritance between sessions)
+    resetGlobalGameState() {
+        
+        window.totalGold = 0;
+        window.ownedBoats = ['spring'];
+        window.magnetLevel = 0;
+        window.shieldLevel = 0;
+        window.bombCount = 0;
+        window.armorCharge = 0;
+        window.ownsArmorLicense = false;
+        window.hasWeapon = false;
+        window.currentLevel = 1;
+        window.score = 0;
+        
+        // 🎯 Reset Missions (v1.99.33.80)
+        if (window.MissionManager && typeof window.MissionManager.reset === 'function') {
+            window.MissionManager.reset();
+        }
+    },
+
+    // v1.99.35.00: ELITE AUDIT - PURGED OFFLINE CALIBRATION (Trash Cleaned)
     clearLocalSyncPending() {
         localStorage.removeItem('riverEscapePendingSync');
         localStorage.removeItem('riverEscapePendingScore');
@@ -566,10 +604,26 @@ const Leaderboard = {
         localStorage.removeItem('riverEscapePendingGold');
     },
 
-    // v1.99.4.1.7: TAM TEMİZLİK (Deep Wipe - No Inheritance)
+    // v1.99.35.00: TAM TEMİZLİK (Deep Wipe - No Inheritance)
     async logout() {
-        if (!confirm("Oturumu kapatmak istediğinize emin misiniz? Tüm yerel veriler silinecek ve ana ekrana döneceksiniz.")) return;
-        
+        if (typeof window.showEliteConfirm === 'function') {
+            window.showEliteConfirm(
+                "OTURUMU KAPAT?", 
+                "Tüm yerel verileriniz (altın, skor vb.) silinecek ve misafir olarak devam edeceksiniz. Emin misiniz?", 
+                "ÇIKIŞ YAP", 
+                "🚪", 
+                async () => {
+                    await this.performLogout();
+                }
+            );
+        } else {
+            if (confirm("Oturumu kapatmak istediğinize emin misiniz?")) {
+                await this.performLogout();
+            }
+        }
+    },
+
+    async performLogout() {
         try {
             if (this.auth) await this.auth.signOut();
             
@@ -580,12 +634,13 @@ const Leaderboard = {
                 'riverEscapeMagnetLevel', 'riverEscapeShieldLevel', 'riverEscapeBombCount',
                 'riverEscapeWeapon', 'riverEscapeArmorLicense', 'riverEscapeArmorCharge',
                 'riverEscapePendingSync', 'riverEscapePendingScore', 'riverEscapePendingLevel',
-                'riverEscapeCountry'
+                'riverEscapeCountry', 'riverEscapeOwnedBoats', 'riverEscapeSave',
+                'riverEscapeMissions', 'riverEscapeMissionCycle', 'riverEscapeLastMissionReset'
             ];
             
             keysToRemove.forEach(key => localStorage.removeItem(key));
+            this.resetGlobalGameState();
             
-            console.log("🚪 [ELITE AUTH] Logout successful. Reloading...");
             location.reload(); 
         } catch (e) {
             console.error("Logout failed:", e);
@@ -616,22 +671,22 @@ const Leaderboard = {
         }
 
         try {
-            console.log("🚀 [ELITE AUTH] Native Modern Modal Başlatılıyor...");
+            
             if (typeof showToast === 'function') showToast("GÜVENLİ GİRİŞ AÇILIYOR...", true);
             
             // 1. Capacitor Native Eklentisine Öncelik Ver
             const AuthPlugin = window.Capacitor && window.Capacitor.Plugins ? window.Capacitor.Plugins.FirebaseAuthentication : null;
 
             if (AuthPlugin) {
-                console.log("📱 [ELITE AUTH] Cihaz İçi Modern Pencere Kullanılıyor!");
+                
                 const result = await AuthPlugin.signInWithGoogle();
                 if (result.credential && result.credential.idToken) {
                     const credential = firebase.auth.GoogleAuthProvider.credential(result.credential.idToken);
                     const userCredential = await this.auth.signInWithCredential(credential);
-                    console.log("✅ [ELITE AUTH] Modern Giriş Başarılı:", userCredential.user.displayName);
+                    
                 }
             } else {
-                console.log("💻 [ELITE AUTH] Platform Algılanıyor...");
+                
                 const provider = new firebase.auth.GoogleAuthProvider();
                 provider.setCustomParameters({ prompt: 'select_account' });
 
@@ -639,10 +694,9 @@ const Leaderboard = {
                 const isWebBrowser = !window.Capacitor || window.Capacitor.getPlatform() === 'web';
 
                 if (isWebBrowser) {
-                    console.log("🖥️ [ELITE AUTH] Web Tarayıcı: Popup Kullanılıyor (Block Fix)");
                     await this.auth.signInWithPopup(provider);
                 } else {
-                    console.log("📱 [ELITE AUTH] Mobil Uygulama: Redirect Kullanılıyor");
+                    
                     await this.auth.signInWithRedirect(provider);
                 }
             }

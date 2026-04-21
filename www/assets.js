@@ -1,6 +1,6 @@
-// River Escape - Varlık Yükleyici (Asset Loader) - v1.99.32.08 (SCOPE PROTECTION)
-const version = "1.99.32.08";
-window.players = { ilkbahar: null, yaz: null, sonbahar: null, kis: null, lava: null, void: null, nostalji: null };
+// River Escape - Varlık Yükleyici (Asset Loader) - v1.99.33.74 (SCOPE PROTECTION)
+const version = "1.99.33.74";
+window.players = { spring: null, yaz: null, sonbahar: null, kis: null, lava: null, void: null, nostalji: null };
 var iPI = null; // v1.99.31.00: Universal Default Ship Identifier
 var playerImg = null;
 

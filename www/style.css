@@ -99,12 +99,12 @@ button, .switch, .toggle-slider, #gameCanvas {
     font-family: 'Press Start 2P', sans-serif;
     font-size: 16px;
     text-shadow: 2px 2px 0px #000;
-    z-index: 10;
+    z-index: 1000;
 }
 
 /* HUD visibility control restored to original v1.99.4.1.10 */
 #score-display {
-    z-index: 10;
+    z-index: 1000;
 }
 
 .screen {
@@ -120,7 +120,7 @@ button, .switch, .toggle-slider, #gameCanvas {
     color: #fff;
     overflow: hidden;
     pointer-events: auto;
-    z-index: 100;
+    z-index: 10000;
     padding: 6vmin;
     box-sizing: border-box;
 }
@@ -142,7 +142,7 @@ button, .switch, .toggle-slider, #gameCanvas {
     justify-content: center;
     background: radial-gradient(circle, rgba(0, 229, 255, 0.1) 0%, rgba(0,0,0,0.9) 80%);
     text-align: center;
-    z-index: 16000;
+    z-index: 20000;
 }
 
 /* Elite Character Preview Box */
@@ -245,7 +245,7 @@ h1 {
     gap: 12px !important;
     pointer-events: auto !important;
     box-shadow: 0 10px 40px rgba(0,0,0,0.5) !important;
-    z-index: 100 !important;
+    z-index: 2000 !important;
 }
 
 /* Sağ Taraf: Karakter Önizleme */
@@ -276,7 +276,7 @@ h1 {
     display: flex !important;
     gap: 15px !important;
     pointer-events: auto !important;
-    z-index: 10000 !important;
+    z-index: 2000 !important;
 }
 
 .bottom-right-group {
@@ -284,7 +284,7 @@ h1 {
     bottom: 30px !important;
     right: 30px !important;
     pointer-events: auto !important;
-    z-index: 10000 !important;
+    z-index: 2000 !important;
 }
 
 .right-middle-group {
@@ -309,7 +309,7 @@ h1 {
     position: relative;
     overflow: hidden;
     pointer-events: auto !important;
-    z-index: 1000 !important;
+    z-index: 2000 !important;
 }
 
 .elite-btn-square:hover {
@@ -762,7 +762,7 @@ input:checked + .toggle-slider:before {
     flex-direction: column;
     align-items: center;
     padding: 22px 18px 18px;
-    z-index: 7000;
+    z-index: 10000;
     box-shadow:
         0 0 0 1px rgba(255,215,0,0.15),
         0 0 40px rgba(255,165,0,0.25),

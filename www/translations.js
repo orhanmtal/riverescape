@@ -1,8 +1,8 @@
-// River Escape - Dil Paketleri (TR/EN) - v1.99.10.0 (LAVA REIGN)
+// River Escape - Dil Paketleri (TR/EN) - v1.99.35.03 (ELITE SEAL)
 const translations = {
     tr: {
         startDesc: "",
-        startBtn: "OYNA 🌊",
+        startBtn: "Oyna",
         shopBtn: "Mağaza",
         settingsBtn: "AYARLAR",
         pauseTitle: "DURDUR",
