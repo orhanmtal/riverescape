@@ -8,10 +8,10 @@
  */
 
 // River Escape Elite - Central Version Control
-// v1.99.40.05 - Sync Hotfix (L-Key Syntax Repair)
+// v1.99.40.06 - Grace Period Patch (Revive Invulnerability)
 window.ELITE_CONFIG = {
-    VERSION: "1.99.40.05",
-    VERSION_CODE: "19940005",
+    VERSION: "1.99.40.06",
+    VERSION_CODE: "19940006",
     BUILD_LEVEL: "Elite Production",
     SYNC_ENGINE: "v3.Elite.Secure",
     LAST_UPDATED: "2026-04-21"

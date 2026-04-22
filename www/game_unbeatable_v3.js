@@ -1,5 +1,5 @@
 /**
- * RİVER ESCAPE ELİTE - v1.99.40.05 (HOTFIX)
+ * RİVER ESCAPE ELİTE - v1.99.40.06 (GRACE PERIOD)
  * DEVELOPMENT RULES:
  * 1. NO PLACEHOLDERS 2. PERFORMANCE FIRST 3. VISUAL EXCELLENCE
  * 4. CODE INTEGRITY 5. ELITE SYNC
@@ -5197,7 +5197,9 @@ if (reviveBtn) reviveBtn.addEventListener('click', () => {
         isPaused = false;
         lives = 1;
         hasShield = true;
-        goldCount = 0; // v1.99.39.02: RESET session gold after it was vaulted in gameOver
+        levelUpInvuln = true; // v1.99.40.06: Absolute Grace Period Ignition
+        obstacles = [];      // v1.99.40.06: Clear the death trap
+        goldCount = 0;
 
         // UI'yi zorla kapat (Hem class hem style)
         if (gameOverScreen) {
@@ -5222,7 +5224,10 @@ if (reviveBtn) reviveBtn.addEventListener('click', () => {
         gameLoopRequestId = requestAnimationFrame(gameLoop);
 
         draw(); // Görseli hemen güncelle
-        setTimeout(() => { hasShield = false; }, 3000);
+        setTimeout(() => { 
+            hasShield = false; 
+            levelUpInvuln = false; // v1.99.40.06: Grace Period End
+        }, 3000);
     });
 });
 
