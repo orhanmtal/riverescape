@@ -1,5 +1,5 @@
 /**
- * RİVER ESCAPE ELİTE - v1.99.39.06 (HUD SYNC)
+ * RİVER ESCAPE ELİTE - v1.99.39.07 (STABLE ECONOMY)
  * DEVELOPMENT RULES:
  * 1. NO PLACEHOLDERS 2. PERFORMANCE FIRST 3. VISUAL EXCELLENCE
  * 4. CODE INTEGRITY 5. ELITE SYNC
@@ -1570,8 +1570,19 @@ function updateShopUI() {
             if (ownsArmorLicense) {
                 const price = 1000;
                 if (iconSpan) iconSpan.innerText = "💎";
+                // v1.99.39.07: Clear label for armor charge
                 buyABtn.innerText = `${t.chargeArmor.replace('{charge}', armorCharge)}\n${price} G`;
-                buyABtn.disabled = (totalGold < price || armorCharge >= 30);
+                
+                // v1.99.39.07: STRICT CAPACITY CHECK
+                const isMaxed = (armorCharge >= 30);
+                buyABtn.disabled = (totalGold < price || isMaxed);
+                
+                if (isMaxed) {
+                    buyABtn.style.opacity = "0.5";
+                } else {
+                    buyABtn.style.opacity = "1";
+                }
+
                 if (document.getElementById('shop-void-armor-title')) document.getElementById('shop-void-armor-title').innerText = t.armorChargeTitle;
             } else {
                 if (iconSpan) iconSpan.innerText = "🔒";

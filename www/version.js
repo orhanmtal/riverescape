@@ -8,10 +8,10 @@
  */
 
 // River Escape Elite - Central Version Control
-// v1.99.39.06 - HUD Sync & Refill Balance
+// v1.99.39.07 - Stable Economy (Armor Logic Reinforced)
 window.ELITE_CONFIG = {
-    VERSION: "1.99.39.06",
-    VERSION_CODE: "19939006",
+    VERSION: "1.99.39.07",
+    VERSION_CODE: "19939007",
     BUILD_LEVEL: "Elite Production",
     SYNC_ENGINE: "v3.Elite.Secure",
     LAST_UPDATED: "2026-04-21"
