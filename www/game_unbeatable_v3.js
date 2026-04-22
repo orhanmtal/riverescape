@@ -1483,12 +1483,7 @@ function buyArmorLicense() {
         }
     }
 }
-            showToast(t.noGold, false);
-        }
-    } else {
-        showToast(translations[currentLang].noGold, false);
-    }
-}
+
 
 function updateShopUI() {
     try {
