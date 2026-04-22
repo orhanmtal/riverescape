@@ -1,5 +1,5 @@
 /**
- * RİVER ESCAPE ELİTE - v1.99.40.03 (PRECISION RESUME)
+ * RİVER ESCAPE ELİTE - v1.99.40.05 (HOTFIX)
  * DEVELOPMENT RULES:
  * 1. NO PLACEHOLDERS 2. PERFORMANCE FIRST 3. VISUAL EXCELLENCE
  * 4. CODE INTEGRITY 5. ELITE SYNC
@@ -1170,8 +1170,11 @@ window.addEventListener('keydown', (e) => {
             const sNum = ((nextLvl - 1) % STAGES_PER_BIOME) + 1;
             showToast(translations[currentLang].skipLevel.replace('{level}', bNum + "-" + sNum));
         }
-    }
 
+        // v1.99.40.05: SEAL JUMP TO CLOUD (Fix Syntax)
+        saveGame();
+        if (typeof triggerEliteEconomySync === 'function') triggerEliteEconomySync(true);
+    }
 });
 
 // v1.99.19.09: ELITE BUTTON LISTENERS (UNIFIED & HAPTIC)
