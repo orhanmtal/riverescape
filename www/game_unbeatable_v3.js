@@ -6,9 +6,9 @@
  */
 
 // --- v1.99.36.80: ELITE GLOBAL CONSTANTS (Locked & Sealed) ---
-const STAGES_PER_BIOME = 1; 
+const STAGES_PER_BIOME = 3; 
 const BIOME_COUNT = 9;
-const LOOP_THRESHOLD = BIOME_COUNT * 1000; 
+const LOOP_THRESHOLD = BIOME_COUNT * 3000; 
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -919,14 +919,14 @@ resizeCanvas();
 
 const levelAssets = [
     { threshold: 0, bgKey: 'spring', speed: 200, spawn: 0.55, titleEN: translations.en.springRiver, titleTR: translations.tr.springRiver, color: "#00e5ff", pKey: "ilkbahar", margin: 0.35, visuals: { hideAmbients: false, isProcedural: false, waterColor: "rgba(0, 180, 255, 0.2)", groundColor: "#1e90ff", waterEffect: "shimmer" } }, 
-    { threshold: 1000, bgKey: 'summer', speed: 220, spawn: 0.52, titleEN: translations.en.summerRiver, titleTR: translations.tr.summerRiver, color: "#1e90ff", pKey: "yaz", margin: 0.35, visuals: { hideAmbients: false, isProcedural: false, waterColor: "rgba(0, 180, 255, 0.2)", groundColor: "#1e90ff", waterEffect: "shimmer" } }, 
-    { threshold: 2000, bgKey: 'autumn', speed: 230, spawn: 0.48, titleEN: translations.en.autumnRiver, titleTR: translations.tr.autumnRiver, color: "#ff8c00", pKey: "sonbahar", margin: 0.35, visuals: { hideAmbients: false, isProcedural: false, waterColor: "rgba(139, 69, 19, 0.25)", groundColor: "#cd853f", waterEffect: "shimmer" } }, 
-    { threshold: 3000, bgKey: 'winter', speed: 220, spawn: 0.45, titleEN: translations.en.winterRiver, titleTR: translations.tr.winterRiver, color: "#add8e6", pKey: "kis", margin: 0.35, visuals: { hideAmbients: false, isProcedural: false, waterColor: "rgba(173, 216, 230, 0.4)", groundColor: "#b0c4de", waterEffect: "shimmer" } }, 
-    { threshold: 4000, bgKey: 'lava', speed: 250, spawn: 0.85, titleEN: translations.en.lavaRiver, titleTR: translations.tr.lavaRiver, color: "#ff4500", pKey: "lava", margin: 0.34, visuals: { hideAmbients: true, isProcedural: false, waterColor: "rgba(255, 69, 0, 0.3)", groundColor: "#1a0000", waterEffect: "lava" } }, 
-    { threshold: 5000, bgKey: 'void', speed: 190, spawn: 0.95, titleEN: translations.en.voidLevel, titleTR: translations.tr.voidLevel, color: "#9b59b6", pKey: "void", margin: 0.32, visuals: { hideAmbients: true, isProcedural: true, neonBorders: true, auraColor: "#9b59b6", waterColor: "rgba(0, 0, 0, 0.85)", groundColor: "#000000", waterEffect: "neonPulse" } }, 
-    { threshold: 6000, bgKey: 'lagoon', speed: 310, spawn: 0.55, titleEN: translations.en.l7Title, titleTR: translations.tr.l7Title, color: "#00e5ff", pKey: "ilkbahar", margin: 0.15, visuals: { hideAmbients: true, isProcedural: false, waterColor: "rgba(0, 180, 255, 0.2)", groundColor: "#00e5ff", waterEffect: "ripples" } }, 
-    { threshold: 7000, bgKey: 'cyber', speed: 340, spawn: 0.42, titleEN: "CYBER CITY", titleTR: "SİBER ŞEHİR", color: "#ff00ff", pKey: "void", margin: 0.18, scrollSpeed: 1.0, visuals: { hideAmbients: true, isProcedural: true, neonBorders: true, auraColor: "#ff00ff", riverFill: "rgba(255, 0, 255, 0.05)", groundColor: "#00050a", waterColor: "rgba(255, 0, 255, 0.1)", waterEffect: "neonPulse" } }, 
-    { threshold: 8000, bgKey: 'toxic', speed: 320, spawn: 0.70, titleEN: "TOXIC WASTELAND", titleTR: "ZEHİRLİ ATIK", color: "#32CD32", pKey: "lava", margin: 0.30, scrollSpeed: 1.0, visuals: { hideAmbients: true, isProcedural: true, neonBorders: true, auraColor: "#32CD32", riverFill: "rgba(50, 205, 50, 0.08)", groundColor: "#0a1a05", waterColor: "rgba(50, 205, 50, 0.1)", waterEffect: "bubbles" } } 
+    { threshold: 3000, bgKey: 'summer', speed: 220, spawn: 0.52, titleEN: translations.en.summerRiver, titleTR: translations.tr.summerRiver, color: "#1e90ff", pKey: "yaz", margin: 0.35, visuals: { hideAmbients: false, isProcedural: false, waterColor: "rgba(0, 180, 255, 0.2)", groundColor: "#1e90ff", waterEffect: "shimmer" } }, 
+    { threshold: 6000, bgKey: 'autumn', speed: 230, spawn: 0.48, titleEN: translations.en.autumnRiver, titleTR: translations.tr.autumnRiver, color: "#ff8c00", pKey: "sonbahar", margin: 0.35, visuals: { hideAmbients: false, isProcedural: false, waterColor: "rgba(139, 69, 19, 0.25)", groundColor: "#cd853f", waterEffect: "shimmer" } }, 
+    { threshold: 9000, bgKey: 'winter', speed: 220, spawn: 0.45, titleEN: translations.en.winterRiver, titleTR: translations.tr.winterRiver, color: "#add8e6", pKey: "kis", margin: 0.35, visuals: { hideAmbients: false, isProcedural: false, waterColor: "rgba(173, 216, 230, 0.4)", groundColor: "#b0c4de", waterEffect: "shimmer" } }, 
+    { threshold: 12000, bgKey: 'lava', speed: 250, spawn: 0.85, titleEN: translations.en.lavaRiver, titleTR: translations.tr.lavaRiver, color: "#ff4500", pKey: "lava", margin: 0.34, visuals: { hideAmbients: true, isProcedural: false, waterColor: "rgba(255, 69, 0, 0.3)", groundColor: "#1a0000", waterEffect: "lava" } }, 
+    { threshold: 15000, bgKey: 'void', speed: 190, spawn: 0.95, titleEN: translations.en.voidLevel, titleTR: translations.tr.voidLevel, color: "#9b59b6", pKey: "void", margin: 0.32, visuals: { hideAmbients: true, isProcedural: true, neonBorders: true, auraColor: "#9b59b6", waterColor: "rgba(0, 0, 0, 0.85)", groundColor: "#000000", waterEffect: "neonPulse" } }, 
+    { threshold: 18000, bgKey: 'lagoon', speed: 310, spawn: 0.55, titleEN: translations.en.l7Title, titleTR: translations.tr.l7Title, color: "#00e5ff", pKey: "ilkbahar", margin: 0.15, visuals: { hideAmbients: true, isProcedural: false, waterColor: "rgba(0, 180, 255, 0.2)", groundColor: "#00e5ff", waterEffect: "ripples" } }, 
+    { threshold: 21000, bgKey: 'cyber', speed: 340, spawn: 0.42, titleEN: "CYBER CITY", titleTR: "SİBER ŞEHİR", color: "#ff00ff", pKey: "void", margin: 0.18, scrollSpeed: 1.0, visuals: { hideAmbients: true, isProcedural: true, neonBorders: true, auraColor: "#ff00ff", riverFill: "rgba(255, 0, 255, 0.05)", groundColor: "#00050a", waterColor: "rgba(255, 0, 255, 0.1)", waterEffect: "neonPulse" } }, 
+    { threshold: 24000, bgKey: 'toxic', speed: 320, spawn: 0.70, titleEN: "TOXIC WASTELAND", titleTR: "ZEHİRLİ ATIK", color: "#32CD32", pKey: "lava", margin: 0.30, scrollSpeed: 1.0, visuals: { hideAmbients: true, isProcedural: true, neonBorders: true, auraColor: "#32CD32", riverFill: "rgba(50, 205, 50, 0.08)", groundColor: "#0a1a05", waterColor: "rgba(50, 205, 50, 0.1)", waterEffect: "bubbles" } } 
 ];
 
 
