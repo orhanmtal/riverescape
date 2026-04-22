@@ -1349,6 +1349,7 @@ if (btnShd) btnShd.addEventListener('click', () => {
     }
 });
 
+const buyArmorBtn = document.getElementById('buy-armor-btn');
 if (buyArmorBtn) buyArmorBtn.addEventListener('click', () => {
     const t = translations[currentLang];
     if (!ownsArmorLicense) {
