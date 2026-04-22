@@ -85,8 +85,9 @@
 .elite-modal-overlay {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(15px);
-    display: none; align-items: center; justify-content: center; z-index: 20000;
+    display: none; align-items: center; justify-content: center; z-index: 50000;
     opacity: 0; transition: opacity 0.4s ease;
+    pointer-events: auto;
 }
 .elite-modal-content {
     width: 85%; max-width: 400px; padding: 40px 25px;

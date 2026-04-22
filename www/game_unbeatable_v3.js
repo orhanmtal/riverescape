@@ -150,20 +150,30 @@ function showEliteConfirm(title, body, confirmBtnText, emoji, onConfirm) {
     document.getElementById('confirm-modal-body').innerText = body || "";
     document.getElementById('confirm-modal-emoji').innerText = emoji || "🛡️";
     const okBtn = document.getElementById('confirm-ok-btn');
+    const cancelBtn = document.getElementById('confirm-cancel-btn');
+    
     okBtn.innerText = confirmBtnText || t.confirmBtn;
     
     modal.style.display = 'flex';
-    modal.classList.add('active');
+    setTimeout(() => modal.classList.add('active'), 10);
     
     const close = () => {
         modal.classList.remove('active');
         setTimeout(() => { modal.style.display = 'none'; }, 300);
     };
     
-    document.getElementById('confirm-cancel-btn').onclick = close;
-    okBtn.onclick = () => {
+    cancelBtn.onclick = (e) => {
+        if (e) e.stopPropagation();
         close();
-        if (onConfirm) onConfirm();
+    };
+
+    okBtn.onclick = (e) => {
+        if (e) e.stopPropagation();
+        close();
+        if (typeof onConfirm === 'function') {
+            console.log("✅ [ELITE CONFIRM] Executing action...");
+            onConfirm();
+        }
     };
 }
 window.showEliteConfirm = showEliteConfirm; // Global expose
