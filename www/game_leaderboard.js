@@ -449,7 +449,9 @@ const Leaderboard = {
                 missionCycle: (window.MissionManager) ? window.MissionManager.getMissions()[0]?.cycle || 1 : 1,
                 missions: (window.MissionManager) ? window.MissionManager.getMissions() : [],
                 
-                // v1.99.40.01 - Elite Cloud Sync
+                // v1.99.40.03: Precision Resume Data
+                sessionLevel: level || window.currentLevel || 1,
+                sessionProgress: window.levelProgressTime || 0,
                 sessionLives: window.resumeLives || 3,
                 sessionScore: window.resumeScore || 0,
 
@@ -552,9 +554,12 @@ const Leaderboard = {
                 
                 if (data.level !== undefined) {
                     window.currentLevel = Number(data.level);
+                    window.resumeLevel = Number(data.level);
                 }
                 
-                // v1.99.40.01: Session Recovery Restore
+                // v1.99.40.03: Precision Resume Restore
+                if (data.sessionLevel !== undefined) window.resumeLevel = Number(data.sessionLevel);
+                if (data.sessionProgress !== undefined) window.resumeProgressTime = Number(data.sessionProgress);
                 if (data.sessionLives !== undefined) window.resumeLives = data.sessionLives;
                 if (data.sessionScore !== undefined) window.resumeScore = data.sessionScore;
 

@@ -8,10 +8,10 @@
  */
 
 // River Escape Elite - Central Version Control
-// v1.99.40.02 - Life Cycle Sync (Auto Cloud Seal)
+// v1.99.40.03 - Precision Resume (Stage Sync)
 window.ELITE_CONFIG = {
-    VERSION: "1.99.40.02",
-    VERSION_CODE: "19940002",
+    VERSION: "1.99.40.03",
+    VERSION_CODE: "19940003",
     BUILD_LEVEL: "Elite Production",
     SYNC_ENGINE: "v3.Elite.Secure",
     LAST_UPDATED: "2026-04-21"
