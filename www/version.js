@@ -1,5 +1,5 @@
 /**
- * RİVER ESCAPE ELİTE - v1.99.40.01 (CLOUD SYNC)
+ * RİVER ESCAPE ELİTE - v1.99.60.00 (AAA UI OVERHAUL)
  * 1. NO PLACEHOLDERS - Always use premium assets or procedural generation.
  * 2. PERFORMANCE FIRST - Optimize update loops and DOM access.
  * 3. VISUAL EXCELLENCE - Use HSL colors, smooth gradients, and micro-animations.
@@ -8,10 +8,10 @@
  */
 
 // River Escape Elite - Central Version Control
-// v1.99.50.00 - Elite Visual Overhaul (Prestige Polish)
+// v1.99.60.00 - Elite Modern UI (AAA Overhaul)
 window.ELITE_CONFIG = {
-    VERSION: "1.99.50.00",
-    VERSION_CODE: "19950000",
+    VERSION: "1.99.60.00",
+    VERSION_CODE: "19960000",
     BUILD_LEVEL: "Elite Production",
     SYNC_ENGINE: "v3.Elite.Secure",
     LAST_UPDATED: "2026-04-21"

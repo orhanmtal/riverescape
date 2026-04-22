@@ -37,11 +37,19 @@
     align-items: center !important;
     justify-content: space-between !important;
     padding: calc(20px + env(safe-area-inset-top)) 6vmin calc(20px + env(safe-area-inset-bottom)) 6vmin !important;
-    background: radial-gradient(circle at center, rgba(5, 15, 30, 0.7) 0%, rgba(0, 0, 0, 0.95) 100%) !important;
+    background: radial-gradient(circle at center, #0a192f 0%, #020617 100%) !important;
     overflow: hidden !important;
+    position: relative !important;
 }
 
-/* --- v1.99.50.00: PRESTIGE ANIMATIONS --- */
+.master-start-v21::before {
+    content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+    background: radial-gradient(circle at 30% 30%, rgba(0, 229, 255, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 70% 70%, rgba(196, 113, 237, 0.05) 0%, transparent 40%);
+    animation: bgMovement 20s infinite alternate linear;
+    pointer-events: none;
+}
+
 @keyframes titleGlow {
     0%, 100% { filter: drop-shadow(0 0 15px rgba(0, 229, 255, 0.4)); transform: scale(1); }
     50% { filter: drop-shadow(0 0 35px rgba(0, 229, 255, 0.8)); transform: scale(1.02); }
@@ -60,24 +68,90 @@
     50% { transform: scale(1.05); filter: brightness(1.2) drop-shadow(0 0 10px rgba(255,215,0,0.3)); }
 }
 
-.floating-logo { animation: titleGlow 4s infinite ease-in-out; }
-.master-play-btn { animation: uiFloat 4s infinite ease-in-out; }
-.elite-btn-square:hover { animation: iconElitePulse 1.5s infinite ease-in-out; }
-
-.mission-bar-bg {
-    width: 100%; height: 8px; background: rgba(255,255,255,0.05);
-    border-radius: 4px; overflow: hidden; position: relative;
-    border: 1px solid rgba(0, 229, 255, 0.2);
+/* --- v1.99.60.00: AAA MODERN GAME UI --- */
+@keyframes titleScan {
+    0% { background-position: -200% center; }
+    100% { background-position: 200% center; }
 }
-.mission-bar-fill {
-    height: 100%; background: linear-gradient(to right, #00e5ff, #12c2e9);
-    box-shadow: 0 0 10px rgba(0, 229, 255, 0.5); position: relative;
+
+.floating-logo {
+    background: linear-gradient(90deg, #fff 0%, #00e5ff 45%, #fff 50%, #00e5ff 55%, #fff 100%) !important;
+    background-size: 200% auto !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    animation: titleScan 6s infinite linear, titleGlow 4s infinite ease-in-out !important;
+    font-size: 14vmin !important;
+    filter: drop-shadow(0 0 20px rgba(0,229,255,0.4)) !important;
+}
+
+.master-play-btn {
+    position: relative;
+    width: 45vmin !important;
+    height: 45vmin !important;
+    background: radial-gradient(circle at 30% 30%, #00e5ff 0%, #00897b 100%) !important;
+    border: none !important;
+    border-radius: 50% !important;
+    box-shadow: 0 0 50px rgba(0,229,255,0.4), inset 0 0 30px rgba(255,255,255,0.4) !important;
+    z-index: 2000 !important;
+    font-size: 8vmin !important;
+    font-weight: 950 !important;
+    letter-spacing: 2px !important;
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+    animation: uiFloat 4s infinite ease-in-out !important;
+}
+
+/* Futuristic Rings */
+.pulse-ring {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 55vmin; height: 55vmin;
+    border: 2px solid rgba(0, 229, 255, 0.3);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+}
+.pulse-ring::after {
+    content: ''; position: absolute; top: -5px; left: -5px; right: -5px; bottom: -5px;
+    border: 1px solid rgba(0, 229, 255, 0.1); border-radius: 50%;
+    animation: ringRotate 10s infinite linear;
+}
+.pulse-ring::before {
+    content: ''; position: absolute; top: -15px; left: -15px; right: -15px; bottom: -15px;
+    border: 1px dashed rgba(0, 229, 255, 0.2); border-radius: 50%;
+    animation: ringRotate 15s infinite linear reverse;
+}
+
+@keyframes ringRotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+#mission-panel {
+    border-radius: 20px !important;
+    background: rgba(15, 23, 42, 0.6) !important;
+    border: 1px solid rgba(0, 229, 255, 0.2) !important;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5), inset 0 0 20px rgba(0,229,255,0.05) !important;
+    position: relative;
     overflow: hidden;
 }
-.mission-bar-fill::after {
-    content: ''; position: absolute; top: 0; left: -100%; width: 40%; height: 100%;
-    background: linear-gradient(to right, transparent, rgba(255,255,255,0.4), transparent);
-    animation: barShine 3s infinite linear;
+
+#mission-panel::before {
+    content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px;
+    background: linear-gradient(90deg, transparent, #00e5ff, transparent);
+    animation: borderFlow 3s infinite linear;
+}
+
+@keyframes borderFlow {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+.elite-action-row {
+    background: rgba(255,255,255,0.03);
+    padding: 10px 20px;
+    border-radius: 30px;
+    border: 1px solid rgba(255,255,255,0.05);
+    backdrop-filter: blur(10px);
 }
 
 .elite-menu-header {
@@ -517,7 +591,7 @@
                 <div style="text-align: center; position: relative; width: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; pointer-events: none;">
                     <h1 class="floating-logo" style="font-family: 'Outfit', sans-serif; font-weight: 900; color: white; font-size: 13vmin; letter-spacing: -2px; margin: 0; line-height: 0.85; background: linear-gradient(135deg, #fff 20%, #00e5ff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 15px 30px rgba(0,229,255,0.3)); text-transform: uppercase;">RIVER<br><span style="background: linear-gradient(135deg, #00e5ff 0%, #00897b 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">ESCAPE</span></h1>
                     <div id="elite-main-version" style="color: #FFD700; font-family: 'Press Start 2P', cursive; font-size: 1.8vmin; font-weight: bold; margin-top: 15px; letter-spacing: 0.8vmin; opacity: 0.9; text-shadow: 0 0 15px rgba(255,215,0,0.4);">
-                        <script>document.write("ELITE v" + (window.ELITE_CONFIG ? window.ELITE_CONFIG.VERSION : "1.99.50.00"));</script>
+                        <script>document.write("ELITE v" + (window.ELITE_CONFIG ? window.ELITE_CONFIG.VERSION : "1.99.60.00"));</script>
                     </div>
                 </div>
 
