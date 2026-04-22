@@ -1,5 +1,5 @@
 /**
- * RİVER ESCAPE ELİTE - v1.99.38.00 (CUSTOM MODALS)
+ * RİVER ESCAPE ELİTE - v1.99.39.00 (ARMOR UNLOCKED)
  * DEVELOPMENT RULES:
  * 1. NO PLACEHOLDERS 2. PERFORMANCE FIRST 3. VISUAL EXCELLENCE
  * 4. CODE INTEGRITY 5. ELITE SYNC
@@ -1349,7 +1349,6 @@ if (btnShd) btnShd.addEventListener('click', () => {
     }
 });
 
-const buyArmorBtn = document.getElementById('buy-armor-btn');
 if (buyArmorBtn) buyArmorBtn.addEventListener('click', () => {
     const t = translations[currentLang];
     if (!ownsArmorLicense) {
@@ -1357,7 +1356,7 @@ if (buyArmorBtn) buyArmorBtn.addEventListener('click', () => {
             if (typeof initAudio === 'function') initAudio();
             totalGold -= 5000;
             ownsArmorLicense = true;
-            armorCharge += 3;
+            armorCharge = Math.min(10, armorCharge + 3); // License gives initial 3
             saveGame();
             triggerEliteEconomySync(true);
             if (typeof playPowerupSound === 'function') playPowerupSound();
@@ -1370,16 +1369,19 @@ if (buyArmorBtn) buyArmorBtn.addEventListener('click', () => {
             showToast(t.noGold, false);
         }
     } else {
-        if (totalGold >= 500) {
+        const refillPrice = 100;
+        if (totalGold >= refillPrice && armorCharge < 10) {
             if (typeof initAudio === 'function') initAudio();
-            totalGold -= 500;
-            armorCharge += 3;
+            totalGold -= refillPrice;
+            armorCharge = Math.min(10, armorCharge + 4); // Refill gives 4
             saveGame();
             triggerEliteEconomySync(true);
             if (typeof playPowerupSound === 'function') playPowerupSound();
             setTimeout(() => { for (var i = 0; i < 3; i++) setTimeout(playCoinSound, i * 100); }, 150);
             showToast(t.armorReloaded, true);
             updateShopUI();
+        } else if (armorCharge >= 10) {
+            showToast(t.maxArmor, false);
         } else {
             shakeTimer = 0.4;
             if (typeof playHaptic === 'function') playHaptic('light');
@@ -1456,28 +1458,31 @@ function buyWeapon() {
 }
 
 function buyArmorLicense() {
+    const t = translations[currentLang];
     if (!ownsArmorLicense && totalGold >= 5000) {
         totalGold -= 5000;
         ownsArmorLicense = true;
-        armorCharge = 3;
+        armorCharge = Math.min(10, armorCharge + 3);
         playPowerupSound();
         saveGame();
         updateShopUI();
-        const t = translations[currentLang];
         showToast(t.armorLicensePurchased, true);
     } else if (ownsArmorLicense) {
-        // Geliştirme/Şarj mantığı (v1.99.19.09: Max 10)
-        const t = translations[currentLang];
-        if (totalGold >= 1000 && armorCharge < 10) {
-            totalGold -= 1000;
-            armorCharge++;
+        const refillPrice = 100;
+        if (totalGold >= refillPrice && armorCharge < 10) {
+            totalGold -= refillPrice;
+            armorCharge = Math.min(10, armorCharge + 4);
             playPowerupSound();
             saveGame();
             updateShopUI();
-            showToast(t.armorCharged, true);
+            showToast(t.armorReloaded, true);
         } else if (armorCharge >= 10) {
             showToast(t.maxArmor, false);
         } else {
+            showToast(t.noGold, false);
+        }
+    }
+}
             showToast(t.noGold, false);
         }
     } else {
@@ -1552,35 +1557,27 @@ function updateShopUI() {
         }
 
         const armRow = document.getElementById('shop-armor-row');
-        const biomeIdxLocal = Math.floor((currentLevel - 1) / STAGES_PER_BIOME) % levelAssets.length;
-        const isVoidLevel = (currentLevel > 0 && biomeIdxLocal === 5); // 0-indexed: 5 is Void
         const buyABtn = document.getElementById('buy-armor-btn');
         const iconSpan = document.querySelector('#shop-armor-row span');
 
         if (armRow) {
             armRow.style.display = 'flex';
-            armRow.style.opacity = isVoidLevel ? '1' : '0.4';
-            armRow.style.pointerEvents = isVoidLevel ? 'auto' : 'none';
+            armRow.style.opacity = '1';
+            armRow.style.pointerEvents = 'auto';
         }
 
         if (buyABtn) {
             buyABtn.classList.add('elite-upgrade-btn');
-            if (isVoidLevel) {
-                if (ownsArmorLicense) {
-                    const price = 1000;
-                    if (iconSpan) iconSpan.innerText = "💎";
-                    buyABtn.innerText = `${t.chargeArmor.replace('{charge}', armorCharge)}\n${price} G`;
-                    buyABtn.disabled = (totalGold < price || armorCharge >= 10);
-                    if (document.getElementById('shop-void-armor-title')) document.getElementById('shop-void-armor-title').innerText = t.armorChargeTitle;
-                } else {
-                    if (iconSpan) iconSpan.innerText = "🔒";
-                    buyABtn.innerText = `${t.getLicenseBtn}\n5000 G`;
-                    buyABtn.disabled = (totalGold < 5000);
-                }
+            if (ownsArmorLicense) {
+                const price = 100;
+                if (iconSpan) iconSpan.innerText = "💎";
+                buyABtn.innerText = `${t.chargeArmor.replace('{charge}', armorCharge)}\n${price} G`;
+                buyABtn.disabled = (totalGold < price || armorCharge >= 10);
+                if (document.getElementById('shop-void-armor-title')) document.getElementById('shop-void-armor-title').innerText = t.armorChargeTitle;
             } else {
                 if (iconSpan) iconSpan.innerText = "🔒";
-                buyABtn.innerText = `${t.lockedBtn}\n(LVL 6+)`;
-                buyABtn.disabled = true;
+                buyABtn.innerText = `${t.getLicenseBtn}\n5000 G`;
+                buyABtn.disabled = (totalGold < 5000);
                 if (document.getElementById('shop-void-armor-title')) document.getElementById('shop-void-armor-title').innerText = t.voidArmorTitleLocked;
                 if (document.getElementById('shop-void-armor-desc')) document.getElementById('shop-void-armor-desc').innerText = t.voidArmorLockedDesc;
             }

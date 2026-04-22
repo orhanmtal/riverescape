@@ -8,10 +8,10 @@
  */
 
 // River Escape Elite - Central Version Control
-// v1.99.38.00 - Custom Modals & Hard Reset Security
+// v1.99.39.00 - Armor System Global Access & Price Tune
 window.ELITE_CONFIG = {
-    VERSION: "1.99.38.00",
-    VERSION_CODE: "19938000",
+    VERSION: "1.99.39.00",
+    VERSION_CODE: "19939000",
     BUILD_LEVEL: "Elite Production",
     SYNC_ENGINE: "v3.Elite.Secure",
     LAST_UPDATED: "2026-04-21"

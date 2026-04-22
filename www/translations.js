@@ -1,4 +1,4 @@
-// River Escape - Dil Paketleri (TR/EN) - v1.99.38.00 (ELITE SEAL)
+// River Escape - Dil Paketleri (TR/EN) - v1.99.39.00 (ELITE SEAL)
 const translations = {
     tr: {
         startDesc: "",
@@ -161,7 +161,7 @@ const translations = {
         chargeArmor: "ŞARJ ET ({charge})",
         armorChargeTitle: "Zırh Şarjı (Mühimmat)",
         voidArmorTitleLocked: "Gemi Zırhı (Void)",
-        voidArmorLockedDesc: "Level 6, 12, 18...'de Açılır",
+        voidArmorLockedDesc: "Tüm seviyelerde zırhı aktif eder",
         lockedBtn: "KİLİTLİ",
         yourScoreLabel: "SKORUN",
         selectBtn: "SEÇ",
@@ -341,7 +341,7 @@ const translations = {
         chargeArmor: "CHARGE ({charge})",
         armorChargeTitle: "Armor Charge (Ammo)",
         voidArmorTitleLocked: "Ship Armor (Void)",
-        voidArmorLockedDesc: "Unlocks at Level 6, 12, 18...",
+        voidArmorLockedDesc: "Enables Ship Armor for all levels",
         lockedBtn: "LOCKED",
         yourScoreLabel: "YOUR SCORE",
         selectBtn: "SELECT",
