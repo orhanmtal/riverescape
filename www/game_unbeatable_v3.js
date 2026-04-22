@@ -5335,6 +5335,14 @@ if (resetYes) resetYes.addEventListener('click', () => {
     // 3. Görevleri ve Döngüleri Sıfırla v1.99.30.06
     if (window.MissionManager) window.MissionManager.reset();
 
+    // 4. Envanter (Kayıklar) Sıfırla v1.99.37.00
+    window.ownedBoats = ['spring'];
+    if (window.currentAsset) window.currentAsset.pKey = 'spring';
+    if (window.players && window.players['spring']) {
+        window.playerImg = window.players['spring'];
+    }
+    saveGame();
+
     // 4. Bulut Mührü (Firebase Sync) - Force=true
     if (typeof triggerEliteEconomySync === 'function') {
         
