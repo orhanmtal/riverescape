@@ -8,10 +8,10 @@
  */
 
 // River Escape Elite - Central Version Control
-// v1.99.40.06 - Grace Period Patch (Revive Invulnerability)
+// v1.99.50.00 - Elite Visual Overhaul (Prestige Polish)
 window.ELITE_CONFIG = {
-    VERSION: "1.99.40.06",
-    VERSION_CODE: "19940006",
+    VERSION: "1.99.50.00",
+    VERSION_CODE: "19950000",
     BUILD_LEVEL: "Elite Production",
     SYNC_ENGINE: "v3.Elite.Secure",
     LAST_UPDATED: "2026-04-21"
