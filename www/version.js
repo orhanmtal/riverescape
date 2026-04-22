@@ -8,10 +8,10 @@
  */
 
 // River Escape Elite - Central Version Control
-// v1.99.39.01 - Game Over Sync & Gold Duplication Fix
+// v1.99.39.02 - Revive Gold Duplication Fix
 window.ELITE_CONFIG = {
-    VERSION: "1.99.39.01",
-    VERSION_CODE: "19939001",
+    VERSION: "1.99.39.02",
+    VERSION_CODE: "19939002",
     BUILD_LEVEL: "Elite Production",
     SYNC_ENGINE: "v3.Elite.Secure",
     LAST_UPDATED: "2026-04-21"

@@ -1,5 +1,5 @@
 /**
- * RİVER ESCAPE ELİTE - v1.99.39.01 (BUG FIX)
+ * RİVER ESCAPE ELİTE - v1.99.39.02 (REVIVE BUG FIX)
  * DEVELOPMENT RULES:
  * 1. NO PLACEHOLDERS 2. PERFORMANCE FIRST 3. VISUAL EXCELLENCE
  * 4. CODE INTEGRITY 5. ELITE SYNC
@@ -1778,6 +1778,7 @@ function reviveWithGold() {
         lives = 3 + (window.extraLives || 0);
         hasShield = true; // Dokunulmazlık Ver
         shieldTimer = 3.0; // 3 Saniye Koruma
+        goldCount = 0; // v1.99.39.02: Reset session gold after vaulting
 
         // Oyuncuyu biraz yukarı kaydır ki engelin içinde kalmasın
         player.y -= 100;
@@ -5178,6 +5179,7 @@ if (reviveBtn) reviveBtn.addEventListener('click', () => {
         isPaused = false;
         lives = 1;
         hasShield = true;
+        goldCount = 0; // v1.99.39.02: RESET session gold after it was vaulted in gameOver
 
         // UI'yi zorla kapat (Hem class hem style)
         if (gameOverScreen) {
