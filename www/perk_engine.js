@@ -33,7 +33,7 @@ const PerkEngine = {
         if (typeof window.armorCharge !== 'undefined' && window.armorCharge < 10) {
             window.armorCharge++;
             if (typeof window.showToast === 'function') {
-                window.showToast("ZIRH YENİLENDİ! 🛡️ (+1)", true);
+                window.showToast(translations[window.currentLang].armorRegenToast, true);
             }
             if (typeof window.updateArmorUI === 'function') {
                 window.updateArmorUI();
@@ -46,7 +46,7 @@ const PerkEngine = {
     checkGhostDodge() {
         if (this.activePerk && this.activePerk.type === 'ghost_chance') {
             if (Math.random() < this.activePerk.value) {
-                if (typeof window.showToast === 'function') window.showToast("GHOSTED! 👻", true);
+                if (typeof window.showToast === 'function') window.showToast(translations[window.currentLang].ghostedToast, true);
                 if (typeof window.playWhooshSound === 'function') window.playWhooshSound();
                 return true; // Dodge successful
             }

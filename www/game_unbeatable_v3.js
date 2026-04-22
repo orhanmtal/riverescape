@@ -1693,7 +1693,7 @@ function buyBoat(id) {
     const itemPrice = Number(boat.price || 0);
 
     if (currentGold < itemPrice) {
-        if (typeof showToast === 'function') showToast("YETERSİZ ALTIN!", false);
+        if (typeof showToast === 'function') showToast(translations[currentLang].insufficientGoldToast, false);
         return;
     }
 
@@ -1728,7 +1728,7 @@ function buyBoat(id) {
     }
     
     updateShopUI();
-    if (typeof showToast === 'function') showToast("YENİ KAYIK ALINDI!", true);
+    if (typeof showToast === 'function') showToast(translations[currentLang].newBoatAcquiredToast, true);
 }
 
 if (buyAmmoBtn) buyAmmoBtn.addEventListener('click', () => {
@@ -1736,7 +1736,7 @@ if (buyAmmoBtn) buyAmmoBtn.addEventListener('click', () => {
 
     // v1.99.34.00: Security Check - License Required
     if (!hasWeapon) {
-        showToast(t.licenseRequired || "Önce Lisans Almalısın!", false);
+        showToast(t.licenseRequiredToast || t.licenseRequired, false);
         shakeTimer = 0.4;
         if (typeof playHaptic === 'function') playHaptic('medium');
         return;
@@ -1750,7 +1750,7 @@ if (buyAmmoBtn) buyAmmoBtn.addEventListener('click', () => {
         // v1.99.34.00: Elite Reload Sound
         if (typeof playPowerupSound === 'function') playPowerupSound();
         setTimeout(() => { for (var i = 0; i < 2; i++) setTimeout(playCoinSound, i * 100); }, 200);
-        showToast(t.ammoPurchased || "Mühimmat Alındı! +10 💣", true);
+        showToast(t.ammoPurchasedToast, true);
         updateShopUI();
     } else {
         shakeTimer = 0.4;
@@ -1798,7 +1798,7 @@ function reviveWithGold() {
         if (pb) pb.style.display = 'block';
 
         for (var i = 0; i < 5; i++) setTimeout(playCoinSound, i * 100);
-        showToast(t.revived || "CANLANDIN! 🏛️", true);
+        showToast(t.revivedToast, true);
 
         // Oyunu Tekrar Döngüye Sok
         requestAnimationFrame(gameLoop);
@@ -2870,10 +2870,10 @@ window.triggerEliteEconomySync = function (force = false) {
 function setTheme(theme) {
     if (theme === 'light') {
         document.body.classList.add('light-theme');
-        showToast("Aydınlık Mod Aktif ☀️", false);
+        showToast(translations[currentLang].lightModeToast, false);
     } else {
         document.body.classList.remove('light-theme');
-        showToast("Karanlık Mod Aktif 🌙", false);
+        showToast(translations[currentLang].darkModeToast, false);
     }
     localStorage.setItem('riverEscapeTheme', theme);
 }

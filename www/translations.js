@@ -170,7 +170,15 @@ const translations = {
         rarityCommon: "Yaygın",
         rarityRare: "Nadir",
         rarityEpic: "Epik",
-        rarityElite: "Seçkin"
+        rarityElite: "Seçkin",
+        armorRegenToast: "ZIRH YENİLENDİ! 🛡️ (+1)",
+        ghostedToast: "HASAR ENGELLENDİ! 👻",
+        newBoatAcquiredToast: "YENİ KAYIK ALINDI!",
+        insufficientGoldToast: "YETERSİZ ALTIN!",
+        revivedToast: "CANLANDIN! 💖",
+        ammoPurchasedToast: "Mühimmat Alındı! +10 🚀",
+        lightModeToast: "Aydınlık Mod Aktif ☀️",
+        darkModeToast: "Karanlık Mod Aktif 🌙"
     },
     en: {
         startDesc: "",
@@ -342,7 +350,15 @@ const translations = {
         rarityCommon: "Common",
         rarityRare: "Rare",
         rarityEpic: "Epic",
-        rarityElite: "Elite"
+        rarityElite: "Elite",
+        armorRegenToast: "ARMOR REGENERATED! 🛡️ (+1)",
+        ghostedToast: "GHOSTED! 👻",
+        newBoatAcquiredToast: "NEW BOAT ACQUIRED!",
+        insufficientGoldToast: "INSUFFICIENT GOLD!",
+        revivedToast: "REVIVED! 💖",
+        ammoPurchasedToast: "Ammo Pack Purchased! +10 🚀",
+        lightModeToast: "Light Mode Active ☀️",
+        darkModeToast: "Dark Mode Active 🌙"
     }
 };
 
