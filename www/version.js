@@ -8,10 +8,10 @@
  */
 
 // River Escape Elite - Central Version Control
-// v1.99.39.09 - UI Polish (Armor Refill Label)
+// v1.99.40.00 - Elite Stability Patch (Economy & HUD Perfected)
 window.ELITE_CONFIG = {
-    VERSION: "1.99.39.09",
-    VERSION_CODE: "19939009",
+    VERSION: "1.99.40.00",
+    VERSION_CODE: "19940000",
     BUILD_LEVEL: "Elite Production",
     SYNC_ENGINE: "v3.Elite.Secure",
     LAST_UPDATED: "2026-04-21"
