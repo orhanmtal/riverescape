@@ -1,5 +1,5 @@
 /**
- * RİVER ESCAPE ELİTE - v1.99.39.02 (REVIVE BUG FIX)
+ * RİVER ESCAPE ELİTE - v1.99.39.03 (GLOBAL ARMOR ENABLED)
  * DEVELOPMENT RULES:
  * 1. NO PLACEHOLDERS 2. PERFORMANCE FIRST 3. VISUAL EXCELLENCE
  * 4. CODE INTEGRITY 5. ELITE SYNC
@@ -3586,8 +3586,8 @@ function update(dt) {
                 continue;
             }
 
-            // Zırh sadece kalkan Level 6 ve üstündeyse hasar bloklar, yoksa sadece roket çarpar! (v1.98 Level 6 Restriction)
-            if (armorCharge > 0 && Math.floor((currentLevel - 1) / STAGES_PER_BIOME) % BIOME_COUNT >= 5) { // Void or later
+            // v1.99.39.03: Armor now blocks damage in ALL levels
+            if (armorCharge > 0) { 
                 // playCrashSound();
                 armorCharge--;
                 updateArmorUI();
@@ -4745,9 +4745,8 @@ function draw(dt) {
     // --- PARÇACIKLARIN (Particles) ÇİZİMİ v126 ---
     particles.forEach(p => p.draw());
 
-    // v1.99.33.71: Armor Aura (Requires Biome 5 - Void or later)
-    const bIdxArmor = syncBIdx;
-    if (armorCharge > 0 && bIdxArmor >= 5) {
+    // v1.99.39.03: Armor Aura enabled for all biomes
+    if (armorCharge > 0) {
         ctx.save();
         var cx = player.x + player.width / 2;
         var pulse = Math.sin(performance.now() / 150) * 3; // İleri-geri motor nefes efekti

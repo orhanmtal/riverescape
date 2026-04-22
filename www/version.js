@@ -8,10 +8,10 @@
  */
 
 // River Escape Elite - Central Version Control
-// v1.99.39.02 - Revive Gold Duplication Fix
+// v1.99.39.03 - Global Armor Functionality Fix
 window.ELITE_CONFIG = {
-    VERSION: "1.99.39.02",
-    VERSION_CODE: "19939002",
+    VERSION: "1.99.39.03",
+    VERSION_CODE: "19939003",
     BUILD_LEVEL: "Elite Production",
     SYNC_ENGINE: "v3.Elite.Secure",
     LAST_UPDATED: "2026-04-21"
