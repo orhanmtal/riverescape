@@ -1260,8 +1260,7 @@ if (quitBtnGameOver) {
 
         if (score > 2000) {
             const t = translations[currentLang];
-            const confirmQuit = confirm(t.confirmQuit);
-            if (confirmQuit) doQuit();
+            showEliteConfirm(t.confirmTitle, t.confirmQuit, t.confirmBtn, "🛑", doQuit);
         } else {
             doQuit();
         }
@@ -1697,38 +1696,39 @@ function buyBoat(id) {
         return;
     }
 
+    const executePurchase = () => {
+        // EXECUTE PURCHASE
+        window.totalGold = Number(window.totalGold) - itemPrice;
+        if (!window.ownedBoats) window.ownedBoats = ['spring'];
+        
+        // Add if not already present
+        if (!window.ownedBoats.includes(id)) {
+            window.ownedBoats.push(id);
+        }
+        
+        saveGame();
+        if (typeof selectBoat === 'function') selectBoat(id);
+        
+        // v1.99.34.00: Immediate Cloud Sync for Boathouse
+        if (window.Leaderboard && typeof window.Leaderboard.submitProgress === 'function') {
+            window.Leaderboard.submitProgress();
+        }
+        
+        updateShopUI();
+        if (typeof showToast === 'function') showToast(translations[currentLang].newBoatAcquiredToast, true);
+    };
+
     // [MODULAR BUY CONTROL] Force Confirm
     if (itemPrice > 0) {
         const name = currentLang === 'tr' ? boat.nameTR : boat.nameEN;
         const msg = currentLang === 'tr' 
-            ? `DİKKAT: ${name} kayığını ${itemPrice} altın karşılığında satın almak istiyor musunuz?` 
-            : `WARNING: Do you want to buy ${name} for ${itemPrice} gold?`;
+            ? `${name} kayığını ${itemPrice} altın karşılığında satın almak istiyor musunuz?` 
+            : `Do you want to buy ${name} for ${itemPrice} gold?`;
 
-        if (!confirm(msg)) {
-            
-            return;
-        }
+        showEliteConfirm(translations[currentLang].confirmTitle, msg, translations[currentLang].buyBtnShort, "🛶", executePurchase);
+    } else {
+        executePurchase();
     }
-
-    // EXECUTE PURCHASE
-    window.totalGold = Number(window.totalGold) - itemPrice;
-    if (!window.ownedBoats) window.ownedBoats = ['spring'];
-    
-    // Add if not already present
-    if (!window.ownedBoats.includes(id)) {
-        window.ownedBoats.push(id);
-    }
-    
-    saveGame();
-    if (typeof selectBoat === 'function') selectBoat(id);
-    
-    // v1.99.34.00: Immediate Cloud Sync for Boathouse
-    if (window.Leaderboard && typeof window.Leaderboard.submitProgress === 'function') {
-        window.Leaderboard.submitProgress();
-    }
-    
-    updateShopUI();
-    if (typeof showToast === 'function') showToast(translations[currentLang].newBoatAcquiredToast, true);
 }
 
 if (buyAmmoBtn) buyAmmoBtn.addEventListener('click', () => {
