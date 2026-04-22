@@ -8,10 +8,10 @@
  */
 
 // River Escape Elite - Central Version Control
-// v1.99.39.08 - Armor Stacking Fix (Refill Adds +30)
+// v1.99.39.09 - UI Polish (Armor Refill Label)
 window.ELITE_CONFIG = {
-    VERSION: "1.99.39.08",
-    VERSION_CODE: "19939008",
+    VERSION: "1.99.39.09",
+    VERSION_CODE: "19939009",
     BUILD_LEVEL: "Elite Production",
     SYNC_ENGINE: "v3.Elite.Secure",
     LAST_UPDATED: "2026-04-21"
