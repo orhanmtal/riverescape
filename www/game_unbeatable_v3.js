@@ -1,5 +1,5 @@
 /**
- * RİVER ESCAPE ELİTE - v1.99.39.03 (GLOBAL ARMOR ENABLED)
+ * RİVER ESCAPE ELİTE - v1.99.39.04 (PRICE REBALANCED)
  * DEVELOPMENT RULES:
  * 1. NO PLACEHOLDERS 2. PERFORMANCE FIRST 3. VISUAL EXCELLENCE
  * 4. CODE INTEGRITY 5. ELITE SYNC
@@ -1356,9 +1356,9 @@ const buyArmorBtn = document.getElementById('buy-armor-btn');
 if (buyArmorBtn) buyArmorBtn.addEventListener('click', () => {
     const t = translations[currentLang];
     if (!ownsArmorLicense) {
-        if (totalGold >= 5000) {
+        if (totalGold >= 20000) {
             if (typeof initAudio === 'function') initAudio();
-            totalGold -= 5000;
+            totalGold -= 20000;
             ownsArmorLicense = true;
             armorCharge = Math.min(10, armorCharge + 3); // License gives initial 3
             saveGame();
@@ -1397,9 +1397,9 @@ if (buyArmorBtn) buyArmorBtn.addEventListener('click', () => {
 if (buyWeaponBtn) buyWeaponBtn.addEventListener('click', () => {
     const t = translations[currentLang];
     if (!hasWeapon) {
-        if (totalGold >= 5000) {
+        if (totalGold >= 15000) {
             if (typeof initAudio === 'function') initAudio();
-            totalGold -= 5000;
+            totalGold -= 15000;
             hasWeapon = true;
             bombCount += 15;
             saveGame();
@@ -1446,8 +1446,8 @@ function buyShield() {
 }
 
 function buyWeapon() {
-    if (!hasWeapon && totalGold >= 5000) {
-        totalGold -= 5000;
+    if (!hasWeapon && totalGold >= 15000) {
+        totalGold -= 15000;
         hasWeapon = true;
         bombCount += 15; // v1.99.27.10: Additive license bonus
         playPowerupSound();
@@ -1463,8 +1463,8 @@ function buyWeapon() {
 
 function buyArmorLicense() {
     const t = translations[currentLang];
-    if (!ownsArmorLicense && totalGold >= 5000) {
-        totalGold -= 5000;
+    if (!ownsArmorLicense && totalGold >= 20000) {
+        totalGold -= 20000;
         ownsArmorLicense = true;
         armorCharge = Math.min(10, armorCharge + 3);
         playPowerupSound();
@@ -1539,8 +1539,8 @@ function updateShopUI() {
                 buyWBtn.innerText = t.ownedBtn;
                 buyWBtn.disabled = true;
             } else {
-                buyWBtn.innerText = `${t.buyBtnShort}\n5000 G`;
-                buyWBtn.disabled = (totalGold < 5000);
+                buyWBtn.innerText = `${t.buyBtnShort}\n15000 G`;
+                buyWBtn.disabled = (totalGold < 15000);
             }
             buyWBtn.classList.add('elite-upgrade-btn');
         }
@@ -1575,8 +1575,8 @@ function updateShopUI() {
                 if (document.getElementById('shop-void-armor-title')) document.getElementById('shop-void-armor-title').innerText = t.armorChargeTitle;
             } else {
                 if (iconSpan) iconSpan.innerText = "🔒";
-                buyABtn.innerText = `${t.getLicenseBtn}\n5000 G`;
-                buyABtn.disabled = (totalGold < 5000);
+                buyABtn.innerText = `${t.getLicenseBtn}\n20000 G`;
+                buyABtn.disabled = (totalGold < 20000);
                 if (document.getElementById('shop-void-armor-title')) document.getElementById('shop-void-armor-title').innerText = t.voidArmorTitleLocked;
                 if (document.getElementById('shop-void-armor-desc')) document.getElementById('shop-void-armor-desc').innerText = t.voidArmorLockedDesc;
             }
