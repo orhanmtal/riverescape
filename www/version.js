@@ -8,10 +8,10 @@
  */
 
 // River Escape Elite - Central Version Control
-// v1.99.39.07 - Stable Economy (Armor Logic Reinforced)
+// v1.99.39.08 - Armor Stacking Fix (Refill Adds +30)
 window.ELITE_CONFIG = {
-    VERSION: "1.99.39.07",
-    VERSION_CODE: "19939007",
+    VERSION: "1.99.39.08",
+    VERSION_CODE: "19939008",
     BUILD_LEVEL: "Elite Production",
     SYNC_ENGINE: "v3.Elite.Secure",
     LAST_UPDATED: "2026-04-21"

@@ -1,5 +1,5 @@
 /**
- * RİVER ESCAPE ELİTE - v1.99.39.07 (STABLE ECONOMY)
+ * RİVER ESCAPE ELİTE - v1.99.39.08 (ARMOR STACKING)
  * DEVELOPMENT RULES:
  * 1. NO PLACEHOLDERS 2. PERFORMANCE FIRST 3. VISUAL EXCELLENCE
  * 4. CODE INTEGRITY 5. ELITE SYNC
@@ -1360,7 +1360,7 @@ if (buyArmorBtn) buyArmorBtn.addEventListener('click', () => {
             if (typeof initAudio === 'function') initAudio();
             totalGold -= 20000;
             ownsArmorLicense = true;
-            armorCharge = Math.min(30, armorCharge + 3); // License gives initial 3
+            armorCharge += 3; // v1.99.39.08: Initial bonus
             saveGame();
             triggerEliteEconomySync(true);
             if (typeof playPowerupSound === 'function') playPowerupSound();
@@ -1377,7 +1377,7 @@ if (buyArmorBtn) buyArmorBtn.addEventListener('click', () => {
         if (totalGold >= refillPrice && armorCharge < 30) {
             if (typeof initAudio === 'function') initAudio();
             totalGold -= refillPrice;
-            armorCharge = Math.min(30, armorCharge + 30); // Refill gives 30
+            armorCharge += 30; // v1.99.39.08: ADDS 30 charges (Stackable)
             saveGame();
             triggerEliteEconomySync(true);
             if (typeof playPowerupSound === 'function') playPowerupSound();
@@ -1466,7 +1466,7 @@ function buyArmorLicense() {
     if (!ownsArmorLicense && totalGold >= 20000) {
         totalGold -= 20000;
         ownsArmorLicense = true;
-        armorCharge = Math.min(30, armorCharge + 3);
+        armorCharge += 3;
         playPowerupSound();
         saveGame();
         updateShopUI();
@@ -1475,7 +1475,7 @@ function buyArmorLicense() {
         const refillPrice = 1000;
         if (totalGold >= refillPrice && armorCharge < 30) {
             totalGold -= refillPrice;
-            armorCharge = Math.min(30, armorCharge + 30);
+            armorCharge += 30; // v1.99.39.08: ADDS 30 charges (Stackable)
             playPowerupSound();
             saveGame();
             updateShopUI();
