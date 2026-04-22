@@ -8,10 +8,10 @@
  */
 
 // River Escape Elite - Central Version Control
-// v1.99.39.04 - License Price Rebalance (Cannon 15k, Armor 20k)
+// v1.99.39.06 - HUD Sync & Refill Balance
 window.ELITE_CONFIG = {
-    VERSION: "1.99.39.04",
-    VERSION_CODE: "19939004",
+    VERSION: "1.99.39.06",
+    VERSION_CODE: "19939006",
     BUILD_LEVEL: "Elite Production",
     SYNC_ENGINE: "v3.Elite.Secure",
     LAST_UPDATED: "2026-04-21"

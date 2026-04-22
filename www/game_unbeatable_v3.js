@@ -1,5 +1,5 @@
 /**
- * RİVER ESCAPE ELİTE - v1.99.39.05 (REFILL UPDATED)
+ * RİVER ESCAPE ELİTE - v1.99.39.06 (HUD SYNC)
  * DEVELOPMENT RULES:
  * 1. NO PLACEHOLDERS 2. PERFORMANCE FIRST 3. VISUAL EXCELLENCE
  * 4. CODE INTEGRITY 5. ELITE SYNC
@@ -1053,8 +1053,8 @@ function updateArmorUI() {
     if (aBadge) aBadge.innerText = armorCharge;
 
     if (aIndi) {
-        // v1.99.19.09: Persistent visibility for licensed players
-        if (ownsArmorLicense) {
+        // v1.99.39.06: Hide indicator on main menu (only show when isPlaying)
+        if (ownsArmorLicense && isPlaying) {
             aIndi.style.display = 'flex';
 
             if (armorCharge > 0) {
