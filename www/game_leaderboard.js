@@ -1,7 +1,7 @@
 /**
- * RİVER ESCAPE ELİTE - v1.99.35.03 (ELITE SYNC)
+ * RİVER ESCAPE ELİTE - v1.99.40.01 (CLOUD SYNC)
  * Firebase Firestore Global Sıralama ve Profil Senkronizasyon Sistemi
- * v1.99.35.03
+ * v1.99.40.01
  */
 
 const Leaderboard = {
@@ -440,15 +440,19 @@ const Leaderboard = {
                 ownsArmorLicense: !!window.ownsArmorLicense,
                 hasWeapon: !!window.hasWeapon,
                 armorCharge: window.armorCharge || 0,
-                level: level || window.currentLevel || 1,
+                level: level || window.currentLevel || 1, // v1.99.40.01: Level Sync
                 country: this.playerCountry,
                 flag: this.playerFlag,
                 ownedBoats: window.ownedBoats || ['spring'],
                 
                 // v1.99.33.80: Mission Sync
-                missionCycle: (window.MissionManager) ? window.MissionManager.getMissions()[0]?.cycle || 1 : 1, // Logic handled in manager
+                missionCycle: (window.MissionManager) ? window.MissionManager.getMissions()[0]?.cycle || 1 : 1,
                 missions: (window.MissionManager) ? window.MissionManager.getMissions() : [],
                 
+                // v1.99.40.01 - Elite Cloud Sync
+                sessionLives: window.resumeLives || 3,
+                sessionScore: window.resumeScore || 0,
+
                 lastSeen: firebase.firestore.FieldValue.serverTimestamp()
             };
 
@@ -548,8 +552,11 @@ const Leaderboard = {
                 
                 if (data.level !== undefined) {
                     window.currentLevel = Number(data.level);
-                    
                 }
+                
+                // v1.99.40.01: Session Recovery Restore
+                if (data.sessionLives !== undefined) window.resumeLives = data.sessionLives;
+                if (data.sessionScore !== undefined) window.resumeScore = data.sessionScore;
 
                 // ⛵ Boathouse Senkronu (v1.99.33.79: Identity Isolation Fix)
                 if (data.ownedBoats && Array.isArray(data.ownedBoats)) {

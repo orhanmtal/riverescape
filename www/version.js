@@ -1,5 +1,5 @@
 /**
- * RİVER ESCAPE ELİTE - DEVELOPMENT RULES
+ * RİVER ESCAPE ELİTE - v1.99.40.01 (CLOUD SYNC)
  * 1. NO PLACEHOLDERS - Always use premium assets or procedural generation.
  * 2. PERFORMANCE FIRST - Optimize update loops and DOM access.
  * 3. VISUAL EXCELLENCE - Use HSL colors, smooth gradients, and micro-animations.
@@ -8,10 +8,10 @@
  */
 
 // River Escape Elite - Central Version Control
-// v1.99.40.00 - Elite Stability Patch (Economy & HUD Perfected)
+// v1.99.40.01 - Elite Cloud Sync (Full Progress & Economy)
 window.ELITE_CONFIG = {
-    VERSION: "1.99.40.00",
-    VERSION_CODE: "19940000",
+    VERSION: "1.99.40.01",
+    VERSION_CODE: "19940001",
     BUILD_LEVEL: "Elite Production",
     SYNC_ENGINE: "v3.Elite.Secure",
     LAST_UPDATED: "2026-04-21"
