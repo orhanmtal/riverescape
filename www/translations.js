@@ -1,4 +1,4 @@
-// River Escape - Dil Paketleri (TR/EN) - v1.99.37.00 (ELITE SEAL)
+// River Escape - Dil Paketleri (TR/EN) - v1.99.38.00 (ELITE SEAL)
 const translations = {
     tr: {
         startDesc: "",

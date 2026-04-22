@@ -8,10 +8,10 @@
  */
 
 // River Escape Elite - Central Version Control
-// v1.99.37.00 - Elite Localization Sync & UI Polish
+// v1.99.38.00 - Custom Modals & Hard Reset Security
 window.ELITE_CONFIG = {
-    VERSION: "1.99.37.00",
-    VERSION_CODE: "19937000",
+    VERSION: "1.99.38.00",
+    VERSION_CODE: "19938000",
     BUILD_LEVEL: "Elite Production",
     SYNC_ENGINE: "v3.Elite.Secure",
     LAST_UPDATED: "2026-04-21"
