@@ -144,12 +144,13 @@ const renderCache = {
 function showEliteConfirm(title, body, confirmBtnText, emoji, onConfirm) {
     const modal = document.getElementById('confirm-modal');
     if (!modal) return;
+    const t = translations[currentLang];
     
-    document.getElementById('confirm-modal-title').innerText = title || "EMİN MİSİNİZ?";
+    document.getElementById('confirm-modal-title').innerText = title || t.confirmTitle;
     document.getElementById('confirm-modal-body').innerText = body || "";
     document.getElementById('confirm-modal-emoji').innerText = emoji || "🛡️";
     const okBtn = document.getElementById('confirm-ok-btn');
-    okBtn.innerText = confirmBtnText || "ONAYLA";
+    okBtn.innerText = confirmBtnText || t.confirmBtn;
     
     modal.style.display = 'flex';
     modal.classList.add('active');
@@ -326,7 +327,7 @@ function updateLanguageUI() {
 
     // v1.99.30.06: DYNAMIC START/RESUME BUTTON
     if (window.resumeScore > 0) {
-        setText('start-btn', t.resumeBtn || 'DEVAM ET');
+        setText('start-btn', t.resumeBtn);
     } else {
         setText('start-btn', t.startBtn);
     }
@@ -338,30 +339,30 @@ function updateLanguageUI() {
     setText('gameover-title', t.gameOver);
     // v3.31.2: Simplified Elite Score Display (RESTORED STYLES)
     if (document.getElementById('score-title-final')) {
-        document.getElementById('score-title-final').innerHTML = `${t.scoreLabel || 'SKOR:'} <span style="color: #fff; font-size: 32px; font-weight: 900;">${Math.floor(score)}</span>`;
+        document.getElementById('score-title-final').innerHTML = `${t.scoreLabel} <span style="color: #fff; font-size: 32px; font-weight: 900;">${Math.floor(score)}</span>`;
     }
-    if (document.getElementById('gold-title-final')) {
-        document.getElementById('gold-title-final').innerHTML = `${t.goldTitle || 'ALTIN:'} <span style="color: #FFD700; font-weight: 900;">${goldCount}</span>`;
+    if (document.getElementById('final-gold-container')) {
+        document.getElementById('final-gold-container').innerHTML = `+ <span id="finalGoldValue">${goldCount}</span> ${t.goldLabel || "GOLD"}`;
     }
 
-    setText('revive-btn', t.reviveBtn);
-    setText('revive-gold-btn', t.reviveGoldBtn);
+    setText('revive-btn', t.reviveAdBtn || t.reviveBtn);
+    setText('revive-gold-btn', t.reviveGoldBtnLong || t.reviveGoldBtn);
     setText('gameover-shop-btn', t.shopBtn);
-    setText('restart-btn', t.hardResetBtn);
-    // setText('spin-btn', t.spinWheelTitle); 🎡 İkonu korunsun v1.99.19.09
+    setText('restart-btn', t.restartBtnLong || t.hardResetBtn);
+    setText('quit-btn-gameover', t.returnToMenu || t.mainMenu);
 
     if (document.getElementById('shop-title-main')) document.getElementById('shop-title-main').innerText = t.shopTitle;
-    if (document.getElementById('shop-balance-text')) document.getElementById('shop-balance-text').innerHTML = `${t.balance} <span id="totalGoldValue" style="color: #FFD700;">0</span> GOLD`;
-
-    document.querySelectorAll('#buy-magnet-btn, #buy-shield-btn').forEach(btn => {
-        const priceId = btn.id === 'buy-magnet-btn' ? 'magnet-price' : 'shield-price';
-        const priceVal = document.getElementById(priceId) ? document.getElementById(priceId).innerText : '0';
-        btn.innerHTML = `${t.upgradeBtn}<br><span id="${priceId}">${priceVal}</span>`;
-    });
+    if (document.getElementById('shop-balance-label')) document.getElementById('shop-balance-label').innerText = t.balance;
+    if (document.getElementById('shop-gold-unit')) document.getElementById('shop-gold-unit').innerText = t.goldLabel || "GOLD";
+    if (document.getElementById('shop-boathouse-title')) document.getElementById('shop-boathouse-title').innerText = t.boathouseTitle;
 
     // SHOP ITEM NAMES v149
     if (document.getElementById('shop-mag-title')) document.getElementById('shop-mag-title').innerText = t.magnetName;
     if (document.getElementById('shop-shd-title')) document.getElementById('shop-shd-title').innerText = t.shieldName;
+    if (document.getElementById('shop-magma-title')) document.getElementById('shop-magma-title').innerText = t.magmaCannonName;
+    if (document.getElementById('shop-weapon-title')) document.getElementById('shop-weapon-title').innerText = t.weaponName;
+    if (document.getElementById('shop-void-armor-title')) document.getElementById('shop-void-armor-title').innerText = t.voidArmorName;
+    if (document.getElementById('shop-gold-market-title')) document.getElementById('shop-gold-market-title').innerText = t.goldMarketTitle;
 
     // SHOP SMALL DESC v149
     if (document.getElementById('shop-mag-desc')) {
@@ -370,20 +371,38 @@ function updateLanguageUI() {
     if (document.getElementById('shop-shd-desc')) {
         document.getElementById('shop-shd-desc').innerHTML = `${t.shieldDesc} <span id="shield-chance" style="color:#64dd17;">%0</span><br>(${translations[currentLang].levelLabel} <span id="shield-lvl">0</span>)`;
     }
+    if (document.getElementById('shop-weapon-desc')) document.getElementById('shop-weapon-desc').innerText = t.weaponDesc;
+    if (document.getElementById('shop-void-armor-desc')) document.getElementById('shop-void-armor-desc').innerText = t.voidArmorDesc;
 
     setText('ad-gold-btn', t.adGoldBtn);
     setText('shop-close-btn', t.closeBtn);
 
     if (document.querySelector('#settings-screen h2')) document.querySelector('#settings-screen h2').innerText = t.settingsTitle;
-    if (document.getElementById('music-label-text')) document.getElementById('music-label-text').innerText = t.musicLabel;
-    if (document.getElementById('sfx-label-text')) document.getElementById('sfx-label-text').innerText = t.sfxLabel;
-    if (document.getElementById('vibration-label-text')) document.getElementById('vibration-label-text').innerText = t.vibrationLabel;
-    setText('settings-close-btn', t.saveCloseBtn);
+    if (document.getElementById('music-label-text')) document.getElementById('music-label-text').innerText = t.musicVolLabel || t.musicLabel;
+    if (document.getElementById('sfx-label-text')) document.getElementById('sfx-label-text').innerText = t.sfxVolLabel || t.sfxLabel;
+    if (document.getElementById('vibration-label-text')) document.getElementById('vibration-label-text').innerText = t.vibrationToggleLabel || t.vibrationLabel;
+    if (document.getElementById('settings-back-btn-text')) document.getElementById('settings-back-btn-text').innerText = t.returnToMenu || "HOME";
+    setText('settings-close-btn', t.settingsSaveBtn || t.saveCloseBtn);
+    setText('logout-btn', t.logoutBtnLabel);
 
-    if (document.querySelector('#reset-confirm-overlay h3')) document.querySelector('#reset-confirm-overlay h3').innerText = t.resetWarning;
-    if (document.querySelector('#reset-confirm-overlay p')) document.querySelector('#reset-confirm-overlay p').innerText = t.resetDesc;
-    setText('confirm-reset-yes', t.resetYes);
-    setText('confirm-reset-no', t.resetNo);
+    if (document.getElementById('logout-confirm-title')) document.getElementById('logout-confirm-title').innerText = t.logoutConfirmTitleModal;
+    if (document.getElementById('logout-confirm-desc')) document.getElementById('logout-confirm-desc').innerText = t.logoutConfirmDesc;
+    setText('confirm-logout-btn', t.logoutYes);
+    setText('cancel-logout-btn', t.cancelBtnModal);
+
+    if (document.querySelector('#reset-confirm-overlay h2')) document.querySelector('#reset-confirm-overlay h2').innerText = t.resetConfirmTitleModal || t.resetWarning;
+    if (document.querySelector('#reset-confirm-overlay p')) document.querySelector('#reset-confirm-overlay p').innerText = t.resetConfirmDesc || t.resetDesc;
+    setText('confirm-reset-yes', t.resetYesAction || t.resetYes);
+    setText('confirm-reset-no', t.cancelBtnModal || t.resetNo);
+
+    if (document.getElementById('edit-username-title')) document.getElementById('edit-username-title').innerText = t.editUsernameTitle;
+    if (document.getElementById('edit-username-desc')) document.getElementById('edit-username-desc').innerText = t.setEliteNameDesc;
+    if (document.getElementById('player-name-input')) document.getElementById('player-name-input').placeholder = t.newUsernamePlaceholder;
+    setText('save-identity-btn', t.editBtn);
+    setText('close-identity-btn', t.cancelBtnModal);
+
+    if (document.getElementById('active-goals-title')) document.getElementById('active-goals-title').innerText = t.activeGoals;
+    if (document.getElementById('armor-badge-label')) document.getElementById('armor-badge-label').innerText = t.armorBadgeLabel;
 
     setText('spin-title', t.spinWheelTitle);
     setText('spin-close-btn', t.spinClose);
@@ -731,7 +750,7 @@ function startSpin() {
             if (btn) btn.disabled = true;
 
             const msg = document.getElementById('spin-reward-msg');
-            if (msg) msg.innerText = translations[currentLang].spinWait || "ZAR ATILIYOR...";
+            if (msg) msg.innerText = translations[currentLang].spinWait;
 
             // Başlangıç hızı (Daha uzun ve etkileyici bir dönüş için güçlendirildi)
             spinVelocity = 0.6 + Math.random() * 0.4;
@@ -1127,7 +1146,7 @@ window.addEventListener('keydown', (e) => {
             const nextLvl = Math.floor(nextTarget / 1000) + 1;
             const bNum = Math.floor((nextLvl - 1) / STAGES_PER_BIOME) + 1;
             const sNum = ((nextLvl - 1) % STAGES_PER_BIOME) + 1;
-            showToast("SKIP TO LEVEL: " + bNum + "-" + sNum);
+            showToast(translations[currentLang].skipLevel.replace('{level}', bNum + "-" + sNum));
         }
     }
 
@@ -1237,7 +1256,7 @@ if (quitBtnGameOver) {
 
         if (score > 2000) {
             const t = translations[currentLang];
-            const confirmQuit = confirm(t.confirmQuit || "Bu turdaki skorun SİLİNECEK! Çıkmak istediğine emin misin?");
+            const confirmQuit = confirm(t.confirmQuit);
             if (confirmQuit) doQuit();
         } else {
             doQuit();
@@ -1368,7 +1387,7 @@ if (buyWeaponBtn) buyWeaponBtn.addEventListener('click', () => {
             triggerEliteEconomySync(true);
             if (typeof playPowerupSound === 'function') playPowerupSound();
             setTimeout(() => { for (var i = 0; i < 8; i++) setTimeout(playCoinSound, i * 100); }, 150);
-            showToast(t.weaponPurchased || "Silah Lisansı Alındı!", true);
+            showToast(t.weaponPurchased, true);
             updateShopUI();
         } else {
             shakeTimer = 0.4;
@@ -1387,9 +1406,9 @@ function buyMagnet() {
         playPowerupSound();
         saveGame();
         updateShopUI();
-        showToast("Mıknatıs Geliştirildi! 🧲", true);
+        showToast(translations[currentLang].magnetUpgraded, true);
     } else {
-        showToast(translations[currentLang].noGold || "Yetersiz Altın!", false);
+        showToast(translations[currentLang].noGold, false);
     }
 }
 
@@ -1401,9 +1420,9 @@ function buyShield() {
         playPowerupSound();
         saveGame();
         updateShopUI();
-        showToast("Kalkan Güçlendirildi! 🛡️", true);
+        showToast(translations[currentLang].shieldUpgraded, true);
     } else {
-        showToast(translations[currentLang].noGold || "Yetersiz Altın!", false);
+        showToast(translations[currentLang].noGold, false);
     }
 }
 
@@ -1415,11 +1434,11 @@ function buyWeapon() {
         playPowerupSound();
         saveGame();
         updateShopUI();
-        showToast("Nehir Topu ALINDI! 💣", true);
+        showToast(translations[currentLang].weaponPurchased, true);
     } else if (hasWeapon) {
-        showToast("Zaten Sahipsin!", false);
+        showToast(translations[currentLang].alreadyOwned, false);
     } else {
-        showToast(translations[currentLang].noGold || "Yetersiz Altın!", false);
+        showToast(translations[currentLang].noGold, false);
     }
 }
 
@@ -1431,20 +1450,22 @@ function buyArmorLicense() {
         playPowerupSound();
         saveGame();
         updateShopUI();
-        showToast("Gemi Zırhı Lisansı ALINDI! 💎", true);
+        const t = translations[currentLang];
+        showToast(t.armorLicensePurchased, true);
     } else if (ownsArmorLicense) {
         // Geliştirme/Şarj mantığı (v1.99.19.09: Max 10)
+        const t = translations[currentLang];
         if (totalGold >= 1000 && armorCharge < 10) {
             totalGold -= 1000;
             armorCharge++;
             playPowerupSound();
             saveGame();
             updateShopUI();
-            showToast("Zırh Şarj Edildi! ⚡", true);
-        } else if (armorCharge >= 5) {
-            showToast("Maksimum Zırh!", false);
+            showToast(t.armorCharged, true);
+        } else if (armorCharge >= 10) {
+            showToast(t.maxArmor, false);
         } else {
-            showToast(translations[currentLang].noGold, false);
+            showToast(t.noGold, false);
         }
     } else {
         showToast(translations[currentLang].noGold, false);
@@ -1453,6 +1474,7 @@ function buyArmorLicense() {
 
 function updateShopUI() {
     try {
+        const t = translations[currentLang];
         const tv = document.getElementById('totalGoldValue');
         const tvShop = document.getElementById('totalGoldValue-shop');
         if (tv) tv.innerText = totalGold;
@@ -1476,24 +1498,20 @@ function updateShopUI() {
 
         if (mBtn) {
             if (magnetLevel >= 5) {
-                mBtn.innerText = "MAX";
+                mBtn.innerText = t.maxBtn;
                 mBtn.disabled = true;
-                mBtn.classList.add('elite-upgrade-btn');
             } else {
-                mBtn.innerText = `AL\n${mPrice} G`;
+                mBtn.innerText = `${t.buyBtnShort}\n${mPrice} G`;
                 mBtn.disabled = (totalGold < mPrice);
-                mBtn.classList.add('elite-upgrade-btn');
             }
         }
         if (sBtn) {
             if (shieldLevel >= 5) {
-                sBtn.innerText = "MAX";
+                sBtn.innerText = t.maxBtn;
                 sBtn.disabled = true;
-                sBtn.classList.add('elite-upgrade-btn');
             } else {
-                sBtn.innerText = `AL\n${sPrice} G`;
+                sBtn.innerText = `${t.buyBtnShort}\n${sPrice} G`;
                 sBtn.disabled = (totalGold < sPrice);
-                sBtn.classList.add('elite-upgrade-btn');
             }
         }
 
@@ -1501,16 +1519,25 @@ function updateShopUI() {
         const buyWBtn = document.getElementById('buy-weapon-btn');
         if (buyWBtn) {
             if (hasWeapon) {
-                buyWBtn.innerText = "SAHİPSİN";
+                buyWBtn.innerText = t.ownedBtn;
                 buyWBtn.disabled = true;
             } else {
-                buyWBtn.innerText = "AL\n5000 G";
+                buyWBtn.innerText = `${t.buyBtnShort}\n5000 G`;
                 buyWBtn.disabled = (totalGold < 5000);
             }
             buyWBtn.classList.add('elite-upgrade-btn');
         }
 
-        // Armor Toggle (Elite Void logic v1.99.34.00)
+        // Ammo Update
+        const bCount = document.getElementById('shop-bomb-count');
+        if (bCount) bCount.innerText = bombCount;
+        
+        const ammoBtn = document.getElementById('buy-ammo-btn');
+        if (ammoBtn) {
+            ammoBtn.innerText = `${t.buyBtnShort}\n1000 G`;
+            ammoBtn.disabled = (totalGold < 1000);
+        }
+
         const armRow = document.getElementById('shop-armor-row');
         const biomeIdxLocal = Math.floor((currentLevel - 1) / STAGES_PER_BIOME) % levelAssets.length;
         const isVoidLevel = (currentLevel > 0 && biomeIdxLocal === 5); // 0-indexed: 5 is Void
@@ -1518,7 +1545,6 @@ function updateShopUI() {
         const iconSpan = document.querySelector('#shop-armor-row span');
 
         if (armRow) {
-            // Her zaman göster ama 6 katı değilse kilitli yap (User Request Sync)
             armRow.style.display = 'flex';
             armRow.style.opacity = isVoidLevel ? '1' : '0.4';
             armRow.style.pointerEvents = isVoidLevel ? 'auto' : 'none';
@@ -1527,26 +1553,30 @@ function updateShopUI() {
         if (buyABtn) {
             buyABtn.classList.add('elite-upgrade-btn');
             if (isVoidLevel) {
-                // LEVEL 6+: ŞARJ VEYA LİSANS AKTİF
                 if (ownsArmorLicense) {
                     const price = 1000;
                     if (iconSpan) iconSpan.innerText = "💎";
-                    buyABtn.innerText = `ŞARJ ET (${armorCharge})\n${price} G`;
+                    buyABtn.innerText = `${t.chargeArmor.replace('{charge}', armorCharge)}\n${price} G`;
                     buyABtn.disabled = (totalGold < price || armorCharge >= 10);
-                    if (document.getElementById('shop-arm-title')) document.getElementById('shop-arm-title').innerText = "Zırh Şarjı (Mühimmat)";
+                    if (document.getElementById('shop-void-armor-title')) document.getElementById('shop-void-armor-title').innerText = t.armorChargeTitle;
                 } else {
                     if (iconSpan) iconSpan.innerText = "🔒";
-                    buyABtn.innerText = "LİSANS AL\n5000 G";
+                    buyABtn.innerText = `${t.getLicenseBtn}\n5000 G`;
                     buyABtn.disabled = (totalGold < 5000);
                 }
             } else {
-                // LEVEL 6 DIŞINDA: KİLİTLİ VE ŞARJ GİZLİ
                 if (iconSpan) iconSpan.innerText = "🔒";
-                buyABtn.innerText = "KİLİTLİ\n(LVL 6+)";
+                buyABtn.innerText = `${t.lockedBtn}\n(LVL 6+)`;
                 buyABtn.disabled = true;
-                if (document.getElementById('shop-arm-title')) document.getElementById('shop-arm-title').innerText = "Gemi Zırhı (Void)";
-                if (document.getElementById('shop-arm-desc')) document.getElementById('shop-arm-desc').innerText = "Level 6, 12, 18...'de Açılır";
+                if (document.getElementById('shop-void-armor-title')) document.getElementById('shop-void-armor-title').innerText = t.voidArmorTitleLocked;
+                if (document.getElementById('shop-void-armor-desc')) document.getElementById('shop-void-armor-desc').innerText = t.voidArmorLockedDesc;
             }
+        }
+
+        // Dynamic Magma Cannon Desc
+        const magmaDesc = document.getElementById('shop-magma-desc');
+        if (magmaDesc) {
+            magmaDesc.innerHTML = t.magmaCannonDesc.replace('{count}', `<span id="shop-bomb-count" style="color: #fff; font-weight: 800;">${bombCount}</span>`);
         }
         // Silah Lisansı Yoksa Mühimmat Satırını Gizle (v1.99.34.00)
         // BOMBA BUTONU, HUD & SHOP SYNC
@@ -1597,12 +1627,15 @@ function renderBoatShop() {
         const perkDesc = currentLang === 'tr' ? boat.perk.descTR : boat.perk.descEN;
         const name = currentLang === 'tr' ? boat.nameTR : boat.nameEN;
 
+        const rarityKey = 'rarity' + boat.rarity;
+        const rarityText = translations[currentLang][rarityKey] || boat.rarity;
+
         card.innerHTML = `
             <div class="item-aura-box" style="border: 2px solid ${isActive ? '#00e5ff' : 'rgba(255,255,255,0.2)'}">
                 <img src="${boat.asset}" style="width: 80%; height: 80%; object-fit: contain;">
             </div>
             <div class="showroom-info">
-                <div class="showroom-title">${name} <span style="font-size: 9px; opacity: 0.5;">[${boat.rarity}]</span></div>
+                <div class="showroom-title">${name} <span style="font-size: 9px; opacity: 0.5;">[${rarityText}]</span></div>
                 <div class="showroom-desc" style="color: #00e5ff;">✨ ${perkDesc}</div>
             </div>
         `;
@@ -1617,7 +1650,8 @@ function renderBoatShop() {
         if (!isOwned && currentGold < itemPrice) btn.disabled = true;
 
         btn.style.background = isOwned ? (isActive ? '#2ecc71' : 'rgba(255,255,255,0.1)') : 'linear-gradient(135deg, #ffd700, #ff8c00)';
-        btn.innerText = isOwned ? (isActive ? 'SEÇİLDİ' : 'SEÇ') : itemPrice + ' G';
+        const t = translations[currentLang];
+        btn.innerText = isOwned ? (isActive ? t.selectedBtn : t.selectBtn) : itemPrice + ' G';
 
         btn.addEventListener('click', () => {
             if (isOwned) {
@@ -1642,7 +1676,7 @@ function selectBoat(id) {
         
         saveGame();
         updateShopUI();
-        if (typeof showToast === 'function') showToast("KAYIK SEÇİLDİ!", true);
+        if (typeof showToast === 'function') showToast(translations[currentLang].boatSelectedToast, true);
     }
 }
 

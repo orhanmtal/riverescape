@@ -8,10 +8,10 @@
  */
 
 // River Escape Elite - Central Version Control
-// v1.99.36.85 - Global Biome Sync & Level 10,000 Stability
+// v1.99.37.00 - Elite Localization Sync & UI Polish
 window.ELITE_CONFIG = {
-    VERSION: "1.99.36.99",
-    VERSION_CODE: "19936099",
+    VERSION: "1.99.37.00",
+    VERSION_CODE: "19937000",
     BUILD_LEVEL: "Elite Production",
     SYNC_ENGINE: "v3.Elite.Secure",
     LAST_UPDATED: "2026-04-21"

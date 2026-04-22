@@ -5,11 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
-    <!-- v1.99.35.03: ELITE VERSION CONTROL SYSTEM -->
-    <script src="version.js?v=1.99.35.03"></script>
+    <!-- v1.99.37.00: ELITE VERSION CONTROL SYSTEM -->
+    <script src="version.js?v=1.99.37.00"></script>
     <script>
         (function() {
-            const v = window.ELITE_CONFIG ? window.ELITE_CONFIG.VERSION : "1.99.35.03";
+            const v = window.ELITE_CONFIG ? window.ELITE_CONFIG.VERSION : "1.99.37.00";
             document.title = "River Escape Elite v" + v;
             // Update Meta immediately
             const updateMeta = (name, val) => {
@@ -22,14 +22,14 @@
         })();
     </script>
 
-    <link rel="stylesheet" href="style.css?v=1.99.35.03">
-    <!-- MASTER UI OVERRIDE// RİVER ESCAPE PRESTIGE - v1.99.35.03 (ELITE LAUNCH) -->
+    <link rel="stylesheet" href="style.css?v=1.99.37.00">
+    <!-- MASTER UI OVERRIDE// RİVER ESCAPE PRESTIGE - v1.99.37.00 (ELITE LAUNCH) -->
 
     <style>
 /* MASTER UI OVERRIDE//
- * RİVER ESCAPE ELİTE - v1.99.35.03 (ELITE LAUNCH)
+ * RİVER ESCAPE ELİTE - v1.99.37.00 (ELITE LAUNCH)
  * Firebase Firestore Global Sıralama ve Profil Senkronizasyon Sistemi
- * v1.99.35.03
+ * v1.99.37.00
  */
 .master-start-v21 {
     display: flex !important;
@@ -476,7 +476,7 @@
                 <div style="text-align: center; position: relative; width: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; pointer-events: none;">
                     <h1 class="floating-logo" style="font-family: 'Outfit', sans-serif; font-weight: 900; color: white; font-size: 13vmin; letter-spacing: -2px; margin: 0; line-height: 0.85; background: linear-gradient(135deg, #fff 20%, #00e5ff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 15px 30px rgba(0,229,255,0.3)); text-transform: uppercase;">RIVER<br><span style="background: linear-gradient(135deg, #00e5ff 0%, #00897b 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">ESCAPE</span></h1>
                     <div id="elite-main-version" style="color: #FFD700; font-family: 'Press Start 2P', cursive; font-size: 1.8vmin; font-weight: bold; margin-top: 15px; letter-spacing: 0.8vmin; opacity: 0.9; text-shadow: 0 0 15px rgba(255,215,0,0.4);">
-                        <script>document.write("ELITE v" + (window.ELITE_CONFIG ? window.ELITE_CONFIG.VERSION : "1.99.35.03"));</script>
+                        <script>document.write("ELITE v" + (window.ELITE_CONFIG ? window.ELITE_CONFIG.VERSION : "1.99.37.00"));</script>
                     </div>
                 </div>
 
@@ -500,7 +500,7 @@
                             50% { border-color: rgba(0, 229, 255, 0.6); box-shadow: 0 0 40px rgba(0, 229, 255, 0.2); }
                         }
                     </style>
-                    <h3 style="font-size: 14px; color: #00e5ff; margin: 0 0 15px 0; text-align: left; font-family: 'Outfit'; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; text-shadow: 0 0 10px rgba(0,229,255,0.5);">AKTİF HEDEFLER 🎯</h3>
+                    <h3 id="active-goals-title" style="font-size: 14px; color: #00e5ff; margin: 0 0 15px 0; text-align: left; font-family: 'Outfit'; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; text-shadow: 0 0 10px rgba(0,229,255,0.5);">AKTİF HEDEFLER 🎯</h3>
                     <div id="mission-list"></div>
                 </div>
             </div>
@@ -516,8 +516,8 @@
         <!-- IDENTITY MODAL v1.99.35.00 -->
         <div id="identity-modal" class="elite-modal-overlay">
             <div class="elite-modal-content">
-                <div style="font-size: 21px; font-weight: 900; color: #FFD700; letter-spacing: 1px;">KULLANICI ADI DÜZENLEME</div>
-                <div style="font-size: 12px; margin-top: 5px; opacity: 0.6; text-transform: uppercase;">Yeni Elite adınızı belirleyin</div>
+                <div id="edit-username-title" style="font-size: 21px; font-weight: 900; color: #FFD700; letter-spacing: 1px;">KULLANICI ADI DÜZENLEME</div>
+                <div id="edit-username-desc" style="font-size: 12px; margin-top: 5px; opacity: 0.6; text-transform: uppercase;">Yeni Elite adınızı belirleyin</div>
                 <input type="text" id="player-name-input" class="elite-input-v22" placeholder="YENİ ADINIZ..." maxlength="15">
                 <div style="display: flex; gap: 10px;">
                     <button id="close-identity-btn" class="elite-modal-btn" style="background: rgba(255,255,255,0.1); color: white;">İPTAL</button>
@@ -596,7 +596,7 @@
                     </div>
                 </div>
                 <div style="font-family: 'Outfit'; font-size: 7px; color: rgba(0, 229, 255, 0.5); text-align: right; margin-top: 2px; font-weight: 900; letter-spacing: 0.5px;">
-                    <script>document.write("v" + (window.ELITE_CONFIG ? window.ELITE_CONFIG.VERSION : "1.99.35.03"));</script>
+                    <script>document.write("v" + (window.ELITE_CONFIG ? window.ELITE_CONFIG.VERSION : "1.99.37.00"));</script>
                 </div>
 
             </div>
@@ -628,7 +628,7 @@
                     font-size: 2.2vmin; text-shadow: 0 0 10px #9b59b6;
                     font-weight: bold;
                 ">0</span>
-                <span style="
+                <span id="armor-badge-label" style="
                     color: rgba(155, 89, 182, 1); font-family: 'Outfit'; 
                     font-size: 1.25vmin; font-weight: 900; letter-spacing: 1px;
                     text-transform: uppercase;
@@ -650,7 +650,7 @@
                 style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 5vmin 10vmin; text-align: center; width: 80%; max-width: 400px;">
                 <div style="color: rgba(255,255,255,0.5); font-size: 3vmin; margin-bottom: 1.5vmin;">TOPLAM SKOR</div>
                 <div id="score-title-final" style="font-size: 11.5vmin; font-weight: 900; line-height: 1;">0</div>
-                <div style="margin-top: 2.8vmin; color: #FFD700; font-size: 5vmin; font-weight: 900;">+ <span
+                <div id="final-gold-container" style="margin-top: 2.8vmin; color: #FFD700; font-size: 5vmin; font-weight: 900;">+ <span
                         id="finalGoldValue">0</span> ALTIN</div>
             </div>
 
@@ -725,8 +725,8 @@
                 </div>
 
                 <button id="settings-back-btn"
-                    style="background: none; border: none; color: rgba(255,255,255,0.3); font-family: 'Outfit'; font-weight: bold; font-size: 2.8vmin; cursor: pointer; margin-top: auto;">GERİ
-                    DÖN 🏠</button>
+                    style="background: none; border: none; color: rgba(255,255,255,0.3); font-family: 'Outfit'; font-weight: bold; font-size: 2.8vmin; cursor: pointer; margin-top: auto;"><span id="settings-back-btn-text">GERİ
+                    DÖN 🏠</span></button>
             </div>
         </div>
 
@@ -737,12 +737,13 @@
                 style="width: 85%; max-width: 380px; background: rgba(20, 30, 45, 0.85); border: 1px solid rgba(255,215,0,0.2); border-radius: 30px; padding: 40px 30px; text-align: center; box-shadow: 0 30px 70px rgba(0,0,0,0.6);">
                 <div style="font-size: 65px; margin-bottom: 20px; filter: drop-shadow(0 0 15px rgba(255,255,255,0.2));">
                     🚪</div>
-                <h2
+                <h2 id="logout-confirm-title"
                     style="color: #fff; font-family: 'Outfit'; font-weight: 900; font-size: 26px; margin-bottom: 12px; letter-spacing: 1px;">
                     ÇIKIŞ YAPILSIN MI?</h2>
                 <div id="version-display" style="position: absolute; bottom: 15px; right: 20px; color: rgba(255,255,255,0.4); font-family: 'Outfit'; font-size: 12px; letter-spacing: 1px; z-index: 1000;">
-                    <script>document.write("v" + (window.ELITE_CONFIG ? window.ELITE_CONFIG.VERSION : "1.99.35.03"));</script>
+                    <script>document.write("v" + (window.ELITE_CONFIG ? window.ELITE_CONFIG.VERSION : "1.99.37.00"));</script>
                 </div>
+                <p id="logout-confirm-desc" style="color: #fff; font-family: 'Outfit'; font-size: 14px; margin-bottom: 30px; line-height: 1.6; opacity: 0.8;">
                 Oturumu kapattığınızda verileriniz bulutta güvende kalır ancak tekrar girmek için internet
                     gereklidir.</p>
                 <div style="display: flex; flex-direction: column; gap: 15px; width: 100%;">
@@ -790,9 +791,9 @@
                     style="color: #FFD700; font-family: 'Outfit'; font-weight: 900; font-size: 9vmin; margin: 0; margin-bottom: 2vmin; letter-spacing: 1px; text-shadow: 0 10px 30px rgba(0,0,0,0.5);">
                     MAĞAZA</h2>
                 <div id="shop-balance-pill" class="elite-balance-pill" style="margin-bottom: 0;">
-                    <span class="elite-balance-label">BAKİYE</span>
+                    <span id="shop-balance-label" class="elite-balance-label">BAKİYE</span>
                     <span id="totalGoldValue-shop" class="elite-balance-value">0</span>
-                    <span style="color: #FFD700; font-size: 14px;">GOLD</span>
+                    <span id="shop-gold-unit" style="color: #FFD700; font-size: 14px;">GOLD</span>
                 </div>
             </div>
 
@@ -802,7 +803,7 @@
                     
                     <!-- v1.99.30.06: ELITE MODULAR BOAT COLLECTION -->
                     <div id="boat-showroom" style="display: flex; flex-direction: column; width: 100%; border-bottom: 2px dashed rgba(255,255,255,0.1); padding-bottom: 20px; margin-bottom: 20px;">
-                        <h3 style="color: #00e5ff; font-family: 'Outfit'; font-size: 16px; margin: 0 0 15px 0; text-align: left; letter-spacing: 2px;">KAYIKHANE 🛶</h3>
+                        <h3 id="shop-boathouse-title" style="color: #00e5ff; font-family: 'Outfit'; font-size: 16px; margin: 0 0 15px 0; text-align: left; letter-spacing: 2px;">KAYIKHANE 🛶</h3>
                         <div id="boat-list"></div>
                     </div>
 
@@ -813,8 +814,8 @@
                             <span style="font-size: 32px;">🧲</span>
                         </div>
                         <div class="showroom-info">
-                            <div class="showroom-title">MIKNATIS 🧲</div>
-                            <div class="showroom-desc"><span id="magnet-duration"></span> <span id="magnet-lvl"></span></div>
+                            <div id="shop-mag-title" class="showroom-title">MIKNATIS 🧲</div>
+                            <div id="shop-mag-desc" class="showroom-desc"><span id="magnet-duration"></span> <span id="magnet-lvl"></span></div>
                         </div>
                         <button id="buy-magnet-btn" class="elite-upgrade-btn">GELİŞTİR</button>
                     </div>
@@ -825,8 +826,8 @@
                             <span style="font-size: 32px;">🛡️</span>
                         </div>
                         <div class="showroom-info">
-                            <div class="showroom-title">KALKAN 🛡️</div>
-                            <div class="showroom-desc"><span id="shield-chance"></span> <span id="shield-lvl"></span></div>
+                            <div id="shop-shd-title" class="showroom-title">KALKAN 🛡️</div>
+                            <div id="shop-shd-desc" class="showroom-desc"><span id="shield-chance"></span> <span id="shield-lvl"></span></div>
                         </div>
                         <button id="buy-shield-btn" class="elite-upgrade-btn" style="background: linear-gradient(135deg, #00e5ff 0%, #12c2e9 100%);">GELİŞTİR</button>
                     </div>
@@ -837,8 +838,8 @@
                             <span style="font-size: 32px;">📡</span>
                         </div>
                         <div class="showroom-info">
-                            <div class="showroom-title">NEHİR TOPU 📡</div>
-                            <div class="showroom-desc">Elite Silah Bataryası</div>
+                            <div id="shop-weapon-title" class="showroom-title">NEHİR TOPU 📡</div>
+                            <div id="shop-weapon-desc" class="showroom-desc">Elite Silah Bataryası</div>
                         </div>
                         <button id="buy-weapon-btn" class="elite-upgrade-btn" style="background: linear-gradient(135deg, #ff3d00 0%, #d84315 100%);">GELİŞTİR</button>
                     </div>
@@ -849,8 +850,8 @@
                             <span style="font-size: 32px;">☄️</span>
                         </div>
                         <div class="showroom-info">
-                            <div class="showroom-title" style="color: #ff8c00;">MAGMA TOPU ☄️</div>
-                            <div class="showroom-desc">Mevcut: <span id="shop-bomb-count" style="color: #fff; font-weight: 800;">0</span> | +10 Lav Atış Hakkı</div>
+                            <div id="shop-magma-title" class="showroom-title" style="color: #ff8c00;">MAGMA TOPU ☄️</div>
+                            <div id="shop-magma-desc" class="showroom-desc">Mevcut: <span id="shop-bomb-count" style="color: #fff; font-weight: 800;">0</span> | +10 Lav Atış Hakkı</div>
                         </div>
                         <button id="buy-ammo-btn" class="elite-upgrade-btn" style="background: linear-gradient(135deg, #ff8c00 0%, #ff4500 100%);">SATIN AL</button>
                     </div>
@@ -861,8 +862,8 @@
                             <span style="font-size: 32px;">💎</span>
                         </div>
                         <div class="showroom-info">
-                            <div class="showroom-title">VOİD ZIRHI 💎</div>
-                            <div class="showroom-desc">Gelişmiş Koruma Modülü</div>
+                            <div id="shop-void-armor-title" class="showroom-title">VOİD ZIRHI 💎</div>
+                            <div id="shop-void-armor-desc" class="showroom-desc">Gelişmiş Koruma Modülü</div>
                         </div>
                         <button id="buy-armor-btn" class="elite-upgrade-btn" style="background: linear-gradient(135deg, #00acc1 0%, #00838f 100%);">LİSANS AL</button>
                     </div>
@@ -871,7 +872,7 @@
     
                     <!-- ALTIN MARKET 💰 v1.99.27.09 PRESTIGE UI -->
                     <div class="gold-market-container">
-                        <h3 class="gold-market-title">ALTIN MARKET 💰</h3>
+                        <h3 id="shop-gold-market-title" class="gold-market-title">ALTIN MARKET 💰</h3>
                         <div class="gold-market-grid-elite">
                             <button onclick="GameStore.buy('gold_pack_1')" class="gold-card">
                                 <span class="amount">5.000</span>
@@ -1048,17 +1049,17 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
 
-    <!-- Scriptleri Yükle (v1.99.35.03 Cache Buster) -->
-    <script src="translations.js?v=1.99.35.03"></script>
-    <script src="audio.js?v=1.99.35.03"></script>
-    <script src="collections.js?v=1.99.35.03"></script>
-    <script src="perk_engine.js?v=1.99.35.03"></script>
-    <script src="assets.js?v=1.99.35.03"></script>
-    <script src="game_leaderboard.js?v=1.99.35.03"></script>
-    <script src="mission_manager.js?v=1.99.35.03"></script>
-    <!-- v1.99.35.03 ELITE BATCH SYNC ENGINE -->
-    <script src="game_store.js?v=1.99.35.03"></script>
-    <script src="game_unbeatable_v3.js?v=1.99.35.03"></script>
+    <!-- Scriptleri Yükle (v1.99.37.00 Cache Buster) -->
+    <script src="translations.js?v=1.99.37.00"></script>
+    <script src="audio.js?v=1.99.37.00"></script>
+    <script src="collections.js?v=1.99.37.00"></script>
+    <script src="perk_engine.js?v=1.99.37.00"></script>
+    <script src="assets.js?v=1.99.37.00"></script>
+    <script src="game_leaderboard.js?v=1.99.37.00"></script>
+    <script src="mission_manager.js?v=1.99.37.00"></script>
+    <!-- v1.99.37.00 ELITE BATCH SYNC ENGINE -->
+    <script src="game_store.js?v=1.99.37.00"></script>
+    <script src="game_unbeatable_v3.js?v=1.99.37.00"></script>
 </body>
 
 </html>

@@ -54,15 +54,19 @@ const Leaderboard = {
                             this.updateAuthUI(true, this.playerName);
                             this.restoreFromCloud();
 
-                            if (typeof showToast === 'function') showToast(`HOŞ GELDİN ${this.playerName.toUpperCase()}! 🏛️`, true);
+                            if (typeof showToast === 'function') {
+                                const welcome = translations[currentLang].welcomeMsg.replace('{name}', this.playerName.toUpperCase());
+                                showToast(welcome, true);
+                            }
                         }
                     }).catch(err => {
                         console.error("❌ [ELITE AUTH] Redirect Hatası Yakalandı:", err);
                         // v1.99.23.00: Safe Overlay Initializationıcı için anlaşılır kıl
+                        const t = translations[currentLang];
                         const errorMap = {
-                            'auth/internal-error': "DAHİLİ BAĞLANTI HATASI! 🌐",
-                            'auth/network-request-failed': "İNTERNET BAĞLANTINI KONTROL ET! 📶",
-                            'auth/web-storage-unsupported': "TARAYICI DEPOLAMA DESTEKLENMİYOR! 💾"
+                            'auth/internal-error': t.authInternalError,
+                            'auth/network-request-failed': t.authNetworkError,
+                            'auth/web-storage-unsupported': t.authStorageError
                         };
                         if (errorMap[err.code]) {
                             if (typeof showToast === 'function') showToast(errorMap[err.code], false);
@@ -137,11 +141,11 @@ const Leaderboard = {
                 if (!isOnline) {
                     securityOverlay.style.visibility = 'visible';
                     securityOverlay.style.opacity = '1';
-                    securityTitle.innerText = t.securityInternetRequired || "İNTERNET GEREKLİ!";
+                    securityTitle.innerText = t.securityInternetRequired;
                     if (securityBody) {
                         securityBody.style.display = 'block';
                         securityBody.style.opacity = '0.7';
-                        securityBody.innerText = t.securityNoInternet || "Lütfen internet bağlantınızı kontrol edin.";
+                        securityBody.innerText = t.securityNoInternet;
                     }
                     if (securityIcon) {
                         securityIcon.innerHTML = `
@@ -155,7 +159,7 @@ const Leaderboard = {
                 } else if (!isLoggedIn) {
                     securityOverlay.style.visibility = 'visible';
                     securityOverlay.style.opacity = '1';
-                    securityTitle.innerText = t.securityAuthRequired || "GİRİŞ GEREKLİ! 🔏";
+                    securityTitle.innerText = t.securityAuthRequired;
                     if (securityBody) securityBody.style.display = 'none';
                     if (securityIcon) {
                         securityIcon.innerHTML = `
@@ -170,7 +174,7 @@ const Leaderboard = {
                         securityLoginBtn.style.display = 'flex';
                         securityLoginBtn.onclick = () => this.loginWithGoogle();
                         const loginTxt = document.getElementById('google-login-text');
-                        if (loginTxt) loginTxt.innerText = t.googleLogin || "Google ile devam et";
+                        if (loginTxt) loginTxt.innerText = t.googleLogin;
                     }
                 } else {
                     // ALL SECURE - REMOVE LOCK
@@ -181,10 +185,10 @@ const Leaderboard = {
 
             if (statusText) {
                 if (isLoggedIn) {
-                    statusText.innerText = isOffline ? "ELİTE BİLGİ 📡" : "ELİTE HESAP 🏛️";
+                    statusText.innerText = isOffline ? t.statusOffline : t.statusOnline;
                     statusText.style.color = "#4caf50";
                 } else {
-                    statusText.innerText = "GİRİŞ YAPMANIZ GEREKLİYOR 🔏";
+                    statusText.innerText = t.statusLoginRequired;
                     statusText.style.color = "#ff4444";
                 }
             }
@@ -227,7 +231,8 @@ const Leaderboard = {
   
             const welcomeMsg = document.getElementById('auth-welcome-msg');
             if (welcomeMsg && isLoggedIn) {
-                welcomeMsg.innerText = isOffline ? `MOD: ÇEVRİMDIŞI 📡` : `HOŞ GELDİN, ${displayName.toUpperCase()}! 🏛️`;
+                const t = translations[currentLang];
+                welcomeMsg.innerText = isOffline ? t.statusOffline : t.welcomeMsg.replace('{name}', displayName.toUpperCase());
                 welcomeMsg.classList.remove('hidden');
             }
 
@@ -268,7 +273,7 @@ const Leaderboard = {
     // v1.99.22.00: CLOUD IDENTITY SYNC
     async updatePlayerName(newName) {
         if (!newName || newName.length < 3) {
-            if (typeof showToast === 'function') showToast("İSİM EN AZ 3 KARAKTER OLMALI!", false);
+            if (typeof showToast === 'function') showToast(translations[currentLang].nameMinLength, false);
             return;
         }
         if (!this.db || !this.auth.currentUser) return;
@@ -293,7 +298,7 @@ const Leaderboard = {
             // 4. UI'yi Yenile
             this.updateAuthUI(true, cleanName, false, user.photoURL);
             
-            if (typeof showToast === 'function') showToast("KİMLİĞİNİZ BULUTA MÜHÜRLENDİ! 🏛️", true);
+            if (typeof showToast === 'function') showToast(translations[currentLang].identitySynced, true);
             const modal = document.getElementById('identity-modal');
             if (modal) {
                 modal.classList.remove('active');
@@ -302,7 +307,7 @@ const Leaderboard = {
             }
         } catch (e) {
             console.error("❌ [ELITE IDENTITY] Sync Error:", e);
-            if (typeof showToast === 'function') showToast("KİMLİK MÜHÜRLENİRKEN HATA OLUŞTU!", false);
+            if (typeof showToast === 'function') showToast(translations[currentLang].identityError, false);
         }
     },
 
@@ -362,9 +367,9 @@ const Leaderboard = {
                     lastSeen: firebase.firestore.FieldValue.serverTimestamp()
                 }, { merge: true });
             }
-            if (typeof showToast === 'function') showToast("İSİM GÜNCELLENDİ! 🏆", true);
+            if (typeof showToast === 'function') showToast(translations[currentLang].nameUpdated, true);
         } else {
-            if (typeof showToast === 'function') showToast("GEÇERLİ BİR İSİM GİRİN!", false);
+            if (typeof showToast === 'function') showToast(translations[currentLang].invalidName, false);
         }
     },
 
@@ -449,7 +454,7 @@ const Leaderboard = {
 
             await this.db.collection('leaderboard').doc(this.playerID).set(payload, { merge: true });
             
-            if (typeof showToast === 'function' && score > 0) showToast("VERİLER BULUTA MÜHÜRLENDİ! 🏛️", true);
+            if (typeof showToast === 'function' && score > 0) showToast(translations[currentLang].dataSynced, true);
         } catch (e) {
             console.error("❌ [ELITE SYNC] Firestore Sync Error:", e);
         }
@@ -508,7 +513,7 @@ const Leaderboard = {
             }
         } catch (e) {
             console.error("❌ [LEADERBOARD] Firestore Download Error:", e);
-            if (typeof showToast === 'function') showToast("SIRALAMA LİSTESİ ALINAMADI!", false);
+            if (typeof showToast === 'function') showToast(translations[currentLang].rankingsFetchError, false);
             callback([], null);
         }
     },
@@ -606,18 +611,19 @@ const Leaderboard = {
 
     // v1.99.35.00: TAM TEMİZLİK (Deep Wipe - No Inheritance)
     async logout() {
+        const t = translations[currentLang];
         if (typeof window.showEliteConfirm === 'function') {
             window.showEliteConfirm(
-                "OTURUMU KAPAT?", 
-                "Tüm yerel verileriniz (altın, skor vb.) silinecek ve misafir olarak devam edeceksiniz. Emin misiniz?", 
-                "ÇIKIŞ YAP", 
+                t.logoutConfirmTitle, 
+                t.logoutConfirmBody, 
+                t.logoutBtnLabel, 
                 "🚪", 
                 async () => {
                     await this.performLogout();
                 }
             );
         } else {
-            if (confirm("Oturumu kapatmak istediğinize emin misiniz?")) {
+            if (confirm(t.logoutConfirmBody)) {
                 await this.performLogout();
             }
         }
@@ -665,14 +671,15 @@ const Leaderboard = {
 
     // v1.99.3.31.5: NATIVE GOOGLE AUTH FORCED (Modern Modal - No Chrome)
     async loginWithGoogle() {
+        const t = translations[currentLang];
         if (!this.auth) {
-            if (typeof showToast === 'function') showToast("FIREBASE BAĞLANTISI YOK!", false);
+            if (typeof showToast === 'function') showToast(t.firebaseNoConnection, false);
             return;
         }
 
         try {
             
-            if (typeof showToast === 'function') showToast("GÜVENLİ GİRİŞ AÇILIYOR...", true);
+            if (typeof showToast === 'function') showToast(t.openingSecureLogin, true);
             
             // 1. Capacitor Native Eklentisine Öncelik Ver
             const AuthPlugin = window.Capacitor && window.Capacitor.Plugins ? window.Capacitor.Plugins.FirebaseAuthentication : null;
@@ -711,12 +718,14 @@ const Leaderboard = {
         const myRankEl = document.getElementById('leaderboard-my-rank');
         if(!listEl) return;
         
-        listEl.innerHTML = '<div style="color:#00e5ff; text-align:center; padding:20px; font-family:\'Outfit\';">YÜKLENİYOR... 🛰️</div>';
+        const t = translations[currentLang];
+        listEl.innerHTML = `<div style="color:#00e5ff; text-align:center; padding:20px; font-family:'Outfit';">${t.loadingLeaderboard}</div>`;
         
         this.getGlobalRankings((rankings, myRank) => {
             listEl.innerHTML = '';
             if(!rankings || rankings.length === 0) {
-                listEl.innerHTML = '<div style="color:#ff4444; text-align:center; padding:20px;">VERİ ALINAMADI! 🛰️</div>';
+                const t = translations[currentLang];
+                listEl.innerHTML = `<div style="color:#ff4444; text-align:center; padding:20px;">${t.noLeaderboardData}</div>`;
                 return;
             }
             

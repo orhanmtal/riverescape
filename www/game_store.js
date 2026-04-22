@@ -88,11 +88,11 @@ const GameStore = {
                 store.order(offer);
             } else {
                 console.error("No Offer found for product:", productId);
-                if (typeof showToast === 'function') showToast("Teklif Bulunamadı!", false);
+                if (typeof showToast === 'function') showToast(translations[currentLang].offerNotFound, false);
             }
         } else {
             console.error("Product not available for purchase:", productId);
-            if (typeof showToast === 'function') showToast("Ürün Marketten Çekilemedi!", false);
+            if (typeof showToast === 'function') showToast(translations[currentLang].productNotAvailable, false);
         }
     },
 
@@ -131,7 +131,7 @@ const GameStore = {
 
             // 6. Başarı Bildirimi
             if (typeof showToast === 'function') {
-                showToast(`BAŞARILI! +${product.amount} ALTIN EKLENDİ! 🏛️`, true);
+                showToast(translations[currentLang].purchaseSuccessAdd.replace('{amount}', product.amount), true);
             }
         }
         

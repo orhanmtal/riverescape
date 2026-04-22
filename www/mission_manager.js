@@ -103,7 +103,7 @@ window.MissionManager = (function() {
                 if (missionCycle > 5) {
                     missionCycle = 1;
                     if (typeof window.showToast === 'function') {
-                        window.showToast("💎 TÜM SETLER BİTTİ! DÖNGÜ SIFIRLANDI.", true);
+                        window.showToast(translations[window.currentLang].missionsAllCompleted, true);
                     }
                 }
 
@@ -114,7 +114,7 @@ window.MissionManager = (function() {
                 });
                 save();
                 if (typeof window.showToast === 'function') {
-                    window.showToast(`🔥 SET ${missionCycle}/5 BAŞLADI`, true);
+                    window.showToast(translations[window.currentLang].missionSetStarted.replace('{cycle}', missionCycle), true);
                 }
                 renderMissions();
             }, 2000);
@@ -131,7 +131,7 @@ window.MissionManager = (function() {
         }
         if (typeof window.showToast === 'function') {
             const label = window.currentLang === 'tr' ? mission.labelTR : mission.labelEN;
-            window.showToast(`🏆 ${label} TAMAMLANDI! +${mission.reward}G`, true);
+            window.showToast(translations[window.currentLang].missionCompletedToast.replace('{label}', label).replace('{reward}', mission.reward), true);
         }
     }
 
@@ -150,8 +150,8 @@ window.MissionManager = (function() {
         // Döngü Başlığını Ekle
         const header = panel.querySelector('h3');
         if (header) {
-            const setLabel = window.currentLang === 'tr' ? 'SET' : 'SET';
-            header.innerText = `${window.currentLang === 'tr' ? 'HEDEFLER' : 'MISSIONS'} [${setLabel} ${missionCycle}/5] 🎯`;
+            const t = translations[window.currentLang];
+            header.innerText = `${t.goalsTitle} [${t.setLabel} ${missionCycle}/5] 🎯`;
         }
 
         missions.forEach(m => {

@@ -1,0 +1,60 @@
+
+const translations = {
+    tr: {
+        startDesc: "", startBtn: "Oyna", shopBtn: "Mağaza", settingsBtn: "AYARLAR", pauseTitle: "DURDUR", resumeBtn: "DEVAM", quitBtn: "ANA MENÜ",
+        gameOver: "Oyun Bitti!", scoreTitle: "Skorun:", goldTitle: "TOPLANAN ALTIN:", reviveBtn: "+1 CAN (REKLAM)", reviveGoldBtn: "+3 CAN (100 ALTIN)",
+        purchaseSuccess: "SATIN ALMA BAŞARILI!", owned: "ALINDI", hardResetBtn: "YENİDEN DENE", shopTitle: "MAĞAZA", balance: "BAKİYE:",
+        magnetName: "Mıknatıs", magnetDesc: "Süre:", shieldName: "Kalkan", shieldDesc: "Çıkma:", upgradeBtn: "Geliştir",
+        weaponName: "Nehir Topu (Lisans)", weaponDesc: "Engelleri parçalar. (İlk 10 Bomba Bedava!)", ammoName: "Mühimmat Paketi (+10)",
+        ammoDesc: "10 Adet Gülle Yeniler.", buyBtn: "Satın Al", licenseOwned: "LİSANSLI - TAZELE", adGoldBtn: "+100 ALTIN (AD)",
+        closeBtn: "KAPAT", settingsTitle: "AYARLAR", musicLabel: "MUZIK", sfxLabel: "EFEKTLER", vibrationLabel: "TITRESIM",
+        saveCloseBtn: "KAYDET", resetWarning: "DİKKAT!", resetDesc: "Tüm altınların ve mağaza geliştirmelerin silinecek. En baştan başlamak istediğine emin misin?",
+        resetYes: "EVET, SIFIRLA", resetNo: "HAYIR, VAZGEÇ", scoreLabel: "SKOR:", goldLabel: "ALTIN:", vaultLabel: "KASA:", levelLabel: "LVL",
+        loadingAd: "Reklam Yükleniyor...", adLoadFail: "Reklam yüklenemedi. İnternetinizi kontrol edin.",
+        l1Title: "ILKBAHAR", l2Title: "YAZ NEHRI", l3Title: "KIZIL BASTIRDI", l4Title: "DONDURUCU KIS",
+        spinWheelTitle: "ŞANS ÇARKI", spinBtn: "ÇEVİR!", spinNextBtn: "ÇEVİR (AD)", spinReward: "TEBRİKLER!", spinClose: "KAPAT",
+        spinWait: "Çevriliyor...", freeSpin: "Bedava!", rewardGold: "Altın", rewardShield: "Kalkan", rewardMagnet: "Mıknatıs",
+        rewardPrefix: "Kazandın: ", rewardBomb: "Bomba", noGold: "Yetersiz Altın!", checkpoint: "KONTROL NOKTASI", paused: "DURAKLATILDI",
+        mainMenu: "ANA MENÜYE DÖN 🏠", ascensionMsg: "YÜCELİŞ: DURDURULAMAZ! ⚡", warningLabel: "DIKKAT!", lavaRiver: "LAV NEHRI",
+        voidLevel: "SONSUZ BOŞLUK", l7Title: "ANI LAGÜNÜ", gameCompleted: "ŞAMPİYON! YENİ TUR BAŞLIYOR...", dashReady: "ZIPLAMA HAZIR!",
+        adNotReady: "⚠️ Reklam henüz hazır değil, lütfen daha sonra tekrar deneyin.", deathValley: "ÖLÜM VADİSİ",
+        armorName: "Gemi Zırhı", armorDesc: "Sadece Lvl6 ve Üstü.\n(2.000 Altın)", armorAmmoName: "Zırh Şarjı",
+        armorAmmoDesc: "Level 6+ Zırhı.\nŞarj Et:", armorActivated: "ZIRH JENERATÖRÜ AKTİF! 🛡️", armorReloaded: "+3 ZIRH ŞARJI MÜHİMMATI",
+        armorEmpty: "ZIRH TÜKENDİ!", armorDeactivated: "VOID ZIRHI DEVRE DIŞI!", securityInternetRequired: "ELITE SUNUCU BAĞLANTISI GEREKLİ!",
+        securityAuthRequired: "ERİŞİM İÇİN GİRİŞ YAPIN! 🔏", googleLogin: "Google ile devam et",
+        securityNoInternet: "Lütfen internet bağlantınızı kontrol edin.", licenseRequired: "ÖNCE LİSANS ALMALISIN! 🛡️"
+    },
+    en: {
+        startDesc: "", startBtn: "Play", shopBtn: "Shop", settingsBtn: "SETTINGS", pauseTitle: "PAUSED", resumeBtn: "RESUME", quitBtn: "MAIN MENU",
+        gameOver: "Game Over!", scoreTitle: "Your Score:", goldTitle: "COLLECTED GOLD:", reviveBtn: "+1 LIFE (AD)", reviveGoldBtn: "+3 LIVES (100 GOLD)",
+        purchaseSuccess: "PURCHASE SUCCESSFUL!", owned: "OWNED", hardResetBtn: "RESTART / RESET", shopTitle: "SHOP", balance: "BALANCE:",
+        magnetName: "Magnet", magnetDesc: "Time:", shieldName: "Shield", shieldDesc: "Spawn:", upgradeBtn: "Upgrade",
+        weaponName: "River Cannon (License)", weaponDesc: "Smashes obstacles. (First 10 Free!)", ammoName: "Ammo Pack (+10)",
+        ammoDesc: "Refills 10 Cannonballs.", buyBtn: "Buy Now", licenseOwned: "LICENSED - REFILL", adGoldBtn: "+100 GOLD (AD)",
+        closeBtn: "CLOSE", settingsTitle: "SETTINGS", musicLabel: "MUSIC", sfxLabel: "SFX", vibrationLabel: "VIBRATION",
+        saveCloseBtn: "SAVE", resetWarning: "WARNING!", resetDesc: "All your gold and upgrades will be deleted. Are you sure you want to start over?",
+        resetYes: "YES, RESET", resetNo: "NO, CANCEL", scoreLabel: "SCORE:", goldLabel: "GOLD:", vaultLabel: "VAULT:", levelLabel: "LVL",
+        loadingAd: "Loading Ad...", adLoadFail: "Ad failed to load. Check connection.",
+        l1Title: "SPRING RIVER", l2Title: "SUMMER RIVER", l3Title: "AUTUMN FLOOD", l4Title: "FREEZING WINTER",
+        spinWheelTitle: "LUCKY SPIN", spinBtn: "SPIN!", spinNextBtn: "SPIN (AD)", spinReward: "CONGRATULATIONS!", spinClose: "CLOSE",
+        spinWait: "Spinning...", freeSpin: "Free!", rewardGold: "Gold", rewardShield: "Shield", rewardMagnet: "Magnet",
+        rewardPrefix: "You Won: ", rewardBomb: "Bomb", noGold: "Insufficient Gold!", checkpoint: "CHECKPOINT", paused: "PAUSED",
+        mainMenu: "RETURN TO MAIN MENU 🏠", ascensionMsg: "ASCENSION: UNSTOPPABLE! ⚡", warningLabel: "WARNING!", lavaRiver: "LAVA RIVER",
+        voidLevel: "THE VOID", l7Title: "LAGOON OF MEMORIES", gameCompleted: "CHAMPION! NEW LOOP STARTING...", dashReady: "DASH READY!",
+        adNotReady: "⚠️ Ad is not ready yet, please try again later.", deathValley: "DEATH VALLEY",
+        armorName: "Void Armor", armorDesc: "Lvl6+ Only.\n(2,000 Gold)", armorAmmoName: "Armor Battery",
+        armorAmmoDesc: "Lvl6+ Armor.\nRecharge:", armorActivated: "ARMOR GENERATOR ACTIVE! 🛡️", armorReloaded: "+3 ARMOR CHARGES ADDED",
+        armorEmpty: "ARMOR DEPLETED!", armorDeactivated: "VOID ARMOR DEACTIVATED!", securityInternetRequired: "ELITE SERVER CONNECTION REQUIRED!",
+        securityAuthRequired: "PLEASE SIGN IN TO ACCESS! 🔏", googleLogin: "Continue with Google",
+        securityNoInternet: "Please check your internet connection.", licenseRequired: "LICENSE REQUIRED FIRST! 🛡️"
+    }
+};
+
+const trKeys = Object.keys(translations.tr);
+const enKeys = Object.keys(translations.en);
+
+const onlyInTr = trKeys.filter(k => !enKeys.includes(k));
+const onlyInEn = enKeys.filter(k => !trKeys.includes(k));
+
+console.log("Only in TR:", onlyInTr);
+console.log("Only in EN:", onlyInEn);
