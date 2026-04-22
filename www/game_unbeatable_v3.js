@@ -1,5 +1,5 @@
 /**
- * RİVER ESCAPE ELİTE - v1.99.39.00 (ARMOR UNLOCKED)
+ * RİVER ESCAPE ELİTE - v1.99.39.01 (BUG FIX)
  * DEVELOPMENT RULES:
  * 1. NO PLACEHOLDERS 2. PERFORMANCE FIRST 3. VISUAL EXCELLENCE
  * 4. CODE INTEGRITY 5. ELITE SYNC
@@ -349,6 +349,9 @@ function updateLanguageUI() {
     if (document.getElementById('open-settings-btn-pause')) document.getElementById('open-settings-btn-pause').innerHTML = `⚙️ ${t.settingsBtn}`;
 
     setText('gameover-title', t.gameOver);
+    setText('gameover-score-label', t.totalScoreLabel);
+    setText('gameover-gold-label', t.goldLabel || "GOLD");
+    
     // v3.31.2: Simplified Elite Score Display (RESTORED STYLES)
     if (document.getElementById('score-title-final')) {
         document.getElementById('score-title-final').innerHTML = `${t.scoreLabel} <span style="color: #fff; font-size: 32px; font-weight: 900;">${Math.floor(score)}</span>`;
@@ -360,7 +363,7 @@ function updateLanguageUI() {
     setText('revive-btn', t.reviveAdBtn || t.reviveBtn);
     setText('revive-gold-btn', t.reviveGoldBtnLong || t.reviveGoldBtn);
     setText('gameover-shop-btn', t.shopBtn);
-    setText('restart-btn', t.restartBtnLong || t.hardResetBtn);
+    setText('restart-btn', t.restartBtnLong || t.hardResetBtnLong || t.hardResetBtn);
     setText('quit-btn-gameover', t.returnToMenu || t.mainMenu);
 
     if (document.getElementById('shop-title-main')) document.getElementById('shop-title-main').innerText = t.shopTitle;
@@ -5295,8 +5298,7 @@ if (hardResetBtnUI) hardResetBtnUI.addEventListener('click', () => {
 // v122: Restart - Altınları kasaya aktar ve yeni oyun başla
 if (restartBtn) restartBtn.addEventListener('click', () => {
     if (typeof playUIClick === 'function') playUIClick();
-    totalGold += goldCount;
-    // goldCount = 0; // v1.99.19.09.0: RESUME İÇİN SIFIRLAMAYI KALDIRDIK
+    // totalGold += goldCount; // v1.99.39.01: DELETED (Already added in gameOver to prevent duplication)
     saveGame();
     startGame();
 });
