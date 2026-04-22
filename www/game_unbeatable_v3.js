@@ -334,6 +334,8 @@ function updateLanguageUI() {
 
     setText('resume-btn', t.resumeBtn);
     setText('quit-btn', t.quitBtn);
+    setText('pause-screen-title', t.pauseTitle);
+    setText('pause-shop-btn', t.shopBtn + " 🛒");
     if (document.getElementById('open-settings-btn-pause')) document.getElementById('open-settings-btn-pause').innerHTML = `⚙️ ${t.settingsBtn}`;
 
     setText('gameover-title', t.gameOver);
@@ -376,6 +378,7 @@ function updateLanguageUI() {
 
     setText('ad-gold-btn', t.adGoldBtn);
     setText('shop-close-btn', t.closeBtn);
+    setText('leaderboard-close-btn', t.closeBtn);
 
     if (document.querySelector('#settings-screen h2')) document.querySelector('#settings-screen h2').innerText = t.settingsTitle;
     if (document.getElementById('music-label-text')) document.getElementById('music-label-text').innerText = t.musicVolLabel || t.musicLabel;
@@ -384,6 +387,7 @@ function updateLanguageUI() {
     if (document.getElementById('settings-back-btn-text')) document.getElementById('settings-back-btn-text').innerText = t.returnToMenu || "HOME";
     setText('settings-close-btn', t.settingsSaveBtn || t.saveCloseBtn);
     setText('logout-btn', t.logoutBtnLabel);
+    setText('hard-reset-btn', t.hardResetBtnLong);
 
     if (document.getElementById('logout-confirm-title')) document.getElementById('logout-confirm-title').innerText = t.logoutConfirmTitleModal;
     if (document.getElementById('logout-confirm-desc')) document.getElementById('logout-confirm-desc').innerText = t.logoutConfirmDesc;

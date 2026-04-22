@@ -762,7 +762,7 @@ const Leaderboard = {
                     </div>
                     <div style="text-align:right;">
                         <div style="color:#FFD700; font-weight:900;">${Math.floor(myRank.score || 0)}</div>
-                        <div style="color:rgba(255,255,255,0.4); font-size:9px; font-weight:bold;">SKORUN</div>
+                        <div style="color:rgba(255,255,255,0.4); font-size:9px; font-weight:bold;">${translations[currentLang].yourScoreLabel || 'SKORUN'}</div>
                     </div>
                 `;
             }
