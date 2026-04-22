@@ -1,5 +1,5 @@
 /**
- * RİVER ESCAPE ELİTE - v1.99.39.04 (PRICE REBALANCED)
+ * RİVER ESCAPE ELİTE - v1.99.39.05 (REFILL UPDATED)
  * DEVELOPMENT RULES:
  * 1. NO PLACEHOLDERS 2. PERFORMANCE FIRST 3. VISUAL EXCELLENCE
  * 4. CODE INTEGRITY 5. ELITE SYNC
@@ -1360,7 +1360,7 @@ if (buyArmorBtn) buyArmorBtn.addEventListener('click', () => {
             if (typeof initAudio === 'function') initAudio();
             totalGold -= 20000;
             ownsArmorLicense = true;
-            armorCharge = Math.min(10, armorCharge + 3); // License gives initial 3
+            armorCharge = Math.min(30, armorCharge + 3); // License gives initial 3
             saveGame();
             triggerEliteEconomySync(true);
             if (typeof playPowerupSound === 'function') playPowerupSound();
@@ -1373,18 +1373,18 @@ if (buyArmorBtn) buyArmorBtn.addEventListener('click', () => {
             showToast(t.noGold, false);
         }
     } else {
-        const refillPrice = 100;
-        if (totalGold >= refillPrice && armorCharge < 10) {
+        const refillPrice = 1000;
+        if (totalGold >= refillPrice && armorCharge < 30) {
             if (typeof initAudio === 'function') initAudio();
             totalGold -= refillPrice;
-            armorCharge = Math.min(10, armorCharge + 4); // Refill gives 4
+            armorCharge = Math.min(30, armorCharge + 30); // Refill gives 30
             saveGame();
             triggerEliteEconomySync(true);
             if (typeof playPowerupSound === 'function') playPowerupSound();
             setTimeout(() => { for (var i = 0; i < 3; i++) setTimeout(playCoinSound, i * 100); }, 150);
             showToast(t.armorReloaded, true);
             updateShopUI();
-        } else if (armorCharge >= 10) {
+        } else if (armorCharge >= 30) {
             showToast(t.maxArmor, false);
         } else {
             shakeTimer = 0.4;
@@ -1466,21 +1466,21 @@ function buyArmorLicense() {
     if (!ownsArmorLicense && totalGold >= 20000) {
         totalGold -= 20000;
         ownsArmorLicense = true;
-        armorCharge = Math.min(10, armorCharge + 3);
+        armorCharge = Math.min(30, armorCharge + 3);
         playPowerupSound();
         saveGame();
         updateShopUI();
         showToast(t.armorLicensePurchased, true);
     } else if (ownsArmorLicense) {
-        const refillPrice = 100;
-        if (totalGold >= refillPrice && armorCharge < 10) {
+        const refillPrice = 1000;
+        if (totalGold >= refillPrice && armorCharge < 30) {
             totalGold -= refillPrice;
-            armorCharge = Math.min(10, armorCharge + 4);
+            armorCharge = Math.min(30, armorCharge + 30);
             playPowerupSound();
             saveGame();
             updateShopUI();
             showToast(t.armorReloaded, true);
-        } else if (armorCharge >= 10) {
+        } else if (armorCharge >= 30) {
             showToast(t.maxArmor, false);
         } else {
             showToast(t.noGold, false);
@@ -1568,10 +1568,10 @@ function updateShopUI() {
         if (buyABtn) {
             buyABtn.classList.add('elite-upgrade-btn');
             if (ownsArmorLicense) {
-                const price = 100;
+                const price = 1000;
                 if (iconSpan) iconSpan.innerText = "💎";
                 buyABtn.innerText = `${t.chargeArmor.replace('{charge}', armorCharge)}\n${price} G`;
-                buyABtn.disabled = (totalGold < price || armorCharge >= 10);
+                buyABtn.disabled = (totalGold < price || armorCharge >= 30);
                 if (document.getElementById('shop-void-armor-title')) document.getElementById('shop-void-armor-title').innerText = t.armorChargeTitle;
             } else {
                 if (iconSpan) iconSpan.innerText = "🔒";
@@ -1750,7 +1750,7 @@ if (buyAmmoBtn) buyAmmoBtn.addEventListener('click', () => {
 
     if (totalGold >= 1000) {
         totalGold -= 1000;
-        bombCount += 10;
+        bombCount += 40;
         saveGame();
         triggerEliteEconomySync();
         // v1.99.34.00: Elite Reload Sound
