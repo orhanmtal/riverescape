@@ -1,5 +1,5 @@
 /**
- * RİVER ESCAPE ELİTE - v1.99.40.01 (CLOUD SYNC)
+ * RİVER ESCAPE ELİTE - v1.99.40.02 (LIFE CYCLE SYNC)
  * DEVELOPMENT RULES:
  * 1. NO PLACEHOLDERS 2. PERFORMANCE FIRST 3. VISUAL EXCELLENCE
  * 4. CODE INTEGRITY 5. ELITE SYNC
@@ -427,20 +427,25 @@ function updateLanguageUI() {
     updateSpinButtonText();
 }
 
-// ARKA PLANA ALINCA SENKRONİZE ET v1.99.20.01
+// ARKA PLANA ALINCA VEYA KAPATINCA SENKRONİZE ET v1.99.40.02
+const forceEliteSync = () => {
+    if (typeof triggerEliteEconomySync === 'function') {
+        triggerEliteEconomySync(true); // v1.99.40.02: Forced Life Cycle Seal
+    }
+};
+
 document.addEventListener('visibilitychange', () => {
-    if (audioCtx) {
-        if (document.hidden) {
-            audioCtx.suspend();
-            if (typeof triggerEliteEconomySync === 'function') {
-                
-                triggerEliteEconomySync(true); // v1.99.27.04: Leak-Proof Sync Wrapper
-            }
-        } else {
-            audioCtx.resume();
-        }
+    if (document.hidden) {
+        if (audioCtx) audioCtx.suspend();
+        forceEliteSync();
+    } else {
+        if (audioCtx) audioCtx.resume();
     }
 });
+
+// v1.99.40.02: Ekstra Gvenlik Katmanlar (Mobil Swipe Close ve Pause)
+window.addEventListener('pagehide', forceEliteSync);
+document.addEventListener('pause', forceEliteSync);
 
 function updateSpinButtonText() {
     const btn = document.getElementById('spin-btn-main');
