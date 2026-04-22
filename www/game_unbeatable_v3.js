@@ -5366,11 +5366,11 @@ const adGoldBtn = document.getElementById('ad-gold-btn');
 if (adGoldBtn) {
     adGoldBtn.addEventListener('click', () => {
         showRewardedAd(adGoldBtn, translations[currentLang].adGoldBtn, () => {
-            totalGold += 100; // v3.31.0: 1 Ad = 1 Revive Cost Correlation
+            totalGold += 50; // v1.99.37.00: Rebalanced ad reward to 50G
             triggerEliteEconomySync(true); // v1.99.27.00: Reklam ödülü sarsılmaz bulut mührü!
             saveGame();
             updateShopUI();
-            showToast(`${translations[currentLang].rewardPrefix} 100 GOLD! 💰`, true);
+            showToast(`${translations[currentLang].rewardPrefix} 50 GOLD! 💰`, true);
             for (var i = 0; i < 4; i++) setTimeout(playCoinSound, i * 100);
         });
     });
