@@ -5223,7 +5223,7 @@ function drawHeart(x, y, size, color) {
 // Tüm ana menü butonları yukarıdaki haptik blokta mühürlenmiştir.
 
 
-const shopPauseBtn = document.getElementById('open-shop-btn-pause');
+const shopPauseBtn = document.getElementById('pause-shop-btn');
 // v1.99.19.09: Mühürlü Mağaza Dinleyicisi
 if (shopPauseBtn) {
     shopPauseBtn.onclick = () => {
