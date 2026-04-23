@@ -428,7 +428,6 @@ const Leaderboard = {
         const finalScore = Math.floor(score || window.score || 0);
         
         try {
-            
             const payload = {
                 id: this.playerID,
                 name: this.playerName,
@@ -440,29 +439,30 @@ const Leaderboard = {
                 ownsArmorLicense: !!window.ownsArmorLicense,
                 hasWeapon: !!window.hasWeapon,
                 armorCharge: window.armorCharge || 0,
-                level: level || window.currentLevel || 1, // v1.99.40.01: Level Sync
+                level: level || window.currentLevel || 1,
                 country: this.playerCountry,
                 flag: this.playerFlag,
                 ownedBoats: window.ownedBoats || ['spring'],
-                
-                // v1.99.33.80: Mission Sync
                 missionCycle: (window.MissionManager) ? window.MissionManager.getMissions()[0]?.cycle || 1 : 1,
                 missions: (window.MissionManager) ? window.MissionManager.getMissions() : [],
-                
-                // v1.99.40.03: Precision Resume Data
                 sessionLevel: level || window.currentLevel || 1,
                 sessionProgress: window.levelProgressTime || 0,
                 sessionLives: window.resumeLives || 3,
                 sessionScore: window.resumeScore || 0,
-
                 lastSeen: firebase.firestore.FieldValue.serverTimestamp()
             };
 
+            console.log("🛰️ [ELITE SYNC] Sending Payload:", payload);
+
             await this.db.collection('leaderboard').doc(this.playerID).set(payload, { merge: true });
+            console.log("✅ [ELITE SYNC] Firestore Sync Success!");
             
             if (typeof showToast === 'function' && score > 0) showToast(translations[currentLang].dataSynced, true);
         } catch (e) {
             console.error("❌ [ELITE SYNC] Firestore Sync Error:", e);
+            // Detailed error analysis
+            if (e.code === 'permission-denied') console.warn("🔐 [SECURITY] Firestore rules rejected the write.");
+            if (e.code === 'invalid-argument') console.warn("🧱 [DATA] Invalid payload structure.");
         }
     },
 

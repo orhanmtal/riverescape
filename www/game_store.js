@@ -69,10 +69,12 @@ const GameStore = {
     // Satın Alma İşlemini Başlat
     buy(productId) {
         if (!window.CdvPurchase) {
-            console.error("Store not ready.");
-            // v1.99.30.02: Simulation Support
-            if (window.location.protocol === 'file:' || window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost') {
-                
+            // v1.99.61.82: Silence error in simulation/browser mode
+            const isSim = window.location.protocol === 'file:' || window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost';
+            if (!isSim) console.error("Store not ready.");
+            else console.log("🛰️ [STORE] Browser Simulation Mode Active.");
+
+            if (isSim) {
                 this.handleFinalizePurchase(productId);
             }
             return;
