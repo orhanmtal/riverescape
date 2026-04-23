@@ -1,4 +1,4 @@
-// River Escape - Dil Paketleri * RİVER ESCAPE ELİTE - v1.99.61.99 (ELİTE UNİFORM ENGİNE)
+// River Escape - Dil Paketleri * RİVER ESCAPE ELİTE - v1.99.62.00 (ELİTE UNİFORM ENGİNE)
 const translations = {
     tr: {
         startDesc: "",
@@ -129,8 +129,8 @@ const translations = {
         armorCharged: "Zırh Şarj Edildi! 🔋",
         maxArmor: "Maksimum Zırh!",
         buyBtnShort: "AL",
-        VERSION: "1.99.61.99",
-        VERSION_CODE: "19961199",
+        VERSION: "1.99.62.00",
+        VERSION_CODE: "19962000",
         maxBtn: "MAX",
         ownedBtn: "SAHİPSİN",
         boathouseTitle: "KAYIKHANE 🛶",
@@ -320,8 +320,8 @@ const translations = {
         armorCharged: "Armor Charged! 🔋",
         maxArmor: "Maximum Armor!",
         buyBtnShort: "BUY",
-        VERSION: "1.99.61.99",
-        VERSION_CODE: "19961199",
+        VERSION: "1.99.62.00",
+        VERSION_CODE: "19962000",
         maxBtn: "MAX",
         ownedBtn: "OWNED",
         boathouseTitle: "BOATHOUSE 🛶",
@@ -384,5 +384,4 @@ const translations = {
     }
 };
 
-// v1.99.61.99 - Elite Lingual Engineguage Initialization
 var currentLang = localStorage.getItem('riverEscapeLang') || 'tr';

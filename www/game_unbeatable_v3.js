@@ -1,5 +1,5 @@
 /**
- * RİVER ESCAPE ELİTE - v1.99.61.111 (ELİTE UNİFORM ENGİNE)
+ * RİVER ESCAPE ELİTE - v1.99.61.122 (ELİTE UNİFORM ENGİNE)
  * DEVELOPMENT RULES:
  * 1. NO PLACEHOLDERS 2. PERFORMANCE FIRST 3. VISUAL EXCELLENCE
  * 4. CODE INTEGRITY 5. ELITE SYNC
@@ -629,10 +629,15 @@ function showToast(msg, isReward = false) {
 }
 
 // --- ADMOB YÖNETİCİSİ v3 (@capacitor-community/admob — Capacitor Native API) ---
-const REWARDED_AD_UNIT_ID = "ca-app-pub-7739440971804169/6392805140"; // PRODUCTION ID
+const ADMOB_APP_ID = "ca-app-pub-7739440971804169~2645131828"; // v1.99.61.112
+const REWARDED_AD_UNIT_ID = "ca-app-pub-7739440971804169/6392805140"; 
+const INTERSTITIAL_AD_UNIT_ID = "ca-app-pub-7739440971804169/1882426485"; // PRODUCTION INTERSTITIAL
+
 var admobInitialized = false;
 var rewardedAdReady = false;
+var interstitialAdReady = false;
 var rewardedAdLoading = false;
+window.isAdShowing = false; // v1.99.61.118: Global Ad Pause Flag (Visible to audio.js)
 
 function getCapacitorAdMob() {
     try {
@@ -660,6 +665,19 @@ async function initAdMob() {
             testingDevices: [],
             initializeForTesting: false,
         });
+
+        // --- v1.99.61.122: GOOGLE PLAY FAMILIES POLICY COMPLIANCE (Ad Content Fix) ---
+        // Bu ayarlar reklamların "Genel İzleyici" (G) seviyesinde olmasını sağlar.
+        try {
+            await AdMob.setRequestConfiguration({
+                maxAdContentRating: 'G', // En kısıtlayıcı derecelendirme (General Audience)
+                tagForChildDirectedTreatment: true, // COPPA: Çocuklara yönelik uygulama
+                tagForUnderAgeOfConsent: true, // GDPR-K: Reşit olmayan kullanıcılar
+            });
+            console.log('[AdMob] Families Policy Configuration Applied: G Rating.');
+        } catch (confErr) {
+            console.error('[AdMob] Configuration failed:', confErr);
+        }
 
         // --- GLOBAL REWARD LISTENERS v3.1 (Hata Payını Sıfırlar) ---
 
@@ -699,6 +717,40 @@ async function initAdMob() {
             console.warn('[AdMob] Yükleme Hatası:', error);
             rewardedAdReady = false;
             rewardedAdLoading = false;
+        });
+
+        // --- INTERSTITIAL LISTENERS v1.99.61.118 ---
+        AdMob.addListener('interstitialAdDismissed', () => {
+            console.log('[AdMob] Interstitial Dismissed. Resuming Game...');
+            window.isAdShowing = false;
+            lastTime = performance.now(); 
+            // v1.99.61.117: Sesi Geri Getir
+            if (window.audioCtx && audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            // v1.99.61.118: Reklam Sonrası 3 Saniye Ölümsüzlük
+            hasShield = true;
+            levelUpInvuln = true;
+            setTimeout(() => {
+                hasShield = false;
+                levelUpInvuln = false;
+            }, 3000);
+        });
+
+        AdMob.addListener('interstitialAdFailedToShow', () => {
+            console.warn('[AdMob] Interstitial Failed to Show.');
+            window.isAdShowing = false;
+            // v1.99.61.117: Sesi Geri Getir
+            if (window.audioCtx && audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            // v1.99.61.118: Fail durumunda da koruma ver (Haksız ölümleri engelle)
+            hasShield = true;
+            levelUpInvuln = true;
+            setTimeout(() => {
+                hasShield = false;
+                levelUpInvuln = false;
+            }, 3000);
         });
 
         admobInitialized = true;
@@ -796,6 +848,38 @@ async function showRewardedAd(btnElem, defaultText, callback) {
         } catch (e) {
             console.error('[AdMob] 1.73: Async Error:', e);
             rewardedAdReady = false;
+        }
+    })();
+}
+
+async function showInterstitialAd() {
+    // v1.99.61.115: ELITE ASYNC SHIELD (Non-blocking & Error Proof)
+    const AdMob = getCapacitorAdMob();
+    if (!AdMob) {
+        console.log("[AdMob Simulation] Interstitial Ad Simulated.");
+        return;
+    }
+
+    // Bağımsız bir asenkron blokta çalıştırıyoruz ki ana thread asla beklemesin!
+    (async () => {
+        try {
+            if (!admobInitialized) await initAdMob();
+            
+            console.log('[AdMob] Preparing Interstitial...');
+            await AdMob.prepareInterstitial({
+                adId: INTERSTITIAL_AD_UNIT_ID,
+                isTesting: false
+            });
+            
+            // v1.99.61.117: Reklam gösterilmeden hemen önce sesi kes ve oyunu dondur
+            if (window.audioCtx) audioCtx.suspend();
+            window.isAdShowing = true; 
+            
+            await AdMob.showInterstitial();
+        } catch (e) {
+            console.error('[AdMob] Elite Shield caught Interstitial Error:', e);
+            window.isAdShowing = false;
+            if (window.audioCtx) audioCtx.resume();
         }
     })();
 }
@@ -1185,7 +1269,7 @@ var currentLAsset = currentAsset;
 
 
 window.totalGold = 0;
-var currentVersion = "1.99.61.111"; // ARMOR PRESERVE (v61.61 RESTORED)
+var currentVersion = "1.99.61.122"; // FAMILIES POLICY FIX (v61.61 RESTORED)
 
 var magnetLevel = 0;
 var shieldLevel = 0;
@@ -1198,7 +1282,7 @@ var hasWeapon = false;
 var lastShotTime = 0;
 var bullets = [];
 
-var currentVersion = "1.99.61.106"; // DIRECT CSS PIXEL ENGINE (v61.61 RESTORED)
+
 
 function saveGame() {
     const data = {
@@ -1503,26 +1587,33 @@ if (closeShopBtn) {
 const armorIndicator = document.getElementById('armor-ui-indicator');
 if (armorIndicator) armorIndicator.addEventListener('click', handleArmorIndicatorClick);
 
-// v1.99.61.85: Manual Armor Refill Prompt
+// v1.99.61.121: Manual Armor Shop Redirect (Matches Bomb Logic)
 function handleArmorIndicatorClick() {
+    if (!isPlaying || isGameOver) return;
     const t = translations[currentLang];
+    
+    // v1.99.61.120: ELITE PAUSE SYNC - Onay kutusu çıkınca oyunu durdur
+    if (!isPaused && typeof togglePause === 'function') {
+        togglePause();
+    }
+
     if (ownsArmorLicense) {
-        // Zaten lisans var, şarj bittiyse veya dolum isteniyorsa sor
+        // Zaten lisans var, şarj bittiyse veya dolum isteniyorsa mağazaya yönlendir
         showEliteConfirm(
             t.armorChargeTitle || "Zırh Şarjı (Mühimmat)",
-            t.buyArmorMsg || "Zırh Şarjı satın almak istiyor musunuz? (1000 G)",
-            t.buyBtnShort || "AL",
+            t.noArmorMsg || "Zırhınız bitti! Satın almak için mağazaya gitmek ister misiniz?",
+            t.goShopBtn || "MAĞAZAYA GİT",
             "🔋",
-            () => { buyArmorLicense(); }
+            () => { openShop(); }
         );
     } else {
-        // Lisans yok, lisans aldır
+        // Lisans yok, lisans aldırmak için mağazaya yönlendir
         showEliteConfirm(
             t.voidArmorTitleLocked || "Gemi Zırhı (Void)",
             t.voidArmorLockedDesc || "Tüm seviyelerde zırhı aktif eder",
-            t.getLicenseBtn || "LİSANS AL",
+            t.goShopBtn || "MAĞAZAYA GİT",
             "🛡️",
-            () => { buyArmorLicense(); }
+            () => { openShop(); }
         );
     }
 }
@@ -5124,7 +5215,7 @@ function gameLoop(timestamp) {
     }
 
     // v1.96.6.3: Menülerde akışı tamamen durdur (Kullanıcı tercihi)
-    var ambientSpeed = (isPlaying && !isPaused) ? bgScrollSpeed : 0;
+    var ambientSpeed = (isPlaying && !isPaused && !window.isAdShowing) ? bgScrollSpeed : 0;
     bgY += ambientSpeed * dt;
     parallaxSkyY += (ambientSpeed * 0.2) * dt; // Layer 1 (Uzak)
     parallaxFogY += (ambientSpeed * 1.5) * dt; // Layer 3 (Yakın)
@@ -5144,7 +5235,7 @@ function gameLoop(timestamp) {
     });
 
     // Sadece oyun aktifse ve duraklatılmamışsa ana mantığı güncelle
-    if (isPlaying && !isPaused) {
+    if (isPlaying && !isPaused && !window.isAdShowing) {
         update(dt);
     }
 
@@ -5662,10 +5753,15 @@ function showLevelUp(levelNum) {
     const stageNum = ((levelNum - 1) % STAGES_PER_BIOME) + 1;
     const formattedLvl = `${biomeNum}-${stageNum}`;
 
-    // v1.99.33.71: Show Elite Toast and Overlay
     if (typeof showToast === 'function') {
         const t = (translations[currentLang] || translations.tr);
         showToast(`${t.levelLabel || 'LVL'} ${formattedLvl} 🚀`, true);
+    }
+
+    // v1.99.61.114: AGRESİF GEÇİŞ REKLAMI (Her Seviye Atlamada)
+    if (levelNum > 1) {
+        console.log(`[AdMob] Her Seviye Reklamı Tetiklendi: Level ${levelNum}`);
+        showInterstitialAd();
     }
 
     // v1.99.33.71: Overlay Animation
