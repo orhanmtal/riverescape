@@ -106,7 +106,8 @@ function buyMagnet() {
     const exec = () => {
         totalGold -= price; magnetLevel++;
         if (typeof playPowerupSound === 'function') playPowerupSound();
-        saveGame(); updateShopUI(); showToast(t.magnetUpgraded, true);
+        if (typeof triggerEliteEconomySync === 'function') triggerEliteEconomySync(true);
+        showToast(t.magnetUpgraded, true);
     };
     showEliteConfirm(t.confirmTitle, `${t.upgradeMagnetMsg || "Mıknatıs seviyesini yükseltmek istiyor musunuz?"} (${price} G)`, t.buyBtnShort, "🧲", exec);
 }
@@ -119,7 +120,8 @@ function buyShield() {
     const exec = () => {
         totalGold -= price; shieldLevel++;
         if (typeof playPowerupSound === 'function') playPowerupSound();
-        saveGame(); updateShopUI(); showToast(t.shieldUpgraded, true);
+        if (typeof triggerEliteEconomySync === 'function') triggerEliteEconomySync(true);
+        showToast(t.shieldUpgraded, true);
     };
     showEliteConfirm(t.confirmTitle, `${t.upgradeShieldMsg || "Kalkan seviyesini yükseltmek istiyor musunuz?"} (${price} G)`, t.buyBtnShort, "🛡️", exec);
 }
@@ -130,7 +132,8 @@ function buyWeapon() {
     if (totalGold < 15000) { showToast(t.noGold, false); return; }
     const exec = () => {
         totalGold -= 15000; hasWeapon = true; bombCount += 15;
-        saveGame(); updateShopUI(); showToast(t.weaponPurchased, true);
+        if (typeof triggerEliteEconomySync === 'function') triggerEliteEconomySync(true);
+        showToast(t.weaponPurchased, true);
     };
     showEliteConfirm(t.confirmTitle, t.buyWeaponMsg || "Nehir Topu lisansı satın almak istiyor musunuz? (15000 G)", t.buyBtnShort, "💣", exec);
 }
@@ -141,7 +144,8 @@ function buyArmorLicense() {
         if (totalGold < 20000) { showToast(t.noGold, false); return; }
         const exec = () => {
             totalGold -= 20000; ownsArmorLicense = true; armorCharge += 3;
-            saveGame(); updateShopUI(); showToast(t.armorLicensePurchased, true);
+            if (typeof triggerEliteEconomySync === 'function') triggerEliteEconomySync(true);
+            showToast(t.armorLicensePurchased, true);
         };
         showEliteConfirm(t.confirmTitle, t.buyArmorMsg || "Zırh Lisansı satın almak istiyor musunuz? (20000 G)", t.buyBtnShort, "🛡️", exec);
     } else {
@@ -150,7 +154,8 @@ function buyArmorLicense() {
         if (totalGold < refillPrice) { showToast(t.noGold, false); return; }
         const exec = () => {
             totalGold -= refillPrice; armorCharge += 30;
-            saveGame(); updateShopUI(); showToast(t.armorReloaded, true);
+            if (typeof triggerEliteEconomySync === 'function') triggerEliteEconomySync(true);
+            showToast(t.armorReloaded, true);
         };
         showEliteConfirm(t.confirmTitle, t.buyArmorMsg || "Zırh Şarjı satın almak istiyor musunuz? (1000 G)", t.buyBtnShort, "🔋", exec);
     }
