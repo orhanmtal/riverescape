@@ -1062,9 +1062,9 @@ function resizeCanvas() {
     
     // Update player dimensions and POSITION
     if (player) {
-        player.width = 44 * gameScale;
-        player.height = 78 * gameScale;
-        player.speed = 140 * gameScale; // v1.99.61.81: Balanced for realistic crossing time
+        player.width = 52 * gameScale; // v1.99.61.86: Slightly larger for visibility
+        player.height = 92 * gameScale;
+        player.speed = 110 * gameScale; // v1.99.61.86: Calibrated for precise control
 
         // Force center horizontally on first load or resize
         if (!isPlaying) {
@@ -3655,8 +3655,8 @@ function updatePlayer(dt) {
         else targetDx = 0;
     }
 
-    // v1.99.61.81: ELITE SMOOTH MOVEMENT (LERP)
-    player.dx += (targetDx - player.dx) * 0.18; // Slightly faster LERP for "Butter" feel
+    // v1.99.61.86: ELITE SMOOTH MOVEMENT (LERP)
+    player.dx += (targetDx - player.dx) * 0.12; // Adjusted for precise handling
 
     const moveDt = dt || 0.016;
     
