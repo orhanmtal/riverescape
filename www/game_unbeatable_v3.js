@@ -1481,7 +1481,31 @@ if (closeShopBtn) {
 
 
 const armorIndicator = document.getElementById('armor-ui-indicator');
-if (armorIndicator) armorIndicator.addEventListener('click', openShop);
+if (armorIndicator) armorIndicator.addEventListener('click', handleArmorIndicatorClick);
+
+// v1.99.61.85: Manual Armor Refill Prompt
+function handleArmorIndicatorClick() {
+    const t = translations[currentLang];
+    if (ownsArmorLicense) {
+        // Zaten lisans var, şarj bittiyse veya dolum isteniyorsa sor
+        showEliteConfirm(
+            t.armorChargeTitle || "Zırh Şarjı (Mühimmat)",
+            t.buyArmorMsg || "Zırh Şarjı satın almak istiyor musunuz? (1000 G)",
+            t.buyBtnShort || "AL",
+            "🔋",
+            () => { buyArmorLicense(); }
+        );
+    } else {
+        // Lisans yok, lisans aldır
+        showEliteConfirm(
+            t.voidArmorTitleLocked || "Gemi Zırhı (Void)",
+            t.voidArmorLockedDesc || "Tüm seviyelerde zırhı aktif eder",
+            t.getLicenseBtn || "LİSANS AL",
+            "🛡️",
+            () => { buyArmorLicense(); }
+        );
+    }
+}
 
 const btnMag = document.getElementById('buy-magnet-btn');
 if (btnMag) btnMag.addEventListener('click', buyMagnet);
@@ -3544,17 +3568,10 @@ function update(dt) {
                 // Patlama Efekti
                 for (var p = 0; p < 15; p++) emitParticles(player.x + player.width / 2, player.y + player.height / 2, "#9b59b6", 'default', 1);
                 
-                // v1.99.61.81: Armor Exhaustion Elite Modal
+                // v1.99.61.85: Automatic exhaustion modal removed per user request.
+                // Player is no longer forcibly redirected to shop.
                 if (armorCharge <= 0) {
-                    const t = translations[currentLang];
-                    if (!isPaused) togglePause();
-                    showEliteConfirm(
-                        t.noArmorTitle || "ZIRH BİTTİ", 
-                        t.noArmorMsg || "Zırhınız bitti! Satın almak için mağazaya gitmek ister misiniz?", 
-                        t.goShopBtn || "MAĞAZAYA GİT", 
-                        "🛡️", 
-                        () => { openShop(); }
-                    );
+                    // Just a visual/audio hint if needed, but silent for now to satisfy "voluntary" request.
                 }
             } else if (hasShield) {
                 // Kalkan varken kırılır ve kütüğü/düşmanı imha eder
