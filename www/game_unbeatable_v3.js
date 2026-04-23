@@ -3044,10 +3044,12 @@ function update(dt) {
         }
     }
 
-    // v1.99.36.15: AMBIENT LIFE SPAWNER (Disabled in Toxic/Void for performance & visibility)
+    // v1.99.61.87: Ambient shadows removed per user request (Reduces visual noise & perceived speed)
+    /*
     if (isPlaying && !isPaused && bIdx !== 8 && bIdx !== 5) {
         if (Math.random() * (bgScrollSpeed / 200) < 0.008) ambientEntities.push(new AmbientLife('shadow'));
     }
+    */
     ambientEntities.forEach(ae => ae.update(dt));
     ambientEntities = ambientEntities.filter(ae => ae.life > 0);
 

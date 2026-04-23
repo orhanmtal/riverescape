@@ -10,8 +10,8 @@
 // River Escape Elite - Central Version Control
 // v1.99.61.81 - Elite Performance Engine
 window.ELITE_CONFIG = {
-    VERSION: "1.99.61.86",
-    VERSION_CODE: "19961186",
+    VERSION: "1.99.61.87",
+    VERSION_CODE: "19961187",
     BUILD_LEVEL: "Elite Production",
     SYNC_ENGINE: "v3.Elite.Secure",
     LAST_UPDATED: "2026-04-23"
