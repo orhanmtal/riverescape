@@ -1,4 +1,4 @@
-// River Escape - Dil Paketleri (TR/EN) - v1.99.39.00 (ELITE SEAL)
+// River Escape - Dil Paketleri * RİVER ESCAPE ELİTE - v1.99.61.99 (ELİTE UNİFORM ENGİNE)
 const translations = {
     tr: {
         startDesc: "",
@@ -79,7 +79,7 @@ const translations = {
         armorAmmoName: "Zırh Şarjı",
         armorAmmoDesc: "Level 6+ Zırhı.\nŞarj Et:",
         armorActivated: "ZIRH JENERATÖRÜ AKTİF! 🛡️",
-        armorReloaded: "+3 ZIRH ŞARJI MÜHİMMATI",
+        armorReloaded: "+30 ZIRH ŞARJI MÜHİMMATI",
         armorEmpty: "ZIRH TÜKENDİ!",
         armorDeactivated: "VOID ZIRHI DEVRE DIŞI!",
         securityInternetRequired: "ELITE SUNUCU BAĞLANTISI GEREKLİ!",
@@ -104,7 +104,7 @@ const translations = {
         authStorageError: "TARAYICI DEPOLAMA DESTEKLENMİYOR! 💾",
         statusOffline: "ELİTE BİLGİ 📡",
         statusOnline: "ELİTE HESAP 🏛️",
-        statusLoginRequired: "GİRİŞ YAPMANIZ GEREKLİYOR 🔏",
+        statusLoginRequired: "GİRİŞ YAPMANIZ GEREKİYOR 🔏",
         nameMinLength: "İSİM EN AZ 3 KARAKTER OLMALI!",
         identitySynced: "KİMLİĞİNİZ BULUTA MÜHÜRLENDİ! 🏛️",
         identityError: "KİMLİK MÜHÜRLENİRKEN HATA OLUŞTU!",
@@ -129,6 +129,8 @@ const translations = {
         armorCharged: "Zırh Şarj Edildi! 🔋",
         maxArmor: "Maksimum Zırh!",
         buyBtnShort: "AL",
+        VERSION: "1.99.61.99",
+        VERSION_CODE: "19961199",
         maxBtn: "MAX",
         ownedBtn: "SAHİPSİN",
         boathouseTitle: "KAYIKHANE 🛶",
@@ -185,10 +187,6 @@ const translations = {
         noArmorTitle: "ZIRH BİTTİ",
         noArmorMsg: "Zırhınız bitti! Satın almak için mağazaya gitmek ister misiniz?",
         goShopBtn: "MAĞAZAYA GİT",
-        cancelBtn: "VAZGEÇ",
-        confirmTitle: "ONAYLA",
-        upgradeMagnetMsg: "Mıknatıs seviyesini yükseltmek istiyor musunuz?",
-        upgradeShieldMsg: "Kalkan seviyesini yükseltmek istiyor musunuz?",
         buyAmmoMsg: "40 adet Bomba Paketi satın almak istiyor musunuz? (1000 Altın)",
         buyArmorMsg: "30 adet Zırh Paketi satın almak istiyor musunuz? (1000 Altın)",
         licenseRequiredToast: "Önce Nehir Topu lisansı almalısın! 📡"
@@ -272,7 +270,7 @@ const translations = {
         armorAmmoName: "Armor Battery",
         armorAmmoDesc: "Lvl6+ Armor.\nRecharge:",
         armorActivated: "ARMOR GENERATOR ACTIVE! 🛡️",
-        armorReloaded: "+3 ARMOR CHARGES ADDED",
+        armorReloaded: "+30 ARMOR CHARGES ADDED",
         armorEmpty: "ARMOR DEPLETED!",
         armorDeactivated: "VOID ARMOR DEACTIVATED!",
         securityInternetRequired: "ELITE SERVER CONNECTION REQUIRED!",
@@ -322,6 +320,8 @@ const translations = {
         armorCharged: "Armor Charged! 🔋",
         maxArmor: "Maximum Armor!",
         buyBtnShort: "BUY",
+        VERSION: "1.99.61.99",
+        VERSION_CODE: "19961199",
         maxBtn: "MAX",
         ownedBtn: "OWNED",
         boathouseTitle: "BOATHOUSE 🛶",
@@ -378,15 +378,11 @@ const translations = {
         noArmorTitle: "ARMOR DEPLETED",
         noArmorMsg: "You are out of armor! Would you like to go to the shop?",
         goShopBtn: "GO TO SHOP",
-        cancelBtn: "CANCEL",
-        confirmTitle: "CONFIRM",
-        upgradeMagnetMsg: "Do you want to upgrade Magnet level?",
-        upgradeShieldMsg: "Do you want to upgrade Shield level?",
         buyAmmoMsg: "Do you want to buy 40 Bomb Packs? (1000 Gold)",
         buyArmorMsg: "Do you want to buy 30 Armor Packs? (1000 Gold)",
         licenseRequiredToast: "You must get a River Cannon license first! 📡"
     }
 };
 
-// v1.99.30.06: Global Language Initialization
+// v1.99.61.99 - Elite Lingual Engineguage Initialization
 var currentLang = localStorage.getItem('riverEscapeLang') || 'tr';

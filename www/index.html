@@ -5,11 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
-    <!-- v1.99.61.81: ELITE VERSION CONTROL SYSTEM -->
-    <script src="version.js?v=1.99.61.87"></script>
+    <!-- v1.99.61.110: ELITE VERSION CONTROL SYSTEM -->
+    <script src="version.js?v=1.99.61.111"></script>
     <script>
         (function() {
-            const v = window.ELITE_CONFIG ? window.ELITE_CONFIG.VERSION : "1.99.61.81";
+            const v = window.ELITE_CONFIG ? window.ELITE_CONFIG.VERSION : "1.99.61.111";
             document.title = "River Escape Elite v" + v;
             // Update Meta immediately
             const updateMeta = (name, val) => {
@@ -18,18 +18,18 @@
                 m.content = val;
             };
             updateMeta("version", v);
-            updateMeta("version-code", window.ELITE_CONFIG ? window.ELITE_CONFIG.VERSION_CODE : "19961181");
+            updateMeta("version-code", window.ELITE_CONFIG ? window.ELITE_CONFIG.VERSION_CODE : "19961110");
         })();
     </script>
 
-    <link rel="stylesheet" href="style.css?v=1.99.61.87">
-    <!-- MASTER UI OVERRIDE// RİVER ESCAPE PRESTIGE - v1.99.61.81 (ELITE LAUNCH) -->
+    <link rel="stylesheet" href="style.css?v=1.99.61.110">
+    <!-- MASTER UI OVERRIDE// RİVER ESCAPE PRESTIGE - v1.99.61.110 (POSITION SYNC) -->
 
     <style>
 /* MASTER UI OVERRIDE//
- * RİVER ESCAPE ELİTE - v1.99.61.81 (ELITE LAUNCH)
+ * RİVER ESCAPE ELİTE - v1.99.61.111 (ELİTE UNİFORM ENGİNE)
  * Firebase Firestore Global Sıralama ve Profil Senkronizasyon Sistemi
- * v1.99.61.81
+ * v1.99.61.110
  */
 .master-start-v21 {
     display: flex !important;
@@ -577,7 +577,7 @@
             box-shadow: 0 0 10px rgba(100, 221, 23, 0.5);
         }
     </style>
-    <!-- EMERGENCY ON-SCREEN DEBUGGER v1.99.25.00 -->
+    <!-- EMERGENCY ON-SCREEN DEBUGGER// v1.99.61.111 - Armor Preserve (v61.61 Restored) -->
     <script>
         window.onerror = function (msg, url, line) {
             var div = document.createElement('div');
@@ -585,8 +585,7 @@
             div.style.cssText = 'position:fixed;top:0;left:0;width:100%;z-index:30000;background:rgba(255,0,0,0.9);color:white;padding:15px;font-size:12px;font-family:monospace;word-break:break-all;pointer-events:auto;';
             div.innerHTML = '🚩 ELITE ERROR DETECTED:<br>' + msg + '<br><br>URL: ' + url + '<br>LINE: ' + line + '<br><button onclick="this.parentElement.remove()" style="margin-top:10px;padding:5px 10px;background:#fff;color:#000;border:none;border-radius:5px;font-weight:bold;">KAPAT</button>';
             document.body.appendChild(div);
-            return false;
-        };
+            };
     </script>
     <script>
         if (window.location.protocol === 'file:' || window.Capacitor) {
@@ -606,7 +605,7 @@
         <button id="pause-btn"
             style="position: absolute; top: calc(20px + env(safe-area-inset-top)); right: calc(20px + env(safe-area-inset-right)); display: none; background: rgba(0,0,0,0.4); color: white; border: 1px solid rgba(255,229,255,0.4); padding: 8px; font-family: 'Outfit', sans-serif; font-size: 18px; z-index: 1001; border-radius: 50%; width: 45px; height: 45px; pointer-events: auto; cursor: pointer; backdrop-filter: blur(4px); line-height: 1;">⏸</button>
 
-        <!-- ELITE FULL-SCREEN UI v1.99.61.81 -->
+        <!-- ELITE FULL-SCREEN UI v1.99.61.108 -->
         <div id="start-screen" class="screen master-start-v21">
             <!-- TOP ROW: PROFILE & SETTINGS -->
             <div class="elite-menu-header">
@@ -636,7 +635,7 @@
                 <div style="text-align: center; position: relative; width: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; pointer-events: none;">
                     <h1 class="floating-logo" style="font-family: 'Outfit', sans-serif; font-weight: 900; color: white; font-size: 13vmin; letter-spacing: -2px; margin: 0; line-height: 0.85; background: linear-gradient(135deg, #fff 20%, #00e5ff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 15px 30px rgba(0,229,255,0.3)); text-transform: uppercase;">RIVER<br><span style="background: linear-gradient(135deg, #00e5ff 0%, #00897b 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">ESCAPE</span></h1>
                     <div id="elite-main-version" style="color: #FFD700; font-family: 'Press Start 2P', cursive; font-size: 1.8vmin; font-weight: bold; margin-top: 15px; letter-spacing: 0.8vmin; opacity: 0.9; text-shadow: 0 0 15px rgba(255,215,0,0.4);">
-                        <script>document.write("ELITE v" + (window.ELITE_CONFIG ? window.ELITE_CONFIG.VERSION : "1.99.61.81"));</script>
+                        <script>document.write("ELITE v" + (window.ELITE_CONFIG ? window.ELITE_CONFIG.VERSION : "1.99.61.110"));</script>
                     </div>
                 </div>
 
@@ -1036,19 +1035,19 @@
                         <div class="gold-market-grid-elite">
                             <button onclick="GameStore.buy('gold_pack_1')" class="gold-card">
                                 <span class="amount">5.000</span>
-                                <span class="price">$0.99</span>
+                                <span id="price-gold_pack_1" class="price">$0.99</span>
                             </button>
                             <button onclick="GameStore.buy('gold_pack_2')" class="gold-card">
                                 <span class="amount">10.000</span>
-                                <span class="price">$1.49</span>
+                                <span id="price-gold_pack_2" class="price">$1.49</span>
                             </button>
                             <button onclick="GameStore.buy('gold_pack_3')" class="gold-card">
                                 <span class="amount">25.000</span>
-                                <span class="price">$2.99</span>
+                                <span id="price-gold_pack_3" class="price">$2.99</span>
                             </button>
                             <button onclick="GameStore.buy('gold_pack_4')" class="gold-card gold-card-best">
                                 <span class="amount" style="color: #FFD700;">50.000</span>
-                                <span class="price">$4.99</span>
+                                <span id="price-gold_pack_4" class="price">$4.99</span>
                             </button>
                         </div>
                     </div>

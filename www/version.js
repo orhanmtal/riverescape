@@ -1,5 +1,5 @@
 /**
- * RİVER ESCAPE ELİTE - v1.99.61.81 (ELİTE PERFORMANCE ENGİNE)
+ * RİVER ESCAPE ELİTE - v1.99.61.111 (ELİTE UNİFORM ENGİNE)
  * 1. NO PLACEHOLDERS - Always use premium assets or procedural generation.
  * 2. PERFORMANCE FIRST - Optimize update loops and DOM access.
  * 3. VISUAL EXCELLENCE - Use HSL colors, smooth gradients, and micro-animations.
@@ -8,10 +8,10 @@
  */
 
 // River Escape Elite - Central Version Control
-// v1.99.61.81 - Elite Performance Engine
+// v1.99.61.111 - Armor Preserve (v61.61 Restored)
 window.ELITE_CONFIG = {
-    VERSION: "1.99.61.87",
-    VERSION_CODE: "19961187",
+    VERSION: "1.99.61.111",
+    VERSION_CODE: "19961111",
     BUILD_LEVEL: "Elite Production",
     SYNC_ENGINE: "v3.Elite.Secure",
     LAST_UPDATED: "2026-04-23"

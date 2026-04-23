@@ -35,7 +35,7 @@ window.ELITE_COLLECTIONS = {
             asset: 'assets/nebula_zenith.png', 
             price: 25000, 
             rarity: 'Elite',
-            perk: { type: 'elite_magnet', value: 400, descTR: 'Daima Aktif Dev Mıknatıs (400m).', descEN: 'Constant Elite Magnet (400m).' }
+            perk: { type: 'elite_magnet', value: 400, descTR: 'Daima Aktif Dev Mıknatıs + 360° Hareket Özgürlüğü.', descEN: 'Constant Elite Magnet + 360-Degree Freedom.' }
         }
     ]
 };

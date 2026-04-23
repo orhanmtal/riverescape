@@ -141,6 +141,22 @@ const GameStore = {
         if (typeof initAudio === 'function') initAudio();
         if (typeof playPowerupSound === 'function') playPowerupSound();
         for(let i=0; i<5; i++) setTimeout(() => { if (typeof playCoinSound === 'function') playCoinSound(); }, 200 + (i*150));
+    },
+
+    // v1.99.61.100: ELITE CURRENCY LOCALIZER
+    getLocalizedPrice(productId) {
+        const p = this.PRODUCTS.find(item => item.id === productId);
+        if (!p) return "";
+        
+        // currentLang is global from translations.js
+        const lang = (typeof currentLang !== 'undefined') ? currentLang : 'tr';
+        
+        if (lang === 'tr') {
+            // Elite Conversion Rate (Fixed for simulation)
+            const tlPrice = (p.priceVal * 34.50).toFixed(2);
+            return `₺${tlPrice}`;
+        }
+        return p.price;
     }
 };
 
