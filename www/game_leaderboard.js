@@ -613,7 +613,7 @@ const Leaderboard = {
         }
     },
 
-    // v1.99.35.00: ELITE AUDIT - PURGED OFFLINE CALIBRATION (Trash Cleaned)
+    // v1.99.61.81: ELITE AUDIT - PURGED OFFLINE CALIBRATION (Trash Cleaned)
     clearLocalSyncPending() {
         localStorage.removeItem('riverEscapePendingSync');
         localStorage.removeItem('riverEscapePendingScore');
@@ -621,7 +621,7 @@ const Leaderboard = {
         localStorage.removeItem('riverEscapePendingGold');
     },
 
-    // v1.99.35.00: TAM TEMİZLİK (Deep Wipe - No Inheritance)
+    // v1.99.61.81: TAM TEMİZLİK (Deep Wipe - No Inheritance)
     async logout() {
         const t = translations[currentLang];
         if (typeof window.showEliteConfirm === 'function') {

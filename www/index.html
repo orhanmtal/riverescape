@@ -5,11 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
-    <!-- v1.99.50.00: ELITE VERSION CONTROL SYSTEM -->
-    <script src="version.js?v=1.99.50.00"></script>
+    <!-- v1.99.61.81: ELITE VERSION CONTROL SYSTEM -->
+    <script src="version.js?v=1.99.61.81"></script>
     <script>
         (function() {
-            const v = window.ELITE_CONFIG ? window.ELITE_CONFIG.VERSION : "1.99.50.00";
+            const v = window.ELITE_CONFIG ? window.ELITE_CONFIG.VERSION : "1.99.61.81";
             document.title = "River Escape Elite v" + v;
             // Update Meta immediately
             const updateMeta = (name, val) => {
@@ -18,60 +18,56 @@
                 m.content = val;
             };
             updateMeta("version", v);
-            updateMeta("version-code", window.ELITE_CONFIG ? window.ELITE_CONFIG.VERSION_CODE : "19935003");
+            updateMeta("version-code", window.ELITE_CONFIG ? window.ELITE_CONFIG.VERSION_CODE : "19961181");
         })();
     </script>
 
-    <link rel="stylesheet" href="style.css?v=1.99.50.00">
-    <!-- MASTER UI OVERRIDE// RİVER ESCAPE PRESTIGE - v1.99.50.00 (ELITE LAUNCH) -->
+    <link rel="stylesheet" href="style.css?v=1.99.61.81">
+    <!-- MASTER UI OVERRIDE// RİVER ESCAPE PRESTIGE - v1.99.61.81 (ELITE LAUNCH) -->
 
     <style>
 /* MASTER UI OVERRIDE//
- * RİVER ESCAPE ELİTE - v1.99.50.00 (ELITE LAUNCH)
+ * RİVER ESCAPE ELİTE - v1.99.61.81 (ELITE LAUNCH)
  * Firebase Firestore Global Sıralama ve Profil Senkronizasyon Sistemi
- * v1.99.50.00
+ * v1.99.61.81
  */
 .master-start-v21 {
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
     justify-content: space-between !important;
-    padding: calc(20px + env(safe-area-inset-top)) 6vmin calc(20px + env(safe-area-inset-bottom)) 6vmin !important;
+    padding: calc(30px + env(safe-area-inset-top)) 6vmin calc(30px + env(safe-area-inset-bottom)) 6vmin !important;
     background: radial-gradient(circle at center, #0a192f 0%, #020617 100%) !important;
     overflow: hidden !important;
-    position: relative !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100vh !important;
+    z-index: 1000 !important;
 }
 
 .master-start-v21::before {
     content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-    background: radial-gradient(circle at 30% 30%, rgba(0, 229, 255, 0.05) 0%, transparent 40%),
-                radial-gradient(circle at 70% 70%, rgba(196, 113, 237, 0.05) 0%, transparent 40%);
-    animation: bgMovement 20s infinite alternate linear;
+    background: radial-gradient(circle at 30% 30%, rgba(0, 229, 255, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 70% 70%, rgba(196, 113, 237, 0.08) 0%, transparent 40%);
+    animation: bgMovement 30s infinite alternate ease-in-out;
     pointer-events: none;
 }
 
-@keyframes titleGlow {
-    0%, 100% { filter: drop-shadow(0 0 15px rgba(0, 229, 255, 0.4)); transform: scale(1); }
-    50% { filter: drop-shadow(0 0 35px rgba(0, 229, 255, 0.8)); transform: scale(1.02); }
-}
-@keyframes uiFloat {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
-}
-@keyframes barShine {
-    0% { left: -100%; }
-    20% { left: 200%; }
-    100% { left: 200%; }
-}
-@keyframes iconElitePulse {
-    0%, 100% { transform: scale(1); filter: brightness(1); }
-    50% { transform: scale(1.05); filter: brightness(1.2) drop-shadow(0 0 10px rgba(255,215,0,0.3)); }
+@keyframes bgMovement {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(180deg); }
 }
 
-/* --- v1.99.60.00: AAA MODERN GAME UI --- */
+/* --- v1.99.60.01: AAA MODERN GAME UI --- */
 @keyframes titleScan {
     0% { background-position: -200% center; }
     100% { background-position: 200% center; }
+}
+@keyframes titleGlow {
+    0%, 100% { filter: drop-shadow(0 0 15px rgba(0, 229, 255, 0.4)); transform: scale(1); }
+    50% { filter: drop-shadow(0 0 35px rgba(0, 229, 255, 0.8)); transform: scale(1.02); }
 }
 
 .floating-logo {
@@ -81,44 +77,76 @@
     -webkit-text-fill-color: transparent !important;
     animation: titleScan 6s infinite linear, titleGlow 4s infinite ease-in-out !important;
     font-size: 14vmin !important;
-    filter: drop-shadow(0 0 20px rgba(0,229,255,0.4)) !important;
+    font-family: 'Outfit', sans-serif !important;
+    font-weight: 950 !important;
+    letter-spacing: -1px !important;
+    text-transform: uppercase !important;
+    text-align: center !important;
 }
 
 .master-play-btn {
     position: relative;
-    width: 45vmin !important;
-    height: 45vmin !important;
-    background: radial-gradient(circle at 30% 30%, #00e5ff 0%, #00897b 100%) !important;
-    border: none !important;
-    border-radius: 50% !important;
-    box-shadow: 0 0 50px rgba(0,229,255,0.4), inset 0 0 30px rgba(255,255,255,0.4) !important;
+    width: 75vmin !important;
+    height: 14vmin !important;
+    background: linear-gradient(135deg, rgba(0, 229, 255, 0.15), rgba(0, 229, 255, 0.05)) !important;
+    border: 2px solid rgba(0, 229, 255, 0.6) !important;
+    border-radius: 100px !important;
+    box-shadow: 0 0 30px rgba(0, 229, 255, 0.2), inset 0 0 20px rgba(0, 229, 255, 0.1) !important;
+    backdrop-filter: blur(25px) !important;
+    -webkit-backdrop-filter: blur(25px) !important;
     z-index: 2000 !important;
-    font-size: 8vmin !important;
-    font-weight: 950 !important;
-    letter-spacing: 2px !important;
-    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+    font-size: 6.5vmin !important;
+    color: #fff !important;
+    font-family: 'Outfit', sans-serif !important;
+    font-weight: 900 !important;
+    letter-spacing: 5px !important;
+    cursor: pointer !important;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
     animation: uiFloat 4s infinite ease-in-out !important;
+    display: flex; align-items: center; justify-content: center;
+    text-transform: uppercase !important;
+    margin-top: 5vh !important;
 }
 
-/* Futuristic Rings */
+.master-play-btn::before {
+    content: ''; position: absolute; top: -5px; left: -5px; right: -5px; bottom: -5px;
+    border-radius: 100px; border: 1px solid rgba(0, 229, 255, 0.3);
+    animation: pulseGlow 2s infinite ease-in-out;
+}
+
+@keyframes pulseGlow {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    50% { opacity: 0.8; transform: scale(1.05); }
+}
+
+.master-play-btn:hover {
+    background: rgba(0, 229, 255, 0.2) !important;
+    border-color: #00e5ff !important;
+    box-shadow: 0 0 50px rgba(0, 229, 255, 0.4) !important;
+    letter-spacing: 8px !important;
+}
+
+/* Futuristic Orbital Rings - Adapted for Wide Button */
 .pulse-ring {
     position: absolute;
     top: 50%; left: 50%;
-    width: 55vmin; height: 55vmin;
-    border: 2px solid rgba(0, 229, 255, 0.3);
-    border-radius: 50%;
+    width: 85vmin; height: 22vmin;
+    border: 1px solid rgba(0, 229, 255, 0.2);
+    border-radius: 50px;
     transform: translate(-50%, -50%);
     pointer-events: none;
+    z-index: 1000;
 }
 .pulse-ring::after {
-    content: ''; position: absolute; top: -5px; left: -5px; right: -5px; bottom: -5px;
-    border: 1px solid rgba(0, 229, 255, 0.1); border-radius: 50%;
-    animation: ringRotate 10s infinite linear;
+    content: ''; position: absolute; top: -8px; left: -8px; right: -8px; bottom: -8px;
+    border: 2px solid rgba(0, 229, 255, 0.15); border-radius: 50%;
+    border-top-color: #00e5ff;
+    animation: ringRotate 8s infinite linear;
 }
 .pulse-ring::before {
-    content: ''; position: absolute; top: -15px; left: -15px; right: -15px; bottom: -15px;
-    border: 1px dashed rgba(0, 229, 255, 0.2); border-radius: 50%;
-    animation: ringRotate 15s infinite linear reverse;
+    content: ''; position: absolute; top: -18px; left: -18px; right: -18px; bottom: -18px;
+    border: 1px dashed rgba(0, 229, 255, 0.3); border-radius: 50%;
+    animation: ringRotate 12s infinite linear reverse;
 }
 
 @keyframes ringRotate {
@@ -127,18 +155,28 @@
 }
 
 #mission-panel {
-    border-radius: 20px !important;
-    background: rgba(15, 23, 42, 0.6) !important;
-    border: 1px solid rgba(0, 229, 255, 0.2) !important;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.5), inset 0 0 20px rgba(0,229,255,0.05) !important;
+    border-radius: 24px !important;
+    background: rgba(15, 23, 42, 0.5) !important;
+    border: 1px solid rgba(0, 229, 255, 0.25) !important;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.6), inset 0 0 25px rgba(0,229,255,0.08) !important;
+    backdrop-filter: blur(20px) !important;
     position: relative;
     overflow: hidden;
+}
+
+#mission-panel::after {
+    content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(rgba(0,229,255,0.03) 50%, transparent 50%);
+    background-size: 100% 4px;
+    pointer-events: none;
+    opacity: 0.3;
 }
 
 #mission-panel::before {
     content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px;
     background: linear-gradient(90deg, transparent, #00e5ff, transparent);
-    animation: borderFlow 3s infinite linear;
+    animation: borderFlow 4s infinite linear;
+    z-index: 5;
 }
 
 @keyframes borderFlow {
@@ -147,12 +185,19 @@
 }
 
 .elite-action-row {
-    background: rgba(255,255,255,0.03);
-    padding: 10px 20px;
-    border-radius: 30px;
-    border: 1px solid rgba(255,255,255,0.05);
-    backdrop-filter: blur(10px);
+    background: rgba(255,255,255,0.03) !important;
+    padding: 12px 25px !important;
+    border-radius: 35px !important;
+    border: 1px solid rgba(255,255,255,0.06) !important;
+    backdrop-filter: blur(15px) !important;
+    display: flex !important;
+    gap: 6vmin !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3) !important;
 }
+
+.elite-btn-square:hover { transform: scale(1.1) !important; filter: brightness(1.2) !important; }
 
 .elite-menu-header {
     width: 100%;
@@ -561,7 +606,7 @@
         <button id="pause-btn"
             style="position: absolute; top: calc(20px + env(safe-area-inset-top)); right: calc(20px + env(safe-area-inset-right)); display: none; background: rgba(0,0,0,0.4); color: white; border: 1px solid rgba(255,229,255,0.4); padding: 8px; font-family: 'Outfit', sans-serif; font-size: 18px; z-index: 1001; border-radius: 50%; width: 45px; height: 45px; pointer-events: auto; cursor: pointer; backdrop-filter: blur(4px); line-height: 1;">⏸</button>
 
-        <!-- ELITE FULL-SCREEN UI v1.99.35.00 -->
+        <!-- ELITE FULL-SCREEN UI v1.99.61.81 -->
         <div id="start-screen" class="screen master-start-v21">
             <!-- TOP ROW: PROFILE & SETTINGS -->
             <div class="elite-menu-header">
@@ -591,7 +636,7 @@
                 <div style="text-align: center; position: relative; width: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; pointer-events: none;">
                     <h1 class="floating-logo" style="font-family: 'Outfit', sans-serif; font-weight: 900; color: white; font-size: 13vmin; letter-spacing: -2px; margin: 0; line-height: 0.85; background: linear-gradient(135deg, #fff 20%, #00e5ff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 15px 30px rgba(0,229,255,0.3)); text-transform: uppercase;">RIVER<br><span style="background: linear-gradient(135deg, #00e5ff 0%, #00897b 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">ESCAPE</span></h1>
                     <div id="elite-main-version" style="color: #FFD700; font-family: 'Press Start 2P', cursive; font-size: 1.8vmin; font-weight: bold; margin-top: 15px; letter-spacing: 0.8vmin; opacity: 0.9; text-shadow: 0 0 15px rgba(255,215,0,0.4);">
-                        <script>document.write("ELITE v" + (window.ELITE_CONFIG ? window.ELITE_CONFIG.VERSION : "1.99.60.00"));</script>
+                        <script>document.write("ELITE v" + (window.ELITE_CONFIG ? window.ELITE_CONFIG.VERSION : "1.99.61.81"));</script>
                     </div>
                 </div>
 
@@ -628,7 +673,7 @@
             </div>
         </div>
 
-        <!-- IDENTITY MODAL v1.99.35.00 -->
+        <!-- IDENTITY MODAL v1.99.61.81 -->
         <div id="identity-modal" class="elite-modal-overlay">
             <div class="elite-modal-content">
                 <div id="edit-username-title" style="font-size: 21px; font-weight: 900; color: #FFD700; letter-spacing: 1px;">KULLANICI ADI DÜZENLEME</div>
@@ -641,7 +686,7 @@
             </div>
         </div>
 
-        <!-- ELITE CONFIRM MODAL v1.99.35.00 -->
+        <!-- ELITE CONFIRM MODAL v1.99.61.81 -->
         <div id="confirm-modal" class="elite-modal-overlay">
             <div class="elite-modal-content" style="border-color: rgba(255,61,0,0.4);">
                 <div id="confirm-modal-emoji" style="font-size: 50px; margin-bottom: 10px;">🛡️</div>
@@ -711,7 +756,7 @@
                     </div>
                 </div>
                 <div style="font-family: 'Outfit'; font-size: 7px; color: rgba(0, 229, 255, 0.5); text-align: right; margin-top: 2px; font-weight: 900; letter-spacing: 0.5px;">
-                    <script>document.write("v" + (window.ELITE_CONFIG ? window.ELITE_CONFIG.VERSION : "1.99.50.00"));</script>
+                    <script>document.write("v" + (window.ELITE_CONFIG ? window.ELITE_CONFIG.VERSION : "v1.99.61.81"));</script>
                 </div>
 
             </div>
@@ -751,7 +796,7 @@
             </div>
         </div>
 
-        <!-- GAME OVER SCREEN (ELITE FULL-SCREEN v1.99.34.00) -->
+        <!-- GAME OVER SCREEN (ELITE FULL-SCREEN v1.99.61.81) -->
         <div id="game-over-screen" class="screen hidden">
             <div style="text-align: center;">
                 <h2 id="gameover-title"
@@ -784,11 +829,11 @@
 
         </div>
 
-        <!-- LEVEL UP OVERLAY (EMERGENCY FIX v1.99.34.00) -->
+        <!-- LEVEL UP OVERLAY (EMERGENCY FIX v1.99.61.81) -->
         <div id="level-up-overlay" class="screen hidden"
             style="z-index: 16000; background: rgba(0,0,0,0.85); pointer-events: none;"></div>
 
-        <!-- MODERN ELITE AYARLAR (v1.99.34.00) -->
+        <!-- MODERN ELITE AYARLAR (v1.99.61.81) -->
         <div id="settings-screen" class="screen hidden"
             style="z-index: 15000; background: linear-gradient(160deg, #050a15 0%, #0a1020 100%); width: 100vw; height: 100vh; max-width: 100%; border-radius: 0;">
             <div
@@ -845,7 +890,7 @@
             </div>
         </div>
 
-        <!-- MODERN LOGOUT CONFIRM MODAL (v1.99.34.00) -->
+        <!-- MODERN LOGOUT CONFIRM MODAL (v1.99.61.81) -->
         <div id="logout-confirm-screen" class="screen hidden"
             style="z-index: 20000; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);">
             <div
@@ -856,7 +901,7 @@
                     style="color: #fff; font-family: 'Outfit'; font-weight: 900; font-size: 26px; margin-bottom: 12px; letter-spacing: 1px;">
                     ÇIKIŞ YAPILSIN MI?</h2>
                 <div id="version-display" style="position: absolute; bottom: 15px; right: 20px; color: rgba(255,255,255,0.4); font-family: 'Outfit'; font-size: 12px; letter-spacing: 1px; z-index: 1000;">
-                    <script>document.write("v" + (window.ELITE_CONFIG ? window.ELITE_CONFIG.VERSION : "1.99.50.00"));</script>
+                    <script>document.write("v" + (window.ELITE_CONFIG ? window.ELITE_CONFIG.VERSION : "1.99.61.81"));</script>
                 </div>
                 <p id="logout-confirm-desc" style="color: #fff; font-family: 'Outfit'; font-size: 14px; margin-bottom: 30px; line-height: 1.6; opacity: 0.8;">
                 Oturumu kapattığınızda verileriniz bulutta güvende kalır ancak tekrar girmek için internet
@@ -1174,7 +1219,7 @@
     <script src="mission_manager.js?v=1.99.40.06"></script>
     <!-- v1.99.40.06 ELITE BATCH SYNC ENGINE -->
     <script src="game_store.js?v=1.99.40.06"></script>
-    <script src="game_unbeatable_v3.js?v=1.99.40.06"></script>
+    <script src="game_unbeatable_v3.js?v=1.99.61.81"></script>
 </body>
 
 </html>

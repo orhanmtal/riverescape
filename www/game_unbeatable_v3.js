@@ -1,5 +1,5 @@
 /**
- * RİVER ESCAPE ELİTE - v1.99.60.00 (AAA UI OVERHAUL)
+ * RİVER ESCAPE ELİTE - v1.99.61.81 (ELİTE PERFORMANCE ENGİNE)
  * DEVELOPMENT RULES:
  * 1. NO PLACEHOLDERS 2. PERFORMANCE FIRST 3. VISUAL EXCELLENCE
  * 4. CODE INTEGRITY 5. ELITE SYNC
@@ -31,7 +31,7 @@ window.addEventListener('load', () => {
 const reviveBtn = document.getElementById('revive-btn');
 const reviveGoldBtn = document.getElementById('revive-gold-btn');
 
-// --- v1.99.35.00 OPTIMIZATION: DOM CACHE ---
+// --- v1.99.61.81 OPTIMIZATION: DOM CACHE ---
 const cachedHud = {
     lives: document.getElementById('lives-hud'),
     score: document.getElementById('scoreValue-hud'),
@@ -67,7 +67,7 @@ const bombActionBtn = document.getElementById('bomb-action-btn');
 
 var lives = 3; // v98: 3 Can Sistemi
 
-// --- DASH (ANI ZIPLAMA) MEKANİĞİ v1.99.35.00 ---
+// --- DASH (ANI ZIPLAMA) MEKANİĞİ v1.99.61.81 ---
 var dashEnergy = 0;
 var isDashing = false;
 var dashTimer = 0;
@@ -96,6 +96,65 @@ var wheelRewards = [
     { type: 'gold', value: 50, color: '#f1c40f', label: '50G' },
     { type: 'gold', value: 100, color: '#d35400', label: '100G' }
 ];
+
+// v1.99.61.81: UPGRADE CONFIRMATIONS (Hoisted to top for Elite Stability)
+function buyMagnet() {
+    const t = translations[currentLang];
+    var price = (magnetLevel + 1) * 1000;
+    if (magnetLevel >= 10) { showToast(t.maxBtn, false); return; }
+    if (totalGold < price) { showToast(t.noGold, false); return; }
+    const exec = () => {
+        totalGold -= price; magnetLevel++;
+        if (typeof playPowerupSound === 'function') playPowerupSound();
+        saveGame(); updateShopUI(); showToast(t.magnetUpgraded, true);
+    };
+    showEliteConfirm(t.confirmTitle, `${t.upgradeMagnetMsg || "Mıknatıs seviyesini yükseltmek istiyor musunuz?"} (${price} G)`, t.buyBtnShort, "🧲", exec);
+}
+
+function buyShield() {
+    const t = translations[currentLang];
+    var price = (shieldLevel + 1) * 1500;
+    if (shieldLevel >= 10) { showToast(t.maxBtn, false); return; }
+    if (totalGold < price) { showToast(t.noGold, false); return; }
+    const exec = () => {
+        totalGold -= price; shieldLevel++;
+        if (typeof playPowerupSound === 'function') playPowerupSound();
+        saveGame(); updateShopUI(); showToast(t.shieldUpgraded, true);
+    };
+    showEliteConfirm(t.confirmTitle, `${t.upgradeShieldMsg || "Kalkan seviyesini yükseltmek istiyor musunuz?"} (${price} G)`, t.buyBtnShort, "🛡️", exec);
+}
+
+function buyWeapon() {
+    const t = translations[currentLang];
+    if (hasWeapon) { showToast(t.alreadyOwned, false); return; }
+    if (totalGold < 15000) { showToast(t.noGold, false); return; }
+    const exec = () => {
+        totalGold -= 15000; hasWeapon = true; bombCount += 15;
+        saveGame(); updateShopUI(); showToast(t.weaponPurchased, true);
+    };
+    showEliteConfirm(t.confirmTitle, t.buyWeaponMsg || "Nehir Topu lisansı satın almak istiyor musunuz? (15000 G)", t.buyBtnShort, "💣", exec);
+}
+
+function buyArmorLicense() {
+    const t = translations[currentLang];
+    if (!ownsArmorLicense) {
+        if (totalGold < 20000) { showToast(t.noGold, false); return; }
+        const exec = () => {
+            totalGold -= 20000; ownsArmorLicense = true; armorCharge += 3;
+            saveGame(); updateShopUI(); showToast(t.armorLicensePurchased, true);
+        };
+        showEliteConfirm(t.confirmTitle, t.buyArmorMsg || "Zırh Lisansı satın almak istiyor musunuz? (20000 G)", t.buyBtnShort, "🛡️", exec);
+    } else {
+        const refillPrice = 1000;
+        if (armorCharge >= 30) { showToast(t.maxArmor, false); return; }
+        if (totalGold < refillPrice) { showToast(t.noGold, false); return; }
+        const exec = () => {
+            totalGold -= refillPrice; armorCharge += 30;
+            saveGame(); updateShopUI(); showToast(t.armorReloaded, true);
+        };
+        showEliteConfirm(t.confirmTitle, t.buyArmorMsg || "Zırh Şarjı satın almak istiyor musunuz? (1000 G)", t.buyBtnShort, "🔋", exec);
+    }
+}
 
 function updateWheelForWeapon() {
     if (hasWeapon) {
@@ -130,7 +189,7 @@ var displayScore = 0; // v1.68 Score Ticker
 var displayGold = 0;  // v1.68 Gold Ticker
 var displayTotalGold = 0; // Vault ticker
 
-// v1.99.35.00: ELITE RENDER CACHE (Prevents per-frame GC pressure)
+// v1.99.61.81: ELITE RENDER CACHE (Prevents per-frame GC pressure)
 const renderCache = {
     lavaGeyser: null,
     leafTornado: null,
@@ -140,7 +199,7 @@ const renderCache = {
     lastCanvasWidth: 0,
     lastCanvasHeight: 0
 };
-// v1.99.35.00: ELITE MODAL ENGINE
+// v1.99.61.81: ELITE MODAL ENGINE
 function showEliteConfirm(title, body, confirmBtnText, emoji, onConfirm) {
     const modal = document.getElementById('confirm-modal');
     if (!modal) return;
@@ -177,19 +236,25 @@ function showEliteConfirm(title, body, confirmBtnText, emoji, onConfirm) {
     };
 }
 window.showEliteConfirm = showEliteConfirm; // Global expose
+
 class Particle {
-    constructor(x, y, color, type = 'default') {
+    constructor() {
+        this.reset(0, 0, "#fff");
+        this.active = false;
+    }
+
+    reset(x, y, color, type = 'default', targetX, targetY) {
         this.x = x; this.y = y;
         this.type = type;
+        this.active = true;
+        this.targetX = targetX;
+        this.targetY = targetY;
         this.size = (type === 'glitch') ? (Math.random() * 6 + 2) : (Math.random() * 4 + 2);
         this.speedX = (type === 'glitch') ? (Math.random() - 0.5) * 10 : (Math.random() - 0.5) * 2;
         
-        // v1.99.35.00: MOTION SAFETY FIX (All particles move DOWN relative to camera)
         if (type === 'ember' || type === 'bubble' || type === 'leaf') {
-             // Rise/Float: Move slower than water (positive but smaller speed)
              this.speedY = Math.random() * 1.5 + 0.5;
         } else {
-             // Normal debris: Move with flow or faster
              this.speedY = Math.random() * 2 + 1.5;
         }
 
@@ -198,7 +263,9 @@ class Particle {
         this.angle = Math.random() * Math.PI * 2;
         this.rotSpeed = (Math.random() - 0.5) * 0.2;
     }
+
     update(dt) {
+        if (!this.active) return;
         if (this.targetX !== undefined) {
             const dx = this.targetX - this.x;
             const dy = this.targetY - this.y;
@@ -207,7 +274,7 @@ class Particle {
                 this.x += (dx / dist) * 800 * dt;
                 this.y += (dy / dist) * 800 * dt;
             } else {
-                this.life = 0;
+                this.active = false;
             }
             return;
         }
@@ -216,37 +283,95 @@ class Particle {
         this.y += this.speedY;
         this.angle += this.rotSpeed;
 
+        let lifeDrain = 0.8;
         if (this.type === 'ember') {
             this.speedX += Math.sin(performance.now() / 500) * 0.1;
-            this.life -= dt * 0.3;
+            lifeDrain = 0.3;
         } else if (this.type === 'glitch') {
             if (Math.random() < 0.1) this.x += (Math.random() - 0.5) * 20;
-            this.life -= dt * 0.8;
+            lifeDrain = 0.8;
         } else if (this.type === 'bubble' || this.type === 'leaf') {
             this.x += Math.cos(performance.now() / 200) * 0.5;
-            this.life -= dt * (this.type === 'leaf' ? 0.2 : 0.4);
-        } else {
-            this.life -= dt * (this.type === 'default' ? 0.8 : 0.4);
+            lifeDrain = (this.type === 'leaf' ? 0.2 : 0.4);
         }
+        
+        this.life -= dt * lifeDrain;
+        if (this.life <= 0) this.active = false;
+    }
+}
+
+function drawParticles() {
+    const types = {};
+    for (let i = 0; i < particlePool.length; i++) {
+        const p = particlePool[i];
+        if (!p.active) continue;
+        if (!types[p.type]) types[p.type] = [];
+        types[p.type].push(p);
     }
 
-    draw() {
+    // 1. Draw Default/Bubble/Leaf (Simple Circles)
+    const simpleTypes = ['default', 'bubble', 'leaf'];
+    simpleTypes.forEach(t => {
+        if (!types[t]) return;
         ctx.save();
-        ctx.globalAlpha = this.life;
-        ctx.fillStyle = this.color;
-        if (this.type === 'glitch') {
-            ctx.translate(this.x, this.y);
-            ctx.rotate(this.angle);
-            ctx.fillRect(-this.size / 2, -this.size / 2, this.size, this.size);
-        } else if (this.type === 'ember') {
-            ctx.shadowBlur = 15; ctx.shadowColor = "#ff4500";
-            ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
-        } else {
+        types[t].forEach(p => {
+            ctx.globalAlpha = p.life;
+            ctx.fillStyle = p.color;
             ctx.beginPath();
-            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
             ctx.fill();
-        }
+        });
         ctx.restore();
+    });
+
+    // 2. Draw Ember (Optimized Glow - No ShadowBlur)
+    if (types['ember']) {
+        ctx.save();
+        types['ember'].forEach(p => {
+            ctx.globalAlpha = p.life;
+            // Fake glow with double-draw (Much faster than shadowBlur)
+            ctx.fillStyle = "rgba(255, 69, 0, 0.3)";
+            ctx.beginPath(); ctx.arc(p.x, p.y, p.size * 2.5, 0, Math.PI * 2); ctx.fill();
+            ctx.fillStyle = "#ff4500";
+            ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); ctx.fill();
+        });
+        ctx.restore();
+    }
+
+    // 3. Draw Glitch (Rectangles)
+    if (types['glitch']) {
+        ctx.save();
+        types['glitch'].forEach(p => {
+            ctx.globalAlpha = p.life;
+            ctx.fillStyle = p.color;
+            ctx.translate(p.x, p.y);
+            ctx.rotate(p.angle);
+            ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+            ctx.setTransform(1, 0, 0, 1, 0, 0); // Reset for next glitch
+            // Reset scale/zoom since glitch uses screen space for rects
+            const dpr = window.devicePixelRatio || 1;
+            ctx.scale(dpr, dpr); 
+            const zoomPivotX = canvas.width / (2 * dpr);
+            const zoomPivotY = canvas.height * 0.7 / dpr;
+            ctx.translate(zoomPivotX, zoomPivotY);
+            ctx.scale(cameraZoom, cameraZoom);
+            ctx.translate(-zoomPivotX, -zoomPivotY);
+        });
+        ctx.restore();
+    }
+}
+
+// v1.99.61.81: ELITE PARTICLE POOL
+const PARTICLE_POOL_SIZE = 250;
+const particlePool = Array.from({ length: PARTICLE_POOL_SIZE }, () => new Particle());
+
+function emitParticles(x, y, color, type = 'default', count = 1, targetX, targetY) {
+    let emitted = 0;
+    for (let i = 0; i < particlePool.length && emitted < count; i++) {
+        if (!particlePool[i].active) {
+            particlePool[i].reset(x, y, color, type, targetX, targetY);
+            emitted++;
+        }
     }
 }
 // --- v1.99.31.00: AMBIENT ECOLOGY SYSTEM (Birds & Shadows) ---
@@ -901,21 +1026,48 @@ function giveReward() {
     updateSpinButtonText();
 }
 
-// v1.99.35.00: ELITE RESPONSIVE ENGINE (Centering & High DPI)
+var gameScale = 1;
+
+// v1.99.61.81: PLAYER OBJECT (Dynamic Dimensions)
+const player = { 
+    x: window.innerWidth / 2, // Will be updated by resizeCanvas
+    y: window.innerHeight - 150, 
+    width: 44, 
+    height: 78, 
+    speed: 140, // v1.99.61.81: Calibrated for CSS pixels
+    dx: 0 
+};
+
+// v1.99.61.81: ELITE RESPONSIVE ENGINE (Perfect Aspect Ratio & Size)
 function resizeCanvas() {
-    const dpr = window.devicePixelRatio || 1;
     const baseWidth = window.innerWidth > 600 ? 600 : window.innerWidth;
     
-    // Internal resolution (DPR for smoothness)
-    canvas.width = baseWidth * dpr;
-    canvas.height = window.innerHeight * dpr;
+    // v1.99.61.81: Critical Fix - Sync internal resolution with CSS pixels!
+    // Removed DPR multiplication. This ensures canvas.width matches logic width,
+    // making the boat and obstacles the correct size relative to the river.
+    canvas.width = baseWidth;
+    canvas.height = window.innerHeight;
     
     // CSS layout size
     canvas.style.width = baseWidth + 'px';
     canvas.style.height = window.innerHeight + 'px';
     
-    // Scale context back to normal for easy coordinate management
-    ctx.scale(dpr, dpr);
+    // v1.99.61.81: GLOBAL SCALE CALCULATION
+    gameScale = baseWidth / 375; 
+    
+    // Update player dimensions and POSITION
+    if (player) {
+        player.width = 44 * gameScale;
+        player.height = 78 * gameScale;
+        player.speed = 140 * gameScale; // v1.99.61.81: Balanced for realistic crossing time
+
+        // Force center horizontally on first load or resize
+        if (!isPlaying) {
+            player.x = (baseWidth / 2) - (player.width / 2);
+            // v1.99.61.81: Percentage based positioning (Elite Precision)
+            player.y = window.innerHeight * 0.85 - player.height;
+        }
+    }
 }
 window.addEventListener('resize', resizeCanvas);
 resizeCanvas();
@@ -988,7 +1140,7 @@ var bgY = 0; var bgScrollSpeed = 200; window.targetLevelSpeed = 200;
 var screenFlash = 0; // Seviye geçişi parlaması v132
 var gameLoopRequestId = null; // v1.98.1.4: LOOP CONTROL
 
-// --- v1.99.35.00: ELITE GLOBAL CONSTANTS ---
+// --- v1.99.61.81: ELITE GLOBAL CONSTANTS ---
 // STAGES_PER_BIOME and LOOP_THRESHOLD already defined in header
 const MORPH_DURATION = 1500;
 var isMorphing = false;
@@ -1021,7 +1173,7 @@ var hasWeapon = false;
 var lastShotTime = 0;
 var bullets = [];
 
-var currentVersion = "1.99.35.00"; // ELITE VOID SYNC
+var currentVersion = "1.99.61.81"; // ELITE PERFORMANCE ENGINE
 
 function saveGame() {
     const data = {
@@ -1327,174 +1479,17 @@ const armorIndicator = document.getElementById('armor-ui-indicator');
 if (armorIndicator) armorIndicator.addEventListener('click', openShop);
 
 const btnMag = document.getElementById('buy-magnet-btn');
-if (btnMag) btnMag.addEventListener('click', () => {
-    var cost = 2000 + magnetLevel * 1000;
-    if (totalGold >= cost && magnetLevel < 5) {
-        if (typeof initAudio === 'function') initAudio();
-        totalGold -= cost; magnetLevel++; saveGame();
-        triggerEliteEconomySync(true);
-        if (typeof playPowerupSound === 'function') playPowerupSound();
-        setTimeout(() => { for (var i = 0; i < 3; i++) setTimeout(playCoinSound, i * 150); }, 150);
-        updateShopUI();
-    } else if (totalGold < cost) {
-        shakeTimer = 0.4; // Sarsıntı güçlendirildi v1.96.6.3
-        if (typeof playHaptic === 'function') playHaptic('light');
-        showToast(translations[currentLang].noGold, false);
-    }
-});
+if (btnMag) btnMag.addEventListener('click', buyMagnet);
 
 const btnShd = document.getElementById('buy-shield-btn');
-if (btnShd) btnShd.addEventListener('click', () => {
-    var cost = 3500 + shieldLevel * 1500;
-    if (totalGold >= cost && shieldLevel < 5) {
-        if (typeof initAudio === 'function') initAudio();
-        totalGold -= cost; shieldLevel++; saveGame();
-        triggerEliteEconomySync(true);
-        if (typeof playPowerupSound === 'function') playPowerupSound();
-        setTimeout(() => { for (var i = 0; i < 3; i++) setTimeout(playCoinSound, i * 150); }, 150);
-        updateShopUI();
-    } else if (totalGold < cost) {
-        shakeTimer = 0.4;
-        if (typeof playHaptic === 'function') playHaptic('light');
-        showToast(translations[currentLang].noGold, false);
-    }
-});
+if (btnShd) btnShd.addEventListener('click', buyShield);
 
 const buyArmorBtn = document.getElementById('buy-armor-btn');
-if (buyArmorBtn) buyArmorBtn.addEventListener('click', () => {
-    const t = translations[currentLang];
-    if (!ownsArmorLicense) {
-        if (totalGold >= 20000) {
-            if (typeof initAudio === 'function') initAudio();
-            totalGold -= 20000;
-            ownsArmorLicense = true;
-            armorCharge += 3; // v1.99.39.08: Initial bonus
-            saveGame();
-            triggerEliteEconomySync(true);
-            if (typeof playPowerupSound === 'function') playPowerupSound();
-            setTimeout(() => { for (var i = 0; i < 8; i++) setTimeout(playCoinSound, i * 100); }, 150);
-            showToast(t.armorActivated, true);
-            updateShopUI();
-        } else {
-            shakeTimer = 0.4;
-            if (typeof playHaptic === 'function') playHaptic('light');
-            showToast(t.noGold, false);
-        }
-    } else {
-        const refillPrice = 1000;
-        if (totalGold >= refillPrice && armorCharge < 30) {
-            if (typeof initAudio === 'function') initAudio();
-            totalGold -= refillPrice;
-            armorCharge += 30; // v1.99.39.08: ADDS 30 charges (Stackable)
-            saveGame();
-            triggerEliteEconomySync(true);
-            if (typeof playPowerupSound === 'function') playPowerupSound();
-            setTimeout(() => { for (var i = 0; i < 3; i++) setTimeout(playCoinSound, i * 100); }, 150);
-            showToast(t.armorReloaded, true);
-            updateShopUI();
-        } else if (armorCharge >= 30) {
-            showToast(t.maxArmor, false);
-        } else {
-            shakeTimer = 0.4;
-            if (typeof playHaptic === 'function') playHaptic('light');
-            showToast(t.noGold, false);
-        }
-    }
-});
+if (buyArmorBtn) buyArmorBtn.addEventListener('click', buyArmorLicense);
 
-if (buyWeaponBtn) buyWeaponBtn.addEventListener('click', () => {
-    const t = translations[currentLang];
-    if (!hasWeapon) {
-        if (totalGold >= 15000) {
-            if (typeof initAudio === 'function') initAudio();
-            totalGold -= 15000;
-            hasWeapon = true;
-            bombCount += 15;
-            saveGame();
-            triggerEliteEconomySync(true);
-            if (typeof playPowerupSound === 'function') playPowerupSound();
-            setTimeout(() => { for (var i = 0; i < 8; i++) setTimeout(playCoinSound, i * 100); }, 150);
-            showToast(t.weaponPurchased, true);
-            updateShopUI();
-        } else {
-            shakeTimer = 0.4;
-            if (typeof playHaptic === 'function') playHaptic('light');
-            showToast(t.noGold, false);
-        }
-    }
-});
+if (buyWeaponBtn) buyWeaponBtn.addEventListener('click', buyWeapon);
 
-// v1.99.19.09: GLOBAL SHOP FUNCTIONS (Elite Logic)
-function buyMagnet() {
-    var price = (magnetLevel + 1) * 1000;
-    if (totalGold >= price && magnetLevel < 10) {
-        totalGold -= price;
-        magnetLevel++;
-        playPowerupSound();
-        saveGame();
-        updateShopUI();
-        showToast(translations[currentLang].magnetUpgraded, true);
-    } else {
-        showToast(translations[currentLang].noGold, false);
-    }
-}
-
-function buyShield() {
-    var price = (shieldLevel + 1) * 1500;
-    if (totalGold >= price && shieldLevel < 10) {
-        totalGold -= price;
-        shieldLevel++;
-        playPowerupSound();
-        saveGame();
-        updateShopUI();
-        showToast(translations[currentLang].shieldUpgraded, true);
-    } else {
-        showToast(translations[currentLang].noGold, false);
-    }
-}
-
-function buyWeapon() {
-    if (!hasWeapon && totalGold >= 15000) {
-        totalGold -= 15000;
-        hasWeapon = true;
-        bombCount += 15; // v1.99.27.10: Additive license bonus
-        playPowerupSound();
-        saveGame();
-        updateShopUI();
-        showToast(translations[currentLang].weaponPurchased, true);
-    } else if (hasWeapon) {
-        showToast(translations[currentLang].alreadyOwned, false);
-    } else {
-        showToast(translations[currentLang].noGold, false);
-    }
-}
-
-function buyArmorLicense() {
-    const t = translations[currentLang];
-    if (!ownsArmorLicense && totalGold >= 20000) {
-        totalGold -= 20000;
-        ownsArmorLicense = true;
-        armorCharge += 3;
-        playPowerupSound();
-        saveGame();
-        updateShopUI();
-        showToast(t.armorLicensePurchased, true);
-    } else if (ownsArmorLicense) {
-        const refillPrice = 1000;
-        if (totalGold >= refillPrice && armorCharge < 30) {
-            totalGold -= refillPrice;
-            armorCharge += 30; // v1.99.39.08: ADDS 30 charges (Stackable)
-            playPowerupSound();
-            saveGame();
-            updateShopUI();
-            showToast(t.armorReloaded, true);
-        } else if (armorCharge >= 30) {
-            showToast(t.maxArmor, false);
-        } else {
-            showToast(t.noGold, false);
-        }
-    }
-}
+// v1.99.61.81: Shop logic consolidated to Master section.
 
 
 function updateShopUI() {
@@ -1606,14 +1601,14 @@ function updateShopUI() {
         if (magmaDesc) {
             magmaDesc.innerHTML = t.magmaCannonDesc.replace('{count}', `<span id="shop-bomb-count" style="color: #fff; font-weight: 800;">${bombCount}</span>`);
         }
-        // Silah Lisansı Yoksa Mühimmat Satırını Gizle (v1.99.34.00)
+        // Silah Lisansı Yoksa Mühimmat Satırını Gizle (v1.99.61.81)
         // BOMBA BUTONU, HUD & SHOP SYNC
         var bBadge = document.getElementById('bomb-badge');
         if (bBadge) bBadge.innerText = bombCount;
         var sBCount = document.getElementById('shop-bomb-count');
         if (sBCount) sBCount.innerText = bombCount;
 
-        // AMMO BUY BUTTON SYNC (v1.99.34.00)
+        // AMMO BUY BUTTON SYNC (v1.99.61.81)
         const ammoBuyBtn = document.getElementById('buy-ammo-btn');
         if (ammoBuyBtn) {
             ammoBuyBtn.innerText = "AL\n1000 G";
@@ -1633,7 +1628,7 @@ function updateShopUI() {
         }
         updateArmorUI();
 
-        // --- v1.99.34.00: ELITE MODULAR BOAT RENDERER ---
+        // --- v1.99.61.81: ELITE MODULAR BOAT RENDERER ---
         renderBoatShop();
 
     } catch (e) { console.warn("Shop UI Error:", e); }
@@ -1671,7 +1666,7 @@ function renderBoatShop() {
         const btn = document.createElement('button');
         btn.className = 'elite-upgrade-btn';
         
-        // v1.99.34.00: Strict Gold Validation (Force window.totalGold)
+        // v1.99.61.81: Strict Gold Validation (Force window.totalGold)
         const currentGold = Number(window.totalGold || 0);
         const itemPrice = Number(boat.price || 0);
         
@@ -1699,7 +1694,7 @@ function selectBoat(id) {
         playerImg = window.players[id];
         if (currentAsset) currentAsset.pKey = id;
         
-        // v1.99.34.00: Sync modular perk engine
+        // v1.99.61.81: Sync modular perk engine
         if (window.PerkEngine) window.PerkEngine.sync();
         
         saveGame();
@@ -1712,7 +1707,7 @@ function buyBoat(id) {
     const boat = window.ELITE_COLLECTIONS.boats.find(b => b.id === id);
     if (!boat) return;
 
-    // v1.99.34.00: Strict Gold Validation (Force window.totalGold)
+    // v1.99.61.81: Strict Gold Validation (Force window.totalGold)
     const currentGold = Number(window.totalGold || 0);
     const itemPrice = Number(boat.price || 0);
 
@@ -1734,7 +1729,7 @@ function buyBoat(id) {
         saveGame();
         if (typeof selectBoat === 'function') selectBoat(id);
         
-        // v1.99.34.00: Immediate Cloud Sync for Boathouse
+        // v1.99.61.81: Immediate Cloud Sync for Boathouse
         if (window.Leaderboard && typeof window.Leaderboard.submitProgress === 'function') {
             window.Leaderboard.submitProgress();
         }
@@ -1759,7 +1754,7 @@ function buyBoat(id) {
 if (buyAmmoBtn) buyAmmoBtn.addEventListener('click', () => {
     const t = translations[currentLang];
 
-    // v1.99.34.00: Security Check - License Required
+    // v1.99.61.81: Security Check - License Required
     if (!hasWeapon) {
         showToast(t.licenseRequiredToast || t.licenseRequired, false);
         shakeTimer = 0.4;
@@ -1768,15 +1763,17 @@ if (buyAmmoBtn) buyAmmoBtn.addEventListener('click', () => {
     }
 
     if (totalGold >= 1000) {
-        totalGold -= 1000;
-        bombCount += 40;
-        saveGame();
-        triggerEliteEconomySync();
-        // v1.99.34.00: Elite Reload Sound
-        if (typeof playPowerupSound === 'function') playPowerupSound();
-        setTimeout(() => { for (var i = 0; i < 2; i++) setTimeout(playCoinSound, i * 100); }, 200);
-        showToast(t.ammoPurchasedToast, true);
-        updateShopUI();
+        const executeAmmoBuy = () => {
+            totalGold -= 1000;
+            bombCount += 40;
+            saveGame();
+            triggerEliteEconomySync();
+            if (typeof playPowerupSound === 'function') playPowerupSound();
+            setTimeout(() => { for (var i = 0; i < 2; i++) setTimeout(playCoinSound, i * 100); }, 200);
+            showToast(t.ammoPurchasedToast, true);
+            updateShopUI();
+        };
+        showEliteConfirm(t.confirmTitle, t.buyAmmoMsg, t.buyBtnShort, "💣", executeAmmoBuy);
     } else {
         shakeTimer = 0.4;
         if (typeof playHaptic === 'function') playHaptic('light');
@@ -1784,7 +1781,7 @@ if (buyAmmoBtn) buyAmmoBtn.addEventListener('click', () => {
     }
 });
 
-// v1.99.34.00: ALTINLA CANLANMA (REVİVE WİTH GOLD)
+// v1.99.61.81: ALTINLA CANLANMA (REVİVE WİTH GOLD)
 if (reviveGoldBtn) reviveGoldBtn.addEventListener('click', reviveWithGold);
 function reviveWithGold() {
     // v3.31.0: ELITE BALANCED ECONOMY
@@ -1793,7 +1790,7 @@ function reviveWithGold() {
 
     if (totalGold >= cost) {
         totalGold -= cost;
-        triggerEliteEconomySync(true); // v1.99.34.00: Harcama anında sarsılmaz mühür!
+        triggerEliteEconomySync(true); // v1.99.61.81: Harcama anında sarsılmaz mühür!
         lives = 3 + (window.extraLives || 0);
         hasShield = true; // Dokunulmazlık Ver
         shieldTimer = 3.0; // 3 Saniye Koruma
@@ -1836,7 +1833,7 @@ function reviveWithGold() {
 }
 
 function fireBomb() {
-    if (!isPlaying || isPaused || isGameOver || !hasWeapon) return; // v1.99.34.00 LOCKDOWN
+    if (!isPlaying || isPaused || isGameOver || !hasWeapon) return; // v1.99.61.81 LOCKDOWN
 
     if (bombCount <= 0) {
         if (hasWeapon) {
@@ -1872,8 +1869,8 @@ window.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W' || e.shiftKey) activateDash();
 });
 
-const player = { x: canvas.width / 2, y: canvas.height - 150, width: 38, height: 68, speed: 320 };
 
+// v1.99.61.81: INPUT TRACKING (Unified)
 const keys = { ArrowLeft: false, ArrowRight: false, ArrowUp: false, ArrowDown: false, a: false, d: false, w: false, s: false };
 window.addEventListener('keydown', (e) => {
     var key = e.key.toLowerCase();
@@ -1889,13 +1886,13 @@ window.addEventListener('keyup', (e) => {
 
 var touchX = null;
 var touchY = null;
-var moveTouchId = null; // v1.99.34.00: MULTI-TOUCH TRACKING
+var moveTouchId = null; // v1.99.61.81: MULTI-TOUCH TRACKING
 
 canvas.addEventListener('touchstart', (e) => {
     e.preventDefault();
     if (typeof initAudio === 'function') initAudio();
 
-    // v1.99.34.00: Akıllı Multi-Touch Sistemi
+    // v1.99.61.81: Akıllı Multi-Touch Sistemi
     for (var i = 0; i < e.changedTouches.length; i++) {
         var touch = e.changedTouches[i];
         var rect = canvas.getBoundingClientRect();
@@ -1955,9 +1952,9 @@ canvas.addEventListener('mousedown', initAudio); // PC için güvenlik kırma
 
 
 // SPAWNERLAR (Artık Yatay ve Dikey var)
-// obstacles/golds/powerups moved to top for v1.99.34.00
+// obstacles/golds/powerups moved to top for v1.99.61.81
 var spawnInterval = 3.0, spawnTimer = 0; // v2.03: Başlangıçta kayaların arasını çok açtık
-var goldSpawnInterval = 8.0, goldTimer = 0; // v1.99.34.00: Kıtlık ve Hardcore Ekonomi
+var goldSpawnInterval = 8.0, goldTimer = 0; // v1.99.61.81: Kıtlık ve Hardcore Ekonomi
 
 var goldBag = [];
 function fillGoldBag() {
@@ -2003,7 +2000,7 @@ function spawnPowerup() {
 }
 
 function spawnObstacle() {
-    // v1.99.34.00: ELITE CORE INITIALIZATION
+    // v1.99.61.81: ELITE CORE INITIALIZATION
     const biomeIndex = Math.floor((currentLevel - 1) / STAGES_PER_BIOME) % levelAssets.length;
     const currentAsset = levelAssets[biomeIndex];
     const isDZ = (typeof getDZStatus === 'function') ? getDZStatus() : false;
@@ -2011,9 +2008,9 @@ function spawnObstacle() {
     if (isDZ) baseSpeed *= 1.7;
     const bgScrollSpeed = baseSpeed * (currentAsset && currentAsset.scrollSpeed ? currentAsset.scrollSpeed : 1.0);
 
-    // v1.99.34.00: TOXIC HARD MODE (Index 8 - Moved from index 4)
+    // v1.99.61.81: TOXIC HARD MODE (Index 8 - Moved from index 4)
     if (biomeIndex === 8) { 
-        if (!hasWeapon) hasWeapon = true; // v1.99.34.00: Combat Support (Free Weapon for L9)
+        if (!hasWeapon) hasWeapon = true; // v1.99.61.81: Combat Support (Free Weapon for L9)
         if (levelProgressTime - lastSpawnTime < 0.4) return; // HARD MODE: 0.4s interval (Elite)
         lastSpawnTime = levelProgressTime;
 
@@ -2047,7 +2044,7 @@ function spawnObstacle() {
             speedX: 0,
             time: Math.random() * 10,
             health: (toxicType === 'toxicSerpent' ? 3 : (toxicType === 'magmaSerpent' ? 2 : 1)),
-            frequency: 1.5, amplitude: 65 // v1.99.34.00: Normalized snake movement
+            frequency: 1.5, amplitude: 65 // v1.99.61.81: Normalized snake movement
         });
         
         return;
@@ -2072,7 +2069,7 @@ function spawnObstacle() {
 
     // isDZ is already calculated at the top
 
-    // v1.99.34.00: ELITE SPAWN COOLDOWN (Anti-Cluster System)
+    // v1.99.61.81: ELITE SPAWN COOLDOWN (Anti-Cluster System)
     // v1.99.35.09: MASTER ELITE BALANCE (One Click Easier)
     var currentCooldown = isDZ ? 0.30 : 0.35; 
     if (biomeIndex === 6) currentCooldown = 0.25; // Lagoon Relaxed
@@ -2088,7 +2085,7 @@ function spawnObstacle() {
 
     if (biomeIndex === 0 && obstacles.length >= 6) return; // v1.99.35.09: Master Elite Density
 
-    // v1.99.34.00: ELITE VERTICAL SPACING GUARD (Anti-Wall System)
+    // v1.99.61.81: ELITE VERTICAL SPACING GUARD (Anti-Wall System)
     for (var obs of obstacles) {
         if (Math.abs(spawnY - obs.y) < 100) return; // v1.99.35.09: MASTER ELITE GAPS
     }
@@ -2097,7 +2094,7 @@ function spawnObstacle() {
 
     var allowedSpecialTypes = (biomeIndex === 4 || biomeIndex === 5 || biomeIndex === 6 || biomeIndex === 7 || biomeIndex === 8) ? [] : ['rock'];
 
-    // --- v1.99.34.00: THE ELITE CYCLE (Strict Biome Filtering) ---
+    // --- v1.99.61.81: THE ELITE CYCLE (Strict Biome Filtering) ---
     if (biomeIndex === 0) { // Spring (L1, L7, L13...)
         allowedSpecialTypes.push('hippo', 'croc', 'vertical', 'horizontal');
     } else if (biomeIndex === 1) { // Summer (L2, L8...)
@@ -2111,17 +2108,17 @@ function spawnObstacle() {
         allowedSpecialTypes.push('rock', 'lavaGeyser', 'burningPillar', 'burningPillar', 'fireball', 'fireball', 'fireball', 'magmaSerpent');
         // CROC/HIPPO/LOGS ARE FORBIDDEN
     } else if (biomeIndex === 5) { // Void (L6, L12...)
-        // v1.99.34.00: ELITE VOID POOL
+        // v1.99.61.81: ELITE VOID POOL
         allowedSpecialTypes.push('asteroid', 'asteroid', 'comet', 'fireball', 'blackHole');
         // CROC/HIPPO/LOGS ARE FORBIDDEN
     } else if (biomeIndex === 6) { // Nostalji (L7, L14...)
         allowedSpecialTypes.push('toyBalloon', 'paperPlane', 'paperPlane', 'kite');
     } else if (biomeIndex === 7) { // Cyber City (L8, L16...)
-        // v1.99.34.00: NO ROCKS IN CYBER CITY - ONLY ELITE HAZARDS
+        // v1.99.61.81: NO ROCKS IN CYBER CITY - ONLY ELITE HAZARDS
         allowedSpecialTypes.push('laserGate', 'laserGate', 'cyberDrone', 'glitchStream', 'cyberSpear');
     } else if (biomeIndex === 8) { // Toxic Wasteland (L9, L17...)
-        // v1.99.34.00: SPEED NORMALIZATION FIX
-        // v1.99.34.00: SERPENT DOMINATION - 90% Serpent spawning weight
+        // v1.99.61.81: SPEED NORMALIZATION FIX
+        // v1.99.61.81: SERPENT DOMINATION - 90% Serpent spawning weight
         allowedSpecialTypes.push('toxicSerpent', 'toxicSerpent', 'toxicSerpent', 'toxicSerpent', 'toxicSerpent', 'toxicSerpent', 'toxicSerpent', 'toxicSerpent', 'toxicSerpent', 'toxicBarrel');
     }
 
@@ -2134,7 +2131,7 @@ function spawnObstacle() {
     var spawnX = Math.random() * (riverRight - riverLeft) + riverLeft;
     var relSpawnX = spawnX - riverShift;
 
-    // v1.99.34.00: ELITE ANGULAR CHAOS (Diagonal & Rotating Obstacles)
+    // v1.99.61.81: ELITE ANGULAR CHAOS (Diagonal & Rotating Obstacles)
     var speedX = 0;
     var angle = 0;
     var rotationSpeed = 0;
@@ -2151,7 +2148,7 @@ function spawnObstacle() {
     var isBlocked = true;
     var spawnGap = player.width + 75; // Kayıktan biraz daha geniş "güvenli şerit"
 
-    // v1.99.34.00: L7 EXCLUSIVE EDGE BUFFER - Strictly exclusive to Lagoon
+    // v1.99.61.81: L7 EXCLUSIVE EDGE BUFFER - Strictly exclusive to Lagoon
     const dynamicObsBuffer = (biomeIndex === 6) ? 65 : 15; // Lagoon
     const leftLimitRel = (canvas.width * spawnMargin) + dynamicObsBuffer;
     const rightLimitRel = (canvas.width * (1 - spawnMargin)) - (dynamicObsBuffer + 45);
@@ -2171,7 +2168,7 @@ function spawnObstacle() {
                 break;
             }
         }
-        // Nehir Sınırlarını Koru (Relative bazda) v1.99.34.00 FIX (Obstacle Outside River)
+        // Nehir Sınırlarını Koru (Relative bazda) v1.99.61.81 FIX (Obstacle Outside River)
         if (relSpawnX < leftLimitRel) relSpawnX = leftLimitRel;
         if (relSpawnX > rightLimitRel) relSpawnX = rightLimitRel;
     }
@@ -2181,14 +2178,14 @@ function spawnObstacle() {
     if (biomeIndex === 6) currentSpawnChance = 0.90; // Lagoon
     else if (biomeIndex === 5) currentSpawnChance = 0.65; // Boşluk Yoğunluğu
     else if (biomeIndex === 7) currentSpawnChance = 0.85; // Cyber Yoğunluğu
-    else if (biomeIndex === 8) currentSpawnChance = 0.95; // Toxic Yoğunluğu (v1.99.34.00 Force)
+    else if (biomeIndex === 8) currentSpawnChance = 0.95; // Toxic Yoğunluğu (v1.99.61.81 Force)
 
     if (Math.random() < currentSpawnChance && allowedSpecialTypes.length > 0) {
         var selectedType = allowedSpecialTypes[Math.floor(Math.random() * allowedSpecialTypes.length)];
 
-        // v1.99.34.00: VERIFICATION LOG
+        // v1.99.61.81: VERIFICATION LOG
         if (selectedType === 'rock') {
-            // v1.99.34.00: RESTORED ROCK PUSH LOGIC
+            // v1.99.61.81: RESTORED ROCK PUSH LOGIC
             obstacles.push({
                 type: 'rock',
                 x: spawnX,
@@ -2255,7 +2252,7 @@ function spawnObstacle() {
         } else if (selectedType === 'fireball') {
             const isL5 = biomeIndex === 4; // Lava
             if (isL5) {
-                // v1.99.34.00: TRIPLE BARRAGE (Left, Center, Right)
+                // v1.99.61.81: TRIPLE BARRAGE (Left, Center, Right)
                 const lanePositions = [0.2, 0.5, 0.8]; // Relative X positions
                 lanePositions.forEach(relPos => {
                     const fX = riverLeft + (riverRight - riverLeft) * relPos;
@@ -2303,7 +2300,7 @@ function spawnObstacle() {
                 y: spawnY, width: 55, height: 55,
                 speedY: baseSpeed * (selectedType === 'comet' ? 1.8 : 1.1) * (isL6 ? 1.25 : 1),
                 speedX: 0,
-                isHoming: false, // v1.99.34.00: Takipçi Mekaniği
+                isHoming: false, // v1.99.61.81: Takipçi Mekaniği
                 hp: selectedType === 'asteroid' ? 4 : 1
             });
         } else if (selectedType === 'blackHole') {
@@ -2330,7 +2327,7 @@ function spawnObstacle() {
                 speedX: (Math.random() < 0.5) ? 120 : -120
             });
         } else if (selectedType === 'rock' || selectedType === 'iceBerg') {
-            if (isEliteLethal) return; // v1.99.34.00: Rocks/Ice are forbidden in Elite biomes
+            if (isEliteLethal) return; // v1.99.61.81: Rocks/Ice are forbidden in Elite biomes
             var isIce = selectedType === 'iceBerg';
             var rockSize = isIce ? (45 + Math.random() * 20) : (40 + Math.random() * 20);
             obstacles.push({
@@ -2344,7 +2341,7 @@ function spawnObstacle() {
                 rotationSpeed: rotationSpeed
             });
         } else if (selectedType === 'burningPillar') {
-            // v1.99.34.00: RESTORED LOST PILLAR (2-Shot Health Specific to L5)
+            // v1.99.61.81: RESTORED LOST PILLAR (2-Shot Health Specific to L5)
             const pWidth = 55 + Math.random() * 15;
             const pHeight = 120 + Math.random() * 30;
             obstacles.push({
@@ -2357,7 +2354,7 @@ function spawnObstacle() {
                 speedY: bgScrollSpeed, speedX: 0
             });
         } else if (selectedType === 'toyBalloon' || selectedType === 'paperPlane' || selectedType === 'kite') {
-            const isL7 = Math.floor((currentLevel - 1) / STAGES_PER_BIOME) % levelAssets.length === 6; // v1.99.34.00: Lagoon Biome check
+            const isL7 = Math.floor((currentLevel - 1) / STAGES_PER_BIOME) % levelAssets.length === 6; // v1.99.61.81: Lagoon Biome check
             var w = 50, h = 50, sY = baseSpeed;
 
             if (selectedType === 'toyBalloon') {
@@ -2381,7 +2378,7 @@ function spawnObstacle() {
                 phase: Math.random() * 1000
             });
         } else if (selectedType === 'magmaSerpent') {
-            // v1.99.34.00: NEW MAGMA SERPENT (Sine Wave Movement)
+            // v1.99.61.81: NEW MAGMA SERPENT (Sine Wave Movement)
             const sX = riverLeft + (riverRight - riverLeft) / 2;
             obstacles.push({
                 type: 'magmaSerpent',
@@ -2433,11 +2430,11 @@ function spawnObstacle() {
                 y: spawnY,
                 width: 120, height: 180,
                 speedY: baseSpeed,
-                speedX: 0, // v1.99.34.00: Akış sabitleme
+                speedX: 0, // v1.99.61.81: Akış sabitleme
                 time: 0
             });
         } else if (selectedType === 'cyberSpear') {
-            // v1.99.34.00: NEON GREEN SPEAR - Targets player X at spawn
+            // v1.99.61.81: NEON GREEN SPEAR - Targets player X at spawn
             const targetX = player.x + (player.width / 2);
             let sx = (targetX - spawnX) * 1.5;
             if (biomeIndex === 0) sx = 0; // Spring check
@@ -2454,7 +2451,7 @@ function spawnObstacle() {
                 rotation: Math.atan2(sx, baseSpeed * 2.1)
             });
         } else if (selectedType === 'toxicRat') {
-            // v1.99.34.00: MUTATED GIANT RAT - Swims across
+            // v1.99.61.81: MUTATED GIANT RAT - Swims across
             const moveDir = Math.random() < 0.5 ? 1 : -1;
             const startX = (moveDir === 1) ? riverLeft - 60 : riverRight + 20;
             let sx = moveDir * 125;
@@ -2470,7 +2467,7 @@ function spawnObstacle() {
                 time: Math.random() * 10
             });
         } else if (selectedType === 'toxicBarrel') {
-            // v1.99.34.00: RADIOACTIVE BARREL
+            // v1.99.61.81: RADIOACTIVE BARREL
             obstacles.push({
                 type: 'toxicBarrel',
                 x: spawnX,
@@ -2479,7 +2476,7 @@ function spawnObstacle() {
                 speedY: bgScrollSpeed, speedX: 0
             });
         } else if (selectedType === 'toxicSerpent') {
-            const targetX = spawnX; // v1.99.34.00: Prevent center-only spawning
+            const targetX = spawnX; // v1.99.61.81: Prevent center-only spawning
             window.obstacles.push({
                 type: 'toxicSerpent',
                 x: targetX,
@@ -2494,8 +2491,8 @@ function spawnObstacle() {
         return;
     }
 
-    // v1.99.34.00: ELITE BIOME PURITY (No logs in Lava, Void, or Nostalgia)
-    // v1.99.34.00: ELITE BIOME PURITY (No logs in Lava, Void, Nostalgia, Cyber)
+    // v1.99.61.81: ELITE BIOME PURITY (No logs in Lava, Void, or Nostalgia)
+    // v1.99.61.81: ELITE BIOME PURITY (No logs in Lava, Void, Nostalgia, Cyber)
     const currentBiome = Math.floor((currentLevel - 1) / STAGES_PER_BIOME) % levelAssets.length;
     const isEliteThemeSpawn = (currentBiome === 4 || currentBiome === 5 || currentBiome === 6 || currentBiome === 7 || currentBiome === 8);
     if (isEliteThemeSpawn) return;
@@ -2505,7 +2502,7 @@ function spawnObstacle() {
     var logRot = 0;
     var logRotSpeed = 0;
 
-    // v1.99.34.00: Nizamlı Düz Akış (Straight Highway Flow)
+    // v1.99.61.81: Nizamlı Düz Akış (Straight Highway Flow)
     // Engeller artık sağa sola savrulmayacak, araba yolu gibi nizamlı ve düz gelecek.
     logSpeedX = 0;
     if (biomeIndex === 0) logSpeedX = 0; // Spring
@@ -2520,7 +2517,7 @@ function spawnObstacle() {
         width: 40,
         height: 55,
         speedY: baseSpeed,
-        speedX: speedX, // v1.99.34.00: Elite Angular Chaos
+        speedX: speedX, // v1.99.61.81: Elite Angular Chaos
         angle: angle,
         rotationSpeed: rotationSpeed
     });
@@ -2548,18 +2545,18 @@ function spawnGold() {
     else if (gVal === 5) { gColor = "#00e5ff"; gRadius = 18; }
     else if (gVal === 10) { gColor = "#ff00ff"; gRadius = 22; }
 
-    // v1.99.34.00: NO TRAPS IN ELITE BIOMES (Lava, Void, Nostalgia, Cyber)
-    // v1.99.34.00: NO TRAPS IN TOXIC WASTELAND (Biome 8)
+    // v1.99.61.81: NO TRAPS IN ELITE BIOMES (Lava, Void, Nostalgia, Cyber)
+    // v1.99.61.81: NO TRAPS IN TOXIC WASTELAND (Biome 8)
     const eliteBiomeGold = Math.floor((currentLevel - 1) / STAGES_PER_BIOME) % levelAssets.length;
     const isEliteForGold = (eliteBiomeGold === 4 || eliteBiomeGold === 5 || eliteBiomeGold === 6 || eliteBiomeGold === 7 || eliteBiomeGold === 8);
 
     if (gVal === 10 && !isEliteForGold && !(Math.floor((currentLevel - 1) / STAGES_PER_BIOME) % levelAssets.length === 0 && obstacles.length >= 2)) {
-        // v1.99.34.00: Seviye 1'de tuzak doğmasını da kısıtladık (Kapasite koruma)
+        // v1.99.61.81: Seviye 1'de tuzak doğmasını da kısıtladık (Kapasite koruma)
         var trapDir = Math.random() < 0.5 ? 1 : -1;
         var trapX1 = gx;
         var trapY1 = gy - 150;
 
-        // v1.99.34.00: ELITE ANGULAR CHAOS (Trap Sync FIX)
+        // v1.99.61.81: ELITE ANGULAR CHAOS (Trap Sync FIX)
         var speedX = 0, angle = 0, rotationSpeed = 0;
         if (Math.random() < 0.45) {
             speedX = (Math.random() - 0.5) * (speed * 0.55); 
@@ -2648,7 +2645,7 @@ function startGame() {
     isPlaying = true;
     isPaused = false;
 
-    // v1.99.34.00: HUD Reveal
+    // v1.99.61.81: HUD Reveal
     const hud = document.getElementById('modern-hud');
     if (hud) hud.style.display = 'flex';
 
@@ -2664,11 +2661,11 @@ function startGame() {
     score = window.resumeScore || 0;
     goldCount = 0;
     lives = window.resumeLives || (3 + (window.extraLives || 0));
-    levelProgressTime = window.resumeProgressTime || 0; // v1.99.34.00: Resume fine-grained progress
+    levelProgressTime = window.resumeProgressTime || 0; // v1.99.61.81: Resume fine-grained progress
     isGameOver = false;
     obstacles = []; golds = []; powerups = []; bullets = [];
 
-    // v1.99.34.00: UNHIDE ELITE HUD & CONTROLS
+    // v1.99.61.81: UNHIDE ELITE HUD & CONTROLS
     const mHud = document.getElementById('modern-hud');
     if (mHud) { mHud.classList.remove('hidden'); mHud.style.display = 'flex'; }
 
@@ -2679,13 +2676,13 @@ function startGame() {
     if (lUi) { lUi.classList.remove('hidden'); lUi.style.display = 'flex'; }
 
     player.x = canvas.width / 2 - player.width / 2;
-    // v1.99.34.00: Fixed Temporal Dead Zone Error - Accessing global currentAsset correctly
+    // v1.99.61.81: Fixed Temporal Dead Zone Error - Accessing global currentAsset correctly
     playerImg = window.players[currentAsset.pKey] || window.players.spring;
 
     updateLanguageUI();
     fillGoldBag();
 
-    // Satın alınan Kalkan/Durum sıfırlama v1.99.34.00
+    // Satın alınan Kalkan/Durum sıfırlama v1.99.61.81
     hasShield = false;
     isDashing = false;
     dashEnergy = MAX_DASH_ENERGY;
@@ -2695,15 +2692,15 @@ function startGame() {
     goldTimer = 0;
     // levelProgressTime handle by resume logic above
 
-    // Sync Assets & UI (v1.99.34.00: STAGES_PER_BIOME Aware Mapping)
-    // v1.99.34.00: Use global currentAsset instead of local const shadowing
+    // Sync Assets & UI (v1.99.61.81: STAGES_PER_BIOME Aware Mapping)
+    // v1.99.61.81: Use global currentAsset instead of local const shadowing
     currentAsset = levelAssets[Math.floor((currentLevel - 1) / STAGES_PER_BIOME) % levelAssets.length];
     bgImg = bgImgs[currentAsset.bgKey];
-    // v1.99.34.00: Dinamik Kayık Sistemi (Skin Fallback) ⛵
+    // v1.99.61.81: Dinamik Kayık Sistemi (Skin Fallback) ⛵
     playerImg = window.players[currentAsset.pKey] || window.players.spring;
     bgScrollSpeed = currentAsset.speed;
     
-    // v1.99.34.00: SPAWN ENGINE IGNITION (Ensures L1 has obstacles)
+    // v1.99.61.81: SPAWN ENGINE IGNITION (Ensures L1 has obstacles)
     isTransitioningLevel = false;
     spawnInterval = currentAsset.spawn;
     lastSpawnTime = 0;
@@ -2742,7 +2739,7 @@ function startGame() {
     gameLoopRequestId = requestAnimationFrame(gameLoop);
 }
 
-// v1.99.34.00: Modern Leaderboard Connector
+// v1.99.61.81: Modern Leaderboard Connector
 const lbMainBtn = document.getElementById('leaderboard-btn');
 if (lbMainBtn) lbMainBtn.addEventListener('click', () => {
     const lbScr = document.getElementById('leaderboard-screen');
@@ -2752,14 +2749,14 @@ if (lbMainBtn) lbMainBtn.addEventListener('click', () => {
         lbScr.classList.add('active');
         if (menuScr) menuScr.classList.add('hidden');
         lbScr.style.display = 'flex';
-        // v1.99.34.00: Trigger data refresh
+        // v1.99.61.81: Trigger data refresh
         if (typeof Leaderboard !== 'undefined' && typeof Leaderboard.refreshData === 'function') {
             Leaderboard.refreshData();
         }
     }
 });
 
-// v1.99.34.00: TOP RIDERS CLOSE BUTTON FIX ❌
+// v1.99.61.81: TOP RIDERS CLOSE BUTTON FIX ❌
 const lbCloseBtn = document.getElementById('leaderboard-close-btn');
 if (lbCloseBtn) lbCloseBtn.addEventListener('click', () => {
     const lbScr = document.getElementById('leaderboard-screen');
@@ -2784,7 +2781,7 @@ function gameOver() {
         playCrashSound();
         hasShield = true;
         player.x = canvas.width / 2 - player.width / 2;
-        player.y = canvas.height - player.height - 100;
+        player.y = window.innerHeight * 0.85 - player.height;
         obstacles = [];
         setTimeout(() => { hasShield = false; }, 3000);
         return;
@@ -2797,7 +2794,7 @@ function gameOver() {
 
     window.resumeScore = 0;
     window.resumeLives = 3;
-    window.resumeLevel = 1; // v1.99.34.00: Reset progression on death
+    window.resumeLevel = 1; // v1.99.61.81: Reset progression on death
     window.totalGold = Number(window.totalGold || 0) + Number(goldCount || 0);
     saveGame();
     localStorage.removeItem('riverEscapeCurrentSession'); // Seansı temizle    
@@ -2824,10 +2821,10 @@ function gameOver() {
         if (bombActionBtn) bombActionBtn.style.display = 'none';
 
         if (typeof triggerEliteEconomySync === 'function') {
-            triggerEliteEconomySync(true); // v1.99.34.00: Oyun bittiğinde sarsılmaz zorunlu mühür!
+            triggerEliteEconomySync(true); // v1.99.61.81: Oyun bittiğinde sarsılmaz zorunlu mühür!
         }
 
-        // v1.99.34.00: BACKGROUND LISTENER (Safe Exit Backup)
+        // v1.99.61.81: BACKGROUND LISTENER (Safe Exit Backup)
         if (typeof Capacitor !== 'undefined' && Capacitor.Plugins && Capacitor.Plugins.App) {
             Capacitor.Plugins.App.addListener('appStateChange', ({ isActive }) => {
                 if (!isActive) {
@@ -2841,8 +2838,8 @@ function gameOver() {
     }
 }
 
-// v1.99.34.00: GLOBAL ELITE ECONOMY SYNC (Cloud + UI + Local)
-// v1.99.34.00: ELITE ECONOMY ENGINE (Cost-Optimized Batching)
+// v1.99.61.81: GLOBAL ELITE ECONOMY SYNC (Cloud + UI + Local)
+// v1.99.61.81: ELITE ECONOMY ENGINE (Cost-Optimized Batching)
 let isEconomyDirty = false; // Yereldeki verinin henüz buluta işlenmediğini takip eder
 
 window.triggerEliteEconomySync = function (force = false) {
@@ -2850,7 +2847,7 @@ window.triggerEliteEconomySync = function (force = false) {
         saveGame(); // Yıldırım hızıyla yerele kaydet (Veri kaybolmaz)
         isEconomyDirty = true;
 
-        // 🛰️ Bulut Mühürleme Koşulu (v1.99.34.00: Lockdown Logic)
+        // 🛰️ Bulut Mühürleme Koşulu (v1.99.61.81: Lockdown Logic)
         // Sadece force=true (GameOver, Reklam, Alışveriş, Background) anlarında yaz.
         if (force) {
             if (typeof Leaderboard !== 'undefined' && Leaderboard.submitProgress) {
@@ -2876,7 +2873,7 @@ window.triggerEliteEconomySync = function (force = false) {
         const totalGoldHUD = document.getElementById('goldValue-hud');
         if (totalGoldHUD) totalGoldHUD.innerText = window.totalGold;
 
-        // v1.99.34.00: KARAKTER ÖNİZLEME GÜNCELLEME (Start Screen)
+        // v1.99.61.81: KARAKTER ÖNİZLEME GÜNCELLEME (Start Screen)
         const STAGES_PER_BIOME_MAP = 3;
         const bIdxSync = Math.floor((currentLevel - 1) / STAGES_PER_BIOME_MAP) % levelAssets.length;
         const currentLAsset = levelAssets[bIdxSync];
@@ -2892,7 +2889,7 @@ window.triggerEliteEconomySync = function (force = false) {
     } catch (e) { console.warn("Economy Sync Error:", e); }
 };
 
-// v1.99.34.00: ELITE THEME ENGINE (Total Visual Shift)
+// v1.99.61.81: ELITE THEME ENGINE (Total Visual Shift)
 function setTheme(theme) {
     if (theme === 'light') {
         document.body.classList.add('light-theme');
@@ -2904,28 +2901,28 @@ function setTheme(theme) {
     localStorage.setItem('riverEscapeTheme', theme);
 }
 
-// v1.99.34.00: ELITE HUD SYNC (Global Function)
+// v1.99.61.81: ELITE HUD SYNC (Global Function)
 function syncEliteHUD() {
     try {
         const langPack = translations[currentLang] || translations.en;
 
         if (cachedHud.lives) {
             var hearts = "";
-            // v1.99.34.00: DİNAMİK KALP SİSTEMİ (Can sayısına göre kalp göster)
+            // v1.99.61.81: DİNAMİK KALP SİSTEMİ (Can sayısına göre kalp göster)
             for (var i = 0; i < Math.max(3, lives); i++) {
                 hearts += (i < lives) ? "❤️" : "🖤";
             }
-            if (cachedHud.lives.innerText !== hearts) cachedHud.lives.innerText = hearts;
+            if (cachedHud.lives.textContent !== hearts) cachedHud.lives.textContent = hearts;
         }
 
-        if (cachedHud.sLabel) cachedHud.sLabel.innerText = langPack.scoreLabel || "SCORE:";
-        if (cachedHud.gLabel) cachedHud.gLabel.innerText = langPack.goldLabel || "GOLD:";
-        if (cachedHud.score) cachedHud.score.innerText = Math.max(0, Math.floor(score));
-        if (cachedHud.gold) cachedHud.gold.innerText = Math.max(0, window.totalGold); // v1.99.34.00: BAKİYEYİ GÖSTER
+        if (cachedHud.sLabel) cachedHud.sLabel.textContent = langPack.scoreLabel || "SCORE:";
+        if (cachedHud.gLabel) cachedHud.gLabel.textContent = langPack.goldLabel || "GOLD:";
+        if (cachedHud.score) cachedHud.score.textContent = Math.max(0, Math.floor(score));
+        if (cachedHud.gold) cachedHud.gold.textContent = Math.max(0, window.totalGold); // v1.99.61.81: BAKİYEYİ GÖSTER
         
-        // v1.99.34.00: Correct Biome Mapping for Stage-based HUD
+        // v1.99.61.81: Correct Biome Mapping for Stage-based HUD
         if (cachedHud.progress) {
-            // v1.99.34.00: ELITE PROGRESS ENGINE - Independent sync from raw time
+            // v1.99.61.81: ELITE PROGRESS ENGINE - Independent sync from raw time
             const absoluteProgress = levelProgressTime * 5;
             const currentVal = absoluteProgress % LOOP_THRESHOLD;
             const loopCount = Math.floor(absoluteProgress / LOOP_THRESHOLD);
@@ -2944,7 +2941,7 @@ function syncEliteHUD() {
             const formattedLvl = `${(loopCount * BIOME_COUNT) + biomeNum}-${stageNum}`;
             if (cachedHud.lvlName) {
                 const lvlLabel = langPack.levelLabel || "LVL";
-                cachedHud.lvlName.innerText = `${lvlLabel} ${formattedLvl}`;
+                cachedHud.lvlName.textContent = `${lvlLabel} ${formattedLvl}`;
             }
 
             const currentBiomeStart = levelAssets[activeIdx].threshold;
@@ -2958,23 +2955,23 @@ function syncEliteHUD() {
 
             cachedHud.progress.style.width = Math.min(100, Math.max(0, smoothWidth)).toFixed(2) + '%';
 
-            // --- v1.99.34.00: VISUAL EVOLUTION (PRESTIGE FILTERS) ---
+            // --- v1.99.61.81: VISUAL EVOLUTION (PRESTIGE FILTERS) ---
             // DISABLED in v1.99.36.99 to prevent color distortion/confusion in later loops
             canvas.style.filter = "none";
         }
 
-        // v1.99.34.00: Profil Bilgisini Güncelle
+        // v1.99.61.81: Profil Bilgisini Güncelle
         const pName = document.getElementById('player-name-val');
         if (pName && window.Leaderboard && Leaderboard.currentUser) {
-            pName.innerText = Leaderboard.currentUser.displayName || "ELITE PLAYER";
+            pName.textContent = Leaderboard.currentUser.displayName || "ELITE PLAYER";
         }
     } catch (e) { console.warn("HUD Sync Error:", e); }
 }
 
-// --- v1.99.34.00: ELITE PERK SYSTEM ---
+// --- v1.99.61.81: ELITE PERK SYSTEM ---
 function getActivePerk() {
     if (!window.ELITE_COLLECTIONS || !window.ELITE_COLLECTIONS.boats) return null;
-    // v1.99.34.00: currentAsset.pKey aktif kayığın ID'idir
+    // v1.99.61.81: currentAsset.pKey aktif kayığın ID'idir
     const activeId = (typeof currentAsset !== 'undefined' && currentAsset) ? currentAsset.pKey : 'ilkbahar';
     return window.ELITE_COLLECTIONS.boats.find(b => b.id === activeId)?.perk || null;
 }
@@ -2982,7 +2979,7 @@ function getActivePerk() {
 function update(dt) {
     if (!isPlaying) return;
 
-    // v1.99.34.00: MODULAR PERK ENGINE UPDATE
+    // v1.99.61.81: MODULAR PERK ENGINE UPDATE
     if (window.PerkEngine) window.PerkEngine.update(dt);
     let scoreMult = (window.PerkEngine && window.PerkEngine.activePerk && window.PerkEngine.activePerk.type === 'score_boost') ? window.PerkEngine.activePerk.value : 1.0;
 
@@ -2991,29 +2988,29 @@ function update(dt) {
     levelProgressTime += dt * (bgScrollSpeed / 100); 
     const bIdx = Math.floor((currentLevel - 1) / STAGES_PER_BIOME) % levelAssets.length;
 
-    // --- v1.99.35.00: UNIFIED AMBIENT PARTICLE ENGINE ---
+    // --- v1.99.61.81: UNIFIED AMBIENT PARTICLE ENGINE ---
     if (isPlaying && !isPaused && Math.random() < 0.08) {
         // bIdx already defined above
         
         switch(bIdx) {
             case 2: // Autumn (Level 35-1)
-                particles.push(new Particle(Math.random() * canvas.width, -20, "#ff6d00", "leaf"));
+                emitParticles(Math.random() * canvas.width, -20, "#ff6d00", "leaf", 1);
                 break;
             case 4: // Lava
-                particles.push(new Particle(Math.random() * canvas.width, canvas.height + 20, "#ff4500", "ember"));
+                emitParticles(Math.random() * canvas.width, canvas.height + 20, "#ff4500", "ember", 1);
                 break;
             case 5: // Void
                 const vColor = Math.random() > 0.5 ? "#00fbff" : "#ff00ff";
-                particles.push(new Particle(Math.random() * canvas.width, Math.random() * canvas.height, vColor, 'glitch'));
+                emitParticles(Math.random() * canvas.width, Math.random() * canvas.height, vColor, 'glitch', 1);
                 break;
             case 6: // Lagoon
-                particles.push(new Particle(Math.random() * canvas.width, canvas.height + 20, "rgba(255,255,255,0.4)", 'bubble'));
+                emitParticles(Math.random() * canvas.width, canvas.height + 20, "rgba(255,255,255,0.4)", 'bubble', 1);
                 break;
             case 7: // Cyber City
-                particles.push(new Particle(Math.random() * canvas.width, -20, "#00e5ff", "glitch"));
+                emitParticles(Math.random() * canvas.width, -20, "#00e5ff", "glitch", 1);
                 break;
             case 8: // Toxic Wasteland
-                particles.push(new Particle(Math.random() * canvas.width, canvas.height + 20, "#32CD32", "bubble"));
+                emitParticles(Math.random() * canvas.width, canvas.height + 20, "#32CD32", "bubble", 1);
                 break;
         }
     }
@@ -3030,7 +3027,7 @@ function update(dt) {
 
     cameraZoom += (targetCameraZoom - cameraZoom) * 0.1;
 
-    // --- v1.99.34.00: DYNAMIC SPEED SMOOTHING (ELITE LERP) ---
+    // --- v1.99.61.81: DYNAMIC SPEED SMOOTHING (ELITE LERP) ---
     // Hız patlamasından (450) hedef hıza (örn: 160) yumuşak geçiş sağlar.
     const tSpeed = window.targetLevelSpeed || 140;
     bgScrollSpeed += (tSpeed - bgScrollSpeed) * 0.02; // Süzülme hızı
@@ -3142,13 +3139,8 @@ function update(dt) {
     }
 
     if (isPlaying) {
-        // v1.99.19.09: AUTO-FORWARD MOVEMENT 🚀
-        // Karakter nehirde kendi kendine ilerler (Otomatik Pilot)
-        const autoSpeed = 15; // Sabit akış hızı
-        player.y -= autoSpeed * dt;
-        // Alt sınır kontrolü (Ekranın çok dışına çıkmasın)
-        if (player.y < 100) player.y = 100;
-
+        // v1.99.61.81: UNIFIED PLAYER UPDATE
+        updatePlayer(dt);
     }
 
     // v1.68 SCORE & GOLD TICKER (Yumuşak Geçiş)
@@ -3186,53 +3178,6 @@ function update(dt) {
     pScaleX += (targetScaleX - pScaleX) * 0.15;
     pScaleY += (targetScaleY - pScaleY) * 0.15;
     pSkew += (targetSkew - pSkew) * 0.2; // Faster tilt return
-
-
-
-    var dx = 0;
-    var dy = 0;
-
-    if (keys.ArrowLeft || keys.a || keys.A) dx = -1;
-    if (keys.ArrowRight || keys.d || keys.D) dx = 1;
-    if (keys.ArrowUp || keys.w || keys.W) dy = 0; // v1.99.19.09.11: Manuel ileri gitme iptal
-    if (keys.ArrowDown || keys.s || keys.S) dy = 0; // v1.99.19.09.11: Manuel geri gitme iptal
-
-    if (touchX !== null && touchY !== null) {
-        if (touchX < player.x + player.width / 2 - 15) dx = -1;
-        else if (touchX > player.x + player.width / 2 + 15) dx = 1;
-
-        // v1.99.19.09.11: Touch Y kontrolü pasifize edildi
-        dy = 0;
-    }
-
-    // v1.99.19.09.11: Manuel hareket cezası kaldırıldı!
-    // Skor artık sadece süreye bağlı olarak artacak, geri gitmeyecek.
-
-    // X Ekseni Sınırları (Nehir Kanalı) - v1.97.0.3: Dinamik Büklüm Sistemi
-    const pMargin = (currentLAsset && typeof currentLAsset.margin === 'number') ? currentLAsset.margin : 0.32;
-    const riverShift = getRiverShift(player.y);
-    // v1.99.19.09: L7 EXCLUSIVE PLAYER BUFFER - Strictly exclusive to Lagoon
-    // v1.99.33.71: DYNAMIC PLAY BUFFER (Biome Based)
-    const bIdxMove = Math.floor((currentLevel - 1) / STAGES_PER_BIOME) % levelAssets.length;
-    const dynamicPlayBuffer = (bIdxMove === 6) ? 40 : (bIdxMove === 5 ? 8 : (bIdxMove >= 3 ? 25 : 10));
-    const playRiverLeft = (canvas.width * pMargin) + riverShift + dynamicPlayBuffer;
-    const playRiverRight = (canvas.width * (1 - pMargin)) + riverShift - player.width - dynamicPlayBuffer;
-
-
-    // PLAYER X CLAMP: Karaya çıkışı fiziksel olarak da engelle!
-    if (player.x < playRiverLeft) player.x = playRiverLeft;
-    if (player.x > playRiverRight) player.x = playRiverRight;
-
-    // KIYIYA SÜRTMÜ KONTROLÜ (Ölüm Yok, Sadece YAVAŞLATMA ve SARSINTI)
-    var moveDt = dt;
-    var isDZ = getDZStatus();
-
-    if (player.x <= playRiverLeft + 1 || player.x >= playRiverRight - 1) {
-        // Kıyıya sürtünce artık ÖLDÜRMÜYOR (Ölüm Bölgesi/isDZ olsa bile kaldırıldı)
-        // Normal sürtünme mekaniği
-        moveDt = dt * 0.4; // Sadece KAYIK yavaşlar!
-    }
-
     // --- CHECKPOINT GEÇİŞ ZAMANLAYICISI v129 (Spawn Korumalı) ---
     if (isTransitioningLevel) {
         transitionTimer -= dt;
@@ -3245,45 +3190,26 @@ function update(dt) {
         }
     }
 
-    // v1.99.33.71: ELITE MANUAL CONTROL (No Auto-Drift for Lava) - Biome Index 4
-    if (bIdxMove === 4) {
-        player.relativeX = undefined; // Reset drift tracker
-    }
-
-    // --- v1.99.19.09.11: Yatay Hareket Sistemi (Fixed Horizontal) ---
-    player.x += dx * player.speed * moveDt;
-
-    // Y pozisyonunu sabitle (Kendi kendine ilerleme hissi)
-    player.y = canvas.height - player.height - 100;
-
-    // X Ekseni Sınırları (Nihai Koruma)
-    if (player.x < playRiverLeft) player.x = playRiverLeft;
-    if (player.x > playRiverRight) player.x = playRiverRight;
-
     // --- SU SIÇRATMA (PARTICLE) v1.99.33.71: Biome Aware Colors ---
     const bIdxUpdate = Math.floor((currentLevel - 1) / STAGES_PER_BIOME) % BIOME_COUNT;
-    if (isPlaying && (dx !== 0 || dy !== 0 || Math.random() < 0.1)) {
+    if (isPlaying && (player.dx !== 0 || Math.random() < 0.1)) {
         var pxL = player.x + player.width / 2 + (Math.random() - 0.5) * 20;
         var pyL = player.y + player.height - 5;
         var pColor = "rgba(255, 255, 255, 0.6)";
         if (bIdxUpdate === 3) pColor = "rgba(200, 230, 255, 0.7)"; // Winter
         else if (bIdxUpdate === 4) pColor = "rgba(255, 69, 0, 0.8)"; // Lava
-        particles.push(new Particle(pxL, pyL, pColor));
+        emitParticles(pxL, pyL, pColor, 'default', 1);
     }
-    // Parçacıkları güncelle ve ömrü biteni sil
     // --- KAR YAĞIŞI (SNOWFALL) v1.99.33.71 ---
     if (bIdxUpdate === 3 && Math.random() < 0.1) {
-        particles.push(new Particle(Math.random() * canvas.width, -50, "rgba(255, 255, 255, 0.8)"));
+        emitParticles(Math.random() * canvas.width, -50, "rgba(255, 255, 255, 0.8)", 'default', 1);
     }
-    // v1.99.35.00: Unified ambient block moved to top of update loop.
-
-    particles.forEach((p, index) => {
-        p.update(dt);
-        if (p.life <= 0) particles.splice(index, 1);
-    });
+    
+    particlePool.forEach(p => p.update(dt));
 
     spawnTimer += dt;
     var effectiveSpawnInterval = spawnInterval;
+    const isDZ = (typeof getDZStatus === 'function') ? getDZStatus() : false;
     // SEVİYE SONU %80 BARAJLARI: AGRESİF mod! (Ölümcül Hız) ama artık daha insaflı
     if (isDZ) {
         effectiveSpawnInterval = 0.42; // v1.99.32.05: EXTREME MODE SWARM (Kaosun Zirvesi)
@@ -3392,9 +3318,7 @@ function update(dt) {
             if (window.MissionManager) window.MissionManager.notify('gold', goldCount);
 
             // Flying gold effect
-            const gp = new Particle(g.x, g.y, "#FFD700");
-            gp.targetX = 40; gp.targetY = 40; // HUD position
-            particles.push(gp);
+            emitParticles(g.x, g.y, "#FFD700", 'default', 1, 40, 40);
 
             golds.splice(i, 1);
             continue;
@@ -3591,7 +3515,7 @@ function update(dt) {
 
             // Eğer su aygırı henüz yüzeye çıkmamışsa (su altındaysa) çarpma/sek!
             // v1.99.36.15: Toxic biome'da su aygırı hasarını tamamen devre dışı bırak (Ghost hit fix)
-            if (obs.type === 'hippo' && (obs.isSubmerged || bIdx === 8)) continue;
+            if (obs.type === 'hippo' && (obs.isSubmerged || bIdxUpdate === 8)) continue;
 
             // v2.05: Lav Gayzeri sadece patlama anında (erupting) öldürür
             if (obs.type === 'lavaGeyser' && !obs.isDeadly) continue;
@@ -3607,14 +3531,26 @@ function update(dt) {
 
             // v1.99.39.03: Armor now blocks damage in ALL levels
             if (armorCharge > 0) { 
-                // playCrashSound();
+                if (typeof playArmorSound === 'function') playArmorSound();
                 armorCharge--;
                 updateArmorUI();
                 obstacles.splice(i, 1);
                 if (window.MissionManager) window.MissionManager.notify('destroy_obstacle');
                 // Patlama Efekti
-                for (var p = 0; p < 15; p++) particles.push(new Particle(player.x + player.width / 2, player.y + player.height / 2, "#9b59b6"));
-                if (armorCharge <= 0) showToast(translations[currentLang].armorEmpty, false);
+                for (var p = 0; p < 15; p++) emitParticles(player.x + player.width / 2, player.y + player.height / 2, "#9b59b6", 'default', 1);
+                
+                // v1.99.61.81: Armor Exhaustion Elite Modal
+                if (armorCharge <= 0) {
+                    const t = translations[currentLang];
+                    if (!isPaused) togglePause();
+                    showEliteConfirm(
+                        t.noArmorTitle || "ZIRH BİTTİ", 
+                        t.noArmorMsg || "Zırhınız bitti! Satın almak için mağazaya gitmek ister misiniz?", 
+                        t.goShopBtn || "MAĞAZAYA GİT", 
+                        "🛡️", 
+                        () => { openShop(); }
+                    );
+                }
             } else if (hasShield) {
                 // Kalkan varken kırılır ve kütüğü/düşmanı imha eder
                 hasShield = false;
@@ -3663,7 +3599,7 @@ function update(dt) {
                     obs.health--;
                     bullets.splice(i, 1);
                     // Hit Effect (Flashes white)
-                    for (var p = 0; p < 5; p++) particles.push(new Particle(b.x, b.y, "#fff"));
+                    for (var p = 0; p < 5; p++) emitParticles(b.x, b.y, "#fff", 'default', 1);
                     shakeTimer = 0.1;
                 } else {
                     obstacles.splice(j, 1);
@@ -3676,6 +3612,93 @@ function update(dt) {
         }
     }
 }
+
+// v1.99.61.81: ELITE SMOOTH MOVEMENT (LERP)
+function updatePlayer(dt) {
+    if (!isPlaying || isPaused || isGameOver) return;
+
+    // v1.99.61.81: UNIFIED INPUT HANDLING
+    let targetDx = 0;
+
+    // 1. Keyboard Input
+    if (keys.ArrowLeft || keys.a) targetDx = -1;
+    else if (keys.ArrowRight || keys.d) targetDx = 1;
+
+    // 2. Touch Input (Overrides Keyboard)
+    if (moveTouchId !== null && touchX !== null) {
+        const playerCenterX = player.x + player.width / 2;
+        const deadzone = 10 * gameScale;
+        if (touchX < playerCenterX - deadzone) targetDx = -1;
+        else if (touchX > playerCenterX + deadzone) targetDx = 1;
+        else targetDx = 0;
+    }
+
+    // v1.99.61.81: ELITE SMOOTH MOVEMENT (LERP)
+    player.dx += (targetDx - player.dx) * 0.18; // Slightly faster LERP for "Butter" feel
+
+    const moveDt = dt || 0.016;
+    
+    // v1.99.61.81: SPEED BOOST FOR ELITE RESOLUTIONS
+    const finalSpeed = player.speed * (isDashing ? 2.5 : 1.0);
+    
+    // Horizontal Movement
+    player.x += player.dx * finalSpeed * moveDt;
+
+    // Boundary Controls
+    const pMargin = (currentAsset && currentAsset.margin) || 0.35;
+    const dynamicPlayBuffer = 10 * gameScale;
+    const riverShift = getRiverShift(player.y);
+    const playRiverLeft = (canvas.width * pMargin) + riverShift + dynamicPlayBuffer;
+    const playRiverRight = (canvas.width * (1 - pMargin)) + riverShift - player.width - dynamicPlayBuffer;
+
+    if (player.x < playRiverLeft) player.x = playRiverLeft;
+    if (player.x > playRiverRight) player.x = playRiverRight;
+
+    // v1.99.61.81: AUTO-FORWARD & POSITIONING
+    if (isTransitioningLevel) {
+        player.y -= 100 * dt;
+        if (player.y < 100) player.y = 100;
+    } else {
+        // Stick to bottom safely (Use window.innerHeight for CSS pixel space)
+        // v1.99.61.81: Percentage based positioning (Elite Precision)
+        const targetY = window.innerHeight * 0.85 - player.height;
+        player.y += (targetY - player.y) * 0.12;
+    }
+}
+
+// v1.99.61.81: AMMO EXHAUSTION SYSTEM
+function fireBomb() {
+    if (!isPlaying || isPaused || isGameOver || !hasWeapon) return;
+
+    if (bombCount <= 0) {
+        const t = translations[currentLang];
+        // Pause game immediately
+        if (!isPaused) togglePause();
+        
+        showEliteConfirm(
+            t.noAmmoTitle || "MÜHİMMAT BİTTİ", 
+            t.noAmmoMsg || "Mühimmatınız bitti! Satın almak için mağazaya gitmek ister misiniz?", 
+            t.goShopBtn || "MAĞAZA", 
+            "💣", 
+            () => { openShop(); }
+        );
+        return;
+    }
+
+    bombCount--;
+    bullets.push({
+        x: player.x + player.width / 2,
+        y: player.y,
+        radius: 8,
+        speed: 850 // Elite Speed
+    });
+
+    if (typeof playShootSound === 'function') playShootSound();
+    triggerVibration(50);
+    saveGame();
+    updateShopUI();
+}
+
 
 function spawnLog() {
     const bIdxAmbient = Math.floor((currentLevel - 1) / STAGES_PER_BIOME) % BIOME_COUNT;
@@ -4019,7 +4042,7 @@ function draw(dt) {
                 ctx.translate(obs.x + obs.width / 2, obs.y + obs.height / 2);
                 ctx.rotate(obs.rotation * Math.PI / 180);
 
-                // 1. Ana Girdap (Turuncu-Altın Gradyan) - v1.99.35.00 CACHED
+                // 1. Ana Girdap (Turuncu-Altın Gradyan) - v1.99.61.81 CACHED
                 if (!renderCache.leafTornado || renderCache.lastCanvasWidth !== canvas.width) {
                     var grad = ctx.createRadialGradient(0, 0, 5, 0, 0, obs.width / 2);
                     grad.addColorStop(0, "rgba(255, 109, 0, 0.45)"); // Deep Orange
@@ -4609,7 +4632,7 @@ function draw(dt) {
                     grad.addColorStop(0.6, "rgba(255, 255, 0, 0.7)");
                     grad.addColorStop(1, "rgba(255, 255, 255, 0)");
 
-                    // Optimized Pillar & Sparks (v1.99.35.00)
+                    // Optimized Pillar & Sparks (v1.99.61.81)
                     ctx.shadowBlur = 15;
                     ctx.shadowColor = "#ff4500";
                     ctx.fillStyle = grad;
@@ -4620,11 +4643,7 @@ function draw(dt) {
 
                     // Smart Particle Throttle (Reduced to 1-2 per eruption cycle)
                     if (Math.random() < 0.25) {
-                        for (var k = 0; k < 2; k++) {
-                            var sx = (Math.random() - 0.5) * obs.width;
-                            var sy = (Math.random() - 1) * obs.height * 2;
-                            particles.push(new Particle(obs.x + obs.width / 2 + sx, obs.y + obs.height / 2 + sy, "#ffaa00"));
-                        }
+                        emitParticles(obs.x + obs.width / 2, obs.y + obs.height / 2, "#ffaa00", 'ember', 2);
                     }
                 }
                 ctx.restore();
@@ -4761,8 +4780,8 @@ function draw(dt) {
         ctx.restore(); // v1.99.32.07: ELITE MATRIX BALANCE
     });
 
-    // --- PARÇACIKLARIN (Particles) ÇİZİMİ v126 ---
-    particles.forEach(p => p.draw());
+    // --- PARÇACIKLARIN (Particles) BATCH RENDERING v1.99.61.81 ---
+    drawParticles();
 
     // v1.99.39.03: Armor Aura enabled for all biomes
     if (armorCharge > 0) {
@@ -4845,7 +4864,7 @@ function draw(dt) {
         ctx.save();
         ctx.translate(player.x + player.width / 2, player.y + player.height / 2);
 
-        // v1.99.35.00: GELİR TAKİBİ (Revenue Tracker)
+        // v1.99.61.81: GELİR TAKİBİ (Revenue Tracker)
         ctx.scale(pScaleX, (pScaleY || 1.0));
         ctx.rotate(pSkew);
 
@@ -4953,7 +4972,7 @@ function draw(dt) {
 
         // Çıkış Kıvılcımları (Mini Trail)
         if (Math.random() < 0.3) {
-            particles.push(new Particle(b.x, b.y + b.radius, "#ff5722"));
+            emitParticles(b.x, b.y + b.radius, "#ff5722", 'ember', 1);
         }
 
         ctx.restore();
@@ -5185,7 +5204,7 @@ if (quitBtn) quitBtn.onclick = () => {
 const qbg = document.getElementById('quit-btn-gameover');
 if (qbg) qbg.onclick = () => {
     // v1.99.27.07: Unified Speed Transition (GameOver context)
-    window.totalGold = Number(window.totalGold || 0) + Number(goldCount || 0);
+    // window.totalGold addition removed here (Already handled in gameOver() to prevent double counting v1.99.61.81)
     goToMainMenu();
 };
 
@@ -5200,6 +5219,9 @@ if (reviveBtn) reviveBtn.addEventListener('click', () => {
         levelUpInvuln = true; // v1.99.40.06: Absolute Grace Period Ignition
         obstacles = [];      // v1.99.40.06: Clear the death trap
         goldCount = 0;
+        
+        // v1.99.61.81: Immediate Sync to prevent revive-exploit (Lives must be sealed)
+        triggerEliteEconomySync(true);
 
         // UI'yi zorla kapat (Hem class hem style)
         if (gameOverScreen) {
@@ -5378,15 +5400,6 @@ if (resetYes) resetYes.addEventListener('click', () => {
     setTimeout(() => {
         location.reload();
     }, 500);
-});
-
-if (resetNo) resetNo.addEventListener('click', () => {
-    const resetOverlay = document.getElementById('reset-confirm-overlay');
-    if (resetOverlay) {
-        resetOverlay.classList.remove('active');
-        resetOverlay.classList.add('hidden');
-        resetOverlay.style.display = 'none';
-    }
 });
 
 if (resetNo) resetNo.addEventListener('click', () => {

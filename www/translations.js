@@ -179,7 +179,19 @@ const translations = {
         revivedToast: "CANLANDIN! 💖",
         ammoPurchasedToast: "Mühimmat Alındı! +10 🚀",
         lightModeToast: "Aydınlık Mod Aktif ☀️",
-        darkModeToast: "Karanlık Mod Aktif 🌙"
+        darkModeToast: "Karanlık Mod Aktif 🌙",
+        noAmmoTitle: "MÜHİMMAT BİTTİ",
+        noAmmoMsg: "Mühimmatınız bitti! Satın almak için mağazaya gitmek ister misiniz?",
+        noArmorTitle: "ZIRH BİTTİ",
+        noArmorMsg: "Zırhınız bitti! Satın almak için mağazaya gitmek ister misiniz?",
+        goShopBtn: "MAĞAZAYA GİT",
+        cancelBtn: "VAZGEÇ",
+        confirmTitle: "ONAYLA",
+        upgradeMagnetMsg: "Mıknatıs seviyesini yükseltmek istiyor musunuz?",
+        upgradeShieldMsg: "Kalkan seviyesini yükseltmek istiyor musunuz?",
+        buyAmmoMsg: "40 adet Bomba Paketi satın almak istiyor musunuz? (1000 Altın)",
+        buyArmorMsg: "30 adet Zırh Paketi satın almak istiyor musunuz? (1000 Altın)",
+        licenseRequiredToast: "Önce Nehir Topu lisansı almalısın! 📡"
     },
     en: {
         startDesc: "",
@@ -360,7 +372,19 @@ const translations = {
         revivedToast: "REVIVED! 💖",
         ammoPurchasedToast: "Ammo Pack Purchased! +10 🚀",
         lightModeToast: "Light Mode Active ☀️",
-        darkModeToast: "Dark Mode Active 🌙"
+        darkModeToast: "Dark Mode Active 🌙",
+        noAmmoTitle: "AMMO DEPLETED",
+        noAmmoMsg: "You are out of ammo! Would you like to go to the shop?",
+        noArmorTitle: "ARMOR DEPLETED",
+        noArmorMsg: "You are out of armor! Would you like to go to the shop?",
+        goShopBtn: "GO TO SHOP",
+        cancelBtn: "CANCEL",
+        confirmTitle: "CONFIRM",
+        upgradeMagnetMsg: "Do you want to upgrade Magnet level?",
+        upgradeShieldMsg: "Do you want to upgrade Shield level?",
+        buyAmmoMsg: "Do you want to buy 40 Bomb Packs? (1000 Gold)",
+        buyArmorMsg: "Do you want to buy 30 Armor Packs? (1000 Gold)",
+        licenseRequiredToast: "You must get a River Cannon license first! 📡"
     }
 };
 

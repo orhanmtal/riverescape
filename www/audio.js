@@ -248,6 +248,50 @@ function playUIClick() {
     osc.start(); osc.stop(audioCtx.currentTime + 0.1);
 }
 
+// v1.99.61.81: ELITE ACTION SOUNDS
+function playShootSound() {
+    if(!audioCtx) return;
+    const now = audioCtx.currentTime;
+    const osc = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    osc.type = 'square';
+    osc.frequency.setValueAtTime(440, now);
+    osc.frequency.exponentialRampToValueAtTime(110, now + 0.15);
+    g.gain.setValueAtTime(0.2 * isSFXVolume, now);
+    g.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
+    osc.connect(g); g.connect(audioCtx.destination);
+    osc.start(now); osc.stop(now + 0.15);
+}
+
+function playArmorSound() {
+    if(!audioCtx) return;
+    const now = audioCtx.currentTime;
+    const osc = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(880, now);
+    osc.frequency.linearRampToValueAtTime(1760, now + 0.1);
+    osc.frequency.linearRampToValueAtTime(880, now + 0.2);
+    g.gain.setValueAtTime(0.3 * isSFXVolume, now);
+    g.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+    osc.connect(g); g.connect(audioCtx.destination);
+    osc.start(now); osc.stop(now + 0.2);
+}
+
+function playJumpSound() {
+    if(!audioCtx) return;
+    const now = audioCtx.currentTime;
+    const osc = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(330, now);
+    osc.frequency.exponentialRampToValueAtTime(660, now + 0.2);
+    g.gain.setValueAtTime(0.25 * isSFXVolume, now);
+    g.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+    osc.connect(g); g.connect(audioCtx.destination);
+    osc.start(now); osc.stop(now + 0.2);
+}
+
 // --- v1.96.9.5: ARKA PLAN SES GÜVENLİĞİ (Elite Safe) ---
 document.addEventListener('visibilitychange', () => {
     if(!audioCtx) return;
