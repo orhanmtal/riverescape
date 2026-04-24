@@ -3,79 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>River Escape | Survive the Current</title>
-    <meta name="description" content="Experience the ultimate river survival challenge. Dodge obstacles, collect rewards, and master the flow in River Escape.">
+    <title>River Escape Elite | Out Now on Google Play!</title>
+    <meta name="description" content="Join the thrilling world of River Escape Elite. Now on Google Play! Dodge obstacles, collect gold, and set the high score.">
+    
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="style.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌊</text></svg>">
 </head>
 <body>
-    <header>
-        <nav class="container">
-            <div class="logo">River<span>Escape</span></div>
-            <ul>
-                <li><a href="#features">Features</a></li>
-                <li><a href="privacy.html">Privacy</a></li>
-                <li><a href="https://play.google.com/store/apps/details?id=com.gemini.riverescape" class="btn-small">Play Now</a></li>
-            </ul>
-        </nav>
-    </header>
+    <div class="bg-gradient"></div>
 
-    <main>
-        <section class="hero">
-            <div class="container hero-content">
-                <h1 class="animate-up">Master the <span>Wild Current</span></h1>
-                <p class="animate-up delay-1">An adrenaline-pumping survival journey through treacherous waters. Dodge, boost, and conquer the river.</p>
-                <div class="hero-btns animate-up delay-2">
-                    <a href="#features" class="btn-primary">Learn More</a>
-                </div>
-            </div>
-            <div class="hero-visual animate-fade">
-                <img src="hero-image.png" alt="River Escape Action" id="main-hero-img">
-                <div class="glow"></div>
-            </div>
-        </section>
+    <section class="hero">
+        <div class="logo-container">
+            <h1 class="hero-title text-gradient">RIVER<br>ESCAPE</h1>
+            <p class="hero-subtitle">ELITE EDITION</p>
+        </div>
 
-        <section id="features" class="features">
-            <div class="container">
-                <h2 class="section-title">Survival Features</h2>
-                <div class="feature-grid">
-                    <div class="feature-card">
-                        <div class="icon">🌊</div>
-                        <h3>Dynamic Waters</h3>
-                        <p>Realistic river physics and ever-changing currents that challenge your reflexes.</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="icon">⛰️</div>
-                        <h3>Deadly Obstacles</h3>
-                        <p>Navigate through jagged rocks and hidden whirlpools at high speeds.</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="icon">✨</div>
-                        <h3>Global Rank</h3>
-                        <p>Unlock secret vessels and compete on global leaderboards with players worldwide.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
+        <div class="cta-container">
+            <a href="https://play.google.com/store/apps/details?id=com.gemini.riverescape" target="_blank" class="btn-primary">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M17.523 15.3414L20.355 12.5094C20.654 12.2104 20.654 11.7244 20.355 11.4254L17.523 8.59338C17.025 8.09538 16.168 8.44838 16.168 9.15238V10.7484H11.001C10.449 10.7484 10.001 11.1964 10.001 11.7484V12.2484C10.001 12.8004 10.449 13.2484 11.001 13.2484H16.168V14.7824C16.168 15.4864 17.025 15.8394 17.523 15.3414ZM4 6H11V8H4V18H11V20H4C2.895 20 2 19.105 2 18V6C2 4.895 2.895 4 4 4H11V6H4Z" />
+                </svg>
+                DOWNLOAD ON GOOGLE PLAY
+            </a>
+        </div>
+    </section>
 
-    <footer>
-        <div class="container footer-content">
-            <div class="footer-brand">
-                <div class="logo">River<span>Escape</span></div>
-                <p>&copy; 2026 River Escape Studios.</p>
+    <section class="features">
+        <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 1rem;" class="text-gradient">READY FOR ADVENTURE</h2>
+        <p style="text-align: center; color: rgba(255,255,255,0.6); max-width: 600px; margin: 0 auto 3rem;">Survive fast-flowing rivers, explore mysterious biomes, and take your place on the global leaderboard.</p>
+        
+        <div class="features-grid">
+            <div class="feature-card glass">
+                <span class="feature-icon">🌊</span>
+                <h3 class="feature-title">DYNAMIC BIOMES</h3>
+                <p>Experience unique transitions and challenges across Lagoon, Toxic, and Summer biomes.</p>
             </div>
-            <div class="footer-links">
-                <a href="privacy.html">Privacy</a>
-                <a href="#">Terms</a>
-                <a href="#">Contact</a>
+            <div class="feature-card glass">
+                <span class="feature-icon">🚀</span>
+                <h3 class="feature-title">ELITE PERFORMANCE</h3>
+                <p>High-precision controls and smooth 60 FPS gameplay for the ultimate experience.</p>
+            </div>
+            <div class="feature-card glass">
+                <span class="feature-icon">🏆</span>
+                <h3 class="feature-title">GLOBAL LEADERBOARD</h3>
+                <p>Compete with players worldwide and engrave your name in gold.</p>
             </div>
         </div>
+    </section>
+
+    <section class="screenshots">
+        <h2 style="font-size: 2.5rem; margin-bottom: 1rem;" class="text-gradient">EXPLORE THE RIVER</h2>
+        <p style="color: rgba(255,255,255,0.5);">Discover unique environments and deadly challenges.</p>
+        
+        <div class="screenshot-grid">
+            <div class="screenshot-item">
+                <img src="assets/screenshots/gkis.jpg" alt="Winter Biome">
+                <div class="screenshot-caption">Frozen Tundra</div>
+            </div>
+            <div class="screenshot-item">
+                <img src="assets/screenshots/glav.jpg" alt="Lava Biome">
+                <div class="screenshot-caption">Volcanic Fury</div>
+            </div>
+            <div class="screenshot-item">
+                <img src="assets/screenshots/gsum.jpg" alt="Summer Biome">
+                <div class="screenshot-caption">Tropical Rush</div>
+            </div>
+            <div class="screenshot-item">
+                <img src="assets/screenshots/gvoid.jpg" alt="Void Biome">
+                <div class="screenshot-caption">The Abyss</div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-links">
+            <a href="privacy.html">Privacy Policy</a>
+            <a href="#">Support</a>
+            <a href="https://play.google.com/store/apps/details?id=com.gemini.riverescape">Google Play</a>
+        </div>
+        <p style="color: rgba(255,255,255,0.3); font-size: 0.8rem;">&copy; 2026 River Escape Elite. All Rights Reserved.</p>
+        <p style="color: var(--prestige-gold); font-size: 0.7rem; margin-top: 1rem; letter-spacing: 2px;">ELITE ENGINE v1.99.62.00</p>
     </footer>
 
-    <script src="main.js"></script>
+    <script>
+        // Micro-interaction for the button
+        const btn = document.querySelector('.btn-primary');
+        btn.addEventListener('mouseenter', () => {
+            console.log('Elite user interested!');
+        });
+    </script>
 </body>
 </html>
-
