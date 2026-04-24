@@ -1,5 +1,5 @@
 /**
- * RİVER ESCAPE ELİTE - v1.99.62.00 (ELİTE UNİFORM ENGİNE)
+ * RİVER ESCAPE ELİTE - v1.99.63.44 (ELİTE GLOBAL UNİFORMİTY MİLESTONE)
  * 1. NO PLACEHOLDERS - Always use premium assets or procedural generation.
  * 2. PERFORMANCE FIRST - Optimize update loops and DOM access.
  * 3. VISUAL EXCELLENCE - Use HSL colors, smooth gradients, and micro-animations.
@@ -8,10 +8,16 @@
  */
 
 // River Escape Elite - Central Version Control
-// v1.99.62.00 - Elite Clean Milestone (v61.61 Restored)
+// v1.99.63.44 - Elite Global Uniformity Milestone
 window.ELITE_CONFIG = {
-    VERSION: "1.99.62.00",
-    VERSION_CODE: "19962000",
+    VERSION: "1.99.63.44",
+    VERSION_CODE: "19963044",
+    LEVEL_MARGIN: 0.15,
+    BG_KEY_SYNC: true,
+    NATURAL_TILING: true,
+    REMOVE_MIST: true,
+    L8_LASER_LOGIC: "optimized",
+
     BUILD_LEVEL: "Elite Production",
     SYNC_ENGINE: "v3.Elite.Secure",
     LAST_UPDATED: "2026-04-24"

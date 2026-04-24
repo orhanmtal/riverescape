@@ -1,5 +1,5 @@
 /**
- * RİVER ESCAPE ELİTE - v1.99.61.122 (ELİTE UNİFORM ENGİNE)
+ * RİVER ESCAPE ELİTE - v1.99.63.44 (ELİTE GLOBAL UNİFORMİTY)
  * DEVELOPMENT RULES:
  * 1. NO PLACEHOLDERS 2. PERFORMANCE FIRST 3. VISUAL EXCELLENCE
  * 4. CODE INTEGRITY 5. ELITE SYNC
@@ -1186,15 +1186,15 @@ resizeCanvas();
 
 
 const levelAssets = [
-    { threshold: 0, bgKey: 'spring', speed: 200, spawn: 0.55, titleEN: translations.en.springRiver, titleTR: translations.tr.springRiver, color: "#00e5ff", pKey: "ilkbahar", margin: 0.35, visuals: { hideAmbients: false, isProcedural: false, waterColor: "rgba(0, 180, 255, 0.2)", groundColor: "#1e90ff", waterEffect: "shimmer" } },
-    { threshold: 3000, bgKey: 'summer', speed: 220, spawn: 0.52, titleEN: translations.en.summerRiver, titleTR: translations.tr.summerRiver, color: "#1e90ff", pKey: "yaz", margin: 0.35, visuals: { hideAmbients: false, isProcedural: false, waterColor: "rgba(0, 180, 255, 0.2)", groundColor: "#1e90ff", waterEffect: "shimmer" } },
-    { threshold: 6000, bgKey: 'autumn', speed: 230, spawn: 0.48, titleEN: translations.en.autumnRiver, titleTR: translations.tr.autumnRiver, color: "#ff8c00", pKey: "sonbahar", margin: 0.35, visuals: { hideAmbients: false, isProcedural: false, waterColor: "rgba(139, 69, 19, 0.25)", groundColor: "#cd853f", waterEffect: "shimmer" } },
-    { threshold: 9000, bgKey: 'winter', speed: 220, spawn: 0.45, titleEN: translations.en.winterRiver, titleTR: translations.tr.winterRiver, color: "#add8e6", pKey: "kis", margin: 0.35, visuals: { hideAmbients: false, isProcedural: false, waterColor: "rgba(173, 216, 230, 0.4)", groundColor: "#b0c4de", waterEffect: "shimmer" } },
-    { threshold: 12000, bgKey: 'lava', speed: 250, spawn: 0.85, titleEN: translations.en.lavaRiver, titleTR: translations.tr.lavaRiver, color: "#ff4500", pKey: "lava", margin: 0.34, visuals: { hideAmbients: true, isProcedural: false, waterColor: "rgba(255, 69, 0, 0.3)", groundColor: "#1a0000", waterEffect: "lava" } },
-    { threshold: 15000, bgKey: 'void', speed: 190, spawn: 0.95, titleEN: translations.en.voidLevel, titleTR: translations.tr.voidLevel, color: "#9b59b6", pKey: "void", margin: 0.32, visuals: { hideAmbients: true, isProcedural: true, neonBorders: true, auraColor: "#9b59b6", waterColor: "rgba(0, 0, 0, 0.85)", groundColor: "#000000", waterEffect: "neonPulse" } },
-    { threshold: 18000, bgKey: 'lagoon', speed: 310, spawn: 0.55, titleEN: translations.en.l7Title, titleTR: translations.tr.l7Title, color: "#00e5ff", pKey: "ilkbahar", margin: 0.15, visuals: { hideAmbients: true, isProcedural: false, waterColor: "rgba(0, 180, 255, 0.2)", groundColor: "#00e5ff", waterEffect: "ripples" } },
-    { threshold: 21000, bgKey: 'cyber', speed: 340, spawn: 0.42, titleEN: "CYBER CITY", titleTR: "SİBER ŞEHİR", color: "#ff00ff", pKey: "void", margin: 0.18, scrollSpeed: 1.0, visuals: { hideAmbients: true, isProcedural: true, neonBorders: true, auraColor: "#ff00ff", riverFill: "rgba(255, 0, 255, 0.05)", groundColor: "#00050a", waterColor: "rgba(255, 0, 255, 0.1)", waterEffect: "neonPulse" } },
-    { threshold: 24000, bgKey: 'toxic', speed: 320, spawn: 0.70, titleEN: "TOXIC WASTELAND", titleTR: "ZEHİRLİ ATIK", color: "#32CD32", pKey: "lava", margin: 0.30, scrollSpeed: 1.0, visuals: { hideAmbients: true, isProcedural: true, neonBorders: true, auraColor: "#32CD32", riverFill: "rgba(50, 205, 50, 0.08)", groundColor: "#0a1a05", waterColor: "rgba(50, 205, 50, 0.1)", waterEffect: "bubbles" } }
+    { threshold: 0, bgKey: 'spring', speed: 200, spawn: 0.52, titleEN: translations.en.springRiver, titleTR: translations.tr.springRiver, color: "#00e5ff", pKey: "ilkbahar", margin: 0.15, visuals: { hideAmbients: false, isProcedural: false, waterColor: "rgba(0, 229, 255, 0.35)", groundColor: "#2d5a27", waterEffect: "shimmer" } },
+    { threshold: 3000, bgKey: 'summer', speed: 220, spawn: 0.48, titleEN: translations.en.summerRiver, titleTR: translations.tr.summerRiver, color: "#1e90ff", pKey: "yaz", margin: 0.15, visuals: { hideAmbients: false, isProcedural: false, waterColor: "rgba(0, 229, 255, 0.35)", groundColor: "#4a8c3d", waterEffect: "shimmer" } },
+    { threshold: 6000, bgKey: 'autumn', speed: 230, spawn: 0.45, titleEN: translations.en.autumnRiver, titleTR: translations.tr.autumnRiver, color: "#ff8c00", pKey: "sonbahar", margin: 0.15, visuals: { hideAmbients: false, isProcedural: false, waterColor: "rgba(255, 140, 0, 0.25)", groundColor: "#8b4513", waterEffect: "shimmer" } },
+    { threshold: 9000, bgKey: 'winter', speed: 220, spawn: 0.42, titleEN: translations.en.winterRiver, titleTR: translations.tr.winterRiver, color: "#add8e6", pKey: "kis", margin: 0.15, visuals: { hideAmbients: false, isProcedural: false, waterColor: "rgba(173, 216, 230, 0.45)", groundColor: "#f0f8ff", waterEffect: "shimmer" } },
+    { threshold: 12000, bgKey: 'lava', speed: 250, spawn: 0.80, titleEN: translations.en.lavaRiver, titleTR: translations.tr.lavaRiver, color: "#ff4500", pKey: "lava", margin: 0.15, visuals: { hideAmbients: true, isProcedural: false, waterColor: "rgba(255, 69, 0, 0.4)", groundColor: "#1a0000", waterEffect: "lava" } },
+    { threshold: 15000, bgKey: 'void', speed: 190, spawn: 0.90, titleEN: translations.en.voidLevel, titleTR: translations.tr.voidLevel, color: "#9b59b6", pKey: "void", margin: 0.15, visuals: { hideAmbients: true, isProcedural: true, neonBorders: true, auraColor: "#9b59b6", waterColor: "rgba(155, 89, 182, 0.2)", groundColor: "#000000", waterEffect: "neonPulse" } },
+    { threshold: 18000, bgKey: 'lagoon', speed: 310, spawn: 0.50, titleEN: translations.en.l7Title, titleTR: translations.tr.l7Title, color: "#00e5ff", pKey: "ilkbahar", margin: 0.15, visuals: { hideAmbients: true, isProcedural: false, waterColor: "rgba(0, 229, 255, 0.35)", groundColor: "#2e8b57", waterEffect: "ripples" } },
+    { threshold: 21000, bgKey: 'cyber', speed: 340, spawn: 0.40, titleEN: "CYBER CITY", titleTR: "SİBER ŞEHİR", color: "#ff00ff", pKey: "void", margin: 0.15, scrollSpeed: 1.0, visuals: { hideAmbients: true, isProcedural: true, neonBorders: true, auraColor: "#ff00ff", riverFill: "rgba(255, 0, 255, 0.1)", groundColor: "#00050a", waterColor: "rgba(255, 0, 255, 0.15)", waterEffect: "neonPulse" } },
+    { threshold: 24000, bgKey: 'toxic', speed: 320, spawn: 0.65, titleEN: "TOXIC WASTELAND", titleTR: "ZEHİRLİ ATIK", color: "#32CD32", pKey: "lava", margin: 0.15, scrollSpeed: 1.0, visuals: { hideAmbients: true, isProcedural: true, neonBorders: true, auraColor: "#32CD32", riverFill: "rgba(50, 205, 50, 0.12)", groundColor: "#0a1a05", waterColor: "rgba(50, 205, 50, 0.15)", waterEffect: "bubbles" } }
 ];
 
 
@@ -1269,7 +1269,7 @@ var currentLAsset = currentAsset;
 
 
 window.totalGold = 0;
-var currentVersion = "1.99.61.122"; // FAMILIES POLICY FIX (v61.61 RESTORED)
+var currentVersion = "1.99.63.44"; // ELITE GLOBAL UNIFORMITY MILESTONE
 
 var magnetLevel = 0;
 var shieldLevel = 0;
@@ -2319,7 +2319,7 @@ function spawnObstacle() {
                 type: 'croc',
                 x: spawnX,
                 relativeX: spawnX - riverShift,
-                y: spawnY + 50, width: 32 * gameScale, height: 55 * gameScale,
+                y: spawnY + 50, width: 52 * gameScale, height: 90 * gameScale,
                 speedY: baseSpeed + (isZigZag ? 60 : 40),
                 speedX: 0,
                 isZigZag: isZigZag,
@@ -2515,18 +2515,27 @@ function spawnObstacle() {
                 maxHealth: 4
             });
         } else if (selectedType === 'laserGate') {
-            const buffer = 50;
-            const gateWidth = (riverRight - riverLeft) - (buffer * 2);
+            // v1.99.63.18: TARGETED SINGLE-SEGMENT LASER (As requested)
+            // Spawns a large laser block centered on the player's current position.
+            const riverW = (riverRight - riverLeft) + 80;
+            const lWidth = riverW * 0.50; // Covers 50% of the river
+            const playerCenterX = player.x + (player.width / 2);
+            
+            let lX = playerCenterX - (lWidth / 2);
+            // Clamp within river bounds
+            if (lX < riverLeft) lX = riverLeft;
+            if (lX + lWidth > riverRight + 80) lX = (riverRight + 80) - lWidth;
+
             obstacles.push({
                 type: 'laserGate',
-                x: riverLeft + buffer,
-                relativeX: (riverLeft + buffer) - riverShift,
+                x: lX,
+                relativeX: lX - riverShift,
                 y: spawnY,
-                width: gateWidth,
+                width: lWidth,
                 height: 30,
-                speedY: baseSpeed * 0.45,
+                speedY: baseSpeed * 0.55,
                 state: 'warning',
-                timer: 1.5,
+                timer: 1.4,
                 time: 0
             });
         } else if (selectedType === 'cyberDrone') {
@@ -3576,16 +3585,14 @@ function update(dt) {
                 obs.isSubmerged = false;
             }
         } else if (obs.type === 'laserGate') {
-            // v1.99.36.50: ELITE LASER STATE ENGINE
+            // v1.99.63.18: TARGETED LASER STATE ENGINE (Fixed Position)
             obs.timer -= dt;
             if (obs.timer <= 0) {
                 if (obs.state === 'warning') {
                     obs.state = 'active';
-                    obs.timer = 2.5; // 2.5 saniye aktif kalır
+                    obs.timer = 2.5; 
                 } else {
-                    // Aktif süre bitti, lazer söner ve engel silinir (veya tekrar uyarıya döner)
-                    // Genelde engeller ekrandan çıkınca silinir, ama lazer sabit bir engeldir.
-                    obs.isExpired = true; // Ekrandan çıkmadan önce silinmesi için
+                    obs.isExpired = true; 
                 }
             }
         }
@@ -3851,25 +3858,87 @@ function renderBackgroundLayer(bg, scrollY, alpha = 1.0) {
     if (!bg || bg.width <= 0) return;
     ctx.save();
     ctx.globalAlpha *= alpha;
+    
     var H = Math.ceil(canvas.height) * 2;
-    ctx.drawImage(bg, 0, Math.floor(scrollY), canvas.width, H);
-    ctx.drawImage(bg, 0, Math.floor(scrollY) - H + 1, canvas.width, H);
+    const sy = Math.floor(scrollY);
+    
+    // v1.99.63.44: ELITE FULL-SPECTRUM MAPPING
+    // We map the entire image: Left Grass (compressed), Center Water (stretched), Right Grass (compressed)
+    // This restores the original colors, textures, and "soul" of the asset.
+    
+    const sMargin = 0.35; // Legacy bank line (35%)
+    const dMargin = 0.15; // Elite bank line (15%)
+    
+    const sGrassW = bg.width * sMargin;
+    const dGrassW = canvas.width * dMargin;
+    
+    const sWaterW = bg.width * (1 - 2 * sMargin);
+    const dWaterW = canvas.width * (1 - 2 * dMargin);
+
+    // --- LEFT BANK ---
+    ctx.drawImage(bg, 0, 0, sGrassW, bg.height, 0, sy, dGrassW, H);
+    ctx.drawImage(bg, 0, 0, sGrassW, bg.height, 0, sy - H + 1, dGrassW, H);
+
+    // --- CENTER WATER (Stretched for Elite Corridor) ---
+    ctx.drawImage(bg, sGrassW, 0, sWaterW, bg.height, dGrassW, sy, dWaterW, H);
+    ctx.drawImage(bg, sGrassW, 0, sWaterW, bg.height, dGrassW, sy - H + 1, dWaterW, H);
+
+    // --- RIGHT BANK ---
+    ctx.drawImage(bg, bg.width - sGrassW, 0, sGrassW, bg.height, canvas.width - dGrassW, sy, dGrassW, H);
+    ctx.drawImage(bg, bg.width - sGrassW, 0, sGrassW, bg.height, canvas.width - dGrassW, sy - H + 1, dGrassW, H);
+
     ctx.restore();
 }
 
 function drawProceduralBG(lvl, alpha = 1.0) {
     const asset = levelAssets[lvl] || levelAssets[0];
     const visuals = asset.visuals || {};
+    const margin = asset.margin || 0.15;
 
     ctx.save();
     ctx.globalAlpha = alpha;
 
-    // 0. Fill Base Ground
-    ctx.fillStyle = visuals.groundColor || "#1e90ff";
+    // 1. ELITE BASE GROUND (Full Fill)
+    ctx.fillStyle = visuals.groundColor || "#1a1a1a";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    if (lvl === 5) { // Void
+    // 2. ELITE BANK MAPPING
+    const rLeft = canvas.width * margin;
+    const rRight = canvas.width * (1 - margin);
+
+    // 3. BIOME SPECIFIC BANK DETAILS
+    if (lvl <= 3 || lvl === 6) { // Spring, Summer, Autumn, Winter, Lagoon
+        // Natural Grass/Bank texture
+        ctx.fillStyle = "rgba(0, 0, 0, 0.08)";
         for (var i = 0; i < 60; i++) {
+            var seed = (i * 791) % 1000;
+            var bx = (seed * 1.5) % canvas.width;
+            if (bx > rLeft && bx < rRight) continue; // Skip the water corridor
+            
+            var by = (performance.now() / 10 + seed * 5) % canvas.height;
+            ctx.beginPath();
+            ctx.arc(bx, by, 2, 0, Math.PI * 2);
+            ctx.fill();
+        }
+        // Bank edge shading (Elite Professionally straight corridor)
+        let gradL = ctx.createLinearGradient(rLeft - 30, 0, rLeft, 0);
+        gradL.addColorStop(0, "rgba(0,0,0,0)"); gradL.addColorStop(1, "rgba(0,0,0,0.15)");
+        ctx.fillStyle = gradL; ctx.fillRect(rLeft - 30, 0, 30, canvas.height);
+        
+        let gradR = ctx.createLinearGradient(rRight, 0, rRight + 30, 0);
+        gradR.addColorStop(0, "rgba(0,0,0,0.15)"); gradR.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = gradR; ctx.fillRect(rRight, 0, 30, canvas.height);
+
+    } else if (lvl === 4) { // Lava - Cracks and heat
+        ctx.strokeStyle = "rgba(255, 69, 0, 0.12)";
+        ctx.lineWidth = 2;
+        for (var i = 0; i < 20; i++) {
+            var lx = (i * 70) % canvas.width;
+            if (lx > rLeft && lx < rRight) continue;
+            ctx.beginPath(); ctx.moveTo(lx, 0); ctx.lineTo(lx, canvas.height); ctx.stroke();
+        }
+    } else if (lvl === 5) { // Void - Stars
+        for (var i = 0; i < 80; i++) {
             var seed = (i * 997) % 1000;
             var sy = (performance.now() / 6 + seed * 2) % canvas.height;
             var sx = (seed * 123) % canvas.width;
@@ -3877,30 +3946,28 @@ function drawProceduralBG(lvl, alpha = 1.0) {
             ctx.fillStyle = `rgba(255, 255, 255, ${alphaStar})`;
             ctx.beginPath(); ctx.arc(sx, sy, 1 + (i % 2), 0, Math.PI * 2); ctx.fill();
         }
-    } else if (lvl === 7) { // Cyber
-        ctx.strokeStyle = "rgba(255, 0, 255, 0.25)"; ctx.lineWidth = 1;
-        for (var i = 0; i < 15; i++) {
-            var lineY = ((performance.now() / 3 + i * (canvas.height / 15)) % canvas.height);
-            ctx.beginPath(); ctx.moveTo(0, lineY); ctx.lineTo(canvas.width, lineY); ctx.stroke();
+    } else if (lvl === 7) { // Cyber - Horizontal grid lines on banks only
+        ctx.strokeStyle = visuals.auraColor || "rgba(255, 0, 255, 0.25)";
+        ctx.lineWidth = 1;
+        ctx.globalAlpha = 0.5;
+        for (var i = 0; i < 25; i++) {
+            var lineY = ((performance.now() / 3 + i * (canvas.height / 25)) % canvas.height);
+            ctx.beginPath();
+            ctx.moveTo(0, lineY); ctx.lineTo(rLeft, lineY);
+            ctx.moveTo(rRight, lineY); ctx.lineTo(canvas.width, lineY);
+            ctx.stroke();
         }
-    } else if (lvl === 8) { // Toxic
+    } else if (lvl === 8) { // Toxic - Bubbles/Gas
+        ctx.fillStyle = "rgba(50, 205, 50, 0.08)";
         for (var i = 0; i < 40; i++) {
-            var bSeed = (i * 733) % 1000;
-            var bx = (bSeed * 147) % canvas.width;
-            var by = (performance.now() / 8 + bSeed * 3) % canvas.height;
-            var bSize = 2 + (i % 5);
-            ctx.fillStyle = `rgba(50, 205, 50, ${0.1 + (i % 3) * 0.1})`;
-            ctx.beginPath(); ctx.arc(bx, by, bSize, 0, Math.PI * 2); ctx.fill();
-        }
-    } else {
-        ctx.fillStyle = "rgba(255, 255, 255, 0.1)";
-        for (var i = 0; i < 20; i++) {
-            var sSeed = (i * 443) % 1000;
-            var sx = (sSeed * 197) % canvas.width;
-            var sy = (performance.now() / 4 + sSeed * 5) % canvas.height;
-            ctx.fillRect(sx, sy, 1, 10 + (i % 5));
+            var seed = (i * 431) % 1000;
+            var tx = (seed * 1.2) % canvas.width;
+            if (tx > rLeft && tx < rRight) continue;
+            var ty = (performance.now() / 8 + seed * 4) % canvas.height;
+            ctx.beginPath(); ctx.arc(tx, ty, 4 + (i % 8), 0, Math.PI * 2); ctx.fill();
         }
     }
+
     ctx.restore();
 }
 
@@ -3981,16 +4048,13 @@ function draw(dt) {
     const showAmbients = syncLAsset && syncLAsset.visuals ? !syncLAsset.visuals.hideAmbients : true;
     if (showAmbients) ambientEntities.forEach(ae => ae.draw('bottom'));
 
-    drawProceduralWater(dt, syncLAsset);
-
-    // v1.99.36.86: ELITE DYNAMIC WATER COLORS
-    let waterColor = syncLAsset.visuals.waterColor || "rgba(0, 180, 255, 0.2)";
-    ctx.fillStyle = waterColor;
-    const cMargin = (syncLAsset ? syncLAsset.margin : 0.35);
-    const rLeft = canvas.width * cMargin;
-    const rRight = canvas.width * (1 - cMargin);
+    // v1.99.63.44: ELITE CORRIDOR MAPPING
+    const rLeft = canvas.width * (syncLAsset.margin || 0.15);
+    const rRight = canvas.width * (1 - (syncLAsset.margin || 0.15));
     const rWidth = rRight - rLeft;
-    ctx.fillRect(rLeft, 0, rWidth, canvas.height);
+
+    // Subtle water shimmer only — no solid fill on top of background texture
+    drawProceduralWater(dt, syncLAsset);
 
     // --- BIOME GUARD: NEON BOUNDARIES ---
     const drawBorders = syncLAsset && syncLAsset.visuals ? syncLAsset.visuals.neonBorders : false;
@@ -5126,15 +5190,7 @@ function drawProceduralWater(dt, overrideAsset = null) {
 
     ctx.save();
     if (effect === "shimmer") {
-        ctx.strokeStyle = wColor;
-        ctx.globalAlpha = 0.1;
-        ctx.lineWidth = 1;
-        for (var i = 0; i < 10; i++) {
-            var waveY = ((performance.now() / 25) + (i * canvas.height / 10)) % canvas.height;
-            ctx.beginPath();
-            ctx.moveTo(rLeft, waveY); ctx.lineTo(rRight, waveY);
-            ctx.stroke();
-        }
+        // No horizontal lines — background asset has its own water texture
     } else if (effect === "lava") {
         ctx.globalAlpha = 0.35;
         for (var i = 0; i < 6; i++) {
@@ -5148,15 +5204,19 @@ function drawProceduralWater(dt, overrideAsset = null) {
             ctx.fillRect(rLeft + sizzle, ly, rRight - rLeft, 25);
         }
     } else if (effect === "neonPulse") {
+        // Subtle neon glow pulse on river edges only
         ctx.strokeStyle = wColor;
-        ctx.globalAlpha = 0.15;
-        ctx.lineWidth = 2;
-        for (var i = 0; i < 8; i++) {
-            var ny = (performance.now() / 12 + i * (canvas.height / 8)) % canvas.height;
+        ctx.globalAlpha = 0.12;
+        ctx.lineWidth = 1;
+        ctx.shadowBlur = 8;
+        ctx.shadowColor = wColor;
+        for (var i = 0; i < 4; i++) {
+            var ny = (performance.now() / 20 + i * (canvas.height / 4)) % canvas.height;
             ctx.beginPath();
-            ctx.moveTo(rLeft, ny); ctx.lineTo(rRight, ny);
+            ctx.moveTo(rLeft + 4, ny); ctx.lineTo(rRight - 4, ny);
             ctx.stroke();
         }
+        ctx.shadowBlur = 0;
     } else if (effect === "ripples") {
         ctx.strokeStyle = "#00e5ff";
         ctx.globalAlpha = 0.2;
