@@ -855,31 +855,31 @@ async function showRewardedAd(btnElem, defaultText, callback) {
 }
 
 async function showInterstitialAd() {
-    // v1.99.61.115: ELITE ASYNC SHIELD (Non-blocking & Error Proof)
+    // v1.99.63.57: ELITE AD-SYNC ENGINE (Immediate Freeze)
+    // Reklam hazırlanırken (loading) oyunun arkada devam etmesini engellemek için anında donduruyoruz.
     const AdMob = getCapacitorAdMob();
     if (!AdMob) {
         console.log("[AdMob Simulation] Interstitial Ad Simulated.");
         return;
     }
 
-    // Bağımsız bir asenkron blokta çalıştırıyoruz ki ana thread asla beklemesin!
+    // 1. ANINDA DONDURMA (Gecikmeyi önle)
+    window.isAdShowing = true; 
+    if (window.audioCtx) audioCtx.suspend();
+    
     (async () => {
         try {
             if (!admobInitialized) await initAdMob();
             
-            console.log('[AdMob] Preparing Interstitial...');
+            console.log('[AdMob] Preparing Interstitial (Pre-Freeze Active)...');
             await AdMob.prepareInterstitial({
                 adId: INTERSTITIAL_AD_UNIT_ID,
                 isTesting: false
             });
             
-            // v1.99.61.117: Reklam gösterilmeden hemen önce sesi kes ve oyunu dondur
-            if (window.audioCtx) audioCtx.suspend();
-            window.isAdShowing = true; 
-            
             await AdMob.showInterstitial();
         } catch (e) {
-            console.error('[AdMob] Elite Shield caught Interstitial Error:', e);
+            console.error('[AdMob] Ad-Sync caught Interstitial Error:', e);
             window.isAdShowing = false;
             if (window.audioCtx) audioCtx.resume();
         }

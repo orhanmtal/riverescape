@@ -1,5 +1,5 @@
 /**
- * RİVER ESCAPE ELİTE - v1.99.63.56 (ELİTE PRECISION FOLLOW MILESTONE)
+ * RİVER ESCAPE ELİTE - v1.99.63.57 (ELİTE AD-SYNC MILESTONE)
  * 1. NO PLACEHOLDERS - Always use premium assets or procedural generation.
  * 2. PERFORMANCE FIRST - Optimize update loops and DOM access.
  * 3. VISUAL EXCELLENCE - Use HSL colors, smooth gradients, and micro-animations.
@@ -8,10 +8,10 @@
  */
 
 // River Escape Elite - Central Version Control
-// v1.99.63.56 - Elite Precision Follow Milestone
+// v1.99.63.57 - Elite Ad-Sync Milestone
 window.ELITE_CONFIG = {
-    VERSION: "1.99.63.56",
-    VERSION_CODE: "19963056",
+    VERSION: "1.99.63.57",
+    VERSION_CODE: "19963057",
     LEVEL_MARGIN: 0.15,
     BG_KEY_SYNC: true,
     NATURAL_TILING: true,
