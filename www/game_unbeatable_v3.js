@@ -1,5 +1,5 @@
 /**
- * RİVER ESCAPE ELİTE - v1.99.63.55 (ELİTE GLOBAL UNİFORMİTY)
+ * RİVER ESCAPE ELİTE - v1.99.63.56 (ELİTE PRECISION FOLLOW MILESTONE)
  * DEVELOPMENT RULES:
  * 1. NO PLACEHOLDERS 2. PERFORMANCE FIRST 3. VISUAL EXCELLENCE
  * 4. CODE INTEGRITY 5. ELITE SYNC
@@ -3788,35 +3788,39 @@ function updatePlayer(dt) {
     if (keys.ArrowUp || keys.w) targetDy = -1;
     else if (keys.ArrowDown || keys.s) targetDy = 1;
 
-    // 2. Touch Input — v1.99.63.55: SCREEN-SPLIT SİSTEMİ
-    // Ekranın sol yarısına dokun → sola, sağ yarısına dokun → sağa.
-    // Önceki sistem parmak + oyuncu merkezini karşılaştırıyordu (sorunluydu).
+    // 2. Touch Input — v1.99.63.56: ELITE PRECISION FOLLOW ENGINE (Distance-Based)
     if (moveTouchId !== null && touchX !== null) {
-        const screenCenter = canvas.width / 2;
-        const deadzone = canvas.width * 0.06; // Ortada %6 ölü bölge (yanlışlıkla tetiklenmesin)
-        if (touchX < screenCenter - deadzone) {
-            targetDx = -1; // Sol yarı → sola
-        } else if (touchX > screenCenter + deadzone) {
-            targetDx = 1;  // Sağ yarı → sağa
-        } else {
-            targetDx = 0; // Orta bölge → dur
-        }
+        const playerCenterX = player.x + player.width / 2;
+        const dist = touchX - playerCenterX;
+        
+        // Hassasiyet Alanı: Kayıktan 80px uzaklıkta maksimum hıza ulaşır.
+        // Bu sayede dibine dokunursan yavaş (hassas), uzağa dokunursan "şak" diye gider.
+        let sensitivityZone = 80 * gameScale;
+        targetDx = dist / sensitivityZone;
+        
+        if (targetDx > 1) targetDx = 1;
+        if (targetDx < -1) targetDx = -1;
 
-        // Dikey hareket (Nebula biome için — önceki gibi)
+        // Dikey hareket (Nebula biome için)
         const playerCenterY = player.y + player.height / 2;
         if (touchY !== null) {
-            const dyZone = 20 * gameScale;
-            if (touchY < playerCenterY - dyZone) targetDy = -1;
-            else if (touchY > playerCenterY + dyZone) targetDy = 1;
+            const dyZone = 25 * gameScale;
+            targetDy = (touchY - playerCenterY) / dyZone;
+            if (targetDy > 1) targetDy = 1;
+            if (targetDy < -1) targetDy = -1;
         }
     }
 
-    // v1.99.63.55: LERP 0.22 → 0.14 (daha az "yağ" hissi, daha kontrollü duruş)
-    player.dx += (targetDx - player.dx) * 0.14;
-    player.dy += (targetDy - player.dy) * 0.14;
+    // v1.99.63.55: Snappy Response & Smooth Flow (LERP 0.30)
+    // Parmağı çekince anında duruş için sürtünme %75 artırıldı.
+    const moveLerp = (targetDx === 0) ? 0.40 : 0.30;
+    player.dx += (targetDx - player.dx) * moveLerp;
+    player.dy += (targetDy - player.dy) * moveLerp;
 
     const moveDt = dt || 0.016;
-    const finalSpeed = player.speed * (isDashing ? 2.5 : 1.0);
+    const isDZ = (typeof getDZStatus === 'function') ? getDZStatus() : false;
+    const baseSpeed = player.speed || 105;
+    const finalSpeed = (isDashing ? baseSpeed * 2.5 : baseSpeed) * (isDZ ? 1.3 : 1.0);
 
     // Horizontal Movement
     player.x += player.dx * finalSpeed * moveDt;
