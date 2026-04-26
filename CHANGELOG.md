@@ -1,6 +1,16 @@
 # River Escape - Versiyon Günlükleri (CHANGELOG)
 Bu dosya, oyun motorunun ve özelliklerin versiyon versiyon nasıl geliştiğini mühürleyip saklamak için Antigravity tarafından oluşturulmuştur.
 
+### [v1.99.63.55] - 2026-04-26
+#### Elite Version Alignment + Families Policy Compliance Fix
+- **Global Version Sync**: Unified version stamps across `package.json`, `version.js`, `index.html`, and `translations.js` to `v1.99.63.55`.
+- **Version Code Update**: Incremented internal version code to `19963055` for production consistency.
+- **[POLICY FIX] AndroidManifest.xml**: Added `AD_ID` permission removal (`tools:node="remove"`) — required for all child-directed apps targeting COPPA/GDPR-K.
+- **[POLICY FIX] AndroidManifest.xml**: Added three native `<meta-data>` tags: `TAG_FOR_CHILD_DIRECTED_TREATMENT`, `MAX_AD_CONTENT_RATING=G`, `TAG_FOR_UNDER_AGE_OF_CONSENT` for binary-level compliance detection.
+- **[POLICY FIX] MainActivity.java**: Expanded from stub to full `MobileAds.setRequestConfiguration()` call at native Java level. Google Play scanners detect this in the compiled APK.
+- **[POLICY FIX] game_unbeatable_v3.js**: Changed `requestTrackingAuthorization` from `true` → `false` (requesting tracking is a COPPA violation).
+- **[POLICY FIX] game_unbeatable_v3.js**: Disabled per-level interstitial ads. Full-screen interrupt ads are a Families Policy violation. Rewarded (voluntary) ads remain active.
+
 ### [v1.99.33.61] - 2026-04-19
 #### Modern Boat & Prestige Perk Update
 - **Boat Collection Modernized**: Replaced placeholder assets with premium 'Elite' boat skins (Magma Overlord, Pixel Phantom, Nebula Zenith).

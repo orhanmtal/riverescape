@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.gemini.riverescape" />
+                  <option name="mobileSdkAppId" value="1:542497054139:android:c06feada5d7adbdf87789e" />
+                  <option name="projectId" value="riverescapeglobal" />
+                  <option name="projectNumber" value="542497054139" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

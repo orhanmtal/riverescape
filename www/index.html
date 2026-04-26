@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
     <!--
- * RİVER ESCAPE ELİTE - v1.99.62.00 (ELİTE UNİFORM ENGİNE)
+ * RİVER ESCAPE ELİTE - v1.99.63.55 (ELİTE UNİFORM ENGİNE)
  * 1. NO PLACEHOLDERS - Always use premium assets or procedural generation.
  * 2. PERFORMANCE FIRST - Optimize update loops and DOM access.
  * 3. VISUAL EXCELLENCE - Use HSL colors, smooth gradients, and micro-animations.
@@ -15,18 +15,18 @@
  */
 
 // River Escape Elite - Central Version Control
-// v1.99.62.00 - Elite Clean Milestone (v61.61 Restored)
+// v1.99.63.55 - Elite Global Uniformity Milestone
 window.ELITE_CONFIG = {
-    VERSION: "1.99.62.00",
-    VERSION_CODE: "19962000",
+    VERSION: "1.99.63.55",
+    VERSION_CODE: "19963055",
     BUILD_LEVEL: "Elite Production",
     SYNC_ENGINE: "v3.Elite.Secure",
-    LAST_UPDATED: "2026-04-24"
+    LAST_UPDATED: "2026-04-26"
 };-->
-    <script src="version.js?v=1.99.63.00"></script>
+    <script src="version.js?v=1.99.63.55"></script>
     <script>
         (function () {
-            const v = window.ELITE_CONFIG ? window.ELITE_CONFIG.VERSION : "1.99.63.00";
+            const v = window.ELITE_CONFIG ? window.ELITE_CONFIG.VERSION : "1.99.63.55";
             document.title = "River Escape Elite v" + v;
             // Update Meta immediately
             const updateMeta = (name, val) => {
@@ -35,7 +35,7 @@ window.ELITE_CONFIG = {
                 m.content = val;
             };
             updateMeta("version", v);
-            updateMeta("version-code", window.ELITE_CONFIG ? window.ELITE_CONFIG.VERSION_CODE : "19961115");
+            updateMeta("version-code", window.ELITE_CONFIG ? window.ELITE_CONFIG.VERSION_CODE : "19963055");
         })();
     </script>
 
@@ -44,7 +44,7 @@ window.ELITE_CONFIG = {
 
     <style>
 /* MASTER UI OVERRIDE//
- * RİVER ESCAPE ELİTE - v1.99.62.00 (ELİTE UNİFORM ENGİNE)
+ * RİVER ESCAPE ELİTE - v1.99.63.55 (ELİTE UNİFORM ENGİNE)
  * Firebase Firestore Global Sıralama ve Profil Senkronizasyon Sistemi
  * v1.99.61.115
  */
@@ -53,14 +53,16 @@ window.ELITE_CONFIG = {
     flex-direction: column !important;
     align-items: center !important;
     justify-content: space-between !important;
-    padding: calc(30px + env(safe-area-inset-top)) 6vmin calc(30px + env(safe-area-inset-bottom)) 6vmin !important;
+    padding: calc(20px + env(safe-area-inset-top)) 6vmin calc(20px + env(safe-area-inset-bottom)) 6vmin !important;
     background: radial-gradient(circle at center, #0a192f 0%, #020617 100%) !important;
     overflow: hidden !important;
     position: fixed !important;
     top: 0 !important;
     left: 0 !important;
     width: 100% !important;
-    height: 100vh !important;
+    /* dvh: eski telefonlarda adres barı hesaba katar, 100vh yerine daha doğru */
+    height: 100dvh !important;
+    height: 100vh !important; /* fallback for older browsers */
     z-index: 1000 !important;
 }
 
@@ -594,7 +596,7 @@ window.ELITE_CONFIG = {
             box-shadow: 0 0 10px rgba(100, 221, 23, 0.5);
         }
     </style>
-    <!-- EMERGENCY ON-SCREEN DEBUGGER// v1.99.62.00 - Elite Clean Milestone (v61.61 Restored) -->
+    <!-- EMERGENCY ON-SCREEN DEBUGGER// v1.99.63.55 - Elite Global Uniformity Milestone -->
     <script>
         window.onerror = function (msg, url, line) {
             var div = document.createElement('div');
@@ -622,7 +624,7 @@ window.ELITE_CONFIG = {
         <button id="pause-btn"
             style="position: absolute; top: calc(20px + env(safe-area-inset-top)); right: calc(20px + env(safe-area-inset-right)); display: none; background: rgba(0,0,0,0.4); color: white; border: 1px solid rgba(255,229,255,0.4); padding: 8px; font-family: 'Outfit', sans-serif; font-size: 18px; z-index: 1001; border-radius: 50%; width: 45px; height: 45px; pointer-events: auto; cursor: pointer; backdrop-filter: blur(4px); line-height: 1;">⏸</button>
 
-        <!-- ELITE FULL-SCREEN UI v1.99.61.108 -->
+        <!-- ELITE FULL-SCREEN UI v1.99.63.55 -->
         <div id="start-screen" class="screen master-start-v21">
             <!-- TOP ROW: PROFILE & SETTINGS -->
             <div class="elite-menu-header">
@@ -648,32 +650,44 @@ window.ELITE_CONFIG = {
             </div>
 
             <!-- CENTER ZONE: LOGO & PLAY -->
-            <div style="display: flex; flex-direction: column; align-items: center; gap: 4vh; width: 100%;">
-                <div style="text-align: center; position: relative; width: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; pointer-events: none;">
+            <div style="display: flex; flex-direction: column; align-items: center; gap: clamp(8px, 2vh, 30px); width: 100%; flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden; scrollbar-width: none; -ms-overflow-style: none; padding-bottom: 8px;">
+                <div style="text-align: center; position: relative; width: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; pointer-events: none; flex-shrink: 0;">
                     <h1 class="floating-logo" style="font-family: 'Outfit', sans-serif; font-weight: 900; color: white; font-size: 13vmin; letter-spacing: -2px; margin: 0; line-height: 0.85; background: linear-gradient(135deg, #fff 20%, #00e5ff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 15px 30px rgba(0,229,255,0.3)); text-transform: uppercase;">RIVER<br><span style="background: linear-gradient(135deg, #00e5ff 0%, #00897b 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">ESCAPE</span></h1>
-                    <div id="elite-main-version" style="color: #FFD700; font-family: 'Press Start 2P', cursive; font-size: 1.8vmin; font-weight: bold; margin-top: 15px; letter-spacing: 0.8vmin; opacity: 0.9; text-shadow: 0 0 15px rgba(255,215,0,0.4);">
-                        <script>document.write("ELITE v" + (window.ELITE_CONFIG ? window.ELITE_CONFIG.VERSION : "1.99.61.110"));</script>
+                    <div id="elite-main-version" style="color: #FFD700; font-family: 'Press Start 2P', cursive; font-size: 1.8vmin; font-weight: bold; margin-top: 10px; letter-spacing: 0.8vmin; opacity: 0.9; text-shadow: 0 0 15px rgba(255,215,0,0.4);">
+                        <script>document.write("ELITE v" + (window.ELITE_CONFIG ? window.ELITE_CONFIG.VERSION : "1.99.63.55"));</script>
                     </div>
                 </div>
 
-                <div style="position: relative; margin-top: 2vh;">
+                <div style="position: relative; flex-shrink: 0;">
                     <button id="start-btn" class="master-play-btn">OYNA 🌊</button>
                     <div class="pulse-ring"></div>
                 </div>
 
                 <!-- v1.99.30.06: ELITE MISSION PANEL -->
                 <div id="mission-panel" style="
-                    margin-top: 15px; padding: 18px; width: 88%; max-width: 340px; 
+                    margin-top: 8px; padding: 14px; width: 88%; max-width: 340px; 
                     border-radius: 24px; background: rgba(0, 229, 255, 0.05); 
                     border: 1px solid rgba(0, 229, 255, 0.3); backdrop-filter: blur(20px);
                     -webkit-backdrop-filter: blur(20px);
                     box-shadow: 0 0 30px rgba(0, 229, 255, 0.1), inset 0 0 15px rgba(255,255,255,0.05);
                     animation: missionPanelPulse 4s infinite ease-in-out;
+                    flex-shrink: 0;
                 ">
                     <style>
                         @keyframes missionPanelPulse {
                             0%, 100% { border-color: rgba(0, 229, 255, 0.3); box-shadow: 0 0 20px rgba(0, 229, 255, 0.1); }
                             50% { border-color: rgba(0, 229, 255, 0.6); box-shadow: 0 0 40px rgba(0, 229, 255, 0.2); }
+                        }
+                        /* Scrollbar gizle - WebKit */
+                        .master-start-v21 > div::-webkit-scrollbar { display: none; }
+                        /* Küçük ekran medya sorgusu */
+                        @media (max-height: 650px) {
+                            #mission-panel { display: none !important; }
+                            .master-start-v21 { padding-top: calc(10px + env(safe-area-inset-top)) !important; padding-bottom: calc(10px + env(safe-area-inset-bottom)) !important; }
+                        }
+                        @media (max-height: 750px) {
+                            #mission-panel { padding: 10px 14px !important; margin-top: 4px !important; }
+                            #mission-panel h3 { margin-bottom: 8px !important; font-size: 12px !important; }
                         }
                     </style>
                     <h3 id="active-goals-title" style="font-size: 14px; color: #00e5ff; margin: 0 0 15px 0; text-align: left; font-family: 'Outfit'; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; text-shadow: 0 0 10px rgba(0,229,255,0.5);">AKTİF HEDEFLER 🎯</h3>
@@ -682,7 +696,7 @@ window.ELITE_CONFIG = {
             </div>
 
             <!-- BOTTOM ROW: ACTIONS -->
-            <div class="elite-action-row">
+            <div class="elite-action-row" style="flex-shrink: 0; position: relative; z-index: 10;">
                 <button id="open-shop-btn" class="elite-btn-square" style="width: 18vmin; height: 18vmin; font-size: 8vmin;">🛒</button>
                 <button id="leaderboard-btn" class="elite-btn-square" style="width: 18vmin; height: 18vmin; font-size: 8vmin; border-color: rgba(255, 215, 0, 0.4); background: rgba(255, 215, 0, 0.05); box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);">🏆</button>
                 <button id="spin-btn" class="elite-btn-square" style="width: 18vmin; height: 18vmin; font-size: 8vmin;">🎡</button>
@@ -772,7 +786,7 @@ window.ELITE_CONFIG = {
                     </div>
                 </div>
                 <div style="font-family: 'Outfit'; font-size: 7px; color: rgba(0, 229, 255, 0.5); text-align: right; margin-top: 2px; font-weight: 900; letter-spacing: 0.5px;">
-                    <script>document.write("v" + (window.ELITE_CONFIG ? window.ELITE_CONFIG.VERSION : "v1.99.61.81"));</script>
+                    <script>document.write("v" + (window.ELITE_CONFIG ? window.ELITE_CONFIG.VERSION : "1.99.63.55"));</script>
                 </div>
 
             </div>
@@ -917,7 +931,7 @@ window.ELITE_CONFIG = {
                     style="color: #fff; font-family: 'Outfit'; font-weight: 900; font-size: 26px; margin-bottom: 12px; letter-spacing: 1px;">
                     ÇIKIŞ YAPILSIN MI?</h2>
                 <div id="version-display" style="position: absolute; bottom: 15px; right: 20px; color: rgba(255,255,255,0.4); font-family: 'Outfit'; font-size: 12px; letter-spacing: 1px; z-index: 1000;">
-                    <script>document.write("v" + (window.ELITE_CONFIG ? window.ELITE_CONFIG.VERSION : "1.99.61.81"));</script>
+                    <script>document.write("v" + (window.ELITE_CONFIG ? window.ELITE_CONFIG.VERSION : "1.99.63.55"));</script>
                 </div>
                 <p id="logout-confirm-desc" style="color: #fff; font-family: 'Outfit'; font-size: 14px; margin-bottom: 30px; line-height: 1.6; opacity: 0.8;">
                 Oturumu kapattığınızda verileriniz bulutta güvende kalır ancak tekrar girmek için internet

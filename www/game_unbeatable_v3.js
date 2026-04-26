@@ -1,5 +1,5 @@
 /**
- * RİVER ESCAPE ELİTE - v1.99.63.44 (ELİTE GLOBAL UNİFORMİTY)
+ * RİVER ESCAPE ELİTE - v1.99.63.55 (ELİTE GLOBAL UNİFORMİTY)
  * DEVELOPMENT RULES:
  * 1. NO PLACEHOLDERS 2. PERFORMANCE FIRST 3. VISUAL EXCELLENCE
  * 4. CODE INTEGRITY 5. ELITE SYNC
@@ -661,20 +661,22 @@ async function initAdMob() {
     }
     try {
         await AdMob.initialize({
-            requestTrackingAuthorization: true,
+            // FAMILIES POLICY: requestTrackingAuthorization MUST be false.
+            // Requesting tracking permission is a COPPA violation for child-directed apps.
+            requestTrackingAuthorization: false,
             testingDevices: [],
             initializeForTesting: false,
         });
 
-        // --- v1.99.61.122: GOOGLE PLAY FAMILIES POLICY COMPLIANCE (Ad Content Fix) ---
-        // Bu ayarlar reklamların "Genel İzleyici" (G) seviyesinde olmasını sağlar.
+        // --- v1.99.63.55: AUDIENCE 13+ — TAM HEDEFLEME AKTİF ---
+        // Families Policy devre dışı (13+ kitle). Interstitial + Rewarded her ikisi aktif.
         try {
             await AdMob.setRequestConfiguration({
-                maxAdContentRating: 'G', // En kısıtlayıcı derecelendirme (General Audience)
-                tagForChildDirectedTreatment: true, // COPPA: Çocuklara yönelik uygulama
-                tagForUnderAgeOfConsent: true, // GDPR-K: Reşit olmayan kullanıcılar
+                maxAdContentRating: 'T',             // T = Teen (13+) — daha fazla reklam tipi
+                tagForChildDirectedTreatment: false,  // 13+: Çocuk yönlendirmesi kapalı
+                tagForUnderAgeOfConsent: false,       // 13+: Rıza yaşı kısıtı kapalı
             });
-            console.log('[AdMob] Families Policy Configuration Applied: G Rating.');
+            console.log('[AdMob] ✅ 13+ Config Active: Teen Rating, Full Targeting, Interstitial Enabled.');
         } catch (confErr) {
             console.error('[AdMob] Configuration failed:', confErr);
         }
@@ -1129,6 +1131,26 @@ function giveReward() {
 }
 
 var gameScale = 1;
+// v1.99.63.55: PERFORMANCE — saveGame Throttle
+// Her altın toplamada localStorage'a yazmak freeze'e neden olur.
+// 3 saniyede bir otomatik kaydeder, kritik anlarda (level up, game over) zorla kaydeder.
+var _saveThrottleTimer = 0;
+var _saveThrottleInterval = 3.0; // saniye
+var _pendingSave = false;
+function throttledSave(force = false) {
+    if (force) { saveGame(); _saveThrottleTimer = 0; _pendingSave = false; return; }
+    _pendingSave = true; // İşaretle, zamanı gelince kaydet
+}
+// gameLoop'tan her frame çağrılır (update içinde değil, dışarıda)
+function tickSaveThrottle(dt) {
+    if (!_pendingSave) return;
+    _saveThrottleTimer += dt;
+    if (_saveThrottleTimer >= _saveThrottleInterval) {
+        saveGame();
+        _saveThrottleTimer = 0;
+        _pendingSave = false;
+    }
+}
 
 // v1.99.61.81: PLAYER OBJECT (Dynamic Dimensions)
 const player = {
@@ -1150,7 +1172,7 @@ function syncPlayerDimensions() {
 
     player.width = 56 * gameScale * scaleFactor;
     player.height = 98 * gameScale * scaleFactor;
-    player.speed = 115 * gameScale; // Slightly faster for responsiveness
+    player.speed = 100 * gameScale; // v1.99.63.55: 115→100 (daha kontrollü hareket)
 }
 
 // v1.99.61.106: ELITE RESPONSIVE ENGINE (Direct CSS Pixel Mapping)
@@ -2012,9 +2034,28 @@ function fireBomb() {
     saveGame();
 }
 
-if (bombActionBtn) bombActionBtn.addEventListener('click', fireBomb);
+if (bombActionBtn) {
+    bombActionBtn.addEventListener('click', (e) => { e.preventDefault(); fireBomb(); });
+    bombActionBtn.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        e.stopPropagation(); // Diğer touch handler'ları engelle
+        bombActionBtn.style.transform = 'scale(0.85)';
+        fireBomb();
+    }, { passive: false });
+    bombActionBtn.addEventListener('touchend', () => { bombActionBtn.style.transform = 'scale(1)'; });
+}
+
 const dashBtn = document.getElementById('dash-action-btn');
-if (dashBtn) dashBtn.addEventListener('click', activateDash);
+if (dashBtn) {
+    dashBtn.addEventListener('click', (e) => { e.preventDefault(); activateDash(); });
+    dashBtn.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dashBtn.style.transform = 'scale(0.85)';
+        activateDash();
+    }, { passive: false });
+    dashBtn.addEventListener('touchend', () => { dashBtn.style.transform = 'scale(1)'; });
+}
 
 window.addEventListener('keydown', (e) => {
     if (e.code === 'Space') fireBomb();
@@ -3241,7 +3282,7 @@ function update(dt) {
 
         showLevelUp(currentLevel);
         syncEliteHUD(); // Force instant UI sync
-        saveGame();
+        throttledSave(true); // v1.99.63.55: PERF — force-save on level-up (critical moment)
     }
 
 
@@ -3408,24 +3449,24 @@ function update(dt) {
         var baseMagnetRange = (powerupTimer > 0) ? 400 : (bIdxUpdate === 4 ? 120 : 0);
         var magnetRange = window.PerkEngine ? window.PerkEngine.getMagnetRange(baseMagnetRange) : baseMagnetRange;
 
-        if (magnetRange > 0) {
-            var dxM = cx - g.x;
-            var dyM = cy - g.y;
-            var distM = Math.sqrt(dxM * dxM + dyM * dyM);
-            if (distM < magnetRange) {
-                var pullSpeed = (powerupTimer > 0) ? 450 : 250;
-                g.x += (dxM / distM) * pullSpeed * dt;
-                g.y += (dyM / distM) * pullSpeed * dt;
-                if (bIdxUpdate === 4) g.relativeX = g.x - getRiverShift(g.y);
-            } else {
-                g.y += g.speed * dt;
-                if (bIdxUpdate === 4) {
-                    if (g.relativeX === undefined) g.relativeX = g.x - getRiverShift(g.y - g.speed * dt);
-                    g.x = getRiverShift(g.y) + g.relativeX;
-                }
-            }
+        // v1.99.63.55: PERF — Unified Magnet & Movement Engine
+        var dxM = cx - g.x;
+        var dyM = cy - g.y;
+        var distSqM = dxM * dxM + dyM * dyM;
+        var magnetRangeSq = magnetRange * magnetRange;
+        
+        if (magnetRange > 0 && distSqM < magnetRangeSq) {
+            var distM = Math.sqrt(distSqM); 
+            var pullSpeed = (powerupTimer > 0) ? 450 : 250;
+            g.x += (dxM / distM) * pullSpeed * dt;
+            g.y += (dyM / distM) * pullSpeed * dt;
+            if (bIdxUpdate === 4) g.relativeX = g.x - getRiverShift(g.y);
         } else {
             g.y += g.speed * dt;
+            if (bIdxUpdate === 4) {
+                if (g.relativeX === undefined) g.relativeX = g.x - getRiverShift(g.y - g.speed * dt);
+                g.x = getRiverShift(g.y) + g.relativeX;
+            }
         }
 
         g.angle += dt * 5;
@@ -3439,7 +3480,7 @@ function update(dt) {
             goldCount += collected;
             window.totalGold = Number(window.totalGold || 0) + Number(collected);
             score += collected * 100; // v1.199.13.0: SKOR ARTIK DEĞERLİ! (x100 Bonus)
-            saveGame();
+            throttledSave(); // v1.99.63.55: PERF — throttle, her coinde saveGame() değil
 
             // --- v1.99.30.06: MISSION HOOK & JUICY VFX ---
             if (window.MissionManager) window.MissionManager.notify('gold', goldCount);
@@ -3747,25 +3788,32 @@ function updatePlayer(dt) {
     if (keys.ArrowUp || keys.w) targetDy = -1;
     else if (keys.ArrowDown || keys.s) targetDy = 1;
 
-    // 2. Touch Input (Overrides Keyboard)
+    // 2. Touch Input — v1.99.63.55: SCREEN-SPLIT SİSTEMİ
+    // Ekranın sol yarısına dokun → sola, sağ yarısına dokun → sağa.
+    // Önceki sistem parmak + oyuncu merkezini karşılaştırıyordu (sorunluydu).
     if (moveTouchId !== null && touchX !== null) {
-        const playerCenterX = player.x + player.width / 2;
-        const deadzone = 10 * gameScale;
-        if (touchX < playerCenterX - deadzone) targetDx = -1;
-        else if (touchX > playerCenterX + deadzone) targetDx = 1;
-        else targetDx = 0;
+        const screenCenter = canvas.width / 2;
+        const deadzone = canvas.width * 0.06; // Ortada %6 ölü bölge (yanlışlıkla tetiklenmesin)
+        if (touchX < screenCenter - deadzone) {
+            targetDx = -1; // Sol yarı → sola
+        } else if (touchX > screenCenter + deadzone) {
+            targetDx = 1;  // Sağ yarı → sağa
+        } else {
+            targetDx = 0; // Orta bölge → dur
+        }
 
-        // v1.99.61.88: Nebula Vertical Touch Support
+        // Dikey hareket (Nebula biome için — önceki gibi)
         const playerCenterY = player.y + player.height / 2;
         if (touchY !== null) {
-            if (touchY < playerCenterY - deadzone) targetDy = -1;
-            else if (touchY > playerCenterY + deadzone) targetDy = 1;
+            const dyZone = 20 * gameScale;
+            if (touchY < playerCenterY - dyZone) targetDy = -1;
+            else if (touchY > playerCenterY + dyZone) targetDy = 1;
         }
     }
 
-    // v1.99.61.96: ELITE OIL-FLOW LERP (More responsive)
-    player.dx += (targetDx - player.dx) * 0.22;
-    player.dy += (targetDy - player.dy) * 0.22;
+    // v1.99.63.55: LERP 0.22 → 0.14 (daha az "yağ" hissi, daha kontrollü duruş)
+    player.dx += (targetDx - player.dx) * 0.14;
+    player.dy += (targetDy - player.dy) * 0.14;
 
     const moveDt = dt || 0.016;
     const finalSpeed = player.speed * (isDashing ? 2.5 : 1.0);
@@ -5251,8 +5299,9 @@ function gameLoop(timestamp) {
     if (!isPlaying && !isGameOver && !startScreen.classList.contains('active') && !isOverlayOpen) return;
 
     var dt = (timestamp - lastTime) / 1000;
-    if (dt > 0.1) dt = 0.1;
+    if (dt > 0.05) dt = 0.05; // v1.99.63.55: PERF — 0.1'den 0.05'e düşürüldü (büyük spike'lar freeze simüle ederdi)
     lastTime = timestamp;
+    tickSaveThrottle(dt); // v1.99.63.55: PERF — Throttled save tick
 
     // v1.96.6.3: Akıllı Ambiyans Yönetimi 
     if (shakeTimer > 0) shakeTimer -= dt;
@@ -5818,9 +5867,10 @@ function showLevelUp(levelNum) {
         showToast(`${t.levelLabel || 'LVL'} ${formattedLvl} 🚀`, true);
     }
 
-    // v1.99.61.114: AGRESİF GEÇİŞ REKLAMI (Her Seviye Atlamada)
+    // v1.99.63.55: 13+ AUDIENCE — Interstitial YENİDEN AKTİF.
+    // Families Policy 13+ için geçerli değil, tüm reklam türleri serbestçe kullanılabilir.
     if (levelNum > 1) {
-        console.log(`[AdMob] Her Seviye Reklamı Tetiklendi: Level ${levelNum}`);
+        console.log(`[AdMob] Level Interstitial: Level ${levelNum}`);
         showInterstitialAd();
     }
 
