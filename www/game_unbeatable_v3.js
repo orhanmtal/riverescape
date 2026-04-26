@@ -3412,9 +3412,9 @@ function update(dt) {
 
 
 
-    // Kayığın Çarpışma Kutusu (Hitbox) - v1.99.32.00: DYNAMİC JUİCE SYNC
-    var pw = (player.width - 8) * pScaleX;
-    var ph = (player.height - 20) * pScaleY;
+    // Kayığın Çarpışma Kutusu (Hitbox) - v1.99.63.56: MAXIMUM FORGIVENESS (Elite Player Friendly)
+    var pw = (player.width * 0.50) * pScaleX; // %50 daraltıldı (Önceden -8 idi)
+    var ph = (player.height * 0.45) * pScaleY; // %55 daraltıldı (Önceden -20 idi)
     var px = player.x + player.width / 2 - pw / 2;
     var py = player.y + player.height / 2 - ph / 2;
 
@@ -3425,8 +3425,8 @@ function update(dt) {
         var p = powerups[i];
         p.y += p.speed * dt;
 
-        // Lava Bonus collection radius (Biome 4)
-        var pRadius = p.radius * (bIdxUpdate === 4 ? 1.25 : 1.0);
+        // Lava Bonus collection radius (Biome 4) - v1.99.63.56: Expanded Hitbox
+        var pRadius = p.radius * (bIdxUpdate === 4 ? 1.6 : 1.4);
 
         if (px < p.x + pRadius && px + pw > p.x - pRadius &&
             py < p.y + pRadius && py + ph > p.y - pRadius) {
@@ -3470,7 +3470,8 @@ function update(dt) {
         }
 
         g.angle += dt * 5;
-        var gRadius = g.radius * (bIdxUpdate === 4 ? 1.3 : 1.0);
+        // v1.99.63.56: COIN MAGNET BUFF (Players love gold)
+        var gRadius = g.radius * (bIdxUpdate === 4 ? 1.6 : 1.3);
 
         if (px < g.x + gRadius && px + pw > g.x - gRadius &&
             py < g.y + gRadius && py + ph > g.y - gRadius) {
@@ -3638,11 +3639,11 @@ function update(dt) {
             }
         }
 
-        // --- RESTORED ELITE HITBOX BASE (v1.99.33.73 Fix) ---
-        var ox = obs.x + (obs.width * 0.25);
-        var oy = obs.y + (obs.height * 0.25);
-        var ow = obs.width * 0.5;
-        var oh = obs.height * 0.5;
+        // --- RESTORED ELITE HITBOX BASE (v1.99.63.56: REDUCED FOR PLAYER ADVANTAGE) ---
+        var ox = obs.x + (obs.width * 0.35); // Daha fazla insaf payı (%35 margin)
+        var oy = obs.y + (obs.width * 0.35);
+        var ow = obs.width * 0.3; // Hitbox genişliği %30'a düşürüldü
+        var oh = obs.height * 0.3; // Hitbox yüksekliği %30'a düşürüldü
 
         if (obs.type === 'lavaGeyser') {
             ox = obs.x + (obs.width * 0.1);
