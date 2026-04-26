@@ -1,5 +1,5 @@
 /**
- * RİVER ESCAPE ELİTE - v1.99.63.56 (ELİTE PRECISION FOLLOW MILESTONE)
+ * RİVER ESCAPE ELİTE - v1.99.63.63 (STABLE AAB RELEASE)
  * DEVELOPMENT RULES:
  * 1. NO PLACEHOLDERS 2. PERFORMANCE FIRST 3. VISUAL EXCELLENCE
  * 4. CODE INTEGRITY 5. ELITE SYNC
@@ -3789,7 +3789,7 @@ function updatePlayer(dt) {
     if (keys.ArrowUp || keys.w) targetDy = -1;
     else if (keys.ArrowDown || keys.s) targetDy = 1;
 
-    // 2. Touch Input — v1.99.63.56: ELITE PRECISION FOLLOW ENGINE (Distance-Based)
+    // 2. Touch Input — v1.99.63.63: ELITE PRECISION FOLLOW ENGINE (Distance-Based)
     if (moveTouchId !== null && touchX !== null) {
         const playerCenterX = player.x + player.width / 2;
         const dist = touchX - playerCenterX;
