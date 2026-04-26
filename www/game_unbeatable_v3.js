@@ -2092,8 +2092,8 @@ canvas.addEventListener('touchstart', (e) => {
         var tx = touch.clientX - rect.left;
         var ty = touch.clientY - rect.top;
 
-        // Ekranın sol %65'inden başlıyorsa ve henüz bir hareket parmağı yoksa kilitle
-        if (moveTouchId === null && tx < canvas.width * 0.65) {
+        // v1.99.63.55: UNIFIED TOUCH-START (Anywhere on canvas can start movement)
+        if (moveTouchId === null) {
             moveTouchId = touch.identifier;
             touchX = tx;
             touchY = ty;
@@ -5903,12 +5903,12 @@ function showLevelUp(levelNum) {
 
         setTimeout(() => {
             overlay.style.opacity = '0';
-            levelUpInvuln = false; // Normalleş
+            levelUpInvuln = false; // Normalleş (v1.99.63.55: Increased to 5s)
             setTimeout(() => {
                 overlay.style.display = 'none';
                 overlay.classList.add('hidden');
             }, 500);
-        }, 1800);
+        }, 5000);
     }
 }
 
