@@ -5623,7 +5623,14 @@ if (hardResetBtnUI) hardResetBtnUI.addEventListener('click', () => {
 // v122: Restart - Altınları kasaya aktar ve yeni oyun başla
 if (restartBtn) restartBtn.addEventListener('click', () => {
     if (typeof playUIClick === 'function') playUIClick();
-    // totalGold += goldCount; // v1.99.39.01: DELETED (Already added in gameOver to prevent duplication)
+    
+    // v1.99.63.77: [ELITE RESET] Önceki seans verilerini tamamen temizle
+    window.resumeScore = 0;
+    window.resumeLives = 3;
+    window.resumeLevel = 1;
+    window.resumeProgressTime = 0;
+    localStorage.removeItem('riverEscapeCurrentSession');
+
     saveGame();
     startGame();
 });
