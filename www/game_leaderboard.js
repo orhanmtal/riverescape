@@ -611,9 +611,11 @@ const Leaderboard = {
                     this.updateUI();
                 }
 
-                // Force Local Save after sync
+                // Force Local Save and UI Refresh after sync
                 if (typeof window.saveGame === 'function') window.saveGame();
                 if (typeof window.updateShopUI === 'function') window.updateShopUI();
+                if (typeof window.syncEliteHUD === 'function') window.syncEliteHUD();
+                
                 if (callback) callback(true);
             } else if (callback) callback(false);
         } catch (e) {
