@@ -5592,8 +5592,8 @@ if (cancelLogoutBtn) cancelLogoutBtn.addEventListener('click', () => {
 
 if (confirmLogoutBtn) confirmLogoutBtn.addEventListener('click', async () => {
     try {
-        if (window.gameLeaderboard && typeof window.gameLeaderboard.logout === 'function') {
-            await window.gameLeaderboard.logout();
+        if (window.gameLeaderboard && typeof window.gameLeaderboard.performLogout === 'function') {
+            await window.gameLeaderboard.performLogout();
         } else {
             // Fallback
             localStorage.clear();
