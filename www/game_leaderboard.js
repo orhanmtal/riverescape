@@ -431,11 +431,20 @@ const Leaderboard = {
 
         const finalScore = Math.floor(score || window.score || 0);
         
+        // v1.99.63.77: [ELITE HIGH SCORE PROTECTION]
+        // Sadece en yüksek skoru 'score' olarak kaydet
+        let localBest = Number(localStorage.getItem('riverEscapeHighScore') || 0);
+        if (finalScore > localBest) {
+            localBest = finalScore;
+            localStorage.setItem('riverEscapeHighScore', localBest);
+        }
+        
         try {
             const payload = {
                 id: this.playerID,
                 name: this.playerName,
-                score: finalScore,
+                score: localBest, // Her zaman en yüksek olanı gönder
+                currentScore: finalScore, // O anki skoru da ek bilgi olarak tutalım
                 totalGold: Math.floor(window.totalGold || 0),
                 magnetLevel: window.magnetLevel || 0,
                 shieldLevel: window.shieldLevel || 0,

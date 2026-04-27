@@ -2995,6 +2995,13 @@ function gameOver() {
     window.resumeLives = 3;
     window.resumeLevel = 1; // v1.99.61.81: Reset progression on death
     window.totalGold = Number(window.totalGold || 0) + Number(goldCount || 0);
+    
+    // v1.99.63.77: [ELITE HIGH SCORE PROTECTION]
+    const currentBest = Number(localStorage.getItem('riverEscapeHighScore') || 0);
+    if (score > currentBest) {
+        localStorage.setItem('riverEscapeHighScore', Math.floor(score));
+    }
+
     saveGame();
     localStorage.removeItem('riverEscapeCurrentSession'); // Seansı temizle    
     try {
