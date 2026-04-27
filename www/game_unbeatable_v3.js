@@ -5645,6 +5645,23 @@ if (restartBtn) restartBtn.addEventListener('click', () => {
     startGame();
 });
 
+// v1.99.63.77: Manuel Bulut Senkronizasyonu
+const cloudSyncBtn = document.getElementById('cloud-sync-btn');
+if (cloudSyncBtn) cloudSyncBtn.addEventListener('click', () => {
+    if (typeof playUIClick === 'function') playUIClick();
+    if (typeof Leaderboard !== 'undefined' && Leaderboard.restoreFromCloud) {
+        showToast("☁️ BULUT VERİLERİ ÇEKİLİYOR...", true);
+        Leaderboard.restoreFromCloud((success) => {
+            if (success) {
+                showToast("✅ VERİLER GÜNCELLENDİ!", true);
+                if (typeof syncEliteHUD === 'function') syncEliteHUD();
+            } else {
+                showToast("❌ BULUTTAN VERİ ÇEKİLEMEDİ.", false);
+            }
+        });
+    }
+});
+
 const resetYes = document.getElementById('confirm-reset-yes');
 const resetNo = document.getElementById('confirm-reset-no');
 
