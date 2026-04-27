@@ -22,6 +22,10 @@ Bu sürüm, oyunun teknik altyapısını profesyonel izleme (Analytics) ve veri 
 - **[BUG FIX]**: "Yeniden Başla" (Restart) butonunun önceki seans ilerlemesini (70% level vb.) temizlememe sorunu giderildi.
 - **[SYNC]**: `restoreFromCloud` motoruna "High Score" (En Yüksek Skor) restorasyonu eklendi.
 - **[RECORDS]**: `submitProgress` mantığı güncellendi; artık sadece mevcut skordan daha yüksek bir değer gelirse rekor güncelleniyor.
+- **[UI/UX]**: Ayarlar ekranına neon ışıklı **"BULUTU KONTROL ET"** (Manual Sync) butonu eklendi.
+- **[SYNC]**: "Zero-Lag" senkronizasyon; buluttan veri indiği an HUD ve Market anında yenileniyor.
+- **[LOCALIZATION]**: Senkronizasyon butonu ve tüm bildirim mesajları tam TR/EN desteğine kavuşturuldu.
+- **[VFX]**: Bomba patlama parçacıkları (particles) dizginlendi; daha odaklanmış ve profesyonel bir patlama efekti sağlandı.
 
 ### [v1.99.63.55] - 2026-04-26
 #### Elite Version Alignment + Families Policy Compliance Fix
