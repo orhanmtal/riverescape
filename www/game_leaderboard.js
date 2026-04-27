@@ -320,7 +320,7 @@ const Leaderboard = {
             'google-login-btn': () => this.loginWithGoogle(),
             'google-recover-btn': () => this.loginWithGoogle(),
             'save-name-btn': () => this.handleManualNameSave(),
-            'logout-btn': () => this.logout(),
+            // 'logout-btn' dinleyicisi Ayarlar ekranı tarafından yönetilecek (v1.99.63.77)
             'close-identity-btn': () => {
                 const modal = document.getElementById('identity-modal');
                 if (modal) {
