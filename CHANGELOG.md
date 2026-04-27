@@ -1,6 +1,28 @@
 # River Escape - Versiyon Günlükleri (CHANGELOG)
 Bu dosya, oyun motorunun ve özelliklerin versiyon versiyon nasıl geliştiğini mühürleyip saklamak için Antigravity tarafından oluşturulmuştur.
 
+### [v1.99.63.77] - 2026-04-27
+#### Elite Performance Next - Analytics & Security Overhaul
+Bu sürüm, oyunun teknik altyapısını profesyonel izleme (Analytics) ve veri güvenliği (Cloud Sync) standartlarına taşımıştır.
+
+| Özellik / Fark | v1.99.63.63 (Eski) | v1.99.63.77 (Yeni) |
+| :--- | :--- | :--- |
+| **Firebase Analytics** | ❌ Yok | ✅ **TAM ENTEGRASYON** |
+| **Liderlik Tablosu** | ⚠️ Güvensiz (Skor siliniyordu) | ✅ **REKOR KORUMALI** (Sadece Max) |
+| **Logout (Çıkış)** | ⚠️ Çift Onay & Çirkin UI | ✅ **MODERN & TEK ONAY** |
+| **Veri Güvenliği** | ❌ Çıkarken veri kaybolabiliyordu | ✅ **ÇIKIŞ ÖNCESİ OTO-SYNC** |
+| **Yeniden Başlatma** | ⚠️ Eski ilerlemeden başlayabiliyordu | ✅ **TAM SIFIRLAMA** (Clean Start) |
+| **Cihazlar Arası Senkron** | ⚠️ Sadece Altın/Level | ✅ **TAM SENKRON** (+ Rekorlar) |
+| **Hata Yönetimi** | ❌ Sessiz Hatalar | ✅ **TOAST UYARI SİSTEMİ** |
+
+**Detaylı Değişiklikler:**
+- **[ANALYTICS]**: Firebase Analytics SDK entegre edildi. Tüm oyun içi harcamalar, level geçişleri ve oyun sonu skorları takip altına alındı.
+- **[SECURITY]**: `performLogout` öncesine zorunlu `submitProgress` (Cloud Sync) eklendi.
+- **[BUG FIX]**: Ayarlar ekranındaki çift logout onayı hatası giderildi, UI "Elite Style"a çekildi.
+- **[BUG FIX]**: "Yeniden Başla" (Restart) butonunun önceki seans ilerlemesini (70% level vb.) temizlememe sorunu giderildi.
+- **[SYNC]**: `restoreFromCloud` motoruna "High Score" (En Yüksek Skor) restorasyonu eklendi.
+- **[RECORDS]**: `submitProgress` mantığı güncellendi; artık sadece mevcut skordan daha yüksek bir değer gelirse rekor güncelleniyor.
+
 ### [v1.99.63.55] - 2026-04-26
 #### Elite Version Alignment + Families Policy Compliance Fix
 - **Global Version Sync**: Unified version stamps across `package.json`, `version.js`, `index.html`, and `translations.js` to `v1.99.63.55`.
