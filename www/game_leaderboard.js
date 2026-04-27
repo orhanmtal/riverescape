@@ -580,6 +580,11 @@ const Leaderboard = {
                     window.currentLevel = Number(data.level);
                     window.resumeLevel = Number(data.level);
                 }
+
+                // 🏆 Rekor Senkronu (v1.99.63.77: Elite High Score Restore)
+                if (data.score !== undefined) {
+                    localStorage.setItem('riverEscapeHighScore', Math.floor(data.score));
+                }
                 
                 // v1.99.40.03: Precision Resume Restore
                 if (data.sessionLevel !== undefined) window.resumeLevel = Number(data.sessionLevel);
