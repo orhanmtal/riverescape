@@ -658,6 +658,16 @@ const Leaderboard = {
 
     async performLogout() {
         try {
+            // v1.99.63.77: [ELITE SECURITY] Çıkmadan önce verileri son kez buluta mühürle
+            if (typeof this.submitProgress === 'function') {
+                console.log("☁️ [ELITE SYNC] Çıkış öncesi son senkronizasyon...");
+                try {
+                    await this.submitProgress(); 
+                } catch (e) {
+                    console.warn("⚠️ Son senkronizasyon başarısız, yine de çıkış yapılıyor...", e);
+                }
+            }
+
             if (this.auth) await this.auth.signOut();
             
             // ELITE PURGE: Tüm oyun verilerini yerel hafızadan kazı! 🧼✨
