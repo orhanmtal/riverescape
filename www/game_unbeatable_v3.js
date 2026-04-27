@@ -5586,15 +5586,13 @@ const confirmLogoutBtn = document.getElementById('confirm-logout-btn');
 const cancelLogoutBtn = document.getElementById('cancel-logout-btn');
 
 if (logoutBtn) logoutBtn.addEventListener('click', () => {
-    if (window.gameLeaderboard && typeof window.gameLeaderboard.logout === 'function') {
-        // v1.99.63.77: Modern Elite Onay Kutusunu Çağır
+    // v1.99.63.77: Elite Onay Kutusunu Zorla (Çirkin tarayıcı uyarısı yasak!)
+    if (window.Leaderboard && typeof window.Leaderboard.logout === 'function') {
+        window.Leaderboard.logout();
+    } else if (window.gameLeaderboard && typeof window.gameLeaderboard.logout === 'function') {
         window.gameLeaderboard.logout();
     } else {
-        // Fallback
-        if (confirm("Logout?")) {
-            localStorage.clear();
-            location.reload();
-        }
+        console.error("❌ [ELITE ERROR] Leaderboard module not found!");
     }
 });
 

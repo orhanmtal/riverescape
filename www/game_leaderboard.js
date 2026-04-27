@@ -827,3 +827,6 @@ const Leaderboard = {
 
 // Başlat
 Leaderboard.init();
+
+// v1.99.63.77: Global Mühürleme (Dış erişim için)
+window.Leaderboard = Leaderboard;
