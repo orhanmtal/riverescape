@@ -284,7 +284,15 @@ class Particle {
         this.targetX = targetX;
         this.targetY = targetY;
         this.size = (type === 'glitch') ? (Math.random() * 6 + 2) : (Math.random() * 4 + 2);
-        this.speedX = (type === 'glitch') ? (Math.random() - 0.5) * 10 : (Math.random() - 0.5) * 2;
+        
+        // v1.99.63.77: [ELITE BURST] Patlama yayılımını daralt
+        if (type === 'glitch') {
+            this.speedX = (Math.random() - 0.5) * 10;
+        } else if (type === 'ember') {
+            this.speedX = (Math.random() - 0.5) * 3; // Yanlara daha az kaç
+        } else {
+            this.speedX = (Math.random() - 0.5) * 2;
+        }
 
         if (type === 'ember' || type === 'bubble' || type === 'leaf') {
             this.speedY = Math.random() * 1.5 + 0.5;
@@ -319,8 +327,10 @@ class Particle {
 
         let lifeDrain = 0.8;
         if (this.type === 'ember') {
-            this.speedX += Math.sin(performance.now() / 500) * 0.1;
-            lifeDrain = 0.3;
+            // v1.99.63.77: [ELITE FOCUS] Sağa sola savrulmayı azalt, daha dik git
+            this.speedX *= 0.94; // Her karede yan hızı biraz kır
+            this.speedX += Math.sin(performance.now() / 500) * 0.05;
+            lifeDrain = 1.2; // Biraz daha hızlı yok olsunlar ki kalabalık yapmasınlar
         } else if (this.type === 'glitch') {
             if (Math.random() < 0.1) this.x += (Math.random() - 0.5) * 20;
             lifeDrain = 0.8;
