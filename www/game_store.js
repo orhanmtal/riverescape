@@ -135,6 +135,16 @@ const GameStore = {
             if (typeof showToast === 'function') {
                 showToast(translations[currentLang].purchaseSuccessAdd.replace('{amount}', product.amount), true);
             }
+
+            // v1.99.63.77: Analytics - Satın Alma Takibi
+            if (typeof Leaderboard !== 'undefined' && Leaderboard.analytics) {
+                Leaderboard.analytics.logEvent('item_purchased', {
+                    item_id: product.id,
+                    item_name: product.label,
+                    value: product.priceVal,
+                    currency: 'USD'
+                });
+            }
         }
         
         // Ses Efekti (v1.99.27.10 Elite Synergy)

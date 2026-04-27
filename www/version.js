@@ -10,8 +10,8 @@
 // River Escape Elite - Central Version Control
 // v1.99.63.63 - Stable AAB Release
 window.ELITE_CONFIG = {
-    VERSION: "1.99.63.63",
-    VERSION_CODE: "19963063",
+    VERSION: "1.99.63.77",
+    VERSION_CODE: "19963077",
     LEVEL_MARGIN: 0.15,
     BG_KEY_SYNC: true,
     NATURAL_TILING: true,
@@ -20,7 +20,7 @@ window.ELITE_CONFIG = {
 
     BUILD_LEVEL: "Elite Production",
     SYNC_ENGINE: "v3.Elite.Secure",
-    LAST_UPDATED: "2026-04-26"
+    LAST_UPDATED: "2026-04-27"
 };
 
 console.log("🚀 [ELITE PERFORMANCE SYSTEM] Active:", window.ELITE_CONFIG.VERSION);

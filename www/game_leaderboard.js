@@ -34,6 +34,10 @@ const Leaderboard = {
                 }
                 this.db = firebase.firestore();
                 this.auth = firebase.auth();
+                this.analytics = firebase.analytics();
+                
+                // İlk açılış sinyali
+                this.analytics.logEvent('app_open', { version: window.ELITE_CONFIG ? window.ELITE_CONFIG.VERSION : '1.99.63.63' });
                 
 
                 // v1.99.23.00: [ELITE SECURITY] Oturum kalıcılığını yerel hafızaya kilitle
@@ -457,6 +461,17 @@ const Leaderboard = {
             await this.db.collection('leaderboard').doc(this.playerID).set(payload, { merge: true });
             console.log("✅ [ELITE SYNC] Firestore Sync Success!");
             
+            // v1.99.63.77: Gelişmiş Analytics Takibi
+            if (this.analytics) {
+                this.analytics.logEvent('score_submitted', {
+                    score: finalScore,
+                    level: payload.level
+                });
+                if (payload.level > 1) {
+                    this.analytics.logEvent('level_reached', { level: payload.level });
+                }
+            }
+            
             if (typeof showToast === 'function' && score > 0) showToast(translations[currentLang].dataSynced, true);
         } catch (e) {
             console.error("❌ [ELITE SYNC] Firestore Sync Error:", e);
@@ -690,6 +705,7 @@ const Leaderboard = {
         }
 
         try {
+            if (this.analytics) this.analytics.logEvent('login_attempt_start');
             
             if (typeof showToast === 'function') showToast(t.openingSecureLogin, true);
             
@@ -702,6 +718,7 @@ const Leaderboard = {
                 if (result.credential && result.credential.idToken) {
                     const credential = firebase.auth.GoogleAuthProvider.credential(result.credential.idToken);
                     const userCredential = await this.auth.signInWithCredential(credential);
+                    if (this.analytics) this.analytics.logEvent('login_success', { method: 'native_google' });
                     
                 }
             } else {
@@ -721,6 +738,13 @@ const Leaderboard = {
             }
         } catch (e) {
             console.error("❌ [ELITE AUTH] Giriş Hatası:", e);
+            
+            if (this.analytics) this.analytics.logEvent('login_failure', { error_msg: e.message || 'unknown', code: e.code || 'no_code' });
+
+            if (typeof showToast === 'function') {
+                const errorMsg = e.message || "Giriş başarısız oldu. Lütfen tekrar deneyin.";
+                showToast(`❌ ${errorMsg}`, false);
+            }
         }
     },
 

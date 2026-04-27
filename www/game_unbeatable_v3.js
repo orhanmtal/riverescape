@@ -99,6 +99,14 @@ var wheelRewards = [
 
 // v1.99.61.81: UPGRADE CONFIRMATIONS (Hoisted to top for Elite Stability)
 function buyMagnet() {
+    if (totalGold >= (magnetLevel + 1) * 1000 && magnetLevel < 5) {
+        totalGold -= (magnetLevel + 1) * 1000;
+        magnetLevel++;
+        if (typeof Leaderboard !== 'undefined' && Leaderboard.analytics) {
+            Leaderboard.analytics.logEvent('item_upgrade', { item: 'magnet', level: magnetLevel });
+        }
+        saveGame();
+    }
     const t = translations[currentLang];
     var price = (magnetLevel + 1) * 1000;
     if (magnetLevel >= 10) { showToast(t.maxBtn, false); return; }
@@ -115,6 +123,14 @@ function buyMagnet() {
 }
 
 function buyShield() {
+    if (totalGold >= (shieldLevel + 1) * 1500 && shieldLevel < 5) {
+        totalGold -= (shieldLevel + 1) * 1500;
+        shieldLevel++;
+        if (typeof Leaderboard !== 'undefined' && Leaderboard.analytics) {
+            Leaderboard.analytics.logEvent('item_upgrade', { item: 'shield', level: shieldLevel });
+        }
+        saveGame();
+    }
     const t = translations[currentLang];
     var price = (shieldLevel + 1) * 1500;
     if (shieldLevel >= 10) { showToast(t.maxBtn, false); return; }
@@ -1906,6 +1922,12 @@ function buyBoat(id) {
         if (typeof initAudio === 'function') initAudio();
         if (typeof playPowerupSound === 'function') playPowerupSound();
         setTimeout(() => { for (var i = 0; i < 6; i++) setTimeout(playCoinSound, i * 120); }, 150);
+        
+        // v1.99.63.77: Analytics
+        if (window.Leaderboard && Leaderboard.analytics) {
+            Leaderboard.analytics.logEvent('boat_purchased', { boat_id: id });
+        }
+
         if (typeof showToast === 'function') showToast(translations[currentLang].newBoatAcquiredToast, true);
     };
 
@@ -1975,6 +1997,10 @@ function reviveWithGold() {
 
         saveGame();
         updateArmorUI();
+
+        if (window.Leaderboard && Leaderboard.analytics) {
+            Leaderboard.analytics.logEvent('revive_gold', { cost: cost });
+        }
 
         // Arayüzü Temizle ve Oyunu Başlat
         isGameOver = false;
