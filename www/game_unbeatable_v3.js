@@ -570,6 +570,7 @@ function updateLanguageUI() {
     setText('settings-close-btn', t.settingsSaveBtn || t.saveCloseBtn);
     setText('logout-btn', t.logoutBtnLabel);
     setText('hard-reset-btn', t.hardResetBtnLong);
+    setText('cloud-sync-btn-text', t.cloudSyncBtnLabel);
 
     if (document.getElementById('logout-confirm-title')) document.getElementById('logout-confirm-title').innerText = t.logoutConfirmTitleModal;
     if (document.getElementById('logout-confirm-desc')) document.getElementById('logout-confirm-desc').innerText = t.logoutConfirmDesc;
@@ -1557,6 +1558,8 @@ if (settingsOpenBtnElite) settingsOpenBtnElite.addEventListener('click', () => {
 
 const closeSettingsElite = () => {
     saveGame(); // Elite v1.99.19.09: Her zaman kaydet
+    
+    const settingsTitle = document.getElementById('settings-title');
     settingsScreen.classList.remove('active');
     settingsScreen.classList.add('hidden');
     settingsScreen.style.display = 'none';
@@ -5649,14 +5652,15 @@ if (restartBtn) restartBtn.addEventListener('click', () => {
 const cloudSyncBtn = document.getElementById('cloud-sync-btn');
 if (cloudSyncBtn) cloudSyncBtn.addEventListener('click', () => {
     if (typeof playUIClick === 'function') playUIClick();
+    const t = translations[currentLang];
     if (typeof Leaderboard !== 'undefined' && Leaderboard.restoreFromCloud) {
-        showToast("☁️ BULUT VERİLERİ ÇEKİLİYOR...", true);
+        showToast(t.syncingCloudToast, true);
         Leaderboard.restoreFromCloud((success) => {
             if (success) {
-                showToast("✅ VERİLER GÜNCELLENDİ!", true);
+                showToast(t.syncSuccessToast, true);
                 if (typeof syncEliteHUD === 'function') syncEliteHUD();
             } else {
-                showToast("❌ BULUTTAN VERİ ÇEKİLEMEDİ.", false);
+                showToast(t.syncErrorToast, false);
             }
         });
     }
