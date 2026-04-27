@@ -5579,31 +5579,30 @@ const confirmLogoutBtn = document.getElementById('confirm-logout-btn');
 const cancelLogoutBtn = document.getElementById('cancel-logout-btn');
 
 if (logoutBtn) logoutBtn.addEventListener('click', () => {
-    logoutConfirmScreen.classList.remove('hidden');
-    logoutConfirmScreen.classList.add('active');
-    logoutConfirmScreen.style.display = 'flex';
-});
-
-if (cancelLogoutBtn) cancelLogoutBtn.addEventListener('click', () => {
-    logoutConfirmScreen.classList.remove('active');
-    logoutConfirmScreen.classList.add('hidden');
-    logoutConfirmScreen.style.display = 'none';
-});
-
-if (confirmLogoutBtn) confirmLogoutBtn.addEventListener('click', async () => {
-    try {
-        if (window.gameLeaderboard && typeof window.gameLeaderboard.performLogout === 'function') {
-            await window.gameLeaderboard.performLogout();
-        } else {
-            // Fallback
+    if (window.gameLeaderboard && typeof window.gameLeaderboard.logout === 'function') {
+        // v1.99.63.77: Modern Elite Onay Kutusunu Çağır
+        window.gameLeaderboard.logout();
+    } else {
+        // Fallback
+        if (confirm("Logout?")) {
             localStorage.clear();
             location.reload();
         }
-    } catch (e) {
-        console.error("Logout failed:", e);
-        location.reload();
     }
 });
+
+// Eski DOM onay butonları artık işlevsiz, temizleyebiliriz
+/* 
+if (cancelLogoutBtn) cancelLogoutBtn.addEventListener('click', () => { ... });
+if (confirmLogoutBtn) confirmLogoutBtn.addEventListener('click', async () => { ... });
+*/
+
+// v1.99.63.77: Unified Logout logic above handles this
+/*
+if (confirmLogoutBtn) confirmLogoutBtn.addEventListener('click', async () => {
+    ...
+});
+*/
 
 // Hard Reset moved to settings v121
 const hardResetBtnUI = document.getElementById('hard-reset-btn');
