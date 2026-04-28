@@ -1,6 +1,16 @@
 # River Escape - Versiyon Günlükleri (CHANGELOG)
 Bu dosya, oyun motorunun ve özelliklerin versiyon versiyon nasıl geliştiğini mühürleyip saklamak için Antigravity tarafından oluşturulmuştur.
 
+### [v1.99.63.88] - 2026-04-28
+#### Elite Gameplay Polishing & Physics Revision
+
+| Sistem | Sorun (Bulunan) | Çözüm (Değiştirilen) |
+| :--- | :--- | :--- |
+| **Bölüm 5 Yılan (Magma Serpent)** | Yılanın sadece baş kısmı öldürüyordu, uzun gövdesinden ve kuyruğundan hasar alınmıyordu. | Çarpışma (hitbox) alanı yılanın gerçek görsel boyutlarına uyacak şekilde uzatıldı. Yılanın tamamı ölümcül hale getirildi. |
+| **Bölüm 5 Lav Huzmeleri (Fireball)** | Lavlar her zaman yan yana 3'lü duvar şeklinde (kaçılması imkansız) geliyordu. | Lav huzmeleri dinamikleştirildi; artık 1 veya 2 adet olarak ve daha rastgele pozisyonlarda çıkıyor. |
+| **Bölüm 6 Bomba İzleri (Trail)** | Bomba patlamaları ve izleri ekranda aşırı savruluyordu. | Özel `bombTrail` ve `explosion` parçacıkları eklendi. İzler daha düz (odaklı) ilerliyor, patlamalar ise daha şık görünüyor. |
+| **Oyuncu Hareketi (Klavye/PC)** | Sağ-sol yön tuşlarıyla hareket çok sert (harsh) ve "ışınlanıyormuş" gibi oluyordu. | Hız (baseSpeed) saniyede 450px olarak sabitlendi. İvmelenme formülü (Lerp) yumuşatılarak daha makul ve akıcı bir kayma sağlandı. |
+
 ### [v1.99.63.77] - 2026-04-27
 #### Elite Performance Next - Analytics & Security Overhaul
 Bu sürüm, oyunun teknik altyapısını profesyonel izleme (Analytics) ve veri güvenliği (Cloud Sync) standartlarına taşımıştır.

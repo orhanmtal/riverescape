@@ -285,11 +285,17 @@ class Particle {
         this.targetY = targetY;
         this.size = (type === 'glitch') ? (Math.random() * 6 + 2) : (Math.random() * 4 + 2);
         
-        // v1.99.63.77: [ELITE BURST] Patlama yayılımını daralt
+        // v1.99.63.88: [ELITE BURST] Patlama yayılımını daralt ve yeni partiküller ekle
         if (type === 'glitch') {
             this.speedX = (Math.random() - 0.5) * 10;
         } else if (type === 'ember') {
             this.speedX = (Math.random() - 0.5) * 3; // Yanlara daha az kaç
+        } else if (type === 'bombTrail') {
+            this.speedX = (Math.random() - 0.5) * 0.8; // Very tight trail
+            this.speedY = Math.random() * 1.5 + 2.0; // Goes down fast
+        } else if (type === 'explosion') {
+            this.speedX = (Math.random() - 0.5) * 8; // Explode outwards
+            this.speedY = (Math.random() - 0.5) * 8;
         } else {
             this.speedX = (Math.random() - 0.5) * 2;
         }
@@ -327,10 +333,14 @@ class Particle {
 
         let lifeDrain = 0.8;
         if (this.type === 'ember') {
-            // v1.99.63.77: [ELITE FOCUS] Sağa sola savrulmayı azalt, daha dik git
+            // v1.99.63.88: [ELITE FOCUS] Sağa sola savrulmayı azalt, daha dik git
             this.speedX *= 0.94; // Her karede yan hızı biraz kır
             this.speedX += Math.sin(performance.now() / 500) * 0.05;
             lifeDrain = 1.2; // Biraz daha hızlı yok olsunlar ki kalabalık yapmasınlar
+        } else if (this.type === 'bombTrail' || this.type === 'explosion') {
+            this.speedX *= 0.92;
+            this.speedY *= 0.92;
+            lifeDrain = (this.type === 'bombTrail') ? 1.6 : 1.2; // Trails vanish fast, explosions linger a bit
         } else if (this.type === 'glitch') {
             if (Math.random() < 0.1) this.x += (Math.random() - 0.5) * 20;
             lifeDrain = 0.8;
@@ -368,19 +378,20 @@ function drawParticles() {
         ctx.restore();
     });
 
-    // 2. Draw Ember (Optimized Glow - No ShadowBlur)
-    if (types['ember']) {
+    // 2. Draw Ember/Explosion/Trail (Optimized Glow - No ShadowBlur)
+    const glowTypes = ['ember', 'explosion', 'bombTrail'];
+    glowTypes.forEach(t => {
+        if (!types[t]) return;
         ctx.save();
-        types['ember'].forEach(p => {
+        types[t].forEach(p => {
             ctx.globalAlpha = p.life;
-            // Fake glow with double-draw (Much faster than shadowBlur)
             ctx.fillStyle = "rgba(255, 69, 0, 0.3)";
             ctx.beginPath(); ctx.arc(p.x, p.y, p.size * 2.5, 0, Math.PI * 2); ctx.fill();
-            ctx.fillStyle = "#ff4500";
+            ctx.fillStyle = p.color || "#ff4500";
             ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); ctx.fill();
         });
         ctx.restore();
-    }
+    });
 
     // 3. Draw Glitch (Rectangles)
     if (types['glitch']) {
@@ -2452,20 +2463,20 @@ function spawnObstacle() {
         } else if (selectedType === 'fireball') {
             const isL5 = biomeIndex === 4; // Lava
             if (isL5) {
-                // v1.99.61.91: TRIPLE BARRAGE (Left, Center, Right)
-                const lanePositions = [0.2, 0.5, 0.8]; // Relative X positions
-                lanePositions.forEach(relPos => {
-                    const fX = riverLeft + (riverRight - riverLeft) * relPos;
+                // v1.99.63.88: Dynamic Lava Fireballs (1 or 2 instead of always 3)
+                const spawnCount = Math.random() < 0.6 ? 1 : 2;
+                for (let i = 0; i < spawnCount; i++) {
+                    const fX = riverLeft + 30 + Math.random() * (riverRight - riverLeft - 60);
                     obstacles.push({
                         type: 'fireball',
                         x: fX,
                         relativeX: fX - riverShift,
                         y: spawnY, width: 52, height: 52,
                         speedY: (baseSpeed + 120) * (0.9 + Math.random() * 0.2),
-                        speedX: 0,
-                        isHoming: true
+                        speedX: (Math.random() - 0.5) * 40,
+                        isHoming: Math.random() < 0.3 // Sadece bazen hedefe kilitlenir (zorluğu dengeler)
                     });
-                });
+                }
             } else {
                 // Default single fireball for other levels
                 obstacles.push({
@@ -3707,11 +3718,14 @@ function update(dt) {
         var isColliding = (px < ox + ow && px + pw > ox &&
             py < oy + oh && py + ph > oy);
 
-        // v1.99.36.12: SYNCHRONIZED LONG-BODY COLLISION (Matches 64px height)
+        // v1.99.63.88: FIX SERPENT COLLISION (Matches realistic long body)
         if (!isColliding && (obs.type === 'toxicSerpent' || obs.type === 'magmaSerpent')) {
-            var bodyOy = oy + (obs.height * 0.1);
-            var bodyOh = obs.height * 0.6; // Matches the new visual length
-            isColliding = (px < ox + ow && px + pw > ox && py < bodyOy + bodyOh && py + ph > bodyOy);
+            var bodyOy = obs.y + obs.height - 108; // Tail tip
+            var bodyOh = 120; // Total length including head
+            var CenterX = obs.x + (obs.width / 2);
+            var bodyOw = obs.width * 0.5; // Slightly forgiving width
+            var bodyOx = CenterX - (bodyOw / 2);
+            isColliding = (px < bodyOx + bodyOw && px + pw > bodyOx && py < bodyOy + bodyOh && py + ph > bodyOy);
         }
 
         if (isColliding) {
@@ -3804,7 +3818,8 @@ function update(dt) {
                 if (obs.health !== undefined && obs.health > 1) {
                     obs.health--;
                     bullets.splice(i, 1);
-                    // Hit Effect (Flashes white)
+                    // Hit Effect (Flashes white + Explosion Particles)
+                    for (var p = 0; p < 15; p++) emitParticles(b.x, b.y, "#ffaa00", 'explosion', 1);
                     for (var p = 0; p < 5; p++) emitParticles(b.x, b.y, "#fff", 'default', 1);
                     shakeTimer = 0.1;
                 } else {
@@ -3858,15 +3873,16 @@ function updatePlayer(dt) {
         }
     }
 
-    // v1.99.63.55: Snappy Response & Smooth Flow (LERP 0.30)
-    // Parmağı çekince anında duruş için sürtünme %75 artırıldı.
-    const moveLerp = (targetDx === 0) ? 0.40 : 0.30;
+    // v1.99.63.88: Snappy Response & Smooth Flow for Web Keyboard & Touch
+    const moveLerp = (targetDx === 0) ? 0.15 : 0.20; // Yumuşatılmış Hızlanma (Klavye için daha makul adımlar)
     player.dx += (targetDx - player.dx) * moveLerp;
     player.dy += (targetDy - player.dy) * moveLerp;
 
     const moveDt = dt || 0.016;
     const isDZ = (typeof getDZStatus === 'function') ? getDZStatus() : false;
-    const baseSpeed = player.speed || 105;
+    
+    // Force consistent pixels-per-second base speed to fix "teleporting" movement
+    const baseSpeed = 450 * gameScale; 
     const finalSpeed = (isDashing ? baseSpeed * 2.5 : baseSpeed) * (isDZ ? 1.3 : 1.0);
 
     // Horizontal Movement
@@ -5265,9 +5281,9 @@ function draw(dt) {
         ctx.arc(b.x, b.y, b.radius, 0, Math.PI * 2);
         ctx.fill();
 
-        // Çıkış Kıvılcımları (Mini Trail)
+        // Çıkış Kıvılcımları (Mini Trail) - v1.99.63.88 bombTrail
         if (Math.random() < 0.3) {
-            emitParticles(b.x, b.y + b.radius, "#ff5722", 'ember', 1);
+            emitParticles(b.x, b.y + b.radius, "#ff5722", 'bombTrail', 1);
         }
 
         ctx.restore();
