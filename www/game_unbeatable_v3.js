@@ -3718,12 +3718,12 @@ function update(dt) {
         var isColliding = (px < ox + ow && px + pw > ox &&
             py < oy + oh && py + ph > oy);
 
-        // v1.99.63.88: FIX SERPENT COLLISION (Matches realistic long body)
+        // v1.99.63.88: FIX SERPENT COLLISION (Matches realistic long body and wiggle)
         if (!isColliding && (obs.type === 'toxicSerpent' || obs.type === 'magmaSerpent')) {
             var bodyOy = obs.y + obs.height - 108; // Tail tip
             var bodyOh = 120; // Total length including head
             var CenterX = obs.x + (obs.width / 2);
-            var bodyOw = obs.width * 0.5; // Slightly forgiving width
+            var bodyOw = obs.width * 1.2; // Kuyruğun sağa sola kıvrılmasını (wiggle) kapsayacak kadar geniş
             var bodyOx = CenterX - (bodyOw / 2);
             isColliding = (px < bodyOx + bodyOw && px + pw > bodyOx && py < bodyOy + bodyOh && py + ph > bodyOy);
         }
