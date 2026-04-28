@@ -42,12 +42,38 @@ if (fs.existsSync(jsPath)) {
 const versionJsPath = path.join(wwwDir, 'version.js');
 if (fs.existsSync(versionJsPath)) {
     let js = fs.readFileSync(versionJsPath, 'utf8');
+    
+    // Convert newVersion (v1.99.63.99) to version code (19963099)
+    let numericalVersion = newVersion.replace(/v/g, '').replace(/\./g, '');
+    if (numericalVersion.length === 6) {
+        numericalVersion = numericalVersion.substring(0, 4) + '0' + numericalVersion.substring(4); // e.g. 1996399 -> 19963099 (just in case)
+    }
+    // Better logic for RiverEscape: 1.99.63.99 -> 1 99 63 099
+    const parts = newVersion.replace('v', '').split('.');
+    let vCode = "";
+    if (parts.length === 4) {
+        vCode = parts[0] + parts[1] + parts[2] + parts[3].padStart(2, '0');
+    } else {
+        vCode = numericalVersion;
+    }
+
     js = js.replace(/VERSION:\s*["']v?[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+["']/g, `VERSION: "${newVersion}"`);
+    js = js.replace(/VERSION_CODE:\s*["'][0-9]+["']/g, `VERSION_CODE: "${vCode}"`);
+    
     fs.writeFileSync(versionJsPath, js);
-    console.log("✅ version.js güncellendi.");
+    console.log(`✅ version.js güncellendi. (VERSION_CODE: ${vCode})`);
 }
 
-// 4. RENAME VERSION TEXT FILE
+// 4. UPDATE package.json
+const pkgPath = path.join(rootDir, 'package.json');
+if (fs.existsSync(pkgPath)) {
+    let pkg = fs.readFileSync(pkgPath, 'utf8');
+    pkg = pkg.replace(/"version":\s*"[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+"/g, `"version": "${newVersion.replace('v', '')}"`);
+    fs.writeFileSync(pkgPath, pkg);
+    console.log("✅ package.json güncellendi.");
+}
+
+// 5. RENAME VERSION TEXT FILE
 const files = fs.readdirSync(rootDir);
 files.forEach(file => {
     if (file.startsWith('VERSION_v') && file.endsWith('.txt')) {
