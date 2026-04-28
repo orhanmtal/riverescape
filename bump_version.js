@@ -38,7 +38,16 @@ if (fs.existsSync(jsPath)) {
     console.log("✅ game_unbeatable_v3.js güncellendi.");
 }
 
-// 3. RENAME VERSION TEXT FILE
+// 3. UPDATE version.js
+const versionJsPath = path.join(wwwDir, 'version.js');
+if (fs.existsSync(versionJsPath)) {
+    let js = fs.readFileSync(versionJsPath, 'utf8');
+    js = js.replace(/VERSION:\s*["']v?[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+["']/g, `VERSION: "${newVersion}"`);
+    fs.writeFileSync(versionJsPath, js);
+    console.log("✅ version.js güncellendi.");
+}
+
+// 4. RENAME VERSION TEXT FILE
 const files = fs.readdirSync(rootDir);
 files.forEach(file => {
     if (file.startsWith('VERSION_v') && file.endsWith('.txt')) {
