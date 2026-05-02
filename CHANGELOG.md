@@ -1,6 +1,16 @@
 # River Escape - Versiyon Günlükleri (CHANGELOG)
 Bu dosya, oyun motorunun ve özelliklerin versiyon versiyon nasıl geliştiğini mühürleyip saklamak için Antigravity tarafından oluşturulmuştur.
 
+### [v1.99.64.01] - 2026-05-02
+#### Firebase Authentication Security Patch (Anti-Deprecation)
+Bu sürüm, Firebase Dynamic Links sisteminin kapatılmasına hazırlık olarak kritik kimlik doğrulama güncellemelerini içerir.
+
+| Sistem | Sorun (Deprecated) | Çözüm (Elite Migration) |
+| :--- | :--- | :--- |
+| **Kimlik Doğrulama (Mobile)** | `signInWithRedirect` Dinamik Linklere bağımlı olduğu için yakında bozulacaktır. | Native platformlarda (Android/iOS) `signInWithRedirect` kullanımı tamamen engellendi. Sadece Native Firebase Auth eklentisi zorunlu kılındı. |
+| **Yönlendirme Sonuçları** | `getRedirectResult` mobil ortamlarda gereksiz hata/gecikme yaratabiliyordu. | Bu kontrol sadece Web ortamı için sınırlandırıldı, mobil açılış hızı optimize edildi. |
+| **Hata Yönetimi** | Native eklenti yoksa sessizce bozulabiliyordu. | Eklenti eksikliğinde kullanıcıya net toast uyarısı ve konsol hatası eklendi. |
+
 ### [v1.99.63.88] - 2026-04-28
 #### Elite Gameplay Polishing & Physics Revision
 

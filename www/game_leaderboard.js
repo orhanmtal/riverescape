@@ -45,38 +45,28 @@ const Leaderboard = {
                     .then(() => {})
                     .catch(e => console.warn("🔐 [ELITE AUTH] Persistence Error:", e));
 
-                // v1.99.23.00: [ELITE REDIRECT] Gelişmiş yönlendirme yakalayıcı (Fast-Sync)
-                try {
-                    this.auth.getRedirectResult().then(result => {
-                        if (result && result.user) {
-                            
-                            this.playerID = result.user.uid;
-                            this.playerName = result.user.displayName;
-                            localStorage.setItem('riverEscapeName', this.playerName);
-                            localStorage.setItem('riverEscapeID', this.playerID);
-                            
-                            this.updateAuthUI(true, this.playerName);
-                            this.restoreFromCloud();
-
-                            if (typeof showToast === 'function') {
-                                const welcome = translations[currentLang].welcomeMsg.replace('{name}', this.playerName.toUpperCase());
-                                showToast(welcome, true);
+                // v1.99.64.01: [ELITE SECURITY] Redirect result only for WEB to avoid Dynamic Links dependency
+                const isWebBrowser = !window.Capacitor || window.Capacitor.getPlatform() === 'web';
+                if (isWebBrowser) {
+                    try {
+                        this.auth.getRedirectResult().then(result => {
+                            if (result && result.user) {
+                                this.playerID = result.user.uid;
+                                this.playerName = result.user.displayName;
+                                localStorage.setItem('riverEscapeName', this.playerName);
+                                localStorage.setItem('riverEscapeID', this.playerID);
+                                this.updateAuthUI(true, this.playerName);
+                                this.restoreFromCloud();
+                                if (typeof showToast === 'function') {
+                                    const welcome = translations[currentLang].welcomeMsg.replace('{name}', this.playerName.toUpperCase());
+                                    showToast(welcome, true);
+                                }
                             }
-                        }
-                    }).catch(err => {
-                        console.error("❌ [ELITE AUTH] Redirect Hatası Yakalandı:", err);
-                        // v1.99.23.00: Safe Overlay Initializationıcı için anlaşılır kıl
-                        const t = translations[currentLang];
-                        const errorMap = {
-                            'auth/internal-error': t.authInternalError,
-                            'auth/network-request-failed': t.authNetworkError,
-                            'auth/web-storage-unsupported': t.authStorageError
-                        };
-                        if (errorMap[err.code]) {
-                            if (typeof showToast === 'function') showToast(errorMap[err.code], false);
-                        }
-                    });
-                } catch(reDirErr) { console.warn("Redirect handler initialization failed."); }
+                        }).catch(err => {
+                            console.error("❌ [ELITE AUTH] Redirect Result Error:", err);
+                        });
+                    } catch(reDirErr) { console.warn("Redirect handler initialization failed."); }
+                }
 
                 // AUTH STATE LISTENER (Safe Wrapper)
                 this.auth.onAuthStateChanged(user => {
@@ -739,27 +729,27 @@ const Leaderboard = {
             const AuthPlugin = window.Capacitor && window.Capacitor.Plugins ? window.Capacitor.Plugins.FirebaseAuthentication : null;
 
             if (AuthPlugin) {
-                
                 const result = await AuthPlugin.signInWithGoogle();
                 if (result.credential && result.credential.idToken) {
                     const credential = firebase.auth.GoogleAuthProvider.credential(result.credential.idToken);
                     const userCredential = await this.auth.signInWithCredential(credential);
                     if (this.analytics) this.analytics.logEvent('login_success', { method: 'native_google' });
-                    
                 }
             } else {
-                
                 const provider = new firebase.auth.GoogleAuthProvider();
                 provider.setCustomParameters({ prompt: 'select_account' });
 
-                // v1.99.8.5: Web Browser ise Popup, Native ise Redirect kullan
                 const isWebBrowser = !window.Capacitor || window.Capacitor.getPlatform() === 'web';
 
                 if (isWebBrowser) {
+                    // Web tarayıcıda popup hala güvenli
                     await this.auth.signInWithPopup(provider);
                 } else {
-                    
-                    await this.auth.signInWithRedirect(provider);
+                    // v1.99.64.01: [ELITE ANTI-DEPRECATION] 
+                    // Android/iOS üzerinde Redirect artık yasak (Dynamic Links kapanıyor).
+                    // Eklenti yoksa hata ver, kullanıcıyı uyar.
+                    console.error("❌ [ELITE AUTH] Native Auth Plugin missing on mobile!");
+                    if (typeof showToast === 'function') showToast("Sistem hatası: Giriş modülü yüklenemedi.", false);
                 }
             }
         } catch (e) {
