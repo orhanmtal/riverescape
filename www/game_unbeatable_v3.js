@@ -1367,10 +1367,11 @@ function saveGame() {
 
 function updateArmorUI() {
     var aBadge = document.getElementById('armor-badge');
+    var aBadgePill = document.getElementById('armor-badge-pill');
     var aIndi = document.getElementById('armor-ui-indicator');
-    var aBG = document.getElementById('armor-bg-diamond');
 
     if (aBadge) aBadge.innerText = armorCharge;
+    if (aBadgePill) aBadgePill.innerText = armorCharge;
 
     if (aIndi) {
         // v1.99.64.02: Forced visibility during gameplay
@@ -1384,18 +1385,6 @@ function updateArmorUI() {
                 // Dimmed look when out of armor
                 aIndi.style.opacity = "0.5";
                 aIndi.style.filter = "grayscale(1) brightness(0.7)";
-            }
-
-            // Cycle Highlighting: Glowing only on recharge cycles (multiples of 6 - Biome based)
-            const isCycle = (currentLevel > 0 && (Math.floor((currentLevel - 1) / STAGES_PER_BIOME) + 1) % 9 === 0);
-            if (isCycle && aBG) {
-                aBG.style.boxShadow = "0 0 40px #9b59b6, inset 0 0 20px #9b59b6";
-                aBG.style.border = "2px solid #fff";
-                aIndi.style.opacity = "1"; // Brighten during cycle even if 0
-                aIndi.style.filter = "none";
-            } else if (aBG) {
-                aBG.style.boxShadow = "0 0 30px rgba(155, 89, 182, 0.3)";
-                aBG.style.border = "2px solid rgba(155, 89, 182, 0.6)";
             }
         } else {
             aIndi.style.display = 'none';

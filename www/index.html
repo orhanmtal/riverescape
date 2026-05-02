@@ -800,34 +800,21 @@ window.ELITE_CONFIG = {
             position: absolute; 
             bottom: calc(20px + env(safe-area-inset-bottom)); 
             left: calc(20px + env(safe-area-inset-left)); 
-            width: 12vmin; height: 12vmin;
+            width: 70px; height: 70px;
+            background: rgba(0,0,0,0.4); backdrop-filter: blur(8px);
+            border-radius: 50%; border: 2px solid rgba(155, 89, 182, 0.5);
             display: none; align-items: center; justify-content: center;
             z-index: 1000; cursor: pointer; transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(155, 89, 182, 0.2);
         ">
-            <!-- Diamond Shape Container -->
-            <div id="armor-bg-diamond" style="
-                position: absolute; width: 100%; height: 100%;
-                background: rgba(155, 89, 182, 0.2);
-                border: 2px solid rgba(155, 89, 182, 0.6);
-                backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-                transform: rotate(45deg);
-                box-shadow: 0 0 30px rgba(155, 89, 182, 0.3);
-                border-radius: 4px;
-            "></div>
-            <div
-                style="position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px;">
-                <span style="font-size: 3.5vmin; filter: drop-shadow(0 0 10px #9b59b6); margin-bottom: -0.5vmin;">💎</span>
-                <span id="armor-badge" style="
-                    color: #fff; font-family: 'Press Start 2P', cursive; 
-                    font-size: 2.2vmin; text-shadow: 0 0 10px #9b59b6;
-                    font-weight: bold;
-                ">0</span>
-                <span id="armor-badge-label" style="
-                    color: rgba(155, 89, 182, 1); font-family: 'Outfit'; 
-                    font-size: 1.25vmin; font-weight: 900; letter-spacing: 1px;
-                    text-transform: uppercase;
-                ">ZIRH</span>
+            <div style="position: relative; display: flex; align-items: center; justify-content: center;">
+                <span style="font-size: 32px; filter: drop-shadow(0 0 8px #9b59b6);">💎</span>
+                <div id="armor-badge-pill"
+                    style="position: absolute; top: -10px; right: -10px; background: #f12711; color: white; font-size: 13px; font-weight: 900; padding: 3px 8px; border-radius: 12px; border: 2px solid #fff; box-shadow: 0 0 10px rgba(0,0,0,0.5);">
+                    0</div>
             </div>
+            <!-- Hidden Legacy Badge for Sync -->
+            <span id="armor-badge" style="display:none;">0</span>
         </div>
 
         <!-- GAME OVER SCREEN (ELITE FULL-SCREEN v1.99.64.01) -->
