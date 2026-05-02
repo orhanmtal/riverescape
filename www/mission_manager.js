@@ -129,6 +129,16 @@ window.MissionManager = (function() {
                 window.triggerEliteEconomySync(true);
             }
         }
+        
+        // v1.99.64.01: ELITE ANALYTICS MÜHÜRLEME
+        if (typeof Leaderboard !== 'undefined' && Leaderboard.analytics) {
+            Leaderboard.analytics.logEvent('mission_completed', {
+                mission_id: mission.id,
+                reward: mission.reward,
+                cycle: missionCycle
+            });
+        }
+
         if (typeof window.showToast === 'function') {
             const label = window.currentLang === 'tr' ? mission.labelTR : mission.labelEN;
             window.showToast(translations[window.currentLang].missionCompletedToast.replace('{label}', label).replace('{reward}', mission.reward), true);

@@ -1000,11 +1000,7 @@ window.ELITE_CONFIG = {
             <div class="shop-scroll-area">
                 <div style="width: 100%; max-width: 500px; margin: 0 auto; display: flex; flex-direction: column;">
                     
-                    <!-- v1.99.64.01: ELITE MODULAR BOAT COLLECTION -->
-                    <div id="boat-showroom" style="display: flex; flex-direction: column; width: 100%; border-bottom: 2px dashed rgba(255,255,255,0.1); padding-bottom: 20px; margin-bottom: 20px;">
-                        <h3 id="shop-boathouse-title" style="color: #00e5ff; font-family: 'Outfit'; font-size: 16px; margin: 0 0 15px 0; text-align: left; letter-spacing: 2px;">KAYIKHANE 🛶</h3>
-                        <div id="boat-list"></div>
-                    </div>
+                    <!-- v1.99.64.02: BOATHOUSE REMOVED -->
 
                     <div class="showroom-container" style="display: flex; flex-direction: column; width: 100%;">
                     <!-- Mıknatıs -->
@@ -1031,40 +1027,34 @@ window.ELITE_CONFIG = {
                         <button id="buy-shield-btn" class="elite-upgrade-btn" style="background: linear-gradient(135deg, #00e5ff 0%, #12c2e9 100%);">GELİŞTİR</button>
                     </div>
 
-                    <!-- Nehir Topu -->
-                    <div class="showroom-item">
-                        <div class="item-aura-box aura-red">
-                            <span style="font-size: 32px;">📡</span>
-                        </div>
-                        <div class="showroom-info">
-                            <div id="shop-weapon-title" class="showroom-title">NEHİR TOPU 📡</div>
-                            <div id="shop-weapon-desc" class="showroom-desc">Elite Silah Bataryası</div>
-                        </div>
-                        <button id="buy-weapon-btn" class="elite-upgrade-btn" style="background: linear-gradient(135deg, #ff3d00 0%, #d84315 100%);">GELİŞTİR</button>
-                    </div>
-
-                    <!-- Lav Topu -->
+                    <!-- Mühimmat Doldur -->
                     <div class="showroom-item">
                         <div class="item-aura-box aura-orange">
                             <span style="font-size: 32px;">☄️</span>
                         </div>
                         <div class="showroom-info">
-                            <div id="shop-magma-title" class="showroom-title" style="color: #ff8c00;">MAGMA TOPU ☄️</div>
-                            <div id="shop-magma-desc" class="showroom-desc">Mevcut: <span id="shop-bomb-count" style="color: #fff; font-weight: 800;">0</span> | +10 Lav Atış Hakkı</div>
+                            <div id="shop-magma-title" class="showroom-title" style="color: #ff8c00;">MÜHİMMAT ☄️</div>
+                            <div id="shop-magma-desc" class="showroom-desc">Mevcut: <span id="shop-bomb-count" style="color: #fff; font-weight: 800;">0</span> | +50 Bomba (1000G)</div>
                         </div>
-                        <button id="buy-ammo-btn" class="elite-upgrade-btn" style="background: linear-gradient(135deg, #ff8c00 0%, #ff4500 100%);">SATIN AL</button>
+                        <div style="display: flex; flex-direction: column; gap: 5px;">
+                            <button id="buy-ammo-btn" class="elite-upgrade-btn" style="background: linear-gradient(135deg, #ff8c00 0%, #ff4500 100%);">1000 G</button>
+                            <button id="ad-ammo-btn" class="elite-upgrade-btn" style="background: rgba(255,215,0,0.1); border: 1px solid #FFD700; color: #FFD700; min-width: auto; padding: 5px 10px; font-size: 10px;">+10 (AD)</button>
+                        </div>
                     </div>
 
-                    <!-- Gemi Zırhı -->
+                    <!-- Zırh Doldur -->
                     <div class="showroom-item">
                         <div class="item-aura-box aura-teal">
-                            <span style="font-size: 32px;">💎</span>
+                            <span style="font-size: 32px;">🔋</span>
                         </div>
                         <div class="showroom-info">
-                            <div id="shop-void-armor-title" class="showroom-title">VOİD ZIRHI 💎</div>
-                            <div id="shop-void-armor-desc" class="showroom-desc">Gelişmiş Koruma Modülü</div>
+                            <div id="shop-void-armor-title" class="showroom-title">ZIRH ŞARJI 🔋</div>
+                            <div id="shop-void-armor-desc" class="showroom-desc">+30 Zırh (1000G)</div>
                         </div>
-                        <button id="buy-armor-btn" class="elite-upgrade-btn" style="background: linear-gradient(135deg, #00acc1 0%, #00838f 100%);">LİSANS AL</button>
+                        <div style="display: flex; flex-direction: column; gap: 5px;">
+                            <button id="buy-armor-btn" class="elite-upgrade-btn" style="background: linear-gradient(135deg, #00acc1 0%, #00838f 100%);" onclick="buyArmorLicense()">1000 G</button>
+                            <button id="ad-armor-btn" class="elite-upgrade-btn" style="background: rgba(0,229,255,0.1); border: 1px solid #00e5ff; color: #00e5ff; min-width: auto; padding: 5px 10px; font-size: 10px;">+1 (AD)</button>
+                        </div>
                     </div>
 
                     <button id="ad-gold-btn" class="elite-ad-gold-btn">+100 ALTIN (REKLAM)</button>
@@ -1073,21 +1063,13 @@ window.ELITE_CONFIG = {
                     <div class="gold-market-container">
                         <h3 id="shop-gold-market-title" class="gold-market-title">ALTIN MARKET 💰</h3>
                         <div class="gold-market-grid-elite">
-                            <button onclick="GameStore.buy('gold_pack_1')" class="gold-card">
-                                <span class="amount">5.000</span>
-                                <span id="price-gold_pack_1" class="price">$0.99</span>
+                            <button onclick="GameStore.buy('gold_pack_05')" class="gold-card">
+                                <span class="amount">20.000</span>
+                                <span id="price-gold_pack_05" class="price">$0.49</span>
                             </button>
-                            <button onclick="GameStore.buy('gold_pack_2')" class="gold-card">
-                                <span class="amount">10.000</span>
-                                <span id="price-gold_pack_2" class="price">$1.49</span>
-                            </button>
-                            <button onclick="GameStore.buy('gold_pack_3')" class="gold-card">
-                                <span class="amount">25.000</span>
-                                <span id="price-gold_pack_3" class="price">$2.99</span>
-                            </button>
-                            <button onclick="GameStore.buy('gold_pack_4')" class="gold-card gold-card-best">
+                            <button onclick="GameStore.buy('gold_pack_1')" class="gold-card gold-card-best">
                                 <span class="amount" style="color: #FFD700;">50.000</span>
-                                <span id="price-gold_pack_4" class="price">$4.99</span>
+                                <span id="price-gold_pack_1" class="price">$0.99</span>
                             </button>
                         </div>
                     </div>

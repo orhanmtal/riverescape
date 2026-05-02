@@ -445,7 +445,6 @@ const Leaderboard = {
                 level: level || window.currentLevel || 1,
                 country: this.playerCountry,
                 flag: this.playerFlag,
-                ownedBoats: window.ownedBoats || ['spring'],
                 missionCycle: (window.MissionManager) ? window.MissionManager.getMissions()[0]?.cycle || 1 : 1,
                 missions: (window.MissionManager) ? window.MissionManager.getMissions() : [],
                 sessionLevel: level || window.currentLevel || 1,
@@ -582,12 +581,7 @@ const Leaderboard = {
                 if (data.sessionLives !== undefined) window.resumeLives = data.sessionLives;
                 if (data.sessionScore !== undefined) window.resumeScore = data.sessionScore;
 
-                // ⛵ Boathouse Senkronu (v1.99.33.79: Identity Isolation Fix)
-                if (data.ownedBoats && Array.isArray(data.ownedBoats)) {
-                    // v1.99.33.79: Overwrite local collection with cloud data to prevent user-leaking
-                    window.ownedBoats = data.ownedBoats.map(id => (id === 'ilkbahar') ? 'spring' : id);
-                    if (!window.ownedBoats.includes('spring')) window.ownedBoats.push('spring');
-                }
+                // v1.99.64.02: Boathouse sync removed - Forced Standard 🛶
 
                 // 🎯 Mission Senkronu (v1.99.33.80)
                 if (data.missions && window.MissionManager && typeof window.MissionManager.syncFromCloud === 'function') {

@@ -1,6 +1,19 @@
 # River Escape - Versiyon Günlükleri (CHANGELOG)
 Bu dosya, oyun motorunun ve özelliklerin versiyon versiyon nasıl geliştiğini mühürleyip saklamak için Antigravity tarafından oluşturulmuştur.
 
+### [v1.99.64.11] - 2026-05-02
+#### Elite Economy Revolution & Boathouse Purge
+Bu sürüm, oyunun ekonomisini ve içerik yapısını kökten sadeleştiren "Elite" standartlarındaki en büyük güncellenmedir.
+
+| Sistem | Değişiklik (Elite Revolution) | Sonuç |
+| :--- | :--- | :--- |
+| **Kayıkhane (Boathouse)** | Tamamen kaldırıldı. | Tüm oyuncular standart `spring` kayığıyla yarışır, içerik kirliliği bitti. |
+| **Ekonomi (Licenses)** | Silah ve Zırh lisansları kaldırıldı. | Tüm oyuncular mühimmat ve zırh özelliklerine sahip olarak başlar. |
+| **Monetizasyon** | $0.49 (20k G) ve $0.99 (50k G) paketleri eklendi. | Giriş bariyeri düşürüldü, dönüşüm oranı artırıldı. |
+| **Reklam Ödülleri** | 1 Reklam = 10 Bomba / 1 Zırh. | Mağaza ve oyun içi ikmal artık reklamla mümkün. |
+| **Başlangıç Hediyesi** | 50 Bomba + 5 Zırh (İlk Giriş). | Yeni oyuncular için hızlı ve güçlü bir başlangıç sağlandı. |
+| **Firebase Sync** | Kayık verileri senkronizasyondan çıkarıldı. | Bulut yükleme hızı ve veri güvenliği optimize edildi. |
+
 ### [v1.99.64.01] - 2026-05-02
 #### Firebase Authentication Security Patch (Anti-Deprecation)
 Bu sürüm, Firebase Dynamic Links sisteminin kapatılmasına hazırlık olarak kritik kimlik doğrulama güncellemelerini içerir.

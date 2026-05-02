@@ -5,10 +5,8 @@
  */
 
 const IAP_PACKS = [
-    { id: 'gold_pack_1', amount: 5000, price: '$0.99', priceVal: 0.99, label: '5.000 GOLD' },
-    { id: 'gold_pack_2', amount: 10000, price: '$1.49', priceVal: 1.49, label: '10.000 GOLD' },
-    { id: 'gold_pack_3', amount: 25000, price: '$2.99', priceVal: 2.99, label: '25.000 GOLD' },
-    { id: 'gold_pack_4', amount: 50000, price: '$4.99', priceVal: 4.99, label: '50.000 GOLD' }
+    { id: 'gold_pack_05', amount: 20000, price: '$0.49', priceVal: 0.49, label: '20.000 GOLD' },
+    { id: 'gold_pack_1', amount: 50000, price: '$0.99', priceVal: 0.99, label: '50.000 GOLD' }
 ];
 
 const GameStore = {

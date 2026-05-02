@@ -1,9 +1,12 @@
 /**
- * RİVER ESCAPE ELİTE - v1.99.63.63 (STABLE AAB RELEASE)
+ * RİVER ESCAPE ELİTE - v1.99.64.02 (ELITE ECONOMY OVERHAUL)
  * DEVELOPMENT RULES:
  * 1. NO PLACEHOLDERS 2. PERFORMANCE FIRST 3. VISUAL EXCELLENCE
  * 4. CODE INTEGRITY 5. ELITE SYNC
  */
+
+const VERSION = "v1.99.64.11";
+const VERSION_CODE = 1996411;
 
 // --- v1.99.36.80: ELITE GLOBAL CONSTANTS (Locked & Sealed) ---
 const STAGES_PER_BIOME = 3;
@@ -148,45 +151,22 @@ function buyShield() {
 
 function buyWeapon() {
     const t = translations[currentLang];
-    if (hasWeapon) { showToast(t.alreadyOwned, false); return; }
-    if (totalGold < 15000) { showToast(t.noGold, false); return; }
-    const exec = () => {
-        totalGold -= 15000; hasWeapon = true; bombCount += 15;
-        if (typeof initAudio === 'function') initAudio();
-        if (typeof playPowerupSound === 'function') playPowerupSound();
-        setTimeout(() => { for (var i = 0; i < 8; i++) setTimeout(playCoinSound, i * 100); }, 150);
-        if (typeof triggerEliteEconomySync === 'function') triggerEliteEconomySync(true);
-        showToast(t.weaponPurchased, true);
-    };
-    showEliteConfirm(t.confirmTitle, t.buyWeaponMsg || "Nehir Topu lisansı satın almak istiyor musunuz? (15000 G)", t.buyBtnShort, "💣", exec);
+    showToast(t.alreadyOwned, false); // v1.99.64.02: Always owned now.
 }
 
 function buyArmorLicense() {
     const t = translations[currentLang];
-    if (!ownsArmorLicense) {
-        if (totalGold < 20000) { showToast(t.noGold, false); return; }
-        const exec = () => {
-            totalGold -= 20000; ownsArmorLicense = true; armorCharge += 30;
-            if (typeof initAudio === 'function') initAudio();
-            if (typeof playPowerupSound === 'function') playPowerupSound();
-            setTimeout(() => { for (var i = 0; i < 8; i++) setTimeout(playCoinSound, i * 100); }, 150);
-            if (typeof triggerEliteEconomySync === 'function') triggerEliteEconomySync(true);
-            showToast(t.armorLicensePurchased, true);
-        };
-        showEliteConfirm(t.confirmTitle, t.buyArmorMsg || "Zırh Lisansı satın almak istiyor musunuz? (20000 G)", t.buyBtnShort, "🛡️", exec);
-    } else {
-        const refillPrice = 1000;
-        if (totalGold < refillPrice) { showToast(t.noGold, false); return; }
-        const exec = () => {
-            totalGold -= refillPrice; armorCharge += 30;
-            if (typeof initAudio === 'function') initAudio();
-            if (typeof playPowerupSound === 'function') playPowerupSound();
-            setTimeout(() => { for (var i = 0; i < 3; i++) setTimeout(playCoinSound, i * 150); }, 150);
-            if (typeof triggerEliteEconomySync === 'function') triggerEliteEconomySync(true);
-            showToast(t.armorReloaded, true);
-        };
-        showEliteConfirm(t.confirmTitle, t.buyArmorMsg || "Zırh Şarjı satın almak istiyor musunuz? (1000 G)", t.buyBtnShort, "🔋", exec);
-    }
+    const refillPrice = 1000;
+    if (totalGold < refillPrice) { showToast(t.noGold, false); return; }
+    const exec = () => {
+        totalGold -= refillPrice; armorCharge += 30;
+        if (typeof initAudio === 'function') initAudio();
+        if (typeof playPowerupSound === 'function') playPowerupSound();
+        setTimeout(() => { for (var i = 0; i < 3; i++) setTimeout(playCoinSound, i * 150); }, 150);
+        if (typeof triggerEliteEconomySync === 'function') triggerEliteEconomySync(true);
+        showToast(t.armorReloaded, true);
+    };
+    showEliteConfirm(t.confirmTitle, t.buyArmorMsg || "Zırh Şarjı satın almak istiyor musunuz? (1000 G)", t.buyBtnShort, "🔋", exec);
 }
 
 function updateWheelForWeapon() {
@@ -734,6 +714,10 @@ async function initAdMob() {
 
             // v1.67: Eğer ödül kazanıldıysa, aksiyonu otomatik tetikle
             if (adExecuted && pendingRewardCallback) {
+                // v1.99.64.01: ELITE ANALYTICS
+                if (typeof Leaderboard !== 'undefined' && Leaderboard.analytics) {
+                    Leaderboard.analytics.logEvent('ad_reward_claimed', { type: window.lastAdRewardType || 'unknown' });
+                }
                 const callback = pendingRewardCallback;
                 pendingRewardCallback = null;
                 callback();
@@ -1125,6 +1109,9 @@ function giveReward() {
 
     if (reward.type === 'gold') {
         totalGold += reward.value;
+        if (typeof Leaderboard !== 'undefined' && Leaderboard.analytics) {
+            Leaderboard.analytics.logEvent('wheel_spin_result', { reward_type: 'gold', reward_value: reward.value });
+        }
         triggerEliteEconomySync(true); // v1.99.27.00: Çark ödülü sarsılmaz mühür!
         saveGame();
         rewardLabel = reward.value + ' ' + t.rewardGold;
@@ -1133,18 +1120,27 @@ function giveReward() {
         popupValue = '+' + reward.value;
     } else if (reward.type === 'bomb') {
         bombCount += reward.value;
+        if (typeof Leaderboard !== 'undefined' && Leaderboard.analytics) {
+            Leaderboard.analytics.logEvent('wheel_spin_result', { reward_type: 'bomb', reward_value: reward.value });
+        }
         rewardLabel = reward.value + ' ' + t.rewardBomb;
         popupEmoji = '💣';
         popupLabel = t.rewardBomb.toUpperCase();
         popupValue = '+' + reward.value;
     } else if (reward.type === 'magnet') {
         magnetLevel++;
+        if (typeof Leaderboard !== 'undefined' && Leaderboard.analytics) {
+            Leaderboard.analytics.logEvent('wheel_spin_result', { reward_type: 'magnet_upgrade', level: magnetLevel });
+        }
         rewardLabel = t.rewardMagnet + ' LVL UP!';
         popupEmoji = '🧲';
         popupLabel = t.rewardMagnet.toUpperCase();
         popupValue = 'LVL ' + magnetLevel;
     } else if (reward.type === 'shield') {
         shieldLevel++;
+        if (typeof Leaderboard !== 'undefined' && Leaderboard.analytics) {
+            Leaderboard.analytics.logEvent('wheel_spin_result', { reward_type: 'shield_upgrade', level: shieldLevel });
+        }
         rewardLabel = t.rewardShield + ' LVL UP!';
         popupEmoji = '🛡️';
         popupLabel = t.rewardShield.toUpperCase();
@@ -1303,7 +1299,7 @@ var powerups = window.powerups;
 var currentLevel = 1;
 // v1.99.19.09: Armor and Leveling
 var armorCharge = 0;
-var ownsArmorLicense = false;
+var ownsArmorLicense = true; // v1.99.64.02: ALWAYS ENABLED
 var bgY = 0; var bgScrollSpeed = 200; window.targetLevelSpeed = 200;
 var screenFlash = 0; // Seviye geçişi parlaması v132
 var gameLoopRequestId = null; // v1.98.1.4: LOOP CONTROL
@@ -1329,16 +1325,14 @@ var currentLAsset = currentAsset;
 
 
 window.totalGold = 0;
-var currentVersion = "1.99.63.44"; // ELITE GLOBAL UNIFORMITY MILESTONE
+var currentVersion = "v1.99.64.02"; // ELITE ECONOMY REVOLUTION
 
 var magnetLevel = 0;
 var shieldLevel = 0;
+var hasWeapon = true; // v1.99.64.02: ALWAYS ENABLED
 var bombCount = 0;
 var powerupTimer = 0;
 var hasShield = false;
-var ownsArmorLicense = false;
-var armorCharge = 0;
-var hasWeapon = false;
 var lastShotTime = 0;
 var bullets = [];
 
@@ -1379,8 +1373,8 @@ function updateArmorUI() {
     if (aBadge) aBadge.innerText = armorCharge;
 
     if (aIndi) {
-        // v1.99.39.06: Hide indicator on main menu (only show when isPlaying)
-        if (ownsArmorLicense && isPlaying) {
+        // v1.99.64.02: Forced visibility during gameplay
+        if (isPlaying) {
             aIndi.style.display = 'flex';
 
             if (armorCharge > 0) {
@@ -1654,30 +1648,26 @@ function handleArmorIndicatorClick() {
     if (!isPlaying || isGameOver) return;
     const t = translations[currentLang];
     
-    // v1.99.61.120: ELITE PAUSE SYNC - Onay kutusu çıkınca oyunu durdur
     if (!isPaused && typeof togglePause === 'function') {
         togglePause();
     }
 
-    if (ownsArmorLicense) {
-        // Zaten lisans var, şarj bittiyse veya dolum isteniyorsa mağazaya yönlendir
-        showEliteConfirm(
-            t.armorChargeTitle || "Zırh Şarjı (Mühimmat)",
-            t.noArmorMsg || "Zırhınız bitti! Satın almak için mağazaya gitmek ister misiniz?",
-            t.goShopBtn || "MAĞAZAYA GİT",
-            "🔋",
-            () => { openShop(); }
-        );
-    } else {
-        // Lisans yok, lisans aldırmak için mağazaya yönlendir
-        showEliteConfirm(
-            t.voidArmorTitleLocked || "Gemi Zırhı (Void)",
-            t.voidArmorLockedDesc || "Tüm seviyelerde zırhı aktif eder",
-            t.goShopBtn || "MAĞAZAYA GİT",
-            "🛡️",
-            () => { openShop(); }
-        );
-    }
+    // v1.99.64.02: ELITE AD REFILL OFFER
+    showEliteConfirm(
+        t.armorChargeTitle || "ZIRH ŞARJI",
+        (currentLang === 'tr' ? "Zırhın bitti! Reklam izleyip +1 Zırh almak ister misin?" : "Out of Armor! Watch ad for +1 Armor?"),
+        (currentLang === 'tr' ? "İZLE & AL" : "WATCH & GET"),
+        "🔋",
+        () => {
+            const btn = document.getElementById('armor-ui-indicator');
+            showRewardedAd(btn, "🔋", () => {
+                armorCharge += 1;
+                saveGame();
+                updateShopUI();
+                showToast("+1 ARMOR! 🛡️", true);
+            });
+        }
+    );
 }
 
 const btnMag = document.getElementById('buy-magnet-btn');
@@ -1833,156 +1823,21 @@ function updateShopUI() {
         }
         updateArmorUI();
 
-        // --- v1.99.61.81: ELITE MODULAR BOAT RENDERER ---
-        renderBoatShop();
+        // v1.99.64.02: Boathouse disabled
+        // renderBoatShop();
 
     } catch (e) { console.warn("Shop UI Error:", e); }
 }
 
-function renderBoatShop() {
-    const list = document.getElementById('boat-list');
-    if (!list || !window.ELITE_COLLECTIONS) return;
-    list.innerHTML = '';
 
-    window.ELITE_COLLECTIONS.boats.forEach(boat => {
-        const isOwned = window.ownedBoats && window.ownedBoats.includes(boat.id);
-        const isActive = currentAsset && currentAsset.pKey === boat.id;
-
-        const card = document.createElement('div');
-        card.className = 'showroom-item';
-        card.style.border = isActive ? '2px solid #00e5ff' : '1px solid rgba(255,255,255,0.1)';
-
-        const perkDesc = currentLang === 'tr' ? boat.perk.descTR : boat.perk.descEN;
-        const name = currentLang === 'tr' ? boat.nameTR : boat.nameEN;
-
-        const rarityKey = 'rarity' + boat.rarity;
-        const rarityText = translations[currentLang][rarityKey] || boat.rarity;
-
-        card.innerHTML = `
-            <div class="item-aura-box" style="border: 2px solid ${isActive ? '#00e5ff' : 'rgba(255,255,255,0.2)'}">
-                <img src="${boat.asset}" style="width: 80%; height: 80%; object-fit: contain;">
-            </div>
-            <div class="showroom-info">
-                <div class="showroom-title">${name} <span style="font-size: 9px; opacity: 0.5;">[${rarityText}]</span></div>
-                <div class="showroom-desc" style="color: #00e5ff;">✨ ${perkDesc}</div>
-            </div>
-        `;
-
-        const btn = document.createElement('button');
-        btn.className = 'elite-upgrade-btn';
-
-        // v1.99.61.81: Strict Gold Validation (Force window.totalGold)
-        const currentGold = Number(window.totalGold || 0);
-        const itemPrice = Number(boat.price || 0);
-
-        if (!isOwned && currentGold < itemPrice) btn.disabled = true;
-
-        btn.style.background = isOwned ? (isActive ? '#2ecc71' : 'rgba(255,255,255,0.1)') : 'linear-gradient(135deg, #ffd700, #ff8c00)';
-        const t = translations[currentLang];
-        btn.innerText = isOwned ? (isActive ? t.selectedBtn : t.selectBtn) : itemPrice + ' G';
-
-        btn.addEventListener('click', () => {
-            if (isOwned) {
-                selectBoat(boat.id);
-            } else {
-                buyBoat(boat.id);
-            }
-        });
-
-        card.appendChild(btn);
-        list.appendChild(card);
-    });
-}
-
-function selectBoat(id) {
-    if (window.players && window.players[id]) {
-        playerImg = window.players[id];
-        if (currentAsset) currentAsset.pKey = id;
-
-        // v1.99.61.89: Immediate size sync on selection
-        syncPlayerDimensions();
-
-        // v1.99.61.81: Sync modular perk engine
-        if (window.PerkEngine) window.PerkEngine.sync();
-
-        saveGame();
-        updateShopUI();
-        if (typeof showToast === 'function') showToast(translations[currentLang].boatSelectedToast, true);
-    }
-}
-
-function buyBoat(id) {
-    const boat = window.ELITE_COLLECTIONS.boats.find(b => b.id === id);
-    if (!boat) return;
-
-    // v1.99.61.81: Strict Gold Validation (Force window.totalGold)
-    const currentGold = Number(window.totalGold || 0);
-    const itemPrice = Number(boat.price || 0);
-
-    if (currentGold < itemPrice) {
-        if (typeof showToast === 'function') showToast(translations[currentLang].insufficientGoldToast, false);
-        return;
-    }
-
-    const executePurchase = () => {
-        // EXECUTE PURCHASE
-        window.totalGold = Number(window.totalGold) - itemPrice;
-        if (!window.ownedBoats) window.ownedBoats = ['spring'];
-
-        // Add if not already present
-        if (!window.ownedBoats.includes(id)) {
-            window.ownedBoats.push(id);
-        }
-
-        saveGame();
-        if (typeof selectBoat === 'function') selectBoat(id);
-
-        // v1.99.61.81: Immediate Cloud Sync for Boathouse
-        if (window.Leaderboard && typeof window.Leaderboard.submitProgress === 'function') {
-            window.Leaderboard.submitProgress();
-        }
-
-        updateShopUI();
-        if (typeof initAudio === 'function') initAudio();
-        if (typeof playPowerupSound === 'function') playPowerupSound();
-        setTimeout(() => { for (var i = 0; i < 6; i++) setTimeout(playCoinSound, i * 120); }, 150);
-        
-        // v1.99.63.77: Analytics
-        if (window.Leaderboard && Leaderboard.analytics) {
-            Leaderboard.analytics.logEvent('boat_purchased', { boat_id: id });
-        }
-
-        if (typeof showToast === 'function') showToast(translations[currentLang].newBoatAcquiredToast, true);
-    };
-
-    // [MODULAR BUY CONTROL] Force Confirm
-    if (itemPrice > 0) {
-        const name = currentLang === 'tr' ? boat.nameTR : boat.nameEN;
-        const msg = currentLang === 'tr'
-            ? `${name} kayığını ${itemPrice} altın karşılığında satın almak istiyor musunuz?`
-            : `Do you want to buy ${name} for ${itemPrice} gold?`;
-
-        showEliteConfirm(translations[currentLang].confirmTitle, msg, translations[currentLang].buyBtnShort, "🛶", executePurchase);
-    } else {
-        executePurchase();
-    }
-}
 
 if (buyAmmoBtn) buyAmmoBtn.addEventListener('click', () => {
     const t = translations[currentLang];
 
-    // v1.99.61.81: Security Check - License Required
-    if (!hasWeapon) {
-        showToast(t.licenseRequiredToast || t.licenseRequired, false);
-        shakeTimer = 0.4;
-        if (typeof playHaptic === 'function') playHaptic('medium');
-        return;
-    }
-
     if (totalGold >= 1000) {
         const executeAmmoBuy = () => {
             totalGold -= 1000;
-            bombCount += 40;
+            bombCount += 50; // v1.99.64.02: 40 -> 50 per request
             saveGame();
             triggerEliteEconomySync();
             if (typeof playPowerupSound === 'function') playPowerupSound();
@@ -2995,7 +2850,7 @@ if (lbCloseBtn) lbCloseBtn.addEventListener('click', () => {
     }
 });
 
-function gameOver() {
+function gameOver(reason = 'unknown') {
     if (isGameOver) return;
 
     lives--;
@@ -3012,6 +2867,16 @@ function gameOver() {
 
     isGameOver = true;
     isPlaying = false;
+
+    // v1.99.64.01: ELITE ANALYTICS - Neden Öldü?
+    if (typeof Leaderboard !== 'undefined' && Leaderboard.analytics) {
+        Leaderboard.analytics.logEvent('game_over_reason', {
+            reason: reason,
+            score: Math.floor(score),
+            level: currentLevel,
+            biome: Math.floor((currentLevel - 1) / STAGES_PER_BIOME) % levelAssets.length
+        });
+    }
     syncEliteHUD();
     playEliteDeathEffect();
 
@@ -3777,7 +3642,7 @@ function update(dt) {
                 obstacles.splice(i, 1);
                 if (window.MissionManager) window.MissionManager.notify('destroy_obstacle');
             } else {
-                gameOver();
+                gameOver(obs.type || 'unknown_obstacle');
                 return; // Kilitlenmeyi önler, frame'i anında sonlandırır
             }
         }
@@ -3926,15 +3791,23 @@ function fireBomb() {
 
     if (bombCount <= 0) {
         const t = translations[currentLang];
-        // Pause game immediately
         if (!isPaused) togglePause();
 
+        // v1.99.64.02: ELITE AD REFILL OFFER
         showEliteConfirm(
             t.noAmmoTitle || "MÜHİMMAT BİTTİ",
-            t.noAmmoMsg || "Mühimmatınız bitti! Satın almak için mağazaya gitmek ister misiniz?",
-            t.goShopBtn || "MAĞAZA",
+            (currentLang === 'tr' ? "Bombaların bitti! Reklam izleyip +10 Bomba almak ister misin?" : "Out of Bombs! Watch ad for +10 Bombs?"),
+            (currentLang === 'tr' ? "İZLE & AL" : "WATCH & GET"),
             "💣",
-            () => { openShop(); }
+            () => {
+                const btn = document.getElementById('bomb-action-btn');
+                showRewardedAd(btn, "💣", () => {
+                    bombCount += 10;
+                    saveGame();
+                    updateShopUI();
+                    showToast("+10 BOMBS! 💣", true);
+                });
+            }
         );
         return;
     }
@@ -5749,12 +5622,36 @@ const adGoldBtn = document.getElementById('ad-gold-btn');
 if (adGoldBtn) {
     adGoldBtn.addEventListener('click', () => {
         showRewardedAd(adGoldBtn, translations[currentLang].adGoldBtn, () => {
-            totalGold += 50; // v1.99.37.00: Rebalanced ad reward to 50G
-            triggerEliteEconomySync(true); // v1.99.27.00: Reklam ödülü sarsılmaz bulut mührü!
+            totalGold += 50; 
+            triggerEliteEconomySync(true);
             saveGame();
             updateShopUI();
             showToast(`${translations[currentLang].rewardPrefix} 50 GOLD! 💰`, true);
             for (var i = 0; i < 4; i++) setTimeout(playCoinSound, i * 100);
+        });
+    });
+}
+
+const adAmmoBtn = document.getElementById('ad-ammo-btn');
+if (adAmmoBtn) {
+    adAmmoBtn.addEventListener('click', () => {
+        showRewardedAd(adAmmoBtn, "+10 (AD)", () => {
+            bombCount += 10;
+            saveGame();
+            updateShopUI();
+            showToast("+10 BOMBS! 💣", true);
+        });
+    });
+}
+
+const adArmorBtn = document.getElementById('ad-armor-btn');
+if (adArmorBtn) {
+    adArmorBtn.addEventListener('click', () => {
+        showRewardedAd(adArmorBtn, "+1 (AD)", () => {
+            armorCharge += 1;
+            saveGame();
+            updateShopUI();
+            showToast("+1 ARMOR! 🛡️", true);
         });
     });
 }
@@ -5775,10 +5672,18 @@ function loadGame() {
         isMusicVolume = (data.musicVol !== undefined) ? data.musicVol : 1.0;
         isSFXVolume = (data.sfxVol !== undefined) ? data.sfxVol : 1.0;
         isVibrationEnabled = (data.vib !== undefined) ? data.vib : true;
-        hasWeapon = data.weapon || false;
-        ownsArmorLicense = data.armorLicense || false;
+        hasWeapon = true; // v1.99.64.02: Force true regardless of save
+        ownsArmorLicense = true; // v1.99.64.02: Force true regardless of save
         armorCharge = data.armorCharge || 0;
         bombCount = data.bombs || 0;
+
+        // v1.99.64.02: NEW PLAYER GIFTS
+        if (localStorage.getItem('riverEscape_FirstGiftClaimed') !== 'true') {
+            bombCount += 50;
+            armorCharge += 5;
+            localStorage.setItem('riverEscape_FirstGiftClaimed', 'true');
+            saveGame();
+        }
 
         // v1.99.19.09.9: Devam Etme Bilgileri
         window.resumeScore = data.sessionScore || 0;
