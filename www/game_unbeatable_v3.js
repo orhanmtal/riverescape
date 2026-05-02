@@ -5659,6 +5659,15 @@ if (adArmorBtn) {
 // Redundant saveGame removed (bottom version used)
 
 function loadGame() {
+    // v1.99.64.11: NEW PLAYER GIFTS (Global Trigger - Works for fresh installs)
+    if (localStorage.getItem('riverEscape_FirstGiftClaimed') !== 'true') {
+        bombCount += 50;
+        armorCharge += 5;
+        localStorage.setItem('riverEscape_FirstGiftClaimed', 'true');
+        saveGame();
+        console.log("🎁 [ELITE ECONOMY] Starter Gift Awarded: 50 Bombs, 5 Armor");
+    }
+
     const saved = localStorage.getItem('riverEscapeSave');
     if (saved) {
         const data = JSON.parse(saved);
@@ -5676,14 +5685,6 @@ function loadGame() {
         ownsArmorLicense = true; // v1.99.64.02: Force true regardless of save
         armorCharge = data.armorCharge || 0;
         bombCount = data.bombs || 0;
-
-        // v1.99.64.02: NEW PLAYER GIFTS
-        if (localStorage.getItem('riverEscape_FirstGiftClaimed') !== 'true') {
-            bombCount += 50;
-            armorCharge += 5;
-            localStorage.setItem('riverEscape_FirstGiftClaimed', 'true');
-            saveGame();
-        }
 
         // v1.99.19.09.9: Devam Etme Bilgileri
         window.resumeScore = data.sessionScore || 0;
