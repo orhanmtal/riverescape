@@ -3045,10 +3045,23 @@ function syncEliteHUD() {
         }
 
         // v1.99.61.81: Profil Bilgisini Güncelle
-        const pName = document.getElementById('player-name-val');
         if (pName && window.Leaderboard && Leaderboard.currentUser) {
             pName.textContent = Leaderboard.currentUser.displayName || "ELITE PLAYER";
         }
+
+        // v1.99.64.11: AMMO & ARMOR BADGE SYNC (Live Update)
+        const bBadge = document.getElementById('bomb-badge');
+        if (bBadge) bBadge.innerText = bombCount;
+        
+        const bBtn = document.getElementById('bomb-action-btn');
+        if (bBtn) {
+            bBtn.style.display = isPlaying ? 'flex' : 'none';
+            bBtn.style.filter = (bombCount <= 0) ? "grayscale(100%) opacity(0.6)" : "none";
+        }
+
+        // Zırh (Elmas) senkronu
+        if (typeof updateArmorUI === 'function') updateArmorUI();
+        
     } catch (e) { console.warn("HUD Sync Error:", e); }
 }
 
