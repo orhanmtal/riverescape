@@ -1,13 +1,12 @@
-/**
- * RİVER ESCAPE ELİTE - v1.99.64.55 (STABLE AAB RELEASE)
+/* RİVER ESCAPE ELİTE - v1.99.64.66 (STABLE AAB RELEASE)
  * DEVELOPMENT RULES:
  * 1. NO PLACEHOLDERS 2. PERFORMANCE FIRST 3. VISUAL EXCELLENCE
  * 4. CODE INTEGRITY 5. ELITE SYNC
- * 6. CLOUD SEAL v55
+ * 6. CLOUD SEAL v66
  */
 
-const VERSION = "v1.99.64.55";
-const VERSION_CODE = 19964550;
+const VERSION = "v1.99.64.66";
+const VERSION_CODE = 19964660;
 
 // --- v1.99.36.80: ELITE GLOBAL CONSTANTS (Locked & Sealed) ---
 const STAGES_PER_BIOME = 3;
@@ -172,6 +171,9 @@ function buyArmorLicense() {
         if (typeof playPowerupSound === 'function') playPowerupSound();
         setTimeout(() => { for (var i = 0; i < 3; i++) setTimeout(playCoinSound, i * 150); }, 150);
         if (typeof triggerEliteEconomySync === 'function') triggerEliteEconomySync(true);
+        // v1.99.64.66: Post-Purchase Invincibility
+        hasShield = true; levelUpInvuln = true;
+        setTimeout(() => { hasShield = false; levelUpInvuln = false; }, 3000);
         showToast(t.armorReloaded, true);
     };
     showEliteConfirm(t.confirmTitle, t.buyArmorMsg || "Zırh Şarjı satın almak istiyor musunuz? (1000 G)", t.buyBtnShort, "🔋", exec);
@@ -405,7 +407,8 @@ function drawParticles() {
 }
 
 // v1.99.61.81: ELITE PARTICLE POOL
-const PARTICLE_POOL_SIZE = 250;
+// v1.99.64.66: PERF - Reduced pool size from 250 to 120 for browser stability
+const PARTICLE_POOL_SIZE = 120;
 const particlePool = Array.from({ length: PARTICLE_POOL_SIZE }, () => new Particle());
 
 function emitParticles(x, y, color, type = 'default', count = 1, targetX, targetY) {
@@ -734,6 +737,9 @@ async function initAdMob() {
                 }
                 const callback = pendingRewardCallback;
                 pendingRewardCallback = null;
+                // v1.99.64.66: Post-Ad Invincibility
+                hasShield = true; levelUpInvuln = true;
+                setTimeout(() => { hasShield = false; levelUpInvuln = false; }, 3000);
                 callback();
             }
 
@@ -747,6 +753,9 @@ async function initAdMob() {
                     lastBtn.innerHTML = window.lastAdButtonText;
                     lastBtn.disabled = false;
                 }
+                
+                // v1.99.64.66: RESET AD STATE
+                window.isAdShowing = false;
             }, 300);
         });
 
@@ -829,10 +838,14 @@ async function showRewardedAd(btnElem, defaultText, callback) {
         return;
     }
 
+    // v1.99.64.66: FORCED BACKGROUND PAUSE
+    window.isAdShowing = true;
+    if (!isPaused) togglePause();
+
     // v1.73: ASLA DONMAYAN (Independent Countdown)
     btnElem.disabled = true;
     var countdown = 8;
-    btnElem.innerText = `${t.loadingAd} (${countdown})`; // Loading text is fine
+    btnElem.innerText = `${t.loadingAd} (${countdown})`;
 
     // UI Referanslarını kaydet (Dismiss sonrası sıfırlama için) v1.78 FIX
     window.lastAdButton = btnElem;
@@ -847,6 +860,7 @@ async function showRewardedAd(btnElem, defaultText, callback) {
             clearInterval(countdownTimer);
             if (btnElem.disabled && !adExecuted) {
                 console.warn('[AdMob] 1.73: Timeout Reset.');
+                window.isAdShowing = false; // Reset state
                 btnElem.innerHTML = defaultText;
                 btnElem.disabled = false;
                 showToast(t.adLoadFail);
@@ -1340,7 +1354,7 @@ var currentLAsset = currentAsset;
 
 
 window.totalGold = 0;
-var currentVersion = "v1.99.64.02"; // ELITE ECONOMY REVOLUTION
+var currentVersion = "v1.99.64.66"; // ELITE ECONOMY REVOLUTION
 
 var magnetLevel = 0;
 var shieldLevel = 0;
@@ -3015,8 +3029,13 @@ function setTheme(theme) {
     localStorage.setItem('riverEscapeTheme', theme);
 }
 
-// v1.99.61.81: ELITE HUD SYNC (Global Function)
+// v1.99.64.66: ELITE HUD SYNC (Throttled for Performance)
+let lastHudSync = 0;
 function syncEliteHUD() {
+    const now = performance.now();
+    if (now - lastHudSync < 100) return; // Only sync once every 100ms
+    lastHudSync = now;
+    
     try {
         const langPack = translations[currentLang] || translations.en;
 
@@ -3859,11 +3878,15 @@ function fireBomb() {
             "💣",
             () => {
                 const btn = document.getElementById('bomb-action-btn');
-                // v1.99.64.44: Save innerHTML to preserve the crosshair icon
+                // v1.99.64.66: Save innerHTML to preserve the crosshair icon
                 showRewardedAd(btn, btn.innerHTML, () => {
                     bombCount += 10;
                     saveGame();
                     
+                    // v1.99.64.66: POST-AD INVINCIBILITY (5 SECONDS)
+                    levelUpInvuln = true;
+                    setTimeout(() => { levelUpInvuln = false; }, 5000);
+
                     // v1.99.64.33: Robust Refill Sync
                     setTimeout(() => {
                         updateShopUI();
@@ -5743,6 +5766,11 @@ if (adArmorBtn) {
             armorCharge += 1;
             saveGame();
             updateShopUI();
+            
+            // v1.99.64.66: POST-AD INVINCIBILITY (5 SECONDS)
+            levelUpInvuln = true;
+            setTimeout(() => { levelUpInvuln = false; }, 5000);
+            
             showToast("+1 ARMOR! 🛡️", true);
         });
     });
