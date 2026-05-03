@@ -1,12 +1,13 @@
 /**
- * RİVER ESCAPE ELİTE - v1.99.64.02 (ELITE ECONOMY OVERHAUL)
+ * RİVER ESCAPE ELİTE - v1.99.64.55 (STABLE AAB RELEASE)
  * DEVELOPMENT RULES:
  * 1. NO PLACEHOLDERS 2. PERFORMANCE FIRST 3. VISUAL EXCELLENCE
  * 4. CODE INTEGRITY 5. ELITE SYNC
+ * 6. CLOUD SEAL v55
  */
 
-const VERSION = "v1.99.64.11";
-const VERSION_CODE = 1996411;
+const VERSION = "v1.99.64.55";
+const VERSION_CODE = 19964550;
 
 // --- v1.99.36.80: ELITE GLOBAL CONSTANTS (Locked & Sealed) ---
 const STAGES_PER_BIOME = 3;
@@ -34,20 +35,27 @@ window.addEventListener('load', () => {
 const reviveBtn = document.getElementById('revive-btn');
 const reviveGoldBtn = document.getElementById('revive-gold-btn');
 
-// --- v1.99.61.81 OPTIMIZATION: DOM CACHE ---
+// --- v1.99.64.33: ELITE ROBUST HUD ENGINE ---
+const getHudElement = (id) => {
+    if (!window._hudCache) window._hudCache = {};
+    if (!window._hudCache[id]) window._hudCache[id] = document.getElementById(id);
+    return window._hudCache[id];
+};
+
 const cachedHud = {
-    lives: document.getElementById('lives-hud'),
-    score: document.getElementById('scoreValue-hud'),
-    gold: document.getElementById('goldValue-hud'),
-    sLabel: document.getElementById('scoreLabel-hud'),
-    gLabel: document.getElementById('goldLabel-hud'),
-    lvlName: document.getElementById('levelName-hud'),
-    progress: document.getElementById('progress-fill-hud'),
-    dashFill: document.getElementById('dash-energy-fill'),
-    bBadge: document.getElementById('bomb-badge'),
-    bBtn: document.getElementById('bomb-action-btn'),
-    aBadge: document.getElementById('armor-badge'),
-    aIndi: document.getElementById('armor-ui-indicator')
+    get lives() { return getHudElement('lives-hud'); },
+    score: null, // Will be handled by getters or direct access
+    get score() { return getHudElement('scoreValue-hud'); },
+    get gold() { return getHudElement('goldValue-hud'); },
+    get sLabel() { return getHudElement('scoreLabel-hud'); },
+    get gLabel() { return getHudElement('goldLabel-hud'); },
+    get lvlName() { return getHudElement('levelName-hud'); },
+    get progress() { return getHudElement('progress-fill-hud'); },
+    get dashFill() { return getHudElement('dash-energy-fill'); },
+    get bBadge() { return getHudElement('bomb-badge'); },
+    get bBtn() { return getHudElement('bomb-action-btn'); },
+    get aBadge() { return getHudElement('armor-badge'); },
+    get aIndi() { return getHudElement('armor-ui-indicator'); }
 };
 var hudUpdateTimer = 0;
 const HUD_UPDATE_INTERVAL = 0.1; // 100ms (10 FPS update for UI is plenty)
@@ -588,8 +596,14 @@ function updateLanguageUI() {
     updateSpinButtonText();
 }
 
-// ARKA PLANA ALINCA VEYA KAPATINCA SENKRONİZE ET v1.99.40.02
+// ARKA PLANA ALINCA VEYA KAPATINCA SENKRONİZE ET v1.99.64.22
 const forceEliteSync = () => {
+    // v1.99.64.22: [ELITE GOLD PROTECTION] Seans içi altınları kasaya aktar
+    if (isPlaying && typeof goldCount !== 'undefined' && goldCount > 0) {
+        window.totalGold = Number(window.totalGold || 0) + Number(goldCount);
+        goldCount = 0; // Kasaya girdi, sıfırla
+    }
+
     if (typeof triggerEliteEconomySync === 'function') {
         triggerEliteEconomySync(true); // v1.99.40.02: Forced Life Cycle Seal
     }
@@ -730,7 +744,7 @@ async function initAdMob() {
 
                 const lastBtn = window.lastAdButton;
                 if (lastBtn) {
-                    lastBtn.innerText = window.lastAdButtonText;
+                    lastBtn.innerHTML = window.lastAdButtonText;
                     lastBtn.disabled = false;
                 }
             }, 300);
@@ -810,7 +824,7 @@ async function showRewardedAd(btnElem, defaultText, callback) {
 
     if (!navigator.onLine) {
         showToast(t.adLoadFail);
-        btnElem.innerText = defaultText;
+        btnElem.innerHTML = defaultText;
         btnElem.disabled = false;
         return;
     }
@@ -818,7 +832,7 @@ async function showRewardedAd(btnElem, defaultText, callback) {
     // v1.73: ASLA DONMAYAN (Independent Countdown)
     btnElem.disabled = true;
     var countdown = 8;
-    btnElem.innerText = `${t.loadingAd} (${countdown})`;
+    btnElem.innerText = `${t.loadingAd} (${countdown})`; // Loading text is fine
 
     // UI Referanslarını kaydet (Dismiss sonrası sıfırlama için) v1.78 FIX
     window.lastAdButton = btnElem;
@@ -833,7 +847,7 @@ async function showRewardedAd(btnElem, defaultText, callback) {
             clearInterval(countdownTimer);
             if (btnElem.disabled && !adExecuted) {
                 console.warn('[AdMob] 1.73: Timeout Reset.');
-                btnElem.innerText = defaultText;
+                btnElem.innerHTML = defaultText;
                 btnElem.disabled = false;
                 showToast(t.adLoadFail);
             }
@@ -844,7 +858,7 @@ async function showRewardedAd(btnElem, defaultText, callback) {
     if (!AdMob) {
         clearInterval(countdownTimer);
         showToast("Simulation Reward...");
-        btnElem.innerText = defaultText;
+        btnElem.innerHTML = defaultText;
         btnElem.disabled = false;
         callback();
         return;
@@ -1304,6 +1318,7 @@ var bgY = 0; var bgScrollSpeed = 200; window.targetLevelSpeed = 200;
 var screenFlash = 0; // Seviye geçişi parlaması v132
 var gameLoopRequestId = null; // v1.98.1.4: LOOP CONTROL
 
+
 // --- v1.99.61.81: ELITE GLOBAL CONSTANTS ---
 // STAGES_PER_BIOME and LOOP_THRESHOLD already defined in header
 const MORPH_DURATION = 1500;
@@ -1366,23 +1381,21 @@ function saveGame() {
 }
 
 function updateArmorUI() {
-    var aBadge = document.getElementById('armor-badge');
-    var aBadgePill = document.getElementById('armor-badge-pill');
-    var aIndi = document.getElementById('armor-ui-indicator');
+    const aBadge = cachedHud.aBadge;
+    const aBadgePill = getHudElement('armor-badge-pill');
+    const aIndi = cachedHud.aIndi;
 
-    if (aBadge) aBadge.innerText = armorCharge;
-    if (aBadgePill) aBadgePill.innerText = armorCharge;
+    if (aBadge && aBadge.textContent !== String(armorCharge)) aBadge.textContent = armorCharge;
+    if (aBadgePill && aBadgePill.textContent !== String(armorCharge)) aBadgePill.textContent = armorCharge;
 
     if (aIndi) {
         // v1.99.64.02: Forced visibility during gameplay
         if (isPlaying) {
             aIndi.style.display = 'flex';
-
             if (armorCharge > 0) {
                 aIndi.style.opacity = "1";
                 aIndi.style.filter = "none";
             } else {
-                // Dimmed look when out of armor
                 aIndi.style.opacity = "0.5";
                 aIndi.style.filter = "grayscale(1) brightness(0.7)";
             }
@@ -1625,8 +1638,15 @@ if (closeShopBtn) {
             }
         }
         saveGame();
+        if (typeof triggerEliteEconomySync === 'function') triggerEliteEconomySync(true);
     });
 }
+
+// v1.99.64.22: HTML onclick compatibility
+window.closeShop = function() {
+    const btn = document.getElementById('shop-close-btn');
+    if (btn) btn.click();
+};
 
 
 const armorIndicator = document.getElementById('armor-ui-indicator');
@@ -1754,14 +1774,18 @@ function updateShopUI() {
             if (ownsArmorLicense) {
                 const price = 1000;
                 if (iconSpan) iconSpan.innerText = "💎";
-                // v1.99.39.07: Clear label for armor charge
-                buyABtn.innerText = `${t.chargeArmor.replace('{charge}', armorCharge)}\n${price} G`;
+                // v1.99.64.22: Synchronized Button Text (Simplified)
+                buyABtn.innerText = `${t.buyBtnShort}\n${price} G`;
 
-                // v1.99.61.94: UNLIMITED CAPACITY
                 buyABtn.disabled = (totalGold < price);
                 buyABtn.style.opacity = "1";
 
                 if (document.getElementById('shop-void-armor-title')) document.getElementById('shop-void-armor-title').innerText = t.armorChargeTitle;
+                // v1.99.64.22: Synchronized description layout
+                const armorDesc = document.getElementById('shop-void-armor-desc');
+                if (armorDesc) {
+                    armorDesc.innerHTML = t.armorChargeDesc.replace('{count}', `<span style="color:#fff;font-weight:800;">${armorCharge}</span>`);
+                }
             } else {
                 if (iconSpan) iconSpan.innerText = "🔒";
                 buyABtn.innerText = `${t.getLicenseBtn}\n20000 G`;
@@ -1774,7 +1798,7 @@ function updateShopUI() {
         // Dynamic Magma Cannon Desc
         const magmaDesc = document.getElementById('shop-magma-desc');
         if (magmaDesc) {
-            magmaDesc.innerHTML = t.magmaCannonDesc.replace('{count}', `<span id="shop-bomb-count" style="color: #fff; font-weight: 800;">${bombCount}</span>`);
+            magmaDesc.innerHTML = t.magmaCannonDesc.replace('{count}', `<span style="color:#fff;font-weight:800;">${bombCount}</span>`);
         }
         // Silah Lisansı Yoksa Mühimmat Satırını Gizle (v1.99.61.81)
         // BOMBA BUTONU, HUD & SHOP SYNC
@@ -1801,8 +1825,7 @@ function updateShopUI() {
         }
 
         // BOMBA BUTONU & HUD SYNC
-        var bBadge = document.getElementById('bomb-badge');
-        if (bBadge) bBadge.innerText = bombCount;
+        // (v1.99.64.33: Redundant badge update removed, handled by syncEliteHUD)
         var bBtn = document.getElementById('bomb-action-btn');
         if (bBtn) {
             if (hasWeapon) {
@@ -1812,8 +1835,8 @@ function updateShopUI() {
         }
         updateArmorUI();
 
-        // v1.99.64.02: Boathouse disabled
-        // renderBoatShop();
+        // v1.99.64.33: INSTANT HUD SYNC
+        syncEliteHUD();
 
     } catch (e) { console.warn("Shop UI Error:", e); }
 }
@@ -1828,7 +1851,7 @@ if (buyAmmoBtn) buyAmmoBtn.addEventListener('click', () => {
             totalGold -= 1000;
             bombCount += 50; // v1.99.64.02: 40 -> 50 per request
             saveGame();
-            triggerEliteEconomySync();
+            if (typeof triggerEliteEconomySync === 'function') triggerEliteEconomySync(true); // v1.99.64.22: FORCED SYNC
             if (typeof playPowerupSound === 'function') playPowerupSound();
             setTimeout(() => { for (var i = 0; i < 2; i++) setTimeout(playCoinSound, i * 100); }, 200);
             showToast(t.ammoPurchasedToast, true);
@@ -1900,41 +1923,20 @@ function reviveWithGold() {
     }
 }
 
-function fireBomb() {
-    if (!isPlaying || isPaused || isGameOver || !hasWeapon) return; // v1.99.61.81 LOCKDOWN
-
-    if (bombCount <= 0) {
-        if (hasWeapon) {
-            // Tıklandığında oyunu durdur (Pause)
-            if (!isPaused) {
-                togglePause();
-            }
-            // Mağazayı otomatik aç
-            openShop();
-        }
-        return;
-    }
-
-    bombCount--;
-    bullets.push({
-        x: player.x + player.width / 2,
-        y: player.y,
-        radius: 8, // v1.68 Sleek: Daha küçük (12->8)
-        speed: 750 // Biraz daha hızlı
-    });
-
-    if (typeof playCrashSound === 'function') playCrashSound();
-    triggerVibration(50);
-    saveGame();
-}
+// v1.99.64.33: Unified Fire Control removed from here and moved to master function
 
 if (bombActionBtn) {
-    bombActionBtn.addEventListener('click', (e) => { e.preventDefault(); fireBomb(); });
-    bombActionBtn.addEventListener('touchstart', (e) => {
-        e.preventDefault();
-        e.stopPropagation(); // Diğer touch handler'ları engelle
-        bombActionBtn.style.transform = 'scale(0.85)';
+    const handleFire = (e) => {
+        if (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
         fireBomb();
+    };
+    bombActionBtn.addEventListener('click', handleFire);
+    bombActionBtn.addEventListener('touchstart', (e) => {
+        handleFire(e);
+        bombActionBtn.style.transform = 'scale(0.85)';
     }, { passive: false });
     bombActionBtn.addEventListener('touchend', () => { bombActionBtn.style.transform = 'scale(1)'; });
 }
@@ -1952,10 +1954,10 @@ if (dashBtn) {
 }
 
 window.addEventListener('keydown', (e) => {
+    if (e.repeat) return;
     if (e.code === 'Space') fireBomb();
     if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W' || e.shiftKey) activateDash();
 });
-
 
 // v1.99.61.81: INPUT TRACKING (Unified)
 const keys = { ArrowLeft: false, ArrowRight: false, ArrowUp: false, ArrowDown: false, a: false, d: false, w: false, s: false };
@@ -2041,14 +2043,14 @@ canvas.addEventListener('mousedown', initAudio); // PC için güvenlik kırma
 // SPAWNERLAR (Artık Yatay ve Dikey var)
 // obstacles/golds/powerups moved to top for v1.99.61.81
 var spawnInterval = 3.0, spawnTimer = 0; // v2.03: Başlangıçta kayaların arasını çok açtık
-var goldSpawnInterval = 6.6, goldTimer = 0; // v1.99.61.95: 20% Faster Gold Economy
+var goldSpawnInterval = 4.0, goldTimer = 0; // v1.99.64.33: 40% Faster Gold Economy (Elite Buff)
 
 var goldBag = [];
 function fillGoldBag() {
     goldBag = [];
-    for (var i = 0; i < 17; i++) goldBag.push(1);
-    for (var i = 0; i < 2; i++) goldBag.push(2);
-    goldBag.push(4);
+    for (var i = 0; i < 10; i++) goldBag.push(1);
+    for (var i = 0; i < 6; i++) goldBag.push(5);
+    for (var i = 0; i < 4; i++) goldBag.push(10);
     // Torbayı karıştırıyorum (Fisher-Yates Shuffle)
     for (var i = goldBag.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -2133,6 +2135,30 @@ function spawnObstacle() {
         });
 
         return;
+    }
+
+    // v1.99.64.33: ELITE BOSS - RED HIPPO (Levels 1.1, 1.2, 1.3)
+    if (currentLevel <= 3 && !window.obstacles.some(o => o.type === 'redHippo')) {
+        if (Math.random() < 0.08) { // v1.99.64.33: Elite Balance
+            const obsWidth = 38 * gameScale * 1.3; // %30 Daha Büyük
+            const obsHeight = 42 * gameScale * 1.3;
+            const riverWidth = (canvas.width * (1 - 2 * spawnMargin)) - obsWidth;
+            const randomX = (canvas.width * spawnMargin) + riverShift + (Math.random() * riverWidth);
+            
+            window.obstacles.push({
+                type: 'redHippo',
+                x: randomX,
+                relativeX: randomX - riverShift,
+                y: spawnY,
+                width: obsWidth,
+                height: obsHeight, // %30 Scale Up (Optimized)
+                speedY: bgScrollSpeed * 0.75, // Biraz daha yavaş ama ısrarcı
+                health: 5, // 5 Bomba dayanıklılığı (Kullanıcı Talebi)
+                isBoss: true,
+                isRed: true
+            });
+            return;
+        }
     }
 
     // Güçlendirici Çıkması (v1.97 Balance: %10 -> %5)
@@ -2680,6 +2706,7 @@ function spawnGold() {
 }
 
 
+
 // OYUN DÖNGÜSÜ (LOOP) 
 function togglePause() {
     if (!isPlaying || isGameOver) return;
@@ -2702,6 +2729,8 @@ function togglePause() {
         }
         if (pauseBtn) pauseBtn.innerText = "⏸";
         lastTime = performance.now();
+        saveGame();
+        if (typeof triggerEliteEconomySync === 'function') triggerEliteEconomySync(true); // v1.99.64.22: Resume Sync Seal
         requestAnimationFrame(gameLoop);
     }
 }
@@ -2747,6 +2776,7 @@ function startGame() {
 
     updateLanguageUI();
     fillGoldBag();
+
 
     // Satın alınan Kalkan/Durum sıfırlama v1.99.61.81
     hasShield = false;
@@ -3044,25 +3074,31 @@ function syncEliteHUD() {
             canvas.style.filter = "none";
         }
 
-        // v1.99.61.81: Profil Bilgisini Güncelle
-        if (pName && window.Leaderboard && Leaderboard.currentUser) {
-            pName.textContent = Leaderboard.currentUser.displayName || "ELITE PLAYER";
-        }
-
-        // v1.99.64.11: AMMO & ARMOR BADGE SYNC (Live Update)
-        const bBadge = document.getElementById('bomb-badge');
-        if (bBadge) bBadge.innerText = bombCount;
+        // v1.99.64.22: Profil ismi güncellemesi syncEliteHUD'dan kaldırıldı (Performans optimizasyonu)
         
-        const bBtn = document.getElementById('bomb-action-btn');
-        if (bBtn) {
-            bBtn.style.display = isPlaying ? 'flex' : 'none';
-            bBtn.style.filter = (bombCount <= 0) ? "grayscale(100%) opacity(0.6)" : "none";
+        // v1.99.64.22: AMMO & ARMOR BADGE SYNC (Ultra-Stable Sync)
+        const currentBombs = Math.max(0, Math.floor(bombCount || 0));
+        if (cachedHud.bBadge) {
+            // v1.99.64.44: Force display and reset any conflicting styles
+            cachedHud.bBadge.style.setProperty('display', (currentBombs > 0) ? 'block' : 'none', 'important');
+            cachedHud.bBadge.style.opacity = '1';
+            if (cachedHud.bBadge.textContent !== String(currentBombs)) {
+                cachedHud.bBadge.textContent = currentBombs;
+            }
+        }
+        
+        if (cachedHud.bBtn) {
+            // hasWeapon artık global bir mühürdür. Menüde de görünmesi için isPlaying şartını gevşetiyoruz.
+            cachedHud.bBtn.style.display = hasWeapon ? 'flex' : 'none';
+            cachedHud.bBtn.style.filter = (currentBombs <= 0) ? "grayscale(100%) opacity(0.6)" : "none";
         }
 
         // Zırh (Elmas) senkronu
         if (typeof updateArmorUI === 'function') updateArmorUI();
         
-    } catch (e) { console.warn("HUD Sync Error:", e); }
+    } catch (e) { 
+        console.warn("HUD Sync Warning:", e.message); 
+    }
 }
 
 // --- v1.99.61.81: ELITE PERK SYSTEM ---
@@ -3206,6 +3242,7 @@ function update(dt) {
 
         showLevelUp(currentLevel);
         syncEliteHUD(); // Force instant UI sync
+
         throttledSave(true); // v1.99.63.55: PERF — force-save on level-up (critical moment)
     }
 
@@ -3288,10 +3325,18 @@ function update(dt) {
         var pxL = player.x + player.width / 2 + (Math.random() - 0.5) * 20;
         var pyL = player.y + player.height - 5;
         var pColor = "rgba(255, 255, 255, 0.6)";
-        if (bIdxUpdate === 3) pColor = "rgba(200, 230, 255, 0.7)"; // Winter
+        if (bIdxUpdate === 2) pColor = "rgba(255, 165, 0, 0.7)"; // Autumn
+        else if (bIdxUpdate === 3) pColor = "rgba(200, 230, 255, 0.7)"; // Winter
         else if (bIdxUpdate === 4) pColor = "rgba(255, 69, 0, 0.8)"; // Lava
         emitParticles(pxL, pyL, pColor, 'default', 1);
     }
+
+    // --- SONBAHAR YAPRAKLARI (AUTUMN LEAVES) v1.99.64.33 ---
+    if (bIdxUpdate === 2 && isPlaying && !isPaused && Math.random() < 0.12) {
+        const leafColor = Math.random() > 0.5 ? "rgba(255, 140, 0, 0.8)" : "rgba(218, 165, 32, 0.8)"; // Turuncu veya Altın
+        emitParticles(Math.random() * canvas.width, -20, leafColor, 'leaf', 1);
+    }
+
     // --- KAR YAĞIŞI (SNOWFALL) v1.99.33.71 ---
     if (bIdxUpdate === 3 && Math.random() < 0.1) {
         emitParticles(Math.random() * canvas.width, -50, "rgba(255, 255, 255, 0.8)", 'default', 1);
@@ -3326,6 +3371,7 @@ function update(dt) {
         spawnGold();
         goldTimer = 0;
     }
+
 
     // 14.000 ŞAMPİYONLUK MÜHRÜ (v1.98 Level 7 Final Loop)
     if (score >= 18000 && totalLoops === 0) {
@@ -3369,8 +3415,9 @@ function update(dt) {
         var cx = player.x + player.width / 2;
         var cy = player.y + player.height / 2;
 
-        // v1.99.33.74: MODULAR MAGNET ENGINE
-        var baseMagnetRange = (powerupTimer > 0) ? 400 : (bIdxUpdate === 4 ? 120 : 0);
+        // v1.99.64.33: ELITE MAGNET ENGINE (Universal & Passive)
+        const passiveRange = (magnetLevel > 0) ? (magnetLevel * 25) : 0;
+        var baseMagnetRange = (powerupTimer > 0) ? 400 : passiveRange;
         var magnetRange = window.PerkEngine ? window.PerkEngine.getMagnetRange(baseMagnetRange) : baseMagnetRange;
 
         // v1.99.63.55: PERF — Unified Magnet & Movement Engine
@@ -3384,13 +3431,13 @@ function update(dt) {
             var pullSpeed = (powerupTimer > 0) ? 450 : 250;
             g.x += (dxM / distM) * pullSpeed * dt;
             g.y += (dyM / distM) * pullSpeed * dt;
-            if (bIdxUpdate === 4) g.relativeX = g.x - getRiverShift(g.y);
+            // v1.99.64.33: Her zaman nehir bağıl konumunu güncelle (Mıknatıs Sabitleme)
+            g.relativeX = g.x - getRiverShift(g.y);
         } else {
             g.y += g.speed * dt;
-            if (bIdxUpdate === 4) {
-                if (g.relativeX === undefined) g.relativeX = g.x - getRiverShift(g.y - g.speed * dt);
-                g.x = getRiverShift(g.y) + g.relativeX;
-            }
+            // v1.99.64.33: Her zaman nehir akışını takip et (Universal Flow)
+            if (g.relativeX === undefined) g.relativeX = g.x - getRiverShift(g.y - g.speed * dt);
+            g.x = getRiverShift(g.y) + g.relativeX;
         }
 
         g.angle += dt * 5;
@@ -3412,6 +3459,7 @@ function update(dt) {
 
             // Flying gold effect
             emitParticles(g.x, g.y, "#FFD700", 'default', 1, 40, 40);
+
 
             golds.splice(i, 1);
             continue;
@@ -3545,10 +3593,14 @@ function update(dt) {
             var dx = pxC - cx;
             obs.speedX = dx * 0.95; // Çok hızlı takip
             obs.rotation = Math.atan2(obs.speedY || 200, dx) - Math.PI / 2;
-        } else if (obs.type === 'hippo') {
-            // Su aygırı suyun altından gelir, oyuncuya 220px yaklaştığında aniden yüzeye çıkar!
-            if (obs.isSubmerged && obs.y > player.y - 220) {
-                obs.isSubmerged = false;
+        } else if (obs.type === 'hippo' || obs.type === 'redHippo') {
+            
+            if (obs.type === 'redHippo') {
+                // v1.99.64.33: ELITE BOSS AI - AGGRESSIVE RED TRACKING
+                const bossCenterX = obs.x + obs.width / 2;
+                const playerCenterX = player.x + player.width / 2;
+                const dx = playerCenterX - bossCenterX;
+                obs.speedX = (Math.abs(dx) > 5) ? (dx > 0 ? 170 : -170) : 0;
             }
         } else if (obs.type === 'laserGate') {
             // v1.99.63.18: TARGETED LASER STATE ENGINE (Fixed Position)
@@ -3609,7 +3661,7 @@ function update(dt) {
 
             // Eğer su aygırı henüz yüzeye çıkmamışsa (su altındaysa) çarpma/sek!
             // v1.99.36.15: Toxic biome'da su aygırı hasarını tamamen devre dışı bırak (Ghost hit fix)
-            if (obs.type === 'hippo' && (obs.isSubmerged || bIdxUpdate === 8)) continue;
+            if (obs.type === 'hippo' && bIdxUpdate === 8) continue;
 
             // v2.05: Lav Gayzeri sadece patlama anında (erupting) öldürür
             if (obs.type === 'lavaGeyser' && !obs.isDeadly) continue;
@@ -3676,7 +3728,6 @@ function update(dt) {
         // Engel çarpışması
         for (var j = obstacles.length - 1; j >= 0; j--) {
             var obs = obstacles[j];
-            if (obs.type === 'hippo' && obs.isSubmerged) continue; // Su altındaki hipoya vurulmaz
 
             if (b.x < obs.x + obs.width && b.x > obs.x &&
                 b.y < obs.y + obs.height && b.y > obs.y) {
@@ -3788,7 +3839,12 @@ function updatePlayer(dt) {
 }
 
 // v1.99.61.81: AMMO EXHAUSTION SYSTEM
+let lastFireTime = 0; // v1.99.64.44: Global Cooldown
 function fireBomb() {
+    const now = performance.now();
+    if (now - lastFireTime < 250) return; // 250ms Elite Cooldown
+    lastFireTime = now;
+
     if (!isPlaying || isPaused || isGameOver || !hasWeapon) return;
 
     if (bombCount <= 0) {
@@ -3803,10 +3859,19 @@ function fireBomb() {
             "💣",
             () => {
                 const btn = document.getElementById('bomb-action-btn');
-                showRewardedAd(btn, "💣", () => {
+                // v1.99.64.44: Save innerHTML to preserve the crosshair icon
+                showRewardedAd(btn, btn.innerHTML, () => {
                     bombCount += 10;
                     saveGame();
-                    updateShopUI();
+                    
+                    // v1.99.64.33: Robust Refill Sync
+                    setTimeout(() => {
+                        updateShopUI();
+                        syncEliteHUD();
+                        console.log("💣 [ELITE AD REFILL] Success: New Bomb Count =", bombCount);
+                    }, 50);
+
+                    if (isPaused) togglePause();
                     showToast("+10 BOMBS! 💣", true);
                 });
             }
@@ -4114,6 +4179,7 @@ function draw(dt) {
         ctx.restore();
     });
 
+
     obstacles.forEach(obs => {
         const tile = syncLAsset ? obsTiles[syncLAsset.bgKey] : null;
 
@@ -4132,6 +4198,8 @@ function draw(dt) {
             if (tile.isIndividual) {
                 // v1.99.19.09: ELITE ASSET FALLBACK (Check level tile first, then global pool)
                 var img = tile[obs.type] || obsTiles[obs.type];
+                if (obs.type === 'redHippo') img = tile['hippo'] || obsTiles['hippo'];
+
                 if (img && (img.tagName === 'CANVAS' || img.complete)) {
                     // Kutuk.png orijinal dosyada YATAY'dır. Base64 olduğu için isim kontrolü silindi.
                     if (obs.type === 'vertical') {
@@ -4150,17 +4218,23 @@ function draw(dt) {
                         ctx.drawImage(img, -obs.width / 2, -obs.height / 2, obs.width, obs.height);
                         ctx.restore();
                     } else {
-                        // Hippo and Taşlar için doğal düz (dik) çizim
+                        // Hippo, RedHippo, Rock
                         ctx.save();
-                        ctx.translate(obs.x + obs.width / 2, obs.y + obs.height / 2);
-                        ctx.drawImage(img, -obs.width / 2, -obs.height / 2, obs.width, obs.height);
+                        if (obs.type === 'redHippo') {
+                            ctx.filter = "sepia(1) saturate(100) hue-rotate(-50deg) brightness(0.8)"; // Elite Red Rage
+                            img = tile['hippo'] || obsTiles['hippo']; // Use hippo texture
+                        }
+                        if (img && (img.tagName === 'CANVAS' || img.complete)) {
+                            ctx.translate(obs.x + obs.width / 2, obs.y + obs.height / 2);
+                            ctx.drawImage(img, -obs.width / 2, -obs.height / 2, obs.width, obs.height);
+                        }
                         ctx.restore();
                     }
                     drawSuccess = true;
                 }
             }
             // Legacy/Grid Tileset System (Levels 1, 3, 4, 5, 6)
-            else if (tile.complete) {
+            else if (tile.tagName === 'CANVAS' || tile.complete) {
                 const sw = Math.floor(tile.width / 2);
                 const sh = Math.floor(tile.height / 2);
                 var sx = 0, sy = 0;
@@ -4170,16 +4244,31 @@ function draw(dt) {
                 else if (obs.type === 'hippo') { sx = sw; sy = sh; }
 
                 const margin = 4;
-                if (obs.type === 'vertical') {
-                    ctx.save();
-                    ctx.translate(obs.x + obs.width / 2, obs.y + obs.height / 2);
-                    ctx.rotate(Math.PI / 2 + (obs.rotation || 0)); // v2.04: Rotation Support
-                    ctx.drawImage(tile, sx + margin, sy + margin, sw - margin * 2, sh - margin * 2, -obs.height / 2, -obs.width / 2, obs.height, obs.width);
-                    ctx.restore();
-                }
-
                 // v1.99.19.09: ONLY set drawSuccess if we actually drew a supported tileset type
-                if (obs.type === 'rock' || obs.type === 'vertical' || obs.type === 'croc' || obs.type === 'hippo') {
+                if (obs.type === 'rock' || obs.type === 'vertical' || obs.type === 'croc' || obs.type === 'hippo' || obs.type === 'redHippo') {
+                    ctx.save();
+                    if (obs.type === 'redHippo') {
+                        ctx.filter = "sepia(1) saturate(100) hue-rotate(-50deg) brightness(0.8)"; // Elite Red Rage
+                        sx = sw; sy = sh; // Hippo texture offset
+                    }
+                    
+                    if (obs.type === 'vertical') {
+                        ctx.translate(obs.x + obs.width / 2, obs.y + obs.height / 2);
+                        ctx.rotate(Math.PI / 2 + (obs.rotation || 0));
+                        ctx.drawImage(tile, sx + margin, sy + margin, sw - margin * 2, sh - margin * 2, -obs.height / 2, -obs.width / 2, obs.height, obs.width);
+                    } else if (obs.type === 'croc') {
+                        ctx.translate(obs.x + obs.width / 2, obs.y + obs.height / 2);
+                        ctx.rotate(Math.PI);
+                        ctx.drawImage(tile, sx + margin, sy + margin, sw - margin * 2, sh - margin * 2, -obs.width / 2, -obs.height / 2, obs.width, obs.height);
+                    } else {
+                        // Hippo, RedHippo, Rock
+                        if (obs.type === 'redHippo') {
+                            ctx.filter = "sepia(1) saturate(100) hue-rotate(-50deg) brightness(0.8)"; // Elite Red Rage
+                            sx = sw; sy = sh; // Hippo texture offset in grid
+                        }
+                        ctx.drawImage(tile, sx + margin, sy + margin, sw - margin * 2, sh - margin * 2, obs.x, obs.y, obs.width, obs.height);
+                    }
+                    ctx.restore();
                     drawSuccess = true;
                 }
             }
@@ -5536,6 +5625,7 @@ if (restartBtn) restartBtn.addEventListener('click', () => {
     localStorage.removeItem('riverEscapeCurrentSession');
 
     saveGame();
+    if (typeof triggerEliteEconomySync === 'function') triggerEliteEconomySync(true);
     startGame();
 });
 

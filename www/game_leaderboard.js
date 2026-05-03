@@ -133,6 +133,7 @@ const Leaderboard = {
 
             if (securityOverlay) {
                 if (!isOnline) {
+                    securityOverlay.style.display = 'flex';
                     securityOverlay.style.visibility = 'visible';
                     securityOverlay.style.opacity = '1';
                     securityTitle.innerText = t.securityInternetRequired;
@@ -151,6 +152,7 @@ const Leaderboard = {
                     }
                     if (securityLoginBtn) securityLoginBtn.style.display = 'none';
                 } else if (!isLoggedIn) {
+                    securityOverlay.style.display = 'flex';
                     securityOverlay.style.visibility = 'visible';
                     securityOverlay.style.opacity = '1';
                     securityTitle.innerText = t.securityAuthRequired;
@@ -173,7 +175,10 @@ const Leaderboard = {
                 } else {
                     // ALL SECURE - REMOVE LOCK
                     securityOverlay.style.opacity = '0';
-                    setTimeout(() => { securityOverlay.style.visibility = 'hidden'; }, 500);
+                    setTimeout(() => { 
+                        securityOverlay.style.visibility = 'hidden'; 
+                        securityOverlay.style.display = 'none';
+                    }, 500);
                 }
             }
 
@@ -447,10 +452,10 @@ const Leaderboard = {
                 flag: this.playerFlag,
                 missionCycle: (window.MissionManager) ? window.MissionManager.getMissions()[0]?.cycle || 1 : 1,
                 missions: (window.MissionManager) ? window.MissionManager.getMissions() : [],
-                sessionLevel: level || window.currentLevel || 1,
+                sessionLevel: window.currentLevel || 1,
                 sessionProgress: window.levelProgressTime || 0,
-                sessionLives: window.resumeLives || 3,
-                sessionScore: window.resumeScore || 0,
+                sessionLives: window.lives || 3,
+                sessionScore: finalScore,
                 lastSeen: firebase.firestore.FieldValue.serverTimestamp()
             };
 

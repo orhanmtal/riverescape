@@ -1,5 +1,5 @@
 /**
- * RİVER ESCAPE ELİTE - v1.99.63.63 (STABLE AAB RELEASE)
+ * RİVER ESCAPE ELİTE - v1.99.64.55 (STABLE AAB RELEASE)
  * 1. NO PLACEHOLDERS - Always use premium assets or procedural generation.
  * 2. PERFORMANCE FIRST - Optimize update loops and DOM access.
  * 3. VISUAL EXCELLENCE - Use HSL colors, smooth gradients, and micro-animations.
@@ -8,10 +8,10 @@
  */
 
 // River Escape Elite - Central Version Control
-// v1.99.64.11 - Elite Economy Overhaul & Boathouse Purge
+// v1.99.64.55 - Boss Balancing & HUD Reliability Update
 window.ELITE_CONFIG = {
-    VERSION: "v1.99.64.11",
-    VERSION_CODE: "1996411",
+    VERSION: "v1.99.64.55",
+    VERSION_CODE: "19964550",
     LEVEL_MARGIN: 0.15,
     BG_KEY_SYNC: true,
     NATURAL_TILING: true,
@@ -20,7 +20,7 @@ window.ELITE_CONFIG = {
 
     BUILD_LEVEL: "Elite Production",
     SYNC_ENGINE: "v3.Elite.Secure",
-    LAST_UPDATED: "2026-04-27"
+    LAST_UPDATED: "2026-05-03"
 };
 
 console.log("🚀 [ELITE PERFORMANCE SYSTEM] Active:", window.ELITE_CONFIG.VERSION);

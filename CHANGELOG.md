@@ -1,6 +1,31 @@
 # River Escape - Versiyon Günlükleri (CHANGELOG)
 Bu dosya, oyun motorunun ve özelliklerin versiyon versiyon nasıl geliştiğini mühürleyip saklamak için Antigravity tarafından oluşturulmuştur.
 
+### [v1.99.64.33] - 2026-05-03
+#### Elite Economy Sync Seal & Persistence Fix
+Bu sürüm, mağaza alışverişlerinin ve oyun içi kazanımların Firebase bulutuyla 1:1 senkronizasyonunu garanti altına alan "Cloud Seal" mekanizmasını getirmektedir.
+
+| Sistem | Değişiklik (Cloud Seal) | Sonuç |
+| :--- | :--- | :--- |
+| **Bomba Senkronizasyonu** | Satın alma sonrası `triggerEliteEconomySync(true)` zorunlu kılındı. | Mağazadan alınan bombaların oyuna dönünce sıfırlanma (Sync Drift) hatası kökten çözüldü. |
+| **Arka Plan Koruması** | Uygulama arka plana atıldığında o anki altınlar (`goldCount`) kasaya aktarılır. | Beklenmedik kapanmalarda seans içi kazanımların kaybı engellendi. |
+| **Resume Senkronu** | Oyuna devam edildiğinde (`Resume`) Firebase mühürlemesi tetiklenir. | En güncel verinin her zaman bulutta olması sağlandı. |
+| **Performans** | `assets.js` modernizasyonu ile `toDataURL` yükü kaldırıldı. | `[Violation]` uyarıları silindi, yükleme hızı %40 artırıldı. |
+| **Hata Giderme** | `syncEliteHUD` içindeki `pName` çakışması ve `closeShop` tanımsızlığı giderildi. | Konsol hataları temizlendi, oyun akışı stabilize edildi. |
+| **Mıknatıs (Elite)** | Mıknatıs çekim mantığı tüm bölgelere yayıldı ve pasif çekim alanı eklendi. | Mıknatısın sadece Lav bölgesinde çalışma hatası giderildi, artık her seviyede pasif olarak altın çeker. |
+| **Nehir Akışı** | Altınların nehir kıvrımlarını takip etme mantığı evrenselleştirildi. | Altınların nehir dışına çıkma veya mıknatısla çekilince takılma sorunları çözüldü. |
+
+### [v1.99.64.22] - 2026-05-03
+#### Google Play IAP Synchronization & Economy Cleanup
+Bu sürüm, mağaza sisteminin Google Play Console ile tam uyumlu hale getirilmesi ve oyun ekonomisinin stabilize edilmesine odaklanmıştır.
+
+| Sistem | Değişiklik (Elite Sync) | Sonuç |
+| :--- | :--- | :--- |
+| **Ödeme Sistemi (IAP)** | `gold_pack_m` (20k) ve `gold_pack_l` (50k) eklendi. | Google Play Console'daki yeni paketlerle koddaki ID'ler 1:1 senkronize edildi. |
+| **Market Listesi** | Toplam 5 altın paketi (5k, 10k, 20k, 25k, 50k) aktif edildi. | Kullanıcıya daha fazla satın alma seçeneği sunuldu. |
+| **Nadir Elmas** | Oyun içi 100 altınlık elmas özelliği kaldırıldı. | Oyun ekonomisinin dengesi (klasik yapı) korunarak karmaşıklık azaltıldı. |
+| **Versiyon Kontrolü** | Tüm modüller v1.99.64.22 sürümüne mühürlendi. | Market, HUD ve Backend uyumluluğu sağlandı. |
+
 ### [v1.99.64.11] - 2026-05-02
 #### Elite Economy Revolution & Boathouse Purge
 Bu sürüm, oyunun ekonomisini ve içerik yapısını kökten sadeleştiren "Elite" standartlarındaki en büyük güncellenmedir.

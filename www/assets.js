@@ -37,12 +37,10 @@ function makeWhiteTransparent(imageElement, isAggressive = false) {
         }
         offCtx.putImageData(imgData, 0, 0);
     } catch (e) {
-        console.warn("Local security block detected: Transparency might fail on some browsers via file:// protocol.");
+        console.warn("Transparency processing failed:", e);
     }
 
-    const newImg = new Image();
-    newImg.src = offCanvas.toDataURL();
-    return newImg;
+    return offCanvas; // v1.99.64.22: Return canvas directly (High Performance)
 }
 
 
@@ -67,7 +65,8 @@ function loadBg(key, src) {
             console.error(`❌ [ELITE ASSETS] Arka Plan Hatası (${key}):`, e);
         }
     };
-    img.src = src;
+    const vStr = (window.ELITE_CONFIG && window.ELITE_CONFIG.VERSION) ? window.ELITE_CONFIG.VERSION : 'v1.99.64.33';
+    img.src = src + "?v=" + vStr;
     return img;
 }
 
@@ -95,7 +94,8 @@ function safeLoad(name, src, processor = null) {
         console.error(`❌ [ELITE ASSETS] Yükleme Hatası (${name}):`, src);
         trackAsset(name + " (FATAL)");
     };
-    img.src = src;
+    const vStr = (window.ELITE_CONFIG && window.ELITE_CONFIG.VERSION) ? window.ELITE_CONFIG.VERSION : 'v1.99.64.33';
+    img.src = src + "?v=" + vStr;
     return img;
 }
 

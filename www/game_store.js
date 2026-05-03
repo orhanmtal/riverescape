@@ -1,12 +1,12 @@
 /**
  * RİVER ESCAPE ELİTE - game_store.js
  * Google Play Satın Alma (In-App Purchases - IAP) Modülü
- * v1.99.30.04
+ * v1.99.64.22
  */
 
 const IAP_PACKS = [
-    { id: 'gold_pack_05', amount: 20000, price: '$0.49', priceVal: 0.49, label: '20.000 GOLD' },
-    { id: 'gold_pack_1', amount: 50000, price: '$0.99', priceVal: 0.99, label: '50.000 GOLD' }
+    { id: 'gold_pack_m', amount: 20000, price: '$0.49', priceVal: 0.49, label: '20.000 GOLD' },
+    { id: 'gold_pack_l', amount: 50000, price: '$0.99', priceVal: 0.99, label: '50.000 GOLD' }
 ];
 
 const GameStore = {
