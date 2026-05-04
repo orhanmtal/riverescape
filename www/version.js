@@ -8,10 +8,10 @@
  */
 
 // River Escape Elite - Central Version Control
-// v1.99.64.102 - Blue Crocodile Dynamic Look-At AI & Majestic Scale
+// v1.99.64.105 - Blue Crocodile Dynamic Look-At AI & Majestic Scale
 window.ELITE_CONFIG = {
-    VERSION: "v1.99.64.102",
-    VERSION_CODE: "19964102",
+    VERSION: "1.99.64.105",
+    VERSION_CODE: "19964105",
     LEVEL_MARGIN: 0.15,
     BG_KEY_SYNC: true,
     NATURAL_TILING: true,

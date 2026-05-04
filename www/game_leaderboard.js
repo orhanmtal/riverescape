@@ -4,7 +4,7 @@
  * v1.99.40.01
  */
 
-const Leaderboard = {
+window.Leaderboard = {
     // FIREBASE YAPILANDIRMASI (CONNECTED v1.99.23.00!)
     firebaseConfig: {
         apiKey: "AIzaSyBVLsQ9I8UAzBYRqWcRYkHUHTQz5xrTHgs",
@@ -663,7 +663,7 @@ const Leaderboard = {
 
     async performLogout() {
         try {
-            // v1.99.63.77: [ELITE SECURITY] Çıkmadan önce verileri son kez buluta mühürle
+            // v1.99.64.106: [ELITE SECURITY] Çıkmadan önce verileri son kez buluta mühürle
             if (typeof this.submitProgress === 'function') {
                 console.log("☁️ [ELITE SYNC] Çıkış öncesi son senkronizasyon...");
                 try {
@@ -674,6 +674,16 @@ const Leaderboard = {
             }
 
             if (this.auth) await this.auth.signOut();
+
+            // v1.99.64.105: Native Session Purge (For Account Switching)
+            const AuthPlugin = window.Capacitor && window.Capacitor.Plugins ? window.Capacitor.Plugins.FirebaseAuthentication : null;
+            if (AuthPlugin) {
+                try {
+                    await AuthPlugin.signOut();
+                } catch (e) {
+                    console.warn("⚠️ Native sign-out failed, proceeding with local purge.");
+                }
+            }
             
             // ELITE PURGE: Tüm oyun verilerini yerel hafızadan kazı! 🧼✨
             const keysToRemove = [
@@ -720,19 +730,47 @@ const Leaderboard = {
         }
 
         try {
-            if (this.analytics) this.analytics.logEvent('login_attempt_start');
+            console.log("🚀 [DEBUG] loginWithGoogle called!");
+            if (typeof showToast === 'function') showToast("Giriş işlemi başlatılıyor...", true);
             
-            if (typeof showToast === 'function') showToast(t.openingSecureLogin, true);
+            if (this.analytics) this.analytics.logEvent('login_attempt_start');
             
             // 1. Capacitor Native Eklentisine Öncelik Ver
             const AuthPlugin = window.Capacitor && window.Capacitor.Plugins ? window.Capacitor.Plugins.FirebaseAuthentication : null;
 
             if (AuthPlugin) {
-                const result = await AuthPlugin.signInWithGoogle();
-                if (result.credential && result.credential.idToken) {
-                    const credential = firebase.auth.GoogleAuthProvider.credential(result.credential.idToken);
-                    const userCredential = await this.auth.signInWithCredential(credential);
-                    if (this.analytics) this.analytics.logEvent('login_success', { method: 'native_google' });
+                let result;
+                try {
+                    // v1.99.64.01: Simplified call - Plugin will find Client ID from google-services.json
+                    result = await AuthPlugin.signInWithGoogle();
+                } catch (nativeError) {
+                    if (typeof showToast === 'function') showToast("❌ Google Hatası: " + nativeError.message, false);
+                    throw nativeError;
+                }
+
+                if (result && result.credential && result.credential.idToken) {
+                    const idToken = result.credential.idToken;
+                    console.log("✅ [ELITE AUTH] ID Token received.");
+
+                    try {
+                        const fb = window.firebase;
+                        if (fb && fb.auth) {
+                            // v1.99.64.01: Absolute Reference to Provider
+                            const Provider = fb.auth.GoogleAuthProvider;
+                            if (Provider) {
+                                const credential = Provider.credential(idToken);
+                                await fb.auth().signInWithCredential(credential);
+                                if (typeof showToast === 'function') showToast("✅ Giriş Başarılı!", true);
+                            } else {
+                                throw new Error("GoogleAuthProvider bulunamadı! (fb.auth var ama provider yok)");
+                            }
+                        } else {
+                            throw new Error("Firebase (window.firebase) yüklü değil!");
+                        }
+                    } catch (innerError) {
+                        console.error("Inner Auth Error:", innerError);
+                        if (typeof showToast === 'function') showToast("❌ Detay: " + innerError.message, false);
+                    }
                 }
             } else {
                 const provider = new firebase.auth.GoogleAuthProvider();

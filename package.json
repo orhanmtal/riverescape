@@ -1,0 +1,24 @@
+{
+  "name": "river-escape-elite",
+  "version": "1.99.64",
+  "description": "River Escape Elite Game",
+  "main": "index.js",
+  "scripts": {
+    "cap": "npx @capacitor/cli",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "OrhanMTAL",
+  "license": "ISC",
+  "dependencies": {
+    "@capacitor-community/admob": "^6.0.0",
+    "@capacitor-firebase/authentication": "^6.0.0",
+    "@capacitor/android": "^6.2.1",
+    "@capacitor/core": "^6.2.1",
+    "@capacitor/haptics": "^6.0.0"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
+    "@capacitor/cli": "^6.2.1"
+  }
+}

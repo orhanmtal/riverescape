@@ -1,0 +1,14 @@
+{
+  "appId": "com.gemini.riverescape",
+  "appName": "River Escape Elite",
+  "webDir": "www",
+  "bundledWebRuntime": false,
+  "plugins": {
+    "FirebaseAuthentication": {
+      "skipNativeAuth": false,
+      "providers": [
+        "google.com"
+      ]
+    }
+  }
+}
