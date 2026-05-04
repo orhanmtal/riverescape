@@ -1289,7 +1289,7 @@ resizeCanvas();
 
 const levelAssets = [
     { threshold: 0, bgKey: 'spring', speed: 200, spawn: 0.52, titleEN: translations.en.springRiver, titleTR: translations.tr.springRiver, color: "#00e5ff", pKey: "ilkbahar", margin: 0.15, visuals: { hideAmbients: false, isProcedural: false, waterColor: "rgba(0, 229, 255, 0.35)", groundColor: "#2d5a27", waterEffect: "shimmer" } },
-    { threshold: 3000, bgKey: 'summer', speed: 220, spawn: 0.48, titleEN: translations.en.summerRiver, titleTR: translations.tr.summerRiver, color: "#1e90ff", pKey: "yaz", margin: 0.15, visuals: { hideAmbients: false, isProcedural: false, waterColor: "rgba(0, 229, 255, 0.35)", groundColor: "#4a8c3d", waterEffect: "shimmer" } },
+    { threshold: 3000, bgKey: 'summer', speed: 220, spawn: 0.48, titleEN: translations.en.summerRiver, titleTR: translations.tr.summerRiver, color: "#40E0D0", pKey: "yaz", margin: 0.15, visuals: { hideAmbients: false, isProcedural: true, straightMargins: true, waterColor: "rgba(64, 224, 208, 0.5)", groundColor: "#4CAF50", waterEffect: "eliteSummer" } },
     { threshold: 6000, bgKey: 'autumn', speed: 230, spawn: 0.45, titleEN: translations.en.autumnRiver, titleTR: translations.tr.autumnRiver, color: "#ff8c00", pKey: "sonbahar", margin: 0.15, visuals: { hideAmbients: false, isProcedural: false, waterColor: "rgba(255, 140, 0, 0.25)", groundColor: "#8b4513", waterEffect: "shimmer" } },
     { threshold: 9000, bgKey: 'winter', speed: 220, spawn: 0.42, titleEN: translations.en.winterRiver, titleTR: translations.tr.winterRiver, color: "#add8e6", pKey: "kis", margin: 0.15, visuals: { hideAmbients: false, isProcedural: false, waterColor: "rgba(173, 216, 230, 0.45)", groundColor: "#f0f8ff", waterEffect: "shimmer" } },
     { threshold: 12000, bgKey: 'lava', speed: 250, spawn: 0.80, titleEN: translations.en.lavaRiver, titleTR: translations.tr.lavaRiver, color: "#ff4500", pKey: "lava", margin: 0.15, visuals: { hideAmbients: true, isProcedural: false, waterColor: "rgba(255, 69, 0, 0.4)", groundColor: "#1a0000", waterEffect: "lava" } },
@@ -4046,8 +4046,11 @@ function drawProceduralBG(lvl, alpha = 1.0) {
 
     // 3. BIOME SPECIFIC BANK DETAILS
     if (lvl <= 3 || lvl === 6) { // Spring, Summer, Autumn, Winter, Lagoon
+        // v1.99.64.87: STRAIGHT MARGIN MODE for Summer (Inspired by Level 1 Clarity)
+        const isSummer = (lvl === 1);
+        
         // Natural Grass/Bank texture
-        ctx.fillStyle = "rgba(0, 0, 0, 0.08)";
+        ctx.fillStyle = isSummer ? "rgba(255, 255, 255, 0.03)" : "rgba(0, 0, 0, 0.08)";
         for (var i = 0; i < 60; i++) {
             var seed = (i * 791) % 1000;
             var bx = (seed * 1.5) % canvas.width;
@@ -4055,16 +4058,18 @@ function drawProceduralBG(lvl, alpha = 1.0) {
             
             var by = (performance.now() / 10 + seed * 5) % canvas.height;
             ctx.beginPath();
-            ctx.arc(bx, by, 2, 0, Math.PI * 2);
+            ctx.arc(bx, by, isSummer ? 1 : 2, 0, Math.PI * 2);
             ctx.fill();
         }
+
         // Bank edge shading (Elite Professionally straight corridor)
+        const shadowOpacity = isSummer ? 0.08 : 0.15;
         let gradL = ctx.createLinearGradient(rLeft - 30, 0, rLeft, 0);
-        gradL.addColorStop(0, "rgba(0,0,0,0)"); gradL.addColorStop(1, "rgba(0,0,0,0.15)");
+        gradL.addColorStop(0, "rgba(0,0,0,0)"); gradL.addColorStop(1, `rgba(0,0,0,${shadowOpacity})`);
         ctx.fillStyle = gradL; ctx.fillRect(rLeft - 30, 0, 30, canvas.height);
         
         let gradR = ctx.createLinearGradient(rRight, 0, rRight + 30, 0);
-        gradR.addColorStop(0, "rgba(0,0,0,0.15)"); gradR.addColorStop(1, "rgba(0,0,0,0)");
+        gradR.addColorStop(0, `rgba(0,0,0,${shadowOpacity})`); gradR.addColorStop(1, "rgba(0,0,0,0)");
         ctx.fillStyle = gradR; ctx.fillRect(rRight, 0, 30, canvas.height);
 
     } else if (lvl === 4) { // Lava - Cracks and heat
@@ -5379,6 +5384,24 @@ function drawProceduralWater(dt, overrideAsset = null) {
     ctx.save();
     if (effect === "shimmer") {
         // No horizontal lines — background asset has its own water texture
+    } else if (effect === "eliteSummer") {
+        // v1.99.64.87: HIGH CONTRAST ARCADE WATER (Scene 2 Inspired)
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.15)";
+        ctx.lineWidth = 1;
+        for (var i = 0; i < 3; i++) {
+            var ly = (performance.now() / 15 + i * (canvas.height / 3)) % canvas.height;
+            ctx.beginPath();
+            ctx.moveTo(rLeft, ly); ctx.lineTo(rRight, ly);
+            ctx.stroke();
+        }
+        // Subtle sparkling glints (Small dots)
+        ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
+        for (var i = 0; i < 5; i++) {
+            var seed = (i * 123) % 1000;
+            var gx = rLeft + ((seed * 5) % rWidth);
+            var gy = (performance.now() / 10 + seed) % canvas.height;
+            ctx.fillRect(gx, gy, 2, 2);
+        }
     } else if (effect === "lava") {
         ctx.globalAlpha = 0.35;
         for (var i = 0; i < 6; i++) {
