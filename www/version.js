@@ -8,10 +8,10 @@
  */
 
 // River Escape Elite - Central Version Control
-// v1.99.64.67 - Web Stability & Elite Economy Correction
+// v1.99.64.68 - Web Stability Patch v2 (Particle & Ad decoupling)
 window.ELITE_CONFIG = {
-    VERSION: "v1.99.64.67",
-    VERSION_CODE: "19964670",
+    VERSION: "v1.99.64.68",
+    VERSION_CODE: "19964680",
     LEVEL_MARGIN: 0.15,
     BG_KEY_SYNC: true,
     NATURAL_TILING: true,

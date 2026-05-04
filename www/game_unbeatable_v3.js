@@ -304,13 +304,17 @@ class Particle {
 
     update(dt) {
         if (!this.active) return;
+        
+        // v1.99.64.68: Safety Guard (NaN/Infinity Protection)
+        const safeDt = Math.min(0.1, dt || 0.016);
+
         if (this.targetX !== undefined) {
             const dx = this.targetX - this.x;
             const dy = this.targetY - this.y;
             const dist = Math.sqrt(dx * dx + dy * dy);
             if (dist > 5) {
-                this.x += (dx / dist) * 800 * dt;
-                this.y += (dy / dist) * 800 * dt;
+                this.x += (dx / dist) * 800 * safeDt;
+                this.y += (dy / dist) * 800 * safeDt;
             } else {
                 this.active = false;
             }
@@ -323,14 +327,13 @@ class Particle {
 
         let lifeDrain = 0.8;
         if (this.type === 'ember') {
-            // v1.99.63.88: [ELITE FOCUS] Sağa sola savrulmayı azalt, daha dik git
-            this.speedX *= 0.94; // Her karede yan hızı biraz kır
+            this.speedX *= 0.94;
             this.speedX += Math.sin(performance.now() / 500) * 0.05;
-            lifeDrain = 1.2; // Biraz daha hızlı yok olsunlar ki kalabalık yapmasınlar
+            lifeDrain = 1.2;
         } else if (this.type === 'bombTrail' || this.type === 'explosion') {
             this.speedX *= 0.92;
             this.speedY *= 0.92;
-            lifeDrain = (this.type === 'bombTrail') ? 1.6 : 1.2; // Trails vanish fast, explosions linger a bit
+            lifeDrain = (this.type === 'bombTrail') ? 1.6 : 1.2;
         } else if (this.type === 'glitch') {
             if (Math.random() < 0.1) this.x += (Math.random() - 0.5) * 20;
             lifeDrain = 0.8;
@@ -339,8 +342,8 @@ class Particle {
             lifeDrain = (this.type === 'leaf' ? 0.2 : 0.4);
         }
 
-        this.life -= dt * lifeDrain;
-        if (this.life <= 0) this.active = false;
+        this.life -= safeDt * lifeDrain;
+        if (this.life <= 0 || isNaN(this.life)) this.active = false;
     }
 }
 
@@ -3885,16 +3888,14 @@ function fireBomb() {
                 // v1.99.64.66: Save innerHTML to preserve the crosshair icon
                 showRewardedAd(btn, btn.innerHTML, () => {
                     bombCount += 10;
-                    saveGame();
+                    // v1.99.64.68: Remove redundant saveGame (togglePause will handle it)
                     
-                    // v1.99.64.66: POST-AD INVINCIBILITY (5 SECONDS)
                     levelUpInvuln = true;
                     setTimeout(() => { levelUpInvuln = false; }, 5000);
 
-                    // v1.99.64.67: Optimized Refill Sync (Removed redundant HUD call)
                     setTimeout(() => {
                         updateShopUI();
-                        console.log("💣 [ELITE AD REFILL] Success: New Bomb Count =", bombCount);
+                        console.log("💣 [ELITE AD REFILL] HUD Updated");
                     }, 100);
 
                     if (isPaused) togglePause();
