@@ -286,6 +286,9 @@ class Particle {
         } else if (type === 'explosion') {
             this.speedX = (Math.random() - 0.5) * 8; // Explode outwards
             this.speedY = (Math.random() - 0.5) * 8;
+        } else if (type === 'wake') {
+            this.speedX = (Math.random() - 0.5) * 1.5;
+            this.speedY = bgScrollSpeed / 40 + Math.random() * 1.0;
         } else {
             this.speedX = (Math.random() - 0.5) * 2;
         }
@@ -337,9 +340,9 @@ class Particle {
         } else if (this.type === 'glitch') {
             if (Math.random() < 0.1) this.x += (Math.random() - 0.5) * 20;
             lifeDrain = 0.8;
-        } else if (this.type === 'bubble' || this.type === 'leaf') {
+        } else if (this.type === 'bubble' || this.type === 'leaf' || this.type === 'wake') {
             this.x += Math.cos(performance.now() / 200) * 0.5;
-            lifeDrain = (this.type === 'leaf' ? 0.2 : 0.4);
+            lifeDrain = (this.type === 'leaf' ? 0.2 : (this.type === 'wake' ? 1.5 : 0.4));
         }
 
         this.life -= safeDt * lifeDrain;
@@ -356,8 +359,8 @@ function drawParticles() {
         types[p.type].push(p);
     }
 
-    // 1. Draw Default/Bubble/Leaf (Simple Circles)
-    const simpleTypes = ['default', 'bubble', 'leaf'];
+    // 1. Draw Default/Bubble/Leaf/Wake (Simple Circles/Foam)
+    const simpleTypes = ['default', 'bubble', 'leaf', 'wake'];
     simpleTypes.forEach(t => {
         if (!types[t]) return;
         ctx.save();
@@ -365,7 +368,12 @@ function drawParticles() {
             ctx.globalAlpha = p.life;
             ctx.fillStyle = p.color;
             ctx.beginPath();
-            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            if (t === 'wake') {
+                // v1.99.64.81: ELITE WAKE RENDERING (Elliptical Foam)
+                ctx.ellipse(p.x, p.y, p.size * (1 + (1 - p.life)), p.size * 0.6, 0, 0, Math.PI * 2);
+            } else {
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            }
             ctx.fill();
         });
         ctx.restore();
@@ -3371,13 +3379,13 @@ function update(dt) {
     // --- SU SIÇRATMA (PARTICLE) v1.99.33.71: Biome Aware Colors ---
     const bIdxUpdate = Math.floor((currentLevel - 1) / STAGES_PER_BIOME) % BIOME_COUNT;
     if (isPlaying && (player.dx !== 0 || Math.random() < 0.1)) {
-        var pxL = player.x + player.width / 2 + (Math.random() - 0.5) * 20;
-        var pyL = player.y + player.height - 5;
-        var pColor = "rgba(255, 255, 255, 0.6)";
-        if (bIdxUpdate === 2) pColor = "rgba(255, 165, 0, 0.7)"; // Autumn
-        else if (bIdxUpdate === 3) pColor = "rgba(200, 230, 255, 0.7)"; // Winter
-        else if (bIdxUpdate === 4) pColor = "rgba(255, 69, 0, 0.8)"; // Lava
-        emitParticles(pxL, pyL, pColor, 'default', 1);
+        var pxL = player.x + player.width / 2 + (Math.random() - 0.5) * 15;
+        var pyL = player.y + player.height - 8;
+        var pColor = "rgba(240, 248, 255, 0.5)"; // Soft Foam White
+        if (bIdxUpdate === 4) pColor = "rgba(255, 69, 0, 0.6)"; // Lava keeps its heat
+        else if (bIdxUpdate === 8) pColor = "rgba(173, 255, 47, 0.4)"; // Toxic Green
+        
+        emitParticles(pxL, pyL, pColor, 'wake', 1);
     }
 
     // --- SONBAHAR YAPRAKLARI (AUTUMN LEAVES) v1.99.64.33 ---

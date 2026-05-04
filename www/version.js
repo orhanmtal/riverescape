@@ -8,10 +8,10 @@
  */
 
 // River Escape Elite - Central Version Control
-// v1.99.64.79 - Red Hippo Elite Reward & Stability (Clean)
+// v1.99.64.81 - Elite Wake Engine & Red Hippo Reward (Clean)
 window.ELITE_CONFIG = {
-    VERSION: "v1.99.64.79",
-    VERSION_CODE: "19964790",
+    VERSION: "v1.99.64.81",
+    VERSION_CODE: "19964810",
     LEVEL_MARGIN: 0.15,
     BG_KEY_SYNC: true,
     NATURAL_TILING: true,
