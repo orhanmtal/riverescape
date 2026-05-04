@@ -1360,6 +1360,7 @@ var currentAsset = levelAssets[0];
 var currentLAsset = currentAsset;
 
 
+var totalGold = 0;
 window.totalGold = 0;
 var currentVersion = "v1.99.64.66"; // ELITE ECONOMY REVOLUTION
 
@@ -1376,7 +1377,7 @@ var bullets = [];
 
 function saveGame() {
     const data = {
-        gold: Number(window.totalGold || 0),
+        gold: Number(totalGold || 0),
         ownedBoats: window.ownedBoats || ['spring'],
         magnet: magnetLevel,
         shield: shieldLevel,
@@ -3116,6 +3117,15 @@ function syncEliteHUD() {
             // hasWeapon artık global bir mühürdür. Menüde de görünmesi için isPlaying şartını gevşetiyoruz.
             cachedHud.bBtn.style.display = hasWeapon ? 'flex' : 'none';
             cachedHud.bBtn.style.filter = (currentBombs <= 0) ? "grayscale(100%) opacity(0.6)" : "none";
+
+            // v1.99.64.74: BOMB ICON AUTO-RESTORE (Fixes missing SVG after ad simulation)
+            if (!cachedHud.bBtn.querySelector('svg')) {
+                cachedHud.bBtn.innerHTML = `
+                    <svg viewBox="0 0 24 24" width="40" height="40" fill="#ff3d00" style="filter: drop-shadow(0 0 8px rgba(255,61,0,0.8));">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M3 12h3m12 0h3M12 3v3m0 12v3" stroke="#fff" stroke-width="2" stroke-linecap="round"></path>
+                    </svg>`;
+            }
         }
 
         // Zırh (Elmas) senkronu
@@ -5785,6 +5795,7 @@ function loadGame() {
     if (saved) {
         const data = JSON.parse(saved);
         totalGold = Number(data.gold || 0);
+        window.totalGold = totalGold;
         // v1.99.33.76: ID MIGRATION (ilkbahar -> spring)
         let loadedBoats = data.ownedBoats || ['spring'];
         window.ownedBoats = loadedBoats.map(id => id === 'ilkbahar' ? 'spring' : id);
