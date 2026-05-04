@@ -8,10 +8,10 @@
  */
 
 // River Escape Elite - Central Version Control
-// v1.99.64.93 - Premium Azure Summer Theme (Image Mode)
+// v1.99.64.95 - No-Bridge Clean Azure Summer Theme (Maximum Clarity)
 window.ELITE_CONFIG = {
-    VERSION: "v1.99.64.93",
-    VERSION_CODE: "19964930",
+    VERSION: "v1.99.64.95",
+    VERSION_CODE: "19964950",
     LEVEL_MARGIN: 0.15,
     BG_KEY_SYNC: true,
     NATURAL_TILING: true,
