@@ -8,10 +8,10 @@
  */
 
 // River Escape Elite - Central Version Control
-// v1.99.64.92 - DZ Audio & Visuals Permanently Disabled (Total Clean)
+// v1.99.64.93 - Premium Azure Summer Theme (Image Mode)
 window.ELITE_CONFIG = {
-    VERSION: "v1.99.64.92",
-    VERSION_CODE: "19964920",
+    VERSION: "v1.99.64.93",
+    VERSION_CODE: "19964930",
     LEVEL_MARGIN: 0.15,
     BG_KEY_SYNC: true,
     NATURAL_TILING: true,

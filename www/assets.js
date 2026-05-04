@@ -101,7 +101,7 @@ function safeLoad(name, src, processor = null) {
 
 // ASSETS YÜKLEME
 let bgImgSpring = loadBg('spring', 'assets/ArkaPlan_Elite_Spring_Straight.png');
-let bgImgSummer = loadBg('summer', 'assets/ArkaPlan_Yaz.png');
+let bgImgSummer = loadBg('summer', 'assets/summer_premium.png');
 let bgImgAutumn = loadBg('autumn', 'assets/ArkaPlan_Sonbahar.png');
 let bgImgWinter = loadBg('winter', 'assets/ArkaPlan_Kis.png');
 let bgImgLava = loadBg('lava', 'assets/ArkaPlan_Lav.png');
