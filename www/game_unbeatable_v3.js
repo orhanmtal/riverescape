@@ -42,19 +42,18 @@ const getHudElement = (id) => {
 };
 
 const cachedHud = {
-    get lives() { return getHudElement('lives-hud'); },
-    score: null, // Will be handled by getters or direct access
-    get score() { return getHudElement('scoreValue-hud'); },
-    get gold() { return getHudElement('goldValue-hud'); },
-    get sLabel() { return getHudElement('scoreLabel-hud'); },
-    get gLabel() { return getHudElement('goldLabel-hud'); },
-    get lvlName() { return getHudElement('levelName-hud'); },
-    get progress() { return getHudElement('progress-fill-hud'); },
-    get dashFill() { return getHudElement('dash-energy-fill'); },
-    get bBadge() { return getHudElement('bomb-badge'); },
-    get bBtn() { return getHudElement('bomb-action-btn'); },
-    get aBadge() { return getHudElement('armor-badge'); },
-    get aIndi() { return getHudElement('armor-ui-indicator'); }
+    get lives() { return document.getElementById('lives-hud'); },
+    get score() { return document.getElementById('scoreValue-hud'); },
+    get gold() { return document.getElementById('goldValue-hud'); },
+    get sLabel() { return document.getElementById('scoreLabel-hud'); },
+    get gLabel() { return document.getElementById('goldLabel-hud'); },
+    get lvlName() { return document.getElementById('levelName-hud'); },
+    get progress() { return document.getElementById('progress-fill-hud'); },
+    get dashFill() { return document.getElementById('dash-energy-fill'); },
+    get bBadge() { return document.getElementById('bomb-badge'); },
+    get bBtn() { return document.getElementById('bomb-action-btn'); },
+    get aBadge() { return document.getElementById('armor-badge'); },
+    get aIndi() { return document.getElementById('armor-ui-indicator'); }
 };
 var hudUpdateTimer = 0;
 const HUD_UPDATE_INTERVAL = 0.1; // 100ms (10 FPS update for UI is plenty)
@@ -1415,12 +1414,17 @@ function saveGame() {
 }
 
 function updateArmorUI() {
-    const aBadge = cachedHud.aBadge;
-    const aBadgePill = getHudElement('armor-badge-pill');
-    const aIndi = cachedHud.aIndi;
+    // v1.99.64.86: ELITE FORCE SYNC (Always use fresh ID lookups to prevent stale references)
+    const aBadge = document.getElementById('armor-badge');
+    const aBadgePill = document.getElementById('armor-badge-pill');
+    const aIndi = document.getElementById('armor-ui-indicator');
 
-    if (aBadge && aBadge.textContent !== String(armorCharge)) aBadge.textContent = armorCharge;
-    if (aBadgePill && aBadgePill.textContent !== String(armorCharge)) aBadgePill.textContent = armorCharge;
+    if (aBadge) {
+        if (aBadge.textContent !== String(armorCharge)) aBadge.textContent = armorCharge;
+    }
+    if (aBadgePill) {
+        if (aBadgePill.textContent !== String(armorCharge)) aBadgePill.textContent = armorCharge;
+    }
 
     if (aIndi) {
         // v1.99.64.75: ARMOR ICON AUTO-RESTORE (Restores complex HUD layout if corrupted)
