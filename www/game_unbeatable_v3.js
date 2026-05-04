@@ -731,11 +731,12 @@ async function initAdMob() {
         // --- GLOBAL REWARD LISTENERS v3.1 (Hata Payını Sıfırlar) ---
 
         // 1. Ödül Kazanıldığında
-        AdMob.addListener('onRewardedVideoAdReward', (info) => {
-
+        const rewardHandler = (info) => {
+            console.log('[AdMob] 🎁 Ödül kazanıldı!', info);
             adExecuted = true;
-            // Aksiyonu Dismissed (Kapatılma) olayına saklıyoruz
-        });
+        };
+        AdMob.addListener('onRewardedVideoAdReward', rewardHandler);
+        AdMob.addListener('rewardedVideoAdRewardReceived', rewardHandler);
 
         // 2. Reklam Kapatıldığında
         AdMob.addListener('onRewardedVideoAdDismissed', () => {
