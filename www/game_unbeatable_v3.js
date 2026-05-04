@@ -4330,29 +4330,6 @@ function draw(dt) {
                     }
                     ctx.restore();
 
-                    // v1.99.64.77: RED HIPPO HEALTH BAR (Forced Visibility)
-                    if (obs.type === 'redHippo' && obs.health > 0) {
-                        ctx.save();
-                        ctx.globalAlpha = 1.0; // Can barı her zaman %100 opak olsun
-                        const barW = obs.width * 0.9;
-                        const barH = 8;
-                        const bx = obs.x + (obs.width - barW) / 2;
-                        const by = obs.y - 15;
-
-                        // Background (Siyah arka plan)
-                        ctx.fillStyle = "rgba(0,0,0,0.8)";
-                        ctx.fillRect(bx, by, barW, barH);
-                        // Foreground (Kırmızı can)
-                        const hpPct = obs.health / obs.maxHealth;
-                        ctx.fillStyle = "#ff3d00"; // Daha parlak kırmızı
-                        ctx.fillRect(bx, by, barW * hpPct, barH);
-                        // Border (Beyaz çerçeve)
-                        ctx.strokeStyle = "#ffffff";
-                        ctx.lineWidth = 2;
-                        ctx.strokeRect(bx, by, barW, barH);
-                        ctx.restore();
-                    }
-
                     drawSuccess = true;
                 }
             }
@@ -5137,6 +5114,31 @@ function draw(dt) {
             }
         }
         ctx.restore(); // v1.99.32.07: ELITE MATRIX BALANCE
+    });
+
+    // v1.99.64.80: GLOBAL RED HIPPO HEALTH BAR (Always Top Layer)
+    obstacles.forEach(obs => {
+        if (obs.type === 'redHippo' && obs.health > 0) {
+            ctx.save();
+            ctx.globalAlpha = 1.0;
+            const barW = (obs.width || 40) * 0.9;
+            const barH = 8;
+            const bx = (obs.x || 0) + ((obs.width || 40) - barW) / 2;
+            const by = (obs.y || 0) - 15;
+
+            // Background
+            ctx.fillStyle = "rgba(0,0,0,0.8)";
+            ctx.fillRect(bx, by, barW, barH);
+            // Foreground
+            const hpPct = obs.health / (obs.maxHealth || 5);
+            ctx.fillStyle = "#ff3d00"; // Bright Red
+            ctx.fillRect(bx, by, barW * hpPct, barH);
+            // Border
+            ctx.strokeStyle = "#ffffff";
+            ctx.lineWidth = 2;
+            ctx.strokeRect(bx, by, barW, barH);
+            ctx.restore();
+        }
     });
 
     // --- PARÇACIKLARIN (Particles) BATCH RENDERING v1.99.61.81 ---
