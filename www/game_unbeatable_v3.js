@@ -5841,6 +5841,8 @@ if (adArmorBtn) {
             levelUpInvuln = true;
             setTimeout(() => { levelUpInvuln = false; }, 5000);
             showToast("+1 ARMOR! 💎", true);
+            if (typeof updateArmorUI === 'function') updateArmorUI();
+            if (typeof syncEliteHUD === 'function') syncEliteHUD();
             setTimeout(() => { saveGame(); updateShopUI(); }, 200);
         });
     });
