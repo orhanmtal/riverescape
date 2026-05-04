@@ -348,8 +348,66 @@ class Particle {
 }
 
 function drawParticles() {
-    // v1.99.64.69: TEMP DISABLE FOR DEBUGGING WEB FREEZE
-    return;
+    const types = {};
+    for (let i = 0; i < particlePool.length; i++) {
+        const p = particlePool[i];
+        if (!p.active) continue;
+        if (!types[p.type]) types[p.type] = [];
+        types[p.type].push(p);
+    }
+
+    // 1. Draw Default/Bubble/Leaf (Simple Circles)
+    const simpleTypes = ['default', 'bubble', 'leaf'];
+    simpleTypes.forEach(t => {
+        if (!types[t]) return;
+        ctx.save();
+        types[t].forEach(p => {
+            ctx.globalAlpha = p.life;
+            ctx.fillStyle = p.color;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            ctx.fill();
+        });
+        ctx.restore();
+    });
+
+    // 2. Draw Ember/Explosion/Trail (Optimized Glow)
+    const glowTypes = ['ember', 'explosion', 'bombTrail'];
+    glowTypes.forEach(t => {
+        if (!types[t]) return;
+        ctx.save();
+        types[t].forEach(p => {
+            ctx.globalAlpha = p.life;
+            ctx.fillStyle = "rgba(255, 69, 0, 0.3)";
+            ctx.beginPath(); ctx.arc(p.x, p.y, p.size * 2.5, 0, Math.PI * 2); ctx.fill();
+            ctx.fillStyle = p.color || "#ff4500";
+            ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); ctx.fill();
+        });
+        ctx.restore();
+    });
+
+    // 3. Draw Glitch (Rectangles)
+    if (types['glitch']) {
+        ctx.save();
+        types['glitch'].forEach(p => {
+            ctx.globalAlpha = p.life;
+            ctx.fillStyle = p.color;
+            ctx.translate(p.x, p.y);
+            ctx.rotate(p.angle);
+            ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+            
+            // v1.99.64.70: Fix - Use setTransform sparingly or reset correctly
+            ctx.setTransform(1, 0, 0, 1, 0, 0); 
+            const dpr = window.devicePixelRatio || 1;
+            ctx.scale(dpr, dpr);
+            const zoomPivotX = canvas.width / (2 * dpr);
+            const zoomPivotY = canvas.height * 0.7 / dpr;
+            ctx.translate(zoomPivotX, zoomPivotY);
+            ctx.scale(cameraZoom, cameraZoom);
+            ctx.translate(-zoomPivotX, -zoomPivotY);
+        });
+        ctx.restore();
+    }
 }
 
 // v1.99.61.81: ELITE PARTICLE POOL
@@ -2695,7 +2753,6 @@ function togglePause() {
         lastTime = performance.now();
         saveGame();
         if (typeof triggerEliteEconomySync === 'function') triggerEliteEconomySync(true); // v1.99.64.22: Resume Sync Seal
-        requestAnimationFrame(gameLoop);
     }
 }
 function startGame() {
@@ -5486,9 +5543,6 @@ if (reviveBtn) reviveBtn.addEventListener('click', () => {
 
         if (!isMusicScheduled) bgMusicScheduler();
         lastTime = performance.now();
-        if (gameLoopRequestId) cancelAnimationFrame(gameLoopRequestId);
-        gameLoopRequestId = requestAnimationFrame(gameLoop);
-
         draw(); // Görseli hemen güncelle
         setTimeout(() => {
             hasShield = false;
