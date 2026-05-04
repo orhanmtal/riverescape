@@ -8,10 +8,10 @@
  */
 
 // River Escape Elite - Central Version Control
-// v1.99.64.97 - Blue Crocodile Visibility Fix (Asset Key Sync)
+// v1.99.64.98 - Blue Crocodile Anatomy & Transparency Fix
 window.ELITE_CONFIG = {
-    VERSION: "v1.99.64.97",
-    VERSION_CODE: "19964970",
+    VERSION: "v1.99.64.98",
+    VERSION_CODE: "19964980",
     LEVEL_MARGIN: 0.15,
     BG_KEY_SYNC: true,
     NATURAL_TILING: true,

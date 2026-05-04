@@ -2186,16 +2186,17 @@ function spawnObstacle() {
             const riverWidth = (canvas.width * (1 - 2 * spawnMargin)) - obsWidth;
             const randomX = (canvas.width * spawnMargin) + riverShift + (Math.random() * riverWidth);
             
-            // v1.99.64.96: BIOME-SPECIFIC BOSS (L1: RedHippo, L2: BlueCroc)
+            // v1.99.64.98: BIOME-SPECIFIC BOSS (L1: RedHippo, L2: BlueCroc)
             const bossType = (biomeIndex === 1) ? 'blueCroc' : 'redHippo';
+            const isCroc = (bossType === 'blueCroc');
 
             window.obstacles.push({
                 type: bossType,
                 x: randomX,
                 relativeX: randomX - riverShift,
                 y: spawnY,
-                width: obsWidth,
-                height: obsHeight,
+                width: isCroc ? (32 * gameScale) : obsWidth,
+                height: isCroc ? (85 * gameScale) : obsHeight,
                 speedY: bgScrollSpeed * 0.75,
                 health: 5,
                 maxHealth: 5,

@@ -24,8 +24,8 @@ function makeWhiteTransparent(imageElement, isAggressive = false) {
 
         for (var i = 0; i < data.length; i += 4) {
             let r = data[i], g = data[i + 1], b = data[i + 2];
-            // ELITE v1.99.31.9.5: Daha agresif beyaz temizliği (210+)
-            if (r > 210 && g > 210 && b > 210) {
+            // ELITE v1.99.64.98: Conservative white cleanup (245+) to protect light blue assets
+            if (r > 245 && g > 245 && b > 245) {
                 data[i + 3] = 0;
             } else if (isAggressive) {
                 // Anti-Alias Halation Cleanup (Grey/White fringing pixels)
