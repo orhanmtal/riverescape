@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <!--
+ * RİVER ESCAPE ELİTE - v1.99.64.33 (ELİTE ECONOMY SYNC SEAL)
+ * 1. NO PLACEHOLDERS - Always use premium assets or procedural generation.
+ * 2. PERFORMANCE FIRST - Optimize update loops and DOM access.
+ * 3. VISUAL EXCELLENCE - Use HSL colors, smooth gradients, and micro-animations.
+ * 4. CODE Integrity - Never access variables before initialization.
+ * 5. ELITE SYNC - Maintain version consistency across all modules.
+-->
+
+<script>
+// River Escape Elite - Central Version Control
+// v1.99.64.33 - Stable AAB Release
+window.ELITE_CONFIG = {
+    VERSION: "v1.99.64.33",
+    VERSION_CODE: "19964330",
+    BUILD_LEVEL: "Elite Production",
+    SYNC_ENGINE: "v3.Elite.Secure",
+    LAST_UPDATED: "2026-05-03"
+};
+</script>
+    <script src="version.js?v=v1.99.64.33"></script>
+    <script>
+        (function () {
+            const v = window.ELITE_CONFIG ? window.ELITE_CONFIG.VERSION : "1.99.63.63";
+            document.title = "River Escape Elite v" + v;
+            // Update Meta immediately
+            const updateMeta = (name, val) => {
+                let m = document.querySelector(`meta[name="${name}"]`);
+                if (!m) { m = document.createElement('meta'); m.name = name; document.head.appendChild(m); }
+                m.content = val;
+            };
+            updateMeta("version", v);
+            updateMeta("version-code", window.ELITE_CONFIG ? window.ELITE_CONFIG.VERSION_CODE : "19963055");
+        })();
+    </script>
+
+    <link rel="stylesheet" href="style.css?v=v1.99.64.01">
+    <!-- MASTER UI OVERRIDE// RİVER ESCAPE PRESTIGE - v1.99.64.01 (POSITION SYNC) -->
+
+    <style>
+/* MASTER UI OVERRIDE//
+ * RİVER ESCAPE ELİTE - v1.99.64.01 (STABLE RELEASE)
+ * Firebase Firestore Global Sıralama ve Profil Senkronizasyon Sistemi
+ * v1.99.64.01
+ */
+.master-start-v21 {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: calc(20px + env(safe-area-inset-top)) 6vmin calc(20px + env(safe-area-inset-bottom)) 6vmin !important;
+    background: radial-gradient(circle at center, #0a192f 0%, #020617 100%) !important;
+    overflow: hidden !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    /* dvh: eski telefonlarda adres barı hesaba katar, 100vh yerine daha doğru */
+    height: 100dvh !important;
+    height: 100vh !important; /* fallback for older browsers */
+    z-index: 1000 !important;
+}
+
+.master-start-v21::before {
+    content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+    background: radial-gradient(circle at 30% 30%, rgba(0, 229, 255, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 70% 70%, rgba(196, 113, 237, 0.08) 0%, transparent 40%);
+    animation: bgMovement 30s infinite alternate ease-in-out;
+    pointer-events: none;
+}
+
+@keyframes bgMovement {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(180deg); }
+}
+
+/* --- v1.99.64.01: AAA MODERN GAME UI --- */
+@keyframes titleScan {
+    0% { background-position: -200% center; }
+    100% { background-position: 200% center; }
+}
+@keyframes titleGlow {
+    0%, 100% { filter: drop-shadow(0 0 15px rgba(0, 229, 255, 0.4)); transform: scale(1); }
+    50% { filter: drop-shadow(0 0 35px rgba(0, 229, 255, 0.8)); transform: scale(1.02); }
+}
+
+.floating-logo {
+    background: linear-gradient(90deg, #fff 0%, #00e5ff 45%, #fff 50%, #00e5ff 55%, #fff 100%) !important;
+    background-size: 200% auto !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    animation: titleScan 6s infinite linear, titleGlow 4s infinite ease-in-out !important;
+    font-size: 14vmin !important;
+    font-family: 'Outfit', sans-serif !important;
+    font-weight: 950 !important;
+    letter-spacing: -1px !important;
+    text-transform: uppercase !important;
+    text-align: center !important;
+}
+
+.master-play-btn {
+    position: relative;
+    width: 75vmin !important;
+    height: 14vmin !important;
+    background: linear-gradient(135deg, rgba(0, 229, 255, 0.15), rgba(0, 229, 255, 0.05)) !important;
+    border: 2px solid rgba(0, 229, 255, 0.6) !important;
+    border-radius: 100px !important;
+    box-shadow: 0 0 30px rgba(0, 229, 255, 0.2), inset 0 0 20px rgba(0, 229, 255, 0.1) !important;
+    backdrop-filter: blur(25px) !important;
+    -webkit-backdrop-filter: blur(25px) !important;
+    z-index: 2000 !important;
+    font-size: 6.5vmin !important;
+    color: #fff !important;
+    font-family: 'Outfit', sans-serif !important;
+    font-weight: 900 !important;
+    letter-spacing: 5px !important;
+    cursor: pointer !important;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+    animation: uiFloat 4s infinite ease-in-out !important;
+    display: flex; align-items: center; justify-content: center;
+    text-transform: uppercase !important;
+    margin-top: 5vh !important;
+}
+
+.master-play-btn::before {
+    content: ''; position: absolute; top: -5px; left: -5px; right: -5px; bottom: -5px;
+    border-radius: 100px; border: 1px solid rgba(0, 229, 255, 0.3);
+    animation: pulseGlow 2s infinite ease-in-out;
+}
+
+@keyframes pulseGlow {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    50% { opacity: 0.8; transform: scale(1.05); }
+}
+
+.master-play-btn:hover {
+    background: rgba(0, 229, 255, 0.2) !important;
+    border-color: #00e5ff !important;
+    box-shadow: 0 0 50px rgba(0, 229, 255, 0.4) !important;
+    letter-spacing: 8px !important;
+}
+
+/* Futuristic Orbital Rings - Adapted for Wide Button */
+.pulse-ring {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 85vmin; height: 22vmin;
+    border: 1px solid rgba(0, 229, 255, 0.2);
+    border-radius: 50px;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 1000;
+}
+.pulse-ring::after {
+    content: ''; position: absolute; top: -8px; left: -8px; right: -8px; bottom: -8px;
+    border: 2px solid rgba(0, 229, 255, 0.15); border-radius: 50%;
+    border-top-color: #00e5ff;
+    animation: ringRotate 8s infinite linear;
+}
+.pulse-ring::before {
+    content: ''; position: absolute; top: -18px; left: -18px; right: -18px; bottom: -18px;
+    border: 1px dashed rgba(0, 229, 255, 0.3); border-radius: 50%;
+    animation: ringRotate 12s infinite linear reverse;
+}
+
+@keyframes ringRotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+#mission-panel {
+    border-radius: 24px !important;
+    background: rgba(15, 23, 42, 0.5) !important;
+    border: 1px solid rgba(0, 229, 255, 0.25) !important;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.6), inset 0 0 25px rgba(0,229,255,0.08) !important;
+    backdrop-filter: blur(20px) !important;
+    position: relative;
+    overflow: hidden;
+}
+
+#mission-panel::after {
+    content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(rgba(0,229,255,0.03) 50%, transparent 50%);
+    background-size: 100% 4px;
+    pointer-events: none;
+    opacity: 0.3;
+}
+
+#mission-panel::before {
+    content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px;
+    background: linear-gradient(90deg, transparent, #00e5ff, transparent);
+    animation: borderFlow 4s infinite linear;
+    z-index: 5;
+}
+
+@keyframes borderFlow {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+.elite-action-row {
+    background: rgba(255,255,255,0.03) !important;
+    padding: 12px 25px !important;
+    border-radius: 35px !important;
+    border: 1px solid rgba(255,255,255,0.06) !important;
+    backdrop-filter: blur(15px) !important;
+    display: flex !important;
+    gap: 6vmin !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3) !important;
+}
+
+.elite-btn-square:hover { transform: scale(1.1) !important; filter: brightness(1.2) !important; }
+
+.elite-menu-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 2000;
+}
+
+.elite-action-row {
+    display: flex !important;
+    gap: 5vmin !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin-top: 2vh !important;
+    width: 100% !important;
+}
+
+.master-play-btn {
+    position: relative;
+    width: 48vmin;
+    height: 48vmin;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #00e5ff 0%, #12c2e9 50%, #c471ed 100%);
+    border: 1.5vmin solid rgba(255, 255, 255, 0.9);
+    color: white;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 900;
+    font-size: 6vmin;
+    cursor: pointer;
+    box-shadow: 0 0 60px rgba(0, 229, 255, 0.5), inset 0 0 30px rgba(255, 255, 255, 0.4);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    text-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.master-play-btn:active { transform: scale(0.92); }
+
+.elite-modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(15px);
+    display: none; align-items: center; justify-content: center; z-index: 50000;
+    opacity: 0; transition: opacity 0.4s ease;
+    pointer-events: auto;
+}
+.elite-modal-content {
+    width: 85%; max-width: 400px; padding: 40px 25px;
+    background: linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
+    border: 1px solid rgba(255, 215, 0, 0.2); border-radius: 30px;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.5), 0 0 30px rgba(255,215,0,0.1);
+    text-align: center; color: white; font-family: 'Outfit', sans-serif;
+    transform: scale(0.9); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.elite-modal-overlay.active { display: flex; opacity: 1; }
+.elite-modal-overlay.active .elite-modal-content { transform: scale(1); }
+
+.elite-input-v22 {
+    width: 100%; padding: 15px; margin: 20px 0;
+    background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px; color: #FFD700; font-family: 'Outfit';
+    font-size: 20px; font-weight: 700; text-align: center; outline: none;
+    transition: all 0.3s ease; text-transform: uppercase;
+}
+.elite-input-v22:focus { border-color: #FFD700; box-shadow: 0 0 15px rgba(255,215,0,0.2); }
+
+.elite-modal-btn {
+    width: 100%; padding: 15px; border-radius: 12px; border: none;
+    background: linear-gradient(135deg, #FFD700 0%, #ff8c00 100%);
+    color: black; font-weight: 900; font-size: 16px; cursor: pointer;
+    text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s ease;
+}
+.elite-modal-btn:active { transform: scale(0.95); opacity: 0.9; }
+
+
+        .elite-btn-square {
+            background: rgba(255, 255, 255, 0.1) !important;
+            border: 0.5vmin solid rgba(215, 215, 215, 0.3) !important;
+            border-radius: 20% !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            backdrop-filter: blur(15px) !important;
+            -webkit-backdrop-filter: blur(15px) !important;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+            pointer-events: auto !important;
+        }
+
+        /* v1.99.64.01: ELITE AESTHETIC SEAL (Remove Yellow Focus Outlines) */
+        * {
+            -webkit-tap-highlight-color: transparent !important;
+            outline: none !important;
+        }
+        button:focus, div:focus, a:focus {
+            outline: none !important;
+        }
+
+        /* --- v1.99.64.22: ELITE REFINED SHOP UI (FIXED) --- */
+        .shop-sticky-header {
+            background: #050a15; border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+            padding: calc(20px + env(safe-area-inset-top)) 20px 20px 20px;
+            width: 100%; text-align: center; z-index: 100; box-sizing: border-box;
+        }
+        .shop-scroll-area {
+            flex: 1; overflow-y: auto; padding: 20px; padding-bottom: 50px;
+            scrollbar-width: none; -ms-overflow-style: none; box-sizing: border-box;
+        }
+        .showroom-item {
+            background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px; padding: 16px; display: flex; align-items: center;
+            gap: 12px; margin-bottom: 15px; box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+        .item-aura-box {
+            width: 55px; height: 55px; border-radius: 18px; display: flex;
+            align-items: center; justify-content: center; background: #000;
+            flex-shrink: 0; border: 1px solid rgba(255,215,0,0.2);
+        }
+        .showroom-info { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+        .showroom-title { font-family: 'Outfit'; font-weight: 900; font-size: 17px; color: #fff; text-transform: uppercase; }
+        .showroom-desc { font-size: 11px; color: rgba(255,255,255,0.4); }
+        
+        .buy-action-group { display: flex; flex-direction: column; gap: 6px; width: 110px; flex-shrink: 0; }
+        
+        .elite-upgrade-btn {
+            width: 100% !important; height: 42px !important; border-radius: 12px !important;
+            border: none !important; font-family: 'Outfit' !important; font-weight: 900 !important;
+            font-size: 13px !important; cursor: pointer !important; text-transform: uppercase !important;
+            display: flex !important; align-items: center !important; justify-content: center !important;
+        }
+        .btn-gold { background: linear-gradient(135deg, #FFD700, #ff8c00) !important; color: #000 !important; }
+        .btn-cyan { background: #00e5ff !important; color: #000 !important; }
+        .btn-orange { background: #ff8c00 !important; color: #fff !important; }
+        
+        .elite-ad-btn-small {
+            width: 100%; height: 26px; border-radius: 8px; border: 1px solid #FFD700;
+            background: transparent; color: #FFD700; font-size: 9px; font-weight: 900;
+            cursor: pointer; text-transform: uppercase;
+        }
+
+        .elite-ad-gold-btn {
+            width: 100%; height: 55px; background: transparent !important;
+            border: 2px solid #FFD700 !important; color: #FFD700 !important;
+            border-radius: 20px !important; font-weight: 900 !important;
+            font-family: 'Outfit' !important; font-size: 15px !important;
+            cursor: pointer !important; text-transform: uppercase !important;
+            margin: 10px 0 30px 0 !important;
+        }
+
+        .gold-market-title { color: #FFD700; font-family: 'Outfit'; font-weight: 900; font-size: 20px; text-align: center; margin-bottom: 20px; }
+        .gold-market-grid-elite { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; }
+        .gold-card {
+            background: rgba(255,255,255,0.02); border: 1px solid rgba(255,215,0,0.3);
+            border-radius: 20px; padding: 25px 15px; display: flex; flex-direction: column;
+            align-items: center; gap: 10px; transition: all 0.3s ease;
+        }
+        .gold-card .amount { font-family: 'Outfit'; font-weight: 900; font-size: 24px; color: #fff; }
+        .gold-card .price { background: #FFD700; color: #000; padding: 3px 12px; border-radius: 8px; font-size: 12px; font-weight: 900; }
+        
+        .elite-btn-large {
+            width: 100%; padding: 16px; border-radius: 18px; font-weight: 900; font-family: 'Outfit';
+            cursor: pointer; margin-top: 25px; text-transform: uppercase; font-size: 15px;
+            background: transparent; color: #FFD700; border: 1px solid #FFD700;
+        }
+        
+        .elite-upgrade-btn:hover { transform: scale(1.05); filter: brightness(1.1); }
+        .elite-upgrade-btn:active { transform: scale(0.95); }
+        .elite-upgrade-btn:disabled {
+            background: rgba(255,255,255,0.05) !important;
+            color: rgba(255,255,255,0.2) !important;
+            box-shadow: none !important;
+            cursor: not-allowed;
+            filter: grayscale(1);
+            opacity: 0.6;
+        }
+
+        /* --- v1.99.64.01: ELITE MISSION UI STYLES --- */
+        .mission-item {
+            margin-bottom: 12px;
+            padding: 8px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: transform 0.3s ease;
+        }
+        .mission-item.completed {
+            border-color: rgba(100, 221, 23, 0.4);
+            background: rgba(100, 221, 23, 0.05);
+        }
+        .mission-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            font-family: 'Outfit';
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 6px;
+            letter-spacing: 0.5px;
+        }
+        .mission-bar-bg {
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .mission-bar-fill {
+            height: 100%;
+            background: linear-gradient(to right, #00e5ff, #00897b);
+            box-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .mission-item.completed .mission-bar-fill {
+            background: linear-gradient(to right, #64dd17, #1b5e20);
+            box-shadow: 0 0 10px rgba(100, 221, 23, 0.5);
+        }
+    </style>
+    <!-- EMERGENCY ON-SCREEN DEBUGGER// v1.99.64.01 - Stable AAB Release -->
+    <script>
+        window.onerror = function (msg, url, line) {
+            var div = document.createElement('div');
+            div.id = 'emergency-debug';
+            div.style.cssText = 'position:fixed;top:0;left:0;width:100%;z-index:30000;background:rgba(255,0,0,0.9);color:white;padding:15px;font-size:12px;font-family:monospace;word-break:break-all;pointer-events:auto;';
+            div.innerHTML = '🚩 ELITE ERROR DETECTED:<br>' + msg + '<br><br>URL: ' + url + '<br>LINE: ' + line + '<br><button onclick="this.parentElement.remove()" style="margin-top:10px;padding:5px 10px;background:#fff;color:#000;border:none;border-radius:5px;font-weight:bold;">KAPAT</button>';
+            document.body.appendChild(div);
+            };
+    </script>
+    <script>
+        if (window.location.protocol === 'file:' || window.Capacitor) {
+            var script = document.createElement('script');
+            script.src = 'cordova.js';
+            document.head.appendChild(script);
+        }
+    </script>
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌊</text></svg>">
+</head>
+
+<body>
+    <div id="game-container">
+        <canvas id="gameCanvas"></canvas>
+
+        <button id="pause-btn"
+            style="position: absolute; top: calc(20px + env(safe-area-inset-top)); right: calc(20px + env(safe-area-inset-right)); display: none; background: rgba(0,0,0,0.4); color: white; border: 1px solid rgba(255,229,255,0.4); padding: 8px; font-family: 'Outfit', sans-serif; font-size: 18px; z-index: 1001; border-radius: 50%; width: 45px; height: 45px; pointer-events: auto; cursor: pointer; backdrop-filter: blur(4px); line-height: 1;">⏸</button>
+
+        <!-- ELITE FULL-SCREEN UI v1.99.64.01 -->
+        <div id="start-screen" class="screen master-start-v21">
+            <!-- TOP ROW: PROFILE & SETTINGS -->
+            <div class="elite-menu-header">
+                <div id="player-profile-elite" class="account-info-elite" style="position: relative;">
+                    <button id="google-login-btn" style="position: absolute; top:0; left:0; width:100%; height:100%; background: transparent; border: none; cursor: pointer; z-index: 10;"></button>
+                    <div id="player-photo-container" style="width: 45px; height: 45px; border-radius: 50%; background: linear-gradient(135deg, rgba(255,215,0,0.2), rgba(255,215,0,0.1)); display: flex; align-items: center; justify-content: center; font-weight: 900; color: #FFD700; font-size: 18px; box-shadow: 0 0 15px rgba(255, 215, 0, 0.2); overflow: hidden; border: 1px solid rgba(255,215,0,0.3);">
+                        <img id="player-pfp-img" src="" style="width: 100%; height: 100%; object-fit: cover; display: none;">
+                        <div id="player-pfp-initial" style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%;">
+                            <svg viewBox="0 0 24 24" style="width: 24px; height: 24px; fill: #FFD700; opacity: 0.8;">
+                                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div style="display: flex; flex-direction: column;">
+                        <div id="player-name-elite" style="font-family: 'Outfit'; font-weight: 900; font-size: 16px; letter-spacing: 0.5px; line-height: 1.1;">ELITE PLAYER</div>
+                        <div id="auth-status-text" style="font-size: 9px; color: #FFD700; font-weight: bold; opacity: 0.8;">DOĞRULANIYOR... 🛰️</div>
+                    </div>
+                </div>
+
+                <!-- v1.99.64.01: TOP HUD GOLD INDICATOR -->
+                <div style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,215,0,0.4); border-radius: 20px; padding: 5px 15px; display: flex; align-items: center; gap: 8px; backdrop-filter: blur(10px); height: fit-content; margin-top: 5px; box-shadow: 0 0 15px rgba(255,215,0,0.1);">
+                    <span style="font-size: 14px; filter: drop-shadow(0 0 5px rgba(255,215,0,0.5));">💰</span>
+                    <span id="totalGoldValue" style="color: #FFD700; font-family: 'Outfit'; font-weight: 900; font-size: 18px; text-shadow: 0 0 10px rgba(255,215,0,0.5);">0</span>
+                </div>
+
+                <button id="open-settings-btn" class="elite-btn-square" style="width: 11.5vmin; height: 11.5vmin; font-size: 5vmin;">⚙️</button>
+            </div>
+
+            <!-- CENTER ZONE: LOGO & PLAY -->
+            <div style="display: flex; flex-direction: column; align-items: center; gap: clamp(8px, 2vh, 30px); width: 100%; flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden; scrollbar-width: none; -ms-overflow-style: none; padding-bottom: 8px;">
+                <div style="text-align: center; position: relative; width: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; pointer-events: none; flex-shrink: 0;">
+                    <h1 class="floating-logo" style="font-family: 'Outfit', sans-serif; font-weight: 900; color: white; font-size: 13vmin; letter-spacing: -2px; margin: 0; line-height: 0.85; background: linear-gradient(135deg, #fff 20%, #00e5ff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 15px 30px rgba(0,229,255,0.3)); text-transform: uppercase;">RIVER<br><span style="background: linear-gradient(135deg, #00e5ff 0%, #00897b 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">ESCAPE</span></h1>
+                    <div id="elite-main-version" style="color: #FFD700; font-family: 'Press Start 2P', cursive; font-size: 1.8vmin; font-weight: bold; margin-top: 10px; letter-spacing: 0.8vmin; opacity: 0.9; text-shadow: 0 0 15px rgba(255,215,0,0.4);">
+                        <script>document.write("ELITE v" + (window.ELITE_CONFIG ? window.ELITE_CONFIG.VERSION : "1.99.63.55"));</script>
+                    </div>
+                </div>
+
+                <div style="position: relative; flex-shrink: 0;">
+                    <button id="start-btn" class="master-play-btn">OYNA 🌊</button>
+                    <div class="pulse-ring"></div>
+                </div>
+
+                <!-- v1.99.64.01: ELITE MISSION PANEL -->
+                <div id="mission-panel" style="
+                    margin-top: 8px; padding: 14px; width: 88%; max-width: 340px; 
+                    border-radius: 24px; background: rgba(0, 229, 255, 0.05); 
+                    border: 1px solid rgba(0, 229, 255, 0.3); backdrop-filter: blur(20px);
+                    -webkit-backdrop-filter: blur(20px);
+                    box-shadow: 0 0 30px rgba(0, 229, 255, 0.1), inset 0 0 15px rgba(255,255,255,0.05);
+                    animation: missionPanelPulse 4s infinite ease-in-out;
+                    flex-shrink: 0;
+                ">
+                    <style>
+                        @keyframes missionPanelPulse {
+                            0%, 100% { border-color: rgba(0, 229, 255, 0.3); box-shadow: 0 0 20px rgba(0, 229, 255, 0.1); }
+                            50% { border-color: rgba(0, 229, 255, 0.6); box-shadow: 0 0 40px rgba(0, 229, 255, 0.2); }
+                        }
+                        /* Scrollbar gizle - WebKit */
+                        .master-start-v21 > div::-webkit-scrollbar { display: none; }
+                        /* Küçük ekran medya sorgusu */
+                        @media (max-height: 650px) {
+                            #mission-panel { display: none !important; }
+                            .master-start-v21 { padding-top: calc(10px + env(safe-area-inset-top)) !important; padding-bottom: calc(10px + env(safe-area-inset-bottom)) !important; }
+                        }
+                        @media (max-height: 750px) {
+                            #mission-panel { padding: 10px 14px !important; margin-top: 4px !important; }
+                            #mission-panel h3 { margin-bottom: 8px !important; font-size: 12px !important; }
+                        }
+                    </style>
+                    <h3 id="active-goals-title" style="font-size: 14px; color: #00e5ff; margin: 0 0 15px 0; text-align: left; font-family: 'Outfit'; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; text-shadow: 0 0 10px rgba(0,229,255,0.5);">AKTİF HEDEFLER 🎯</h3>
+                    <div id="mission-list"></div>
+                </div>
+            </div>
+
+            <!-- BOTTOM ROW: ACTIONS -->
+            <div class="elite-action-row" style="flex-shrink: 0; position: relative; z-index: 10;">
+                <button id="open-shop-btn" class="elite-btn-square" style="width: 18vmin; height: 18vmin; font-size: 8vmin;">🛒</button>
+                <button id="leaderboard-btn" class="elite-btn-square" style="width: 18vmin; height: 18vmin; font-size: 8vmin; border-color: rgba(255, 215, 0, 0.4); background: rgba(255, 215, 0, 0.05); box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);">🏆</button>
+                <button id="spin-btn" class="elite-btn-square" style="width: 18vmin; height: 18vmin; font-size: 8vmin;">🎡</button>
+            </div>
+        </div>
+
+        <!-- IDENTITY MODAL v1.99.64.01 -->
+        <div id="identity-modal" class="elite-modal-overlay">
+            <div class="elite-modal-content">
+                <div id="edit-username-title" style="font-size: 21px; font-weight: 900; color: #FFD700; letter-spacing: 1px;">KULLANICI ADI DÜZENLEME</div>
+                <div id="edit-username-desc" style="font-size: 12px; margin-top: 5px; opacity: 0.6; text-transform: uppercase;">Yeni Elite adınızı belirleyin</div>
+                <input type="text" id="player-name-input" class="elite-input-v22" placeholder="YENİ ADINIZ..." maxlength="15">
+                <div style="display: flex; gap: 10px;">
+                    <button id="close-identity-btn" class="elite-modal-btn" style="background: rgba(255,255,255,0.1); color: white;">İPTAL</button>
+                    <button id="save-identity-btn" class="elite-modal-btn">DÜZENLE</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ELITE CONFIRM MODAL v1.99.64.01 -->
+        <div id="confirm-modal" class="elite-modal-overlay">
+            <div class="elite-modal-content" style="border-color: rgba(255,61,0,0.4);">
+                <div id="confirm-modal-emoji" style="font-size: 50px; margin-bottom: 10px;">🛡️</div>
+                <div id="confirm-modal-title" style="font-size: 20px; font-weight: 900; color: #fff; text-transform: uppercase; letter-spacing: 1px;">EMİN MİSİNİZ?</div>
+                <div id="confirm-modal-body" style="font-size: 13px; margin: 15px 0 25px 0; opacity: 0.8; line-height: 1.5;">Bu işlemi geri alamazsınız.</div>
+                <div style="display: flex; gap: 12px;">
+                    <button id="confirm-cancel-btn" class="elite-modal-btn" style="background: rgba(255,255,255,0.1); color: white;">VAZGEÇ</button>
+                    <button id="confirm-ok-btn" class="elite-modal-btn" style="background: linear-gradient(135deg, #ff3d00, #d50000); color: white;">ONAYLA</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAUSE SCREEN (ELITE FULL-SCREEN v1.99.64.01) -->
+        <div id="pause-screen" class="screen hidden">
+            <h2 id="pause-screen-title"
+                style="font-family: 'Outfit'; font-weight: 900; color: white; font-size: 8vmin; margin-bottom: 5vmin; letter-spacing: 1vmin;">
+                DURAKLATILDI</h2>
+            <div style="display: flex; flex-direction: column; gap: 2.8vmin; width: 65%; max-width: 300px;">
+                <button id="resume-btn" class="elite-btn-large"
+                    style="background: linear-gradient(135deg, #00e5ff, #004d40);">DEVAM ET</button>
+                <button id="pause-shop-btn" class="elite-btn-large"
+                    style="background: linear-gradient(135deg, #ffd700, #ff8c00); color: #000;">MAĞAZA 🛒</button>
+                <button id="quit-btn" class="elite-btn-large"
+                    style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);">ANA
+                    MENÜ</button>
+            </div>
+        </div>
+
+        <!-- MODERN GLASS HUD v1.99.64.01 -->
+        <div id="modern-hud" style="
+            position: absolute; 
+            top: calc(15px + env(safe-area-inset-top)); 
+            left: calc(15px + env(safe-area-inset-left)); 
+            padding: 10px 18px; border-radius: 15px;
+            background: rgba(0, 30, 60, 0.45); 
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 229, 255, 0.4);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+            display: none; flex-direction: column; gap: 4px;
+            z-index: 1000; pointer-events: none; min-width: 110px;
+        ">
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <span id="scoreLabel-hud"
+                    style="color: #00e5ff; font-family: 'Press Start 2P', cursive; font-size: 8px; text-shadow: 0 0 5px #00e5ff;">SCORE:</span>
+                <span id="scoreValue-hud"
+                    style="color: #fff; font-family: 'Outfit', sans-serif; font-size: 16px; font-weight: 900;">0</span>
+            </div>
+            <div
+                style="display: flex; align-items: center; gap: 8px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 4px;">
+                <span id="goldLabel-hud"
+                    style="color: #ffd700; font-family: 'Press Start 2P', cursive; font-size: 8px; text-shadow: 0 0 5px #ffd700;">GOLD:</span>
+                <span id="goldValue-hud"
+                    style="color: #fff; font-family: 'Outfit', sans-serif; font-size: 16px; font-weight: 900;">0</span>
+            </div>
+            <div style="margin-top: 4px; display: flex; flex-direction: column; gap: 2px;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span id="levelName-hud"
+                        style="color: rgba(255,255,255,0.9); font-family: 'Outfit', sans-serif; font-size: 9px; font-weight: bold; letter-spacing: 1px; text-transform: uppercase;">LEVEL
+                        1</span>
+                    <span id="lives-hud"
+                        style="font-size: 10px; filter: drop-shadow(0 0 5px rgba(255,82,82,0.4));">❤️❤️❤️</span>
+                </div>
+                <div id="progress-container-hud"
+                    style="width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden; border: 1px solid rgba(0, 229, 255, 0.2);">
+                    <div id="progress-fill-hud"
+                        style="width: 0%; height: 100%; background: linear-gradient(to right, #00ffea, #00e5ff, #12c2e9); box-shadow: 0 0 12px #00ffea;">
+                    </div>
+                </div>
+                <div style="font-family: 'Outfit'; font-size: 7px; color: rgba(0, 229, 255, 0.5); text-align: right; margin-top: 2px; font-weight: 900; letter-spacing: 0.5px;">
+                    <script>document.write("v" + (window.ELITE_CONFIG ? window.ELITE_CONFIG.VERSION : "1.99.63.63"));</script>
+                </div>
+
+            </div>
+        </div>
+
+        <div id="armor-ui-indicator" onclick="handleArmorIndicatorClick()" style="
+            position: absolute; 
+            bottom: calc(20px + env(safe-area-inset-bottom)); 
+            left: calc(20px + env(safe-area-inset-left)); 
+            width: 70px; height: 70px;
+            background: rgba(0,0,0,0.4); backdrop-filter: blur(8px);
+            border-radius: 50%; border: 2px solid rgba(155, 89, 182, 0.5);
+            display: none; align-items: center; justify-content: center;
+            z-index: 1000; cursor: pointer; transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(155, 89, 182, 0.2);
+        ">
+            <div style="position: relative; display: flex; align-items: center; justify-content: center;">
+                <span style="font-size: 32px; filter: drop-shadow(0 0 8px #9b59b6);">💎</span>
+                <div id="armor-badge-pill"
+                    style="position: absolute; top: -10px; right: -10px; background: #00b8d4; color: white; font-size: 13px; font-weight: 900; padding: 3px 8px; border-radius: 12px; border: 2px solid #fff; box-shadow: 0 0 10px rgba(0,0,0,0.5);">
+                    0</div>
+            </div>
+            <!-- Hidden Legacy Badge for Sync -->
+            <span id="armor-badge" style="display:none;">0</span>
+        </div>
+
+        <!-- GAME OVER SCREEN (ELITE FULL-SCREEN v1.99.64.01) -->
+        <div id="game-over-screen" class="screen hidden">
+            <div style="text-align: center;">
+                <h2 id="gameover-title"
+                    style="font-family: 'Outfit'; font-weight: 900; font-size: 9vmin; color: #ff5252; letter-spacing: 1vmin; margin: 0; text-shadow: 0 0 20px rgba(255,82,82,0.4);">
+                    OYUN BİTTİ</h2>
+                <div style="color: rgba(255,255,255,0.3); font-size: 2.5vmin; font-weight: bold; margin-top: 5px;">ELITE
+                    PERFORMANCE</div>
+            </div>
+
+            <div
+                style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 5vmin 10vmin; text-align: center; width: 80%; max-width: 400px;">
+                <div id="gameover-score-label" style="color: rgba(255,255,255,0.5); font-size: 3vmin; margin-bottom: 1.5vmin;">TOPLAM SKOR</div>
+                <div id="score-title-final" style="font-size: 11.5vmin; font-weight: 900; line-height: 1;">0</div>
+                <div id="final-gold-container" style="margin-top: 2.8vmin; color: #FFD700; font-size: 5vmin; font-weight: 900;">+ <span
+                        id="finalGoldValue">0</span> <span id="gameover-gold-label">ALTIN</span></div>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 3vmin; width: 80%; max-width: 350px; padding-bottom: 2vmin;">
+                <button id="revive-btn" class="elite-btn-large"
+                    style="background: linear-gradient(135deg, #f12711, #f5af19);">DEVAM ET (REKLAM)</button>
+                <button id="revive-gold-btn" class="elite-btn-large"
+                    style="background: linear-gradient(135deg, #FFD700, #ff8c00); color: #000;">+3 CAN (100
+                    ALTIN)</button>
+                <button id="restart-btn" class="elite-btn-large" style="background: rgba(255,255,255,0.15);">YENİDEN
+                    BAŞLA 🔄</button>
+                <button id="quit-btn-gameover"
+                    style="background: none; border: none; color: rgba(255,255,255,0.4); font-family: 'Outfit'; font-weight: bold; font-size: 3.5vmin; cursor: pointer; margin-top: 1.5vmin;">ANA
+                    MENÜYE DÖN 🏠</button>
+            </div>
+
+        </div>
+
+        <!-- LEVEL UP OVERLAY (EMERGENCY FIX v1.99.64.01) -->
+        <div id="level-up-overlay" class="screen hidden"
+            style="z-index: 16000; background: rgba(0,0,0,0.85); pointer-events: none;"></div>
+
+        <!-- MODERN ELITE AYARLAR (v1.99.64.01) -->
+        <div id="settings-screen" class="screen hidden"
+            style="z-index: 15000; background: linear-gradient(160deg, #050a15 0%, #0a1020 100%); width: 100vw; height: 100vh; max-width: 100%; border-radius: 0;">
+            <div
+                style="width: 85%; max-width: 400px; padding: calc(5vmin + env(safe-area-inset-top)) 0; display: flex; flex-direction: column; align-items: center; gap: 5vmin;">
+                <h2
+                    style="color: #FFD700; font-family: 'Outfit', sans-serif; font-weight: 900; font-size: 8vmin; letter-spacing: 0.5vmin; text-shadow: 0 0 20px rgba(255,215,0,0.3); margin-bottom: 1.5vmin;">
+                    AYARLAR</h2>
+
+                <div
+                    style="width: 100%; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 5vmin; box-sizing: border-box; display: flex; flex-direction: column; gap: 5vmin;">
+                    <div class="settings-item-col">
+                        <div class="settings-label-row">
+                            <span class="settings-label" id="music-label-text">🎵 Müzik Sesi</span>
+                            <span id="music-vol-txt"
+                                style="color: #FFD700; font-weight: bold; font-size: 3.5vmin;">100%</span>
+                        </div>
+                        <input type="range" id="music-slider" min="0" max="100" value="100" class="vol-slider">
+                    </div>
+
+                    <div class="settings-item-col">
+                        <div class="settings-label-row">
+                            <span class="settings-label" id="sfx-label-text">🔊 Efekt Sesi</span>
+                            <span id="sfx-vol-txt"
+                                style="color: #FFD700; font-weight: bold; font-size: 3.5vmin;">100%</span>
+                        </div>
+                        <input type="range" id="sfx-slider" min="0" max="100" value="100" class="vol-slider">
+                    </div>
+
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 2.8vmin;">
+                        <span class="settings-label" id="vibration-label-text">📳 Titreşim</span>
+                        <label class="switch">
+                            <input type="checkbox" id="vibration-toggle" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div style="width: 100%; display: flex; flex-direction: column; gap: 3vmin; margin-top: 1.5vmin;">
+                    <button id="settings-close-btn"
+                        style="background: linear-gradient(135deg, #2ecc71, #27ae60); color: #fff; border: none; padding: 2.8vmin; border-radius: 15px; font-weight: 900; font-family: 'Outfit'; cursor: pointer; font-size: 4.5vmin; box-shadow: 0 5px 15px rgba(46, 204, 113, 0.2);">AYARLARI
+                        KAYDET</button>
+                    <button id="logout-btn"
+                        style="background: rgba(255,255,255,0.05); color: #fff; border: 1px solid rgba(255,255,255,0.1); padding: 3.5vmin; border-radius: 15px; font-weight: 700; font-family: 'Outfit'; cursor: pointer; font-size: 3.5vmin; display: flex; align-items: center; justify-content: center; gap: 1.5vmin;">🚪
+                        OTURUMU KAPAT</button>
+                    <button id="cloud-sync-btn"
+                        style="width: 100%; margin-top: 15px; padding: 14px; border-radius: 15px; border: 1px solid rgba(0, 229, 255, 0.4); background: linear-gradient(135deg, rgba(0, 229, 255, 0.1), rgba(0, 229, 255, 0.2)); color: #00e5ff; font-family: 'Outfit'; font-weight: 900; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0, 229, 255, 0.2); text-transform: uppercase; letter-spacing: 1px;">
+                        <span style="font-size: 18px; filter: drop-shadow(0 0 5px #00e5ff);">☁️</span> 
+                        <span id="cloud-sync-btn-text">BULUTU KONTROL ET</span>
+                    </button>
+                    <button id="hard-reset-btn"
+                        style="background: rgba(255, 68, 68, 0.05); border: 1px solid rgba(255, 68, 68, 0.2); color: #ff4444; padding: 3vmin; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 3vmin;">⚠️
+                        TÜM VERİLERİ SIFIRLA</button>
+                </div>
+
+                <button id="settings-back-btn"
+                    style="background: none; border: none; color: rgba(255,255,255,0.3); font-family: 'Outfit'; font-weight: bold; font-size: 2.8vmin; cursor: pointer; margin-top: auto;"><span id="settings-back-btn-text">GERİ
+                    DÖN 🏠</span></button>
+            </div>
+        </div>
+
+        <!-- MODERN LOGOUT CONFIRM MODAL (v1.99.64.01) -->
+        <div id="logout-confirm-screen" class="screen hidden"
+            style="z-index: 20000; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);">
+            <div
+                style="width: 85%; max-width: 380px; background: rgba(20, 30, 45, 0.85); border: 1px solid rgba(255,215,0,0.2); border-radius: 30px; padding: 40px 30px; text-align: center; box-shadow: 0 30px 70px rgba(0,0,0,0.6);">
+                <div style="font-size: 65px; margin-bottom: 20px; filter: drop-shadow(0 0 15px rgba(255,255,255,0.2));">
+                    🚪</div>
+                <h2 id="logout-confirm-title"
+                    style="color: #fff; font-family: 'Outfit'; font-weight: 900; font-size: 26px; margin-bottom: 12px; letter-spacing: 1px;">
+                    ÇIKIŞ YAPILSIN MI?</h2>
+                <div id="version-display" style="position: absolute; bottom: 15px; right: 20px; color: rgba(255,255,255,0.4); font-family: 'Outfit'; font-size: 12px; letter-spacing: 1px; z-index: 1000;">
+                    <script>document.write("v" + (window.ELITE_CONFIG ? window.ELITE_CONFIG.VERSION : "1.99.63.63"));</script>
+                </div>
+                <p id="logout-confirm-desc" style="color: #fff; font-family: 'Outfit'; font-size: 14px; margin-bottom: 30px; line-height: 1.6; opacity: 0.8;">
+                Oturumu kapattığınızda verileriniz bulutta güvende kalır ancak tekrar girmek için internet
+                    gereklidir.</p>
+                <div style="display: flex; flex-direction: column; gap: 15px; width: 100%;">
+                    <button id="confirm-logout-btn"
+                        style="background: linear-gradient(135deg, #ff416c, #ff4b2b); color: #fff; border: none; padding: 18px; border-radius: 18px; font-weight: 900; font-family: 'Outfit'; cursor: pointer; font-size: 17px; box-shadow: 0 4px 15px rgba(255, 65, 108, 0.3);">EVET,
+                        ÇIKIŞ YAP</button>
+                    <button id="cancel-logout-btn"
+                        style="background: rgba(255,255,255,0.05); color: #fff; border: 1px solid rgba(255,255,255,0.1); padding: 15px; border-radius: 18px; font-weight: 800; font-family: 'Outfit'; cursor: pointer; font-size: 16px;">İPTAL</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODERN RESET CONFIRM MODAL (v1.99.64.01) -->
+        <div id="reset-confirm-overlay" class="screen hidden"
+            style="z-index: 25000; background: rgba(183, 28, 28, 0.4); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);">
+            <div
+                style="width: 85%; max-width: 380px; background: rgba(20, 10, 10, 0.95); border: 2px solid #ff4444; border-radius: 30px; padding: 40px 30px; text-align: center; box-shadow: 0 30px 100px rgba(255, 68, 68, 0.4);">
+                <div
+                    style="font-size: 70px; margin-bottom: 20px; filter: drop-shadow(0 0 20px rgba(255, 68, 68, 0.5));">
+                    ⚠️</div>
+                <h2
+                    style="color: #ff4444; font-family: 'Outfit'; font-weight: 900; font-size: 28px; margin-bottom: 15px; letter-spacing: 1px;">
+                    EMİN MİSİNİZ?</h2>
+                <p
+                    style="color: #fff; font-family: 'Outfit'; font-size: 16px; margin-bottom: 35px; line-height: 1.6; opacity: 0.9;">
+                    Bu işlem **TÜM ALTINLARINIZI, GELİŞTİRMELERİNİZİ VE REKORLARINIZI** kalıcı olarak silecektir. Bu
+                    işlemin geri dönüşü YOKTUR!</p>
+                <div style="display: flex; flex-direction: column; gap: 15px; width: 100%;">
+                    <button id="confirm-reset-yes"
+                        style="background: #ff4444; color: #fff; border: none; padding: 18px; border-radius: 18px; font-weight: 900; font-family: 'Outfit'; cursor: pointer; font-size: 18px; box-shadow: 0 8px 25px rgba(255, 68, 68, 0.3);">EVET,
+                        HER ŞEYİ SİL</button>
+                    <button id="confirm-reset-no"
+                        style="background: rgba(255,255,255,0.05); color: #fff; border: 1px solid rgba(255,255,255,0.2); padding: 15px; border-radius: 18px; font-weight: 800; font-family: 'Outfit'; cursor: pointer; font-size: 16px;">VAZGEÇ</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODERN ELITE MAĞAZA (FIXED HEADER + SCROLL BODY) -->
+        <div id="shop-screen" class="screen hidden"
+            style="background: linear-gradient(135deg, #050a10 0%, #0a1525 100%); display: flex; flex-direction: column; overflow: hidden; padding: 0;">
+            
+            <!-- FIXED HEADER AREA -->
+            <div class="shop-sticky-header">
+                <h2 id="shop-title-main"
+                    style="color: #FFD700; font-family: 'Outfit'; font-weight: 900; font-size: 9vmin; margin: 0; margin-bottom: 2vmin; letter-spacing: 1px; text-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+                    MAĞAZA</h2>
+                <div id="shop-balance-pill" class="elite-balance-pill" style="margin-bottom: 0;">
+                    <span id="shop-balance-label" class="elite-balance-label">BAKİYE</span>
+                    <span id="totalGoldValue-shop" class="elite-balance-value">0</span>
+                    <span id="shop-gold-unit" style="color: #FFD700; font-size: 14px;">GOLD</span>
+                </div>
+            </div>
+
+            <!-- SCROLLABLE CONTENT AREA -->
+            <div class="shop-scroll-area">
+                <div style="width: 100%; max-width: 500px; margin: 0 auto; display: flex; flex-direction: column;">
+                    
+                    <!-- v1.99.64.02: BOATHOUSE REMOVED -->
+
+                    <div class="showroom-container" style="display: flex; flex-direction: column; width: 100%;">
+                    <!-- Mıknatıs -->
+                    <div class="showroom-item">
+                        <div class="item-aura-box" style="border-color: #FFD700;">
+                            <span style="font-size: 32px;">🧲</span>
+                        </div>
+                        <div class="showroom-info">
+                            <div id="shop-mag-title" class="showroom-title">MIKNATIS</div>
+                            <div id="shop-mag-desc" class="showroom-desc"><span id="magnet-duration"></span> | <span id="magnet-lvl"></span></div>
+                        </div>
+                        <div class="buy-action-group">
+                            <button id="buy-magnet-btn" class="elite-upgrade-btn btn-gold">GELİŞTİR</button>
+                        </div>
+                    </div>
+
+                    <!-- Kalkan -->
+                    <div class="showroom-item">
+                        <div class="item-aura-box" style="border-color: #00e5ff;">
+                            <span style="font-size: 32px;">🛡️</span>
+                        </div>
+                        <div class="showroom-info">
+                            <div id="shop-shd-title" class="showroom-title">KALKAN</div>
+                            <div id="shop-shd-desc" class="showroom-desc"><span id="shield-chance"></span> | <span id="shield-lvl"></span></div>
+                        </div>
+                        <div class="buy-action-group">
+                            <button id="buy-shield-btn" class="elite-upgrade-btn btn-cyan">GELİŞTİR</button>
+                        </div>
+                    </div>
+
+                    <!-- Mühimmat Doldur -->
+                    <div class="showroom-item">
+                        <div class="item-aura-box" style="border-color: #ff8c00;">
+                            <span style="font-size: 32px;">☄️</span>
+                        </div>
+                        <div class="showroom-info">
+                            <div id="shop-magma-title" class="showroom-title" style="color: #ff8c00;">CEPHANE</div>
+                            <div id="shop-magma-desc" class="showroom-desc">Mevcut: <span id="shop-bomb-count" style="color: #fff;">0</span> | +50 Bomba</div>
+                        </div>
+                        <div class="buy-action-group">
+                            <button id="buy-ammo-btn" class="elite-upgrade-btn btn-orange">1000 G</button>
+                            <button id="ad-ammo-btn" class="elite-ad-btn-small">+10 (AD)</button>
+                        </div>
+                    </div>
+
+                    <!-- Zırh Doldur -->
+                    <div class="showroom-item">
+                        <div class="item-aura-box" style="border-color: #00acc1;">
+                            <span style="font-size: 32px;">🔋</span>
+                        </div>
+                        <div class="showroom-info">
+                            <div id="shop-void-armor-title" class="showroom-title">ZIRH ŞARJI</div>
+                            <div id="shop-void-armor-desc" class="showroom-desc">+30 Zırh Birimi</div>
+                        </div>
+                        <div class="buy-action-group">
+                            <button id="buy-armor-btn" class="elite-upgrade-btn btn-cyan" onclick="buyArmorLicense()">1000 G</button>
+                            <button id="ad-armor-btn" class="elite-ad-btn-small">+1 (AD)</button>
+                        </div>
+                    </div>
+
+                    <button id="ad-gold-btn" class="elite-ad-gold-btn" style="margin-top: 10px;">+100 ALTIN (ÜCRETSİZ REKLAM)</button>
+    
+                    <!-- ALTIN MARKET 💰 v1.99.64.01 PRESTIGE UI -->
+                    <div class="gold-market-container">
+                        <h3 id="shop-gold-market-title" class="gold-market-title">ALTIN MARKET 💰</h3>
+                        <div class="gold-market-grid-elite">
+                            <button onclick="GameStore.buy('gold_pack_m')" class="gold-card">
+                                <span style="font-size: 32px; margin-bottom: 5px;">💰</span>
+                                <span class="amount">20.000</span>
+                                <span id="price-gold_pack_m" class="price">$0.49</span>
+                            </button>
+                            <button onclick="GameStore.buy('gold_pack_l')" class="gold-card gold-card-best">
+                                <span style="font-size: 36px; margin-bottom: 5px; filter: drop-shadow(0 0 10px rgba(255,215,0,0.5));">💎</span>
+                                <span class="amount" style="color: #FFD700;">50.000</span>
+                                <span id="price-gold_pack_l" class="price">$0.99</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+    
+                <button id="shop-close-btn" class="elite-btn-large" style="background: rgba(255,255,255,0.05); color: #FFD700; border: 1px solid rgba(255,215,0,0.4); margin-top: 2vh;">GERİ DÖN</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- LEADERBOARD MODAL -->
+        <div id="leaderboard-screen" class="screen hidden"
+            style="background: rgba(0,0,0,0.92); z-index: 19000; font-family: 'Outfit', sans-serif;">
+            <div
+                style="width: 90%; max-width: 400px; background: rgba(20, 20, 20, 0.9); backdrop-filter: blur(20px); border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); padding: 25px; box-shadow: 0 20px 50px rgba(0,0,0,0.4); pointer-events: auto;">
+                <h2
+                    style="color: #FFD700; font-family: 'Press Start 2P', cursive; font-size: 16px; margin-bottom: 20px; text-align: center;">
+                    TOP RIDERS</h2>
+                <div id="leaderboard-list"
+                    style="display: flex; flex-direction: column; gap: 8px; max-height: 50vh; overflow-y: auto;"></div>
+                <div style="margin: 15px 0; border-top: 2px dashed rgba(255,255,255,0.1); padding-top: 15px;">
+                    <div id="leaderboard-my-rank"
+                        style="background: rgba(0, 229, 255, 0.2); border: 1px solid #00e5ff; padding: 12px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center;">
+                    </div>
+                </div>
+                <button id="leaderboard-close-btn"
+                    style="width: 100%; background: #f12711; color: white; border: none; padding: 15px; font-weight: bold; border-radius: 12px; cursor: pointer;">KAPAT</button>
+            </div>
+        </div>
+
+        <!-- LUCKY SPIN (ŞANS ÇARKI) EKRANI v1.99.64.01 -->
+        <div id="spin-screen" class="screen hidden"
+            style="z-index: 17000; background: rgba(0,0,0,0.92); width: 100vw; height: 100vh; max-width: 100%; border-radius: 0;">
+            <div id="spin-container">
+                <h2 id="spin-title"
+                    style="color: #FFD700; font-family: 'Press Start 2P', cursive; font-size: 16px; margin-bottom: 2px;">
+                    Lucky Spin</h2>
+                <div id="spin-balance-bar"
+                    style="display:flex; gap:18px; justify-content:center; margin-bottom:6px; font-family:'Press Start 2P',cursive; font-size:10px; font-weight:bold;">
+                    <span>GOLD: <span id="spin-gold-live" style="color:#FFD700;">0</span></span>
+                </div>
+                <div id="wheel-canvas-container">
+                    <div id="wheel-pointer"></div>
+                    <canvas id="wheel-canvas" width="400" height="400"></canvas>
+                </div>
+                <div class="buttons" style="width: 100%; display: flex; flex-direction: column; gap: 10px;">
+                    <button id="spin-btn-main">ÇEVİR (AD)</button>
+                    <div id="spin-reward-msg"
+                        style="color: #64dd17; font-family: 'Press Start 2P', cursive; font-size: 8px; margin-top: 5px; text-align: center; min-height: 10px;">
+                    </div>
+                    <button id="spin-close-btn"
+                        style="background: rgba(255,255,255,0.1); color: #ccc; border: none; padding: 12px; font-weight: bold; border-radius: 12px; font-size: 14px; outline: none; cursor: pointer;">KAPAT</button>
+                </div>
+            </div>
+            <!-- POPUP: REWARD NOTIFICATION (Restored) -->
+            <div id="spin-reward-popup"
+                style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%) scale(0); background: rgba(10, 20, 30, 0.95); border: 3px solid #FFD700; border-radius: 25px; padding: 30px; z-index: 18000; text-align: center; opacity: 0; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); backdrop-filter: blur(10px); box-shadow: 0 0 50px rgba(255, 215, 0, 0.3);">
+                <div id="spin-popup-emoji" style="font-size: 70px; margin-bottom: 10px;">🎉</div>
+                <div id="spin-popup-label"
+                    style="color: #fff; font-family: 'Outfit'; font-weight: 800; font-size: 22px; letter-spacing: 1px;">
+                    ÖDÜN KAZANILIYOR</div>
+                <div id="spin-popup-value"
+                    style="color: #FFD700; font-family: 'Outfit'; font-weight: 900; font-size: 32px; margin-top: 5px;">
+                    +0</div>
+            </div>
+        </div>
+
+        <div id="controls-ui" style="
+            position: absolute; 
+            bottom: calc(20px + env(safe-area-inset-bottom)); 
+            right: calc(20px + env(safe-area-inset-right)); 
+            display: flex; flex-direction: column; gap: 15px; 
+            z-index: 1000; pointer-events: none;
+        ">
+            <div id="dash-action-btn"
+                style="width: 60px; height: 60px; border-radius: 50%; background: rgba(0, 229, 255, 0.15); border: 2px solid rgba(0, 229, 255, 0.4); display: flex; align-items: center; justify-content: center; cursor: pointer; pointer-events: auto;">
+                <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="#00e5ff" stroke-width="2">
+                    <polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polyline>
+                </svg>
+                <div id="dash-energy-bar"
+                    style="position: absolute; top: -10px; width: 40px; height: 4px; background: #333; border-radius: 2px; overflow: hidden;">
+                    <div id="dash-energy-fill" style="width: 0%; height: 100%; background: #00e5ff;"></div>
+                </div>
+            </div>
+            
+            <div style="position: relative; pointer-events: none;">
+                <div id="bomb-action-btn"
+                    style="display: none; width: 70px; height: 70px; background: rgba(0,0,0,0.4); backdrop-filter: blur(8px); border-radius: 50%; border: 2px solid rgba(255,61,0,0.5); cursor: pointer; pointer-events: auto; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 20px rgba(255,61,0,0.2);">
+                    <svg viewBox="0 0 24 24" width="40" height="40" fill="#ff3d00" style="filter: drop-shadow(0 0 8px rgba(255,61,0,0.8));">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M3 12h3m12 0h3M12 3v3m0 12v3" stroke="#fff" stroke-width="2" stroke-linecap="round"></path>
+                    </svg>
+                </div>
+                <div id="bomb-badge"
+                    style="position: absolute; top: -5px; right: -5px; background: #f12711; color: white; font-size: 13px; font-weight: 900; padding: 3px 8px; border-radius: 12px; border: 2px solid #fff; z-index: 1001; display: none;">
+                    0</div>
+            </div>
+        </div>
+
+        <!-- v1.99.64.01: ULTIMATE SECURITY LOCK OVERLAY -->
+        <div id="security-lock-overlay" style="
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            z-index: 100000;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            gap: 20px; text-align: center; color: white;
+            transition: opacity 0.2s ease, visibility 0.2s ease;
+            display: none;
+        ">
+            <div id="security-icon-box" style="margin-bottom: 30px; display: flex; align-items: center; justify-content: center;">
+                <svg id="security-svg-lock" viewBox="0 0 24 24" style="width: 80px; height: 80px; fill: none; stroke: rgba(255, 215, 0, 0.8); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.4)); animation: elitePulse 2.5s infinite ease-in-out;">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    <circle cx="12" cy="16" r="1"></circle>
+                </svg>
+            </div>
+            <style>
+                @keyframes elitePulse {
+                    0% { transform: scale(1); filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.4)); }
+                    50% { transform: scale(1.05); filter: drop-shadow(0 0 25px rgba(255, 215, 0, 0.6)); }
+                    100% { transform: scale(1); filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.4)); }
+                }
+            </style>
+            <h2 id="security-msg-title" style="display: none;"></h2>
+            <p id="security-msg-body" style="display: none;"></p>
+            
+            <!-- Login trigger inside the lock screen if needed -->
+            <button id="security-retry-btn" onclick="location.reload()" style="
+                background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.3);
+                color: white; padding: 12px 25px; border-radius: 12px; font-weight: bold; cursor: pointer;
+                margin-top: 10px; display: none;
+            ">YENİDEN DENE</button>
+            <button id="security-login-trigger" style="
+                display: none; align-items: center; justify-content: center; gap: 12px;
+                background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.4);
+                border-radius: 50px; color: #FFFFFF; font-family: 'Outfit', sans-serif;
+                font-size: 16px; font-weight: 600; padding: 14px 30px; min-width: 260px;
+                cursor: pointer; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+                transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            ">
+                <svg viewBox="0 0 48 48" style="width: 20px; height: 20px; display: block;">
+                    <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"></path>
+                    <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"></path>
+                    <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"></path>
+                    <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"></path>
+                    <path fill="none" d="M0 0h48v48H0z"></path>
+                </svg>
+                <span id="google-login-text">Google ile devam et</span>
+            </button>
+        </div>
+        
+
+    <!-- ELITE TOAST SYSTEM (v1.99.30) -->
+    <div id="game-toast" style="display: none; position: absolute; bottom: 12vh; left: 50%; transform: translate(-50%, 0) scale(0.9); background: rgba(0,0,0,0.85); color: white; padding: 14px 28px; border-radius: 50px; font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 16px; z-index: 30000; pointer-events: none; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); opacity: 0; box-shadow: 0 10px 40px rgba(0,0,0,0.4); white-space: nowrap; text-align: center; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);">
+        <span id="toast-text">BİLDİRİM</span>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-analytics-compat.js"></script>
+
+    <!-- Scriptleri Yükle (v1.99.64.66 Cache Buster) -->
+    <script src="translations.js?v=v1.99.64.66"></script>
+    <script src="audio.js?v=v1.99.64.66"></script>
+    <script src="collections.js?v=v1.99.64.66"></script>
+    <script src="perk_engine.js?v=v1.99.64.66"></script>
+    <script src="assets.js?v=v1.99.64.66"></script>
+    <script src="game_leaderboard.js?v=v1.99.64.66"></script>
+    <script src="mission_manager.js?v=v1.99.64.66"></script>
+    <!-- v1.99.64.66 ELITE BATCH SYNC ENGINE -->
+    <script src="game_store.js?v=v1.99.64.66"></script>
+    <script src="game_unbeatable_v3.js?v=v1.99.64.66"></script>
+</body>
+
+</html>
