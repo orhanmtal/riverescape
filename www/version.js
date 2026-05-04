@@ -8,10 +8,10 @@
  */
 
 // River Escape Elite - Central Version Control
-// v1.99.64.70 - Elite Loop & Sync Final Seal (Duplicate Loop Fix)
+// v1.99.64.71 - Elite Syntax & Ad Sync Fix
 window.ELITE_CONFIG = {
-    VERSION: "v1.99.64.70",
-    VERSION_CODE: "19964700",
+    VERSION: "v1.99.64.71",
+    VERSION_CODE: "19964710",
     LEVEL_MARGIN: 0.15,
     BG_KEY_SYNC: true,
     NATURAL_TILING: true,
