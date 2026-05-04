@@ -8,10 +8,10 @@
  */
 
 // River Escape Elite - Central Version Control
-// v1.99.64.90 - Summer Flower Addition & Visual Polish (Clean)
+// v1.99.64.91 - DZ Permanently Disabled & Summer Flower Polish
 window.ELITE_CONFIG = {
-    VERSION: "v1.99.64.90",
-    VERSION_CODE: "19964900",
+    VERSION: "v1.99.64.91",
+    VERSION_CODE: "19964910",
     LEVEL_MARGIN: 0.15,
     BG_KEY_SYNC: true,
     NATURAL_TILING: true,

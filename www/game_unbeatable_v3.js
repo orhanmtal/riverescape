@@ -1305,23 +1305,9 @@ const levelAssets = [
 
 
 
-// v1.96.6.6: Ölüm Vadisi (DZ) Durumunu Merkezi Olarak Belirle
-// v1.99.19.09: Ölüm Vadisi (DZ) Tetikleyicisi - Seviye Süresinin Son %10'unda Başlar
+// v1.99.64.91: DZ (Death Zone) PERMANENTLY DISABLED
 function getDZStatus() {
-    // v1.99.19.09: ELITE DYNAMIC DZ - Triggers at last 20% of CURRENT level progress
-    var p = Math.floor(levelProgressTime * 5) % LOOP_THRESHOLD;
-
-    for (var i = 0; i < levelAssets.length; i++) {
-        var start = levelAssets[i].threshold;
-        var end = (i < levelAssets.length - 1) ? levelAssets[i + 1].threshold : 27500;
-
-        if (p >= start && p < end) {
-            var duration = end - start;
-            var dzStartPoint = end - (duration * 0.10); // v1.99.19.09: Elite DZ Threshold (Last 10%)
-            return p >= dzStartPoint;
-        }
-    }
-    return false;
+    return false; // DZ trigger is globally deactivated for clean gameplay
 }
 
 var isTransitioningLevel = false;
