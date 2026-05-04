@@ -832,34 +832,42 @@ async function preloadRewardedAd() {
     }
 }
 
-async function showRewardedAd(btnElem, defaultText, callback) {
+// v1.99.64.72: ELITE AD ENGINE - Clean separation of Web simulation vs real AdMob
+function showRewardedAd(btnElem, defaultText, callback) {
     const t = translations[currentLang];
+    const AdMob = getCapacitorAdMob();
 
     if (!navigator.onLine) {
         showToast(t.adLoadFail);
-        btnElem.innerHTML = defaultText;
-        btnElem.disabled = false;
         return;
     }
 
-    // v1.99.64.71: SMART BACKGROUND PAUSE (Bypass on Web Simulation)
-    window.isAdShowing = true;
-    const AdMob = getCapacitorAdMob();
-    if (!isPaused && AdMob) {
-        console.log("[AdMob] Pausing for real ad...");
-        togglePause();
+    // WEB SIMULATION PATH - No togglePause, no game state changes, just give reward
+    if (!AdMob) {
+        btnElem.disabled = true;
+        btnElem.innerText = "Simulating...";
+        showToast("🎬 Simülasyon Reklamı...");
+        
+        setTimeout(() => {
+            btnElem.innerHTML = defaultText;
+            btnElem.disabled = false;
+            window.isAdShowing = false;
+            // Give reward directly - no game loop interference
+            try { callback(); } catch(e) { console.error('[Ad Sim] Callback error:', e); }
+        }, 1000);
+        return;
     }
 
-    // v1.73: ASLA DONMAYAN (Independent Countdown)
+    // REAL ADMOB PATH - Only runs on Android with real plugin
+    window.isAdShowing = true;
+    if (!isPaused) togglePause();
+
     btnElem.disabled = true;
     var countdown = 8;
     btnElem.innerText = `${t.loadingAd} (${countdown})`;
-
-    // UI Referanslarını kaydet (Dismiss sonrası sıfırlama için) v1.78 FIX
     window.lastAdButton = btnElem;
     window.lastAdButtonText = defaultText;
 
-    // Bağımsız Görsel Geri Sayım (Plugin'den tamamen bağımsız çalışır)
     var countdownTimer = setInterval(() => {
         countdown--;
         if (countdown > 0) {
@@ -867,8 +875,8 @@ async function showRewardedAd(btnElem, defaultText, callback) {
         } else {
             clearInterval(countdownTimer);
             if (btnElem.disabled && !adExecuted) {
-                console.warn('[AdMob] 1.73: Timeout Reset.');
-                window.isAdShowing = false; // Reset state
+                console.warn('[AdMob] Timeout Reset.');
+                window.isAdShowing = false;
                 btnElem.innerHTML = defaultText;
                 btnElem.disabled = false;
                 showToast(t.adLoadFail);
@@ -876,42 +884,21 @@ async function showRewardedAd(btnElem, defaultText, callback) {
         }
     }, 1000);
 
-    // Use already declared AdMob
-
-    if (!AdMob) {
-        clearInterval(countdownTimer);
-        showToast("Simulation Reward...");
-        btnElem.innerHTML = defaultText;
-        btnElem.disabled = false;
-        
-        // v1.99.64.67: Fix Web-only freeze by decoupling callback from click event
-        setTimeout(() => {
-            callback();
-        }, 500); 
-        return;
-    }
-
-    // Plugin işlemlerini 'AWAIT' etmeden, arkada (Non-blocking) başlatıyoruz.
-    // Böylece Plugin kilitlense bile UI kitlenmeyecek!
     (async () => {
         try {
             if (!admobInitialized) await initAdMob();
-
             if (!rewardedAdReady) {
-
                 await AdMob.prepareRewardVideoAd({ adId: REWARDED_AD_UNIT_ID, isTesting: false });
                 rewardedAdReady = true;
             }
-
             if (rewardedAdReady) {
-                clearInterval(countdownTimer); // Reklam hazırsa sayacı durdur
+                clearInterval(countdownTimer);
                 pendingRewardCallback = callback;
                 adExecuted = false;
-
                 await AdMob.showRewardVideoAd();
             }
         } catch (e) {
-            console.error('[AdMob] 1.73: Async Error:', e);
+            console.error('[AdMob] Async Error:', e);
             rewardedAdReady = false;
         }
     })();
@@ -5758,9 +5745,8 @@ if (adAmmoBtn) {
     adAmmoBtn.addEventListener('click', () => {
         showRewardedAd(adAmmoBtn, "+10 (AD)", () => {
             bombCount += 10;
-            saveGame();
-            updateShopUI();
             showToast("+10 BOMBS! 💣", true);
+            setTimeout(() => { saveGame(); updateShopUI(); }, 200);
         });
     });
 }
@@ -5768,16 +5754,12 @@ if (adAmmoBtn) {
 const adArmorBtn = document.getElementById('ad-armor-btn');
 if (adArmorBtn) {
     adArmorBtn.addEventListener('click', () => {
-        showRewardedAd(adArmorBtn, "+1 (AD)", () => {
+        showRewardedAd(adArmorBtn, "+1 💎 (AD)", () => {
             armorCharge += 1;
-            saveGame();
-            updateShopUI();
-            
-            // v1.99.64.66: POST-AD INVINCIBILITY (5 SECONDS)
             levelUpInvuln = true;
             setTimeout(() => { levelUpInvuln = false; }, 5000);
-            
-            showToast("+1 ARMOR! 🛡️", true);
+            showToast("+1 ARMOR! 💎", true);
+            setTimeout(() => { saveGame(); updateShopUI(); }, 200);
         });
     });
 }
