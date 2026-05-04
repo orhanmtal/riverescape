@@ -8,10 +8,10 @@
  */
 
 // River Escape Elite - Central Version Control
-// v1.99.64.91 - DZ Permanently Disabled & Summer Flower Polish
+// v1.99.64.92 - DZ Audio & Visuals Permanently Disabled (Total Clean)
 window.ELITE_CONFIG = {
-    VERSION: "v1.99.64.91",
-    VERSION_CODE: "19964910",
+    VERSION: "v1.99.64.92",
+    VERSION_CODE: "19964920",
     LEVEL_MARGIN: 0.15,
     BG_KEY_SYNC: true,
     NATURAL_TILING: true,

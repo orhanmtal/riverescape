@@ -24,20 +24,11 @@ function bgMusicScheduler() {
             nextNoteTime = window.audioCtx.currentTime + 0.05;
         }
         while (nextNoteTime < window.audioCtx.currentTime + 0.1) {
-            // v1.99.14.23: ELITE DZ SYNC - Zaman bazlı (levelProgressTime) kesin %10 kuralı
-            let pVal = (typeof levelProgressTime !== 'undefined') ? (levelProgressTime * 5) % 18000 : score; 
-            let isDZ = (typeof getDZStatus === 'function') ? getDZStatus() : (
-                (currentLevel === 1 && pVal >= 900) || 
-                (currentLevel === 2 && pVal >= 2350) || 
-                (currentLevel === 3 && pVal >= 4300) || 
-                (currentLevel === 4 && pVal >= 6750) || 
-                (currentLevel === 5 && pVal >= 9700) || 
-                (currentLevel === 6 && pVal >= 13600) ||
-                (currentLevel >= 7 && (pVal % 1000 >= 900))
-            );
+            // v1.99.64.91: DZ AUDIO PERMANENTLY DISABLED (Clean Sync)
+            let isDZ = false; 
 
             playMelodyNote(melody[currentNote], nextNoteTime, isDZ);
-            nextNoteTime += isDZ ? 0.10 : 0.2; // Ölüm Vadisi'nde tempo hızlanır
+            nextNoteTime += 0.2; // Tempo is now permanently stable (no acceleration)
             currentNote = (currentNote + 1) % melody.length;
         }
     }
