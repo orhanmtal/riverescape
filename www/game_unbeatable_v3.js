@@ -2177,25 +2177,30 @@ function spawnObstacle() {
         return;
     }
 
-    // v1.99.64.33: ELITE BOSS - RED HIPPO (Levels 1.1, 1.2, 1.3)
-    if (currentLevel <= 3 && !window.obstacles.some(o => o.type === 'redHippo')) {
-        if (Math.random() < 0.08) { // v1.99.64.33: Elite Balance
-            const obsWidth = 38 * gameScale * 1.3; // %30 Daha Büyük
+    // v1.99.64.96: ELITE BOSS - RED HIPPO (L1) / BLUE CROC (L2)
+    const isBossSpawned = window.obstacles.some(o => o.type === 'redHippo' || o.type === 'blueCroc');
+    if (currentLevel <= 6 && !isBossSpawned) {
+        if (Math.random() < 0.08) { 
+            const obsWidth = 38 * gameScale * 1.3;
             const obsHeight = 42 * gameScale * 1.3;
             const riverWidth = (canvas.width * (1 - 2 * spawnMargin)) - obsWidth;
             const randomX = (canvas.width * spawnMargin) + riverShift + (Math.random() * riverWidth);
             
+            // v1.99.64.96: BIOME-SPECIFIC BOSS (L1: RedHippo, L2: BlueCroc)
+            const bossType = (biomeIndex === 1) ? 'blueCroc' : 'redHippo';
+
             window.obstacles.push({
-                type: 'redHippo',
+                type: bossType,
                 x: randomX,
                 relativeX: randomX - riverShift,
                 y: spawnY,
                 width: obsWidth,
-                height: obsHeight, // %30 Scale Up (Optimized)
-                speedY: bgScrollSpeed * 0.75, // Biraz daha yavaş ama ısrarcı
-                health: 5, // 5 Bomba dayanıklılığı (Kullanıcı Talebi)
+                height: obsHeight,
+                speedY: bgScrollSpeed * 0.75,
+                health: 5,
+                maxHealth: 5,
                 isBoss: true,
-                isRed: true
+                isRed: (bossType === 'redHippo')
             });
             return;
         }
@@ -2227,7 +2232,7 @@ function spawnObstacle() {
     if (biomeIndex === 0) {
         allowedSpecialTypes.push('hippo', 'croc', 'vertical', 'horizontal', 'redHippo');
     } else if (biomeIndex === 1) {
-        allowedSpecialTypes.push('hippo', 'croc', 'vertical', 'horizontal', 'redHippo');
+        allowedSpecialTypes.push('hippo', 'croc', 'vertical', 'horizontal');
     } else if (biomeIndex === 2) {
         allowedSpecialTypes.push('hippo', 'croc', 'vertical', 'horizontal', 'leafTornado', 'redHippo');
         allowedSpecialTypes.push('whirlpool');
@@ -3648,10 +3653,10 @@ function update(dt) {
             var dx = pxC - cx;
             obs.speedX = dx * 0.95; // Çok hızlı takip
             obs.rotation = Math.atan2(obs.speedY || 200, dx) - Math.PI / 2;
-        } else if (obs.type === 'hippo' || obs.type === 'redHippo') {
+        } else if (obs.type === 'hippo' || obs.type === 'redHippo' || obs.type === 'blueCroc') {
             
-            if (obs.type === 'redHippo') {
-                // v1.99.64.33: ELITE BOSS AI - AGGRESSIVE RED TRACKING
+            if (obs.type === 'redHippo' || obs.type === 'blueCroc') {
+                // v1.99.64.96: ELITE BOSS AI - AGGRESSIVE TRACKING (Red Hippo & Blue Croc)
                 const bossCenterX = obs.x + obs.width / 2;
                 const playerCenterX = player.x + player.width / 2;
                 const dx = playerCenterX - bossCenterX;
@@ -3797,7 +3802,8 @@ function update(dt) {
                     shakeTimer = 0.1;
                 } else {
                     // v1.99.64.77: RED HIPPO REWARD (50G)
-                    if (obs.type === 'redHippo') {
+                    // v1.99.64.96: ELITE BOSS REWARD (50G)
+                    if (obs.type === 'redHippo' || obs.type === 'blueCroc') {
                         totalGold += 50;
                         window.totalGold = totalGold;
                         showToast("+50 GOLD! 💰", true);
@@ -4348,7 +4354,7 @@ function draw(dt) {
 
                 const margin = 4;
                 // v1.99.19.09: ONLY set drawSuccess if we actually drew a supported tileset type
-                if (obs.type === 'rock' || obs.type === 'vertical' || obs.type === 'croc' || obs.type === 'hippo' || obs.type === 'redHippo') {
+                if (obs.type === 'rock' || obs.type === 'vertical' || obs.type === 'croc' || obs.type === 'hippo' || obs.type === 'redHippo' || obs.type === 'blueCroc') {
                     ctx.save();
                     if (obs.type === 'redHippo') {
                         ctx.filter = "sepia(1) saturate(100) hue-rotate(-50deg) brightness(0.8)"; // Elite Red Rage
@@ -4363,6 +4369,14 @@ function draw(dt) {
                         ctx.translate(obs.x + obs.width / 2, obs.y + obs.height / 2);
                         ctx.rotate(Math.PI);
                         ctx.drawImage(tile, sx + margin, sy + margin, sw - margin * 2, sh - margin * 2, -obs.width / 2, -obs.height / 2, obs.width, obs.height);
+                    } else if (obs.type === 'blueCroc') {
+                        // v1.99.64.96: PREMIUM BLUE CROCODILE
+                        const blueTile = obsTiles['blue_croc'];
+                        if (blueTile) {
+                            ctx.translate(obs.x + obs.width / 2, obs.y + obs.height / 2);
+                            ctx.rotate(Math.PI); // Facing player
+                            ctx.drawImage(blueTile, -obs.width / 2, -obs.height / 2, obs.width, obs.height);
+                        }
                     } else {
                         // Hippo, RedHippo, Rock
                         if (obs.type === 'redHippo') {
@@ -5161,7 +5175,7 @@ function draw(dt) {
 
     // v1.99.64.80: GLOBAL RED HIPPO HEALTH BAR (Always Top Layer)
     obstacles.forEach(obs => {
-        if (obs.type === 'redHippo' && obs.health > 0) {
+        if ((obs.type === 'redHippo' || obs.type === 'blueCroc') && obs.health > 0) {
             ctx.save();
             ctx.globalAlpha = 1.0;
             const barW = (obs.width || 40) * 0.9;

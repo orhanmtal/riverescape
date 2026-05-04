@@ -167,6 +167,7 @@ loadIndividualTiles('lagoon', 'assets/duck_elite.png', 'assets/Kutuk.png', 'asse
 safeLoad('plane_elite', 'assets/plane_elite.png', (img) => {
     obsTiles['plane_elite'] = makeWhiteTransparent(img, false);
 });
+safeLoad('BlueCroc', 'assets/blue_croc_elite.png', (img) => { obsTiles['blue_croc'] = makeWhiteTransparent(img, false); });
 
 // v1.99.14.4: INDIVIDUAL SCATTERED BALLOONS (Elite)
 safeLoad('balloon_red', 'assets/balloon_red_elite.png', (img) => { obsTiles['balloon_red'] = makeWhiteTransparent(img, false); });

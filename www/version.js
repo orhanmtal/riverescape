@@ -8,10 +8,10 @@
  */
 
 // River Escape Elite - Central Version Control
-// v1.99.64.95 - No-Bridge Clean Azure Summer Theme (Maximum Clarity)
+// v1.99.64.96 - Blue Crocodile Elite Enemy (Summer Exclusive)
 window.ELITE_CONFIG = {
-    VERSION: "v1.99.64.95",
-    VERSION_CODE: "19964950",
+    VERSION: "v1.99.64.96",
+    VERSION_CODE: "19964960",
     LEVEL_MARGIN: 0.15,
     BG_KEY_SYNC: true,
     NATURAL_TILING: true,
