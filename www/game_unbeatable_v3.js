@@ -852,6 +852,13 @@ function showRewardedAd(btnElem, defaultText, callback) {
             btnElem.innerHTML = defaultText;
             btnElem.disabled = false;
             window.isAdShowing = false;
+            
+            // v1.99.64.73: AUTO-RESUME if simulation paused the game
+            if (isPaused) {
+                console.log("[Ad Sim] Resuming game...");
+                togglePause();
+            }
+
             // Give reward directly - no game loop interference
             try { callback(); } catch(e) { console.error('[Ad Sim] Callback error:', e); }
         }, 1000);
@@ -1680,14 +1687,14 @@ function handleArmorIndicatorClick() {
         t.armorChargeTitle || "ZIRH ŞARJI",
         (currentLang === 'tr' ? "Zırhın bitti! Reklam izleyip +1 Zırh almak ister misin?" : "Out of Armor! Watch ad for +1 Armor?"),
         (currentLang === 'tr' ? "İZLE & AL" : "WATCH & GET"),
-        "🔋",
+        "💎",
         () => {
             const btn = document.getElementById('armor-ui-indicator');
-            showRewardedAd(btn, "🔋", () => {
+            showRewardedAd(btn, "💎", () => {
                 armorCharge += 1;
                 saveGame();
                 updateShopUI();
-                showToast("+1 ARMOR! 🛡️", true);
+                showToast("+1 ARMOR! 💎", true);
             });
         }
     );
