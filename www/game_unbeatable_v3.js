@@ -3858,10 +3858,17 @@ function updatePlayer(dt) {
         }
     }
 
-    // v1.99.63.88: Snappy Response & Smooth Flow for Web Keyboard & Touch
-    const moveLerp = (targetDx === 0) ? 0.15 : 0.20; // Yumuşatılmış Hızlanma (Klavye için daha makul adımlar)
+    // v1.99.64.82: Snappy Response & Smooth Flow for Web Keyboard & Touch
+    // Klavye/Web için hızlanma ivmesini (moveLerp) %40 düşürerek ani fırlamaları engelledik.
+    const moveLerp = (targetDx === 0) ? 0.18 : 0.12; 
     player.dx += (targetDx - player.dx) * moveLerp;
     player.dy += (targetDy - player.dy) * moveLerp;
+
+    // Strict Velocity Clamping (v1.99.64.82) - Hız asla kontrol dışı artamaz
+    if (player.dx > 1.0) player.dx = 1.0;
+    if (player.dx < -1.0) player.dx = -1.0;
+    if (player.dy > 1.0) player.dy = 1.0;
+    if (player.dy < -1.0) player.dy = -1.0;
 
     const moveDt = dt || 0.016;
     const isDZ = (typeof getDZStatus === 'function') ? getDZStatus() : false;
