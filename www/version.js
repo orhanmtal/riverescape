@@ -8,10 +8,10 @@
  */
 
 // River Escape Elite - Central Version Control
-// v1.99.64.99 - Dynamic Blue Tinted Crocodile (Asset Sync Mode)
+// v1.99.64.100 - ELITE MILESTONE: Pre-Rendered Blue Crocodile (Native Asset Mode)
 window.ELITE_CONFIG = {
-    VERSION: "v1.99.64.99",
-    VERSION_CODE: "19964990",
+    VERSION: "v1.99.64.100",
+    VERSION_CODE: "19964100",
     LEVEL_MARGIN: 0.15,
     BG_KEY_SYNC: true,
     NATURAL_TILING: true,

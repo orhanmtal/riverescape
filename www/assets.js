@@ -138,7 +138,19 @@ function loadIndividualTiles(key, rockSrc, logSrc, crocSrc, hippoSrc) {
     const load = (type, src) => {
         if (!src) return;
         safeLoad(`${key}_${type}`, src, (img) => {
-            obsTiles[key][type] = makeWhiteTransparent(img, key === 'lava');
+            const processed = makeWhiteTransparent(img, key === 'lava');
+            obsTiles[key][type] = processed;
+
+            // v1.99.64.100: PRE-RENDER BLUE ELITE CROCODILE
+            if (type === 'croc' && !obsTiles['blueCroc']) {
+                const off = document.createElement('canvas');
+                off.width = processed.width; off.height = processed.height;
+                const oCtx = off.getContext('2d');
+                oCtx.filter = "hue-rotate(140deg) saturate(3) brightness(1.1)";
+                oCtx.drawImage(processed, 0, 0);
+                obsTiles['blueCroc'] = off;
+                console.log("🐊 [ELITE ASSETS] Blue Crocodile Pre-Rendered");
+            }
         });
     };
     load('rock', rockSrc);
