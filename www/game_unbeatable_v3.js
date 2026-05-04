@@ -728,49 +728,52 @@ async function initAdMob() {
             console.error('[AdMob] Configuration failed:', confErr);
         }
 
-        // --- GLOBAL REWARD LISTENERS v3.1 (Hata Payını Sıfırlar) ---
+        // --- GLOBAL REWARD LISTENERS v3.5 (BULLETPROOF) ---
+        
+        const executeReward = () => {
+            if (pendingRewardCallback) {
+                console.log('[AdMob] 🎁 EXECUTING REWARD CALLBACK...');
+                const callback = pendingRewardCallback;
+                pendingRewardCallback = null;
+                adExecuted = false; // Reset for next ad
+                
+                // v1.99.64.66: Post-Ad Invincibility
+                hasShield = true; levelUpInvuln = true;
+                setTimeout(() => { hasShield = false; levelUpInvuln = false; }, 4000);
+                
+                try { callback(); } catch(e) { console.error('[AdMob] Callback fail:', e); }
+            }
+        };
 
-        // 1. Ödül Kazanıldığında
+        // 1. Reward Received (Direct execution support)
         const rewardHandler = (info) => {
-            console.log('[AdMob] 🎁 Ödül kazanıldı!', info);
+            console.log('[AdMob] 🏆 REWARD RECEIVED EVENT:', info);
             adExecuted = true;
+            // Bazı cihazlarda dismissed geç gelebilir, burada direkt veriyoruz!
+            executeReward();
         };
         AdMob.addListener('onRewardedVideoAdReward', rewardHandler);
         AdMob.addListener('rewardedVideoAdRewardReceived', rewardHandler);
 
-        // 2. Reklam Kapatıldığında
-        AdMob.addListener('onRewardedVideoAdDismissed', () => {
-
-
-            // v1.67: Eğer ödül kazanıldıysa, aksiyonu otomatik tetikle
-            if (adExecuted && pendingRewardCallback) {
-                // v1.99.64.01: ELITE ANALYTICS
-                if (typeof Leaderboard !== 'undefined' && Leaderboard.analytics) {
-                    Leaderboard.analytics.logEvent('ad_reward_claimed', { type: window.lastAdRewardType || 'unknown' });
-                }
-                const callback = pendingRewardCallback;
-                pendingRewardCallback = null;
-                // v1.99.64.66: Post-Ad Invincibility
-                hasShield = true; levelUpInvuln = true;
-                setTimeout(() => { hasShield = false; levelUpInvuln = false; }, 3000);
-                callback();
-            }
+        // 2. Ad Dismissed (Backup execution)
+        const dismissedHandler = () => {
+            console.log('[AdMob] 🎬 AD DISMISSED');
+            if (adExecuted) executeReward();
 
             setTimeout(() => {
                 adExecuted = false;
                 rewardedAdReady = false;
                 preloadRewardedAd();
-
                 const lastBtn = window.lastAdButton;
                 if (lastBtn) {
                     lastBtn.innerHTML = window.lastAdButtonText;
                     lastBtn.disabled = false;
                 }
-                
-                // v1.99.64.66: RESET AD STATE
                 window.isAdShowing = false;
-            }, 300);
-        });
+            }, 400);
+        };
+        AdMob.addListener('onRewardedVideoAdDismissed', dismissedHandler);
+        AdMob.addListener('rewardedVideoAdDismissed', dismissedHandler);
 
         // 3. Yükleme Hatası (Fail) durumunda
         AdMob.addListener('onRewardedVideoAdFailedToLoad', (error) => {

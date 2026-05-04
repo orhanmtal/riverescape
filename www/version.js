@@ -8,10 +8,10 @@
  */
 
 // River Escape Elite - Central Version Control
-// v1.99.64.84 - AdMob Dual-Event Fix & HUD Sync (Clean)
+// v1.99.64.85 - Bulletproof Ad Reward & AdMob v3.5 (Clean)
 window.ELITE_CONFIG = {
-    VERSION: "v1.99.64.84",
-    VERSION_CODE: "19964840",
+    VERSION: "v1.99.64.85",
+    VERSION_CODE: "19964850",
     LEVEL_MARGIN: 0.15,
     BG_KEY_SYNC: true,
     NATURAL_TILING: true,
