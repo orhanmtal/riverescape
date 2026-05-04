@@ -4330,24 +4330,27 @@ function draw(dt) {
                     }
                     ctx.restore();
 
-                    // v1.99.64.77: RED HIPPO HEALTH BAR
+                    // v1.99.64.77: RED HIPPO HEALTH BAR (Forced Visibility)
                     if (obs.type === 'redHippo' && obs.health > 0) {
-                        const barW = obs.width * 0.8;
-                        const barH = 6;
+                        ctx.save();
+                        ctx.globalAlpha = 1.0; // Can barı her zaman %100 opak olsun
+                        const barW = obs.width * 0.9;
+                        const barH = 8;
                         const bx = obs.x + (obs.width - barW) / 2;
-                        const by = obs.y - 12;
+                        const by = obs.y - 15;
 
-                        // Background
-                        ctx.fillStyle = "rgba(0,0,0,0.5)";
+                        // Background (Siyah arka plan)
+                        ctx.fillStyle = "rgba(0,0,0,0.8)";
                         ctx.fillRect(bx, by, barW, barH);
-                        // Foreground
+                        // Foreground (Kırmızı can)
                         const hpPct = obs.health / obs.maxHealth;
-                        ctx.fillStyle = "#ff0000";
+                        ctx.fillStyle = "#ff3d00"; // Daha parlak kırmızı
                         ctx.fillRect(bx, by, barW * hpPct, barH);
-                        // Border
-                        ctx.strokeStyle = "#fff";
-                        ctx.lineWidth = 1;
+                        // Border (Beyaz çerçeve)
+                        ctx.strokeStyle = "#ffffff";
+                        ctx.lineWidth = 2;
                         ctx.strokeRect(bx, by, barW, barH);
+                        ctx.restore();
                     }
 
                     drawSuccess = true;
