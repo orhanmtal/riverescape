@@ -842,9 +842,13 @@ async function showRewardedAd(btnElem, defaultText, callback) {
         return;
     }
 
-    // v1.99.64.66: FORCED BACKGROUND PAUSE
+    // v1.99.64.71: SMART BACKGROUND PAUSE (Bypass on Web Simulation)
     window.isAdShowing = true;
-    if (!isPaused) togglePause();
+    const AdMob = getCapacitorAdMob();
+    if (!isPaused && AdMob) {
+        console.log("[AdMob] Pausing for real ad...");
+        togglePause();
+    }
 
     // v1.73: ASLA DONMAYAN (Independent Countdown)
     btnElem.disabled = true;
@@ -872,7 +876,8 @@ async function showRewardedAd(btnElem, defaultText, callback) {
         }
     }, 1000);
 
-    const AdMob = getCapacitorAdMob();
+    // Use already declared AdMob
+
     if (!AdMob) {
         clearInterval(countdownTimer);
         showToast("Simulation Reward...");
