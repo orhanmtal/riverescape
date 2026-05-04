@@ -4053,17 +4053,30 @@ function drawProceduralBG(lvl, alpha = 1.0) {
         // v1.99.64.87: STRAIGHT MARGIN MODE for Summer (Inspired by Level 1 Clarity)
         const isSummer = (lvl === 1);
         
-        // Natural Grass/Bank texture
+        // Natural Grass/Bank texture & FLOWERS (v1.99.64.90)
         ctx.fillStyle = isSummer ? "rgba(255, 255, 255, 0.03)" : "rgba(0, 0, 0, 0.08)";
-        for (var i = 0; i < 60; i++) {
+        const flowers = ["#ffeb3b", "#ff1744", "#ffffff", "#ff9100"]; // Summer Palette
+        
+        for (var i = 0; i < 80; i++) { // Increased count for life
             var seed = (i * 791) % 1000;
             var bx = (seed * 1.5) % canvas.width;
-            if (bx > rLeft && bx < rRight) continue; // Skip the water corridor
+            if (bx > rLeft && bx < rRight) continue; // Skip water
             
             var by = (performance.now() / 10 + seed * 5) % canvas.height;
+            
+            // Draw Grass/Texture
+            ctx.fillStyle = isSummer ? "rgba(255, 255, 255, 0.03)" : "rgba(0, 0, 0, 0.08)";
             ctx.beginPath();
             ctx.arc(bx, by, isSummer ? 1 : 2, 0, Math.PI * 2);
             ctx.fill();
+
+            // v1.99.64.90: DRAW FLOWERS (Only in Summer/Spring or specific seeds)
+            if (isSummer && i % 4 === 0) {
+                ctx.fillStyle = flowers[i % flowers.length];
+                ctx.beginPath();
+                ctx.arc(bx, by, 1.5, 0, Math.PI * 2);
+                ctx.fill();
+            }
         }
 
         // Bank edge shading (Elite Professionally straight corridor)

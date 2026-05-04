@@ -8,10 +8,10 @@
  */
 
 // River Escape Elite - Central Version Control
-// v1.99.64.89 - Level 1 Spirit Summer Theme (Deep Blue)
+// v1.99.64.90 - Summer Flower Addition & Visual Polish (Clean)
 window.ELITE_CONFIG = {
-    VERSION: "v1.99.64.89",
-    VERSION_CODE: "19964890",
+    VERSION: "v1.99.64.90",
+    VERSION_CODE: "19964900",
     LEVEL_MARGIN: 0.15,
     BG_KEY_SYNC: true,
     NATURAL_TILING: true,
