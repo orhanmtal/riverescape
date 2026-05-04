@@ -8,10 +8,10 @@
  */
 
 // River Escape Elite - Central Version Control
-// v1.99.64.77 - Elite Stability & HUD Sync (Final Fix - No PS)
+// v1.99.64.78 - Red Hippo Elite Reward & Stability
 window.ELITE_CONFIG = {
-    VERSION: "v1.99.64.77",
-    VERSION_CODE: "19964770",
+    VERSION: "v1.99.64.78",
+    VERSION_CODE: "19964780",
     LEVEL_MARGIN: 0.15,
     BG_KEY_SYNC: true,
     NATURAL_TILING: true,

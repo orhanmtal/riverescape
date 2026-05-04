@@ -2219,11 +2219,11 @@ function spawnObstacle() {
     var allowedSpecialTypes = (biomeIndex === 4 || biomeIndex === 5 || biomeIndex === 6 || biomeIndex === 7 || biomeIndex === 8) ? [] : ['rock'];
 
     if (biomeIndex === 0) {
-        allowedSpecialTypes.push('hippo', 'croc', 'vertical', 'horizontal');
+        allowedSpecialTypes.push('hippo', 'croc', 'vertical', 'horizontal', 'redHippo');
     } else if (biomeIndex === 1) {
-        allowedSpecialTypes.push('hippo', 'croc', 'vertical', 'horizontal');
+        allowedSpecialTypes.push('hippo', 'croc', 'vertical', 'horizontal', 'redHippo');
     } else if (biomeIndex === 2) {
-        allowedSpecialTypes.push('hippo', 'croc', 'vertical', 'horizontal', 'leafTornado');
+        allowedSpecialTypes.push('hippo', 'croc', 'vertical', 'horizontal', 'leafTornado', 'redHippo');
         allowedSpecialTypes.push('whirlpool');
     } else if (biomeIndex === 3) {
         allowedSpecialTypes.push('rock', 'iceBerg', 'whirlpool', 'slidingIce', 'vertical', 'horizontal');
@@ -2300,13 +2300,15 @@ function spawnObstacle() {
         var selectedType = allowedSpecialTypes[Math.floor(Math.random() * allowedSpecialTypes.length)];
 
         // v1.99.61.91: VERIFICATION LOG
-        if (selectedType === 'hippo') {
+        if (selectedType === 'hippo' || selectedType === 'redHippo') {
             obstacles.push({
-                type: 'hippo',
+                type: selectedType,
                 x: spawnX,
                 relativeX: spawnX - riverShift,
                 y: spawnY + 50, width: 38 * gameScale, height: 42 * gameScale,
-                speedY: baseSpeed - 20, speedX: 0, isSubmerged: true
+                speedY: baseSpeed - 20, speedX: 0, isSubmerged: true,
+                health: selectedType === 'redHippo' ? 5 : 1,
+                maxHealth: selectedType === 'redHippo' ? 5 : 1
             });
         } else if (selectedType === 'croc') {
             const isZigZag = Math.random() < 0.5;
@@ -3788,6 +3790,16 @@ function update(dt) {
                     for (var p = 0; p < 5; p++) emitParticles(b.x, b.y, "#fff", 'default', 1);
                     shakeTimer = 0.1;
                 } else {
+                    // v1.99.64.77: RED HIPPO REWARD (50G)
+                    if (obs.type === 'redHippo') {
+                        totalGold += 50;
+                        window.totalGold = totalGold;
+                        showToast("+50 GOLD! 💰", true);
+                        // Visual coin explosion effect towards score UI
+                        for (var p = 0; p < 8; p++) {
+                            setTimeout(() => { playCoinSound(); }, p * 100);
+                        }
+                    }
                     obstacles.splice(j, 1);
                     bullets.splice(i, 1);
                     if (window.MissionManager) window.MissionManager.notify('destroy_obstacle');
@@ -4317,6 +4329,27 @@ function draw(dt) {
                         ctx.drawImage(tile, sx + margin, sy + margin, sw - margin * 2, sh - margin * 2, obs.x, obs.y, obs.width, obs.height);
                     }
                     ctx.restore();
+
+                    // v1.99.64.77: RED HIPPO HEALTH BAR
+                    if (obs.type === 'redHippo' && obs.health > 0) {
+                        const barW = obs.width * 0.8;
+                        const barH = 6;
+                        const bx = obs.x + (obs.width - barW) / 2;
+                        const by = obs.y - 12;
+
+                        // Background
+                        ctx.fillStyle = "rgba(0,0,0,0.5)";
+                        ctx.fillRect(bx, by, barW, barH);
+                        // Foreground
+                        const hpPct = obs.health / obs.maxHealth;
+                        ctx.fillStyle = "#ff0000";
+                        ctx.fillRect(bx, by, barW * hpPct, barH);
+                        // Border
+                        ctx.strokeStyle = "#fff";
+                        ctx.lineWidth = 1;
+                        ctx.strokeRect(bx, by, barW, barH);
+                    }
+
                     drawSuccess = true;
                 }
             }
