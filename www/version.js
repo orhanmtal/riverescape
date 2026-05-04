@@ -8,10 +8,10 @@
  */
 
 // River Escape Elite - Central Version Control
-// v1.99.64.66 - Post-Ad Invincibility & Performance King
+// v1.99.64.67 - Web Stability & Elite Economy Correction
 window.ELITE_CONFIG = {
-    VERSION: "v1.99.64.66",
-    VERSION_CODE: "19964660",
+    VERSION: "v1.99.64.67",
+    VERSION_CODE: "19964670",
     LEVEL_MARGIN: 0.15,
     BG_KEY_SYNC: true,
     NATURAL_TILING: true,
@@ -20,7 +20,7 @@ window.ELITE_CONFIG = {
 
     BUILD_LEVEL: "Elite Production",
     SYNC_ENGINE: "v3.Elite.Secure",
-    LAST_UPDATED: "2026-05-03"
+    LAST_UPDATED: "2026-05-04"
 };
 
 console.log("🚀 [ELITE PERFORMANCE SYSTEM] Active:", window.ELITE_CONFIG.VERSION);

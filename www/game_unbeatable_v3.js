@@ -874,7 +874,11 @@ async function showRewardedAd(btnElem, defaultText, callback) {
         showToast("Simulation Reward...");
         btnElem.innerHTML = defaultText;
         btnElem.disabled = false;
-        callback();
+        
+        // v1.99.64.67: Fix Web-only freeze by decoupling callback from click event
+        setTimeout(() => {
+            callback();
+        }, 500); 
         return;
     }
 
@@ -3887,12 +3891,11 @@ function fireBomb() {
                     levelUpInvuln = true;
                     setTimeout(() => { levelUpInvuln = false; }, 5000);
 
-                    // v1.99.64.33: Robust Refill Sync
+                    // v1.99.64.67: Optimized Refill Sync (Removed redundant HUD call)
                     setTimeout(() => {
                         updateShopUI();
-                        syncEliteHUD();
                         console.log("💣 [ELITE AD REFILL] Success: New Bomb Count =", bombCount);
-                    }, 50);
+                    }, 100);
 
                     if (isPaused) togglePause();
                     showToast("+10 BOMBS! 💣", true);
@@ -5779,13 +5782,11 @@ if (adArmorBtn) {
 // Redundant saveGame removed (bottom version used)
 
 function loadGame() {
-    // v1.99.64.11: NEW PLAYER GIFTS (Global Trigger - Works for fresh installs)
+    // v1.99.64.67: NEW PLAYER GIFTS (Corrected: 10 Bombs, 5 Armor)
     if (localStorage.getItem('riverEscape_FirstGiftClaimed') !== 'true') {
-        bombCount += 50;
-        armorCharge += 5;
+        window.starterGiftsPending = { bombs: 10, armor: 5 };
         localStorage.setItem('riverEscape_FirstGiftClaimed', 'true');
-        saveGame();
-        console.log("🎁 [ELITE ECONOMY] Starter Gift Awarded: 50 Bombs, 5 Armor");
+        console.log("🎁 [ELITE ECONOMY] Starter Gift Queued: 10 Bombs, 5 Armor");
     }
 
     const saved = localStorage.getItem('riverEscapeSave');
@@ -5803,8 +5804,13 @@ function loadGame() {
         isVibrationEnabled = (data.vib !== undefined) ? data.vib : true;
         hasWeapon = true; // v1.99.64.02: Force true regardless of save
         ownsArmorLicense = true; // v1.99.64.02: Force true regardless of save
-        armorCharge = data.armorCharge || 0;
-        bombCount = data.bombs || 0;
+        
+        // v1.99.64.67: Fix - Apply pending gifts after loading base values
+        armorCharge = (data.armorCharge || 0) + (window.starterGiftsPending ? window.starterGiftsPending.armor : 0);
+        bombCount = (data.bombs || 0) + (window.starterGiftsPending ? window.starterGiftsPending.bombs : 0);
+        delete window.starterGiftsPending;
+
+        saveGame(); // Save corrected values immediately
 
         // v1.99.19.09.9: Devam Etme Bilgileri
         window.resumeScore = data.sessionScore || 0;
