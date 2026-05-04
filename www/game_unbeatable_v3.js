@@ -2195,8 +2195,8 @@ function spawnObstacle() {
                 x: randomX,
                 relativeX: randomX - riverShift,
                 y: spawnY,
-                width: isCroc ? (32 * gameScale) : obsWidth,
-                height: isCroc ? (85 * gameScale) : obsHeight,
+                width: isCroc ? (32 * gameScale * 1.3) : obsWidth,
+                height: isCroc ? (85 * gameScale * 1.3) : obsHeight,
                 speedY: bgScrollSpeed * 0.75,
                 health: 5,
                 maxHealth: 5,
@@ -3657,11 +3657,15 @@ function update(dt) {
         } else if (obs.type === 'hippo' || obs.type === 'redHippo' || obs.type === 'blueCroc') {
             
             if (obs.type === 'redHippo' || obs.type === 'blueCroc') {
-                // v1.99.64.96: ELITE BOSS AI - AGGRESSIVE TRACKING (Red Hippo & Blue Croc)
+                // v1.99.64.102: ELITE BOSS AI - AGGRESSIVE TRACKING & LOOK-AT
                 const bossCenterX = obs.x + obs.width / 2;
                 const playerCenterX = player.x + player.width / 2;
                 const dx = playerCenterX - bossCenterX;
                 obs.speedX = (Math.abs(dx) > 5) ? (dx > 0 ? 170 : -170) : 0;
+
+                // v1.99.64.102: Face the boat dynamically
+                const dy = player.y - obs.y;
+                obs.angle = Math.atan2(dy, dx) - Math.PI / 2;
             }
         } else if (obs.type === 'laserGate') {
             // v1.99.63.18: TARGETED LASER STATE ENGINE (Fixed Position)
@@ -4344,53 +4348,57 @@ function draw(dt) {
                 }
             }
             // Legacy/Grid Tileset System (Levels 1, 3, 4, 5, 6)
-            else if (tile.tagName === 'CANVAS' || tile.complete) {
-                const sw = Math.floor(tile.width / 2);
-                const sh = Math.floor(tile.height / 2);
-                var sx = 0, sy = 0;
-                if (obs.type === 'rock') { sx = 0; sy = 0; }
-                else if (obs.type === 'vertical') { sx = sw; sy = 0; }
-                else if (obs.type === 'croc') { sx = 0; sy = sh; }
-                else if (obs.type === 'hippo') { sx = sw; sy = sh; }
-
-                const margin = 4;
-                // v1.99.19.09: ONLY set drawSuccess if we actually drew a supported tileset type
-                if (obs.type === 'rock' || obs.type === 'vertical' || obs.type === 'croc' || obs.type === 'hippo' || obs.type === 'redHippo' || obs.type === 'blueCroc') {
-                    ctx.save();
-                    if (obs.type === 'redHippo') {
-                        ctx.filter = "sepia(1) saturate(100) hue-rotate(-50deg) brightness(0.8)"; // Elite Red Rage
-                        sx = sw; sy = sh; // Hippo texture offset
+                // v1.99.64.102: INDIVIDUAL ELITE ASSET (Blue Crocodile)
+                if (obs.type === 'blueCroc') {
+                    const blueTile = obsTiles['blueCroc'];
+                    if (blueTile) {
+                        ctx.save();
+                        ctx.translate(obs.x + obs.width / 2, obs.y + obs.height / 2);
+                        // Dynamic Look-At Rotation
+                        ctx.rotate(obs.angle || Math.PI);
+                        ctx.drawImage(blueTile, -obs.width / 2, -obs.height / 2, obs.width, obs.height);
+                        ctx.restore();
+                        drawSuccess = true;
                     }
-                    
-                    if (obs.type === 'vertical') {
-                        ctx.translate(obs.x + obs.width / 2, obs.y + obs.height / 2);
-                        ctx.rotate(Math.PI / 2 + (obs.rotation || 0));
-                        ctx.drawImage(tile, sx + margin, sy + margin, sw - margin * 2, sh - margin * 2, -obs.height / 2, -obs.width / 2, obs.height, obs.width);
-                    } else if (obs.type === 'croc') {
-                        ctx.translate(obs.x + obs.width / 2, obs.y + obs.height / 2);
-                        ctx.rotate(Math.PI);
-                        ctx.drawImage(tile, sx + margin, sy + margin, sw - margin * 2, sh - margin * 2, -obs.width / 2, -obs.height / 2, obs.width, obs.height);
-                    } else if (obs.type === 'blueCroc') {
-                        // v1.99.64.96: PREMIUM BLUE CROCODILE
-                        const blueTile = obsTiles['blue_croc'];
-                        if (blueTile) {
-                            ctx.translate(obs.x + obs.width / 2, obs.y + obs.height / 2);
-                            ctx.rotate(Math.PI); // Facing player
-                            ctx.drawImage(blueTile, -obs.width / 2, -obs.height / 2, obs.width, obs.height);
-                        }
-                    } else {
-                        // Hippo, RedHippo, Rock
+                } else if (tile.tagName === 'CANVAS' || tile.complete) {
+                    const sw = Math.floor(tile.width / 2);
+                    const sh = Math.floor(tile.height / 2);
+                    var sx = 0, sy = 0;
+                    if (obs.type === 'rock') { sx = 0; sy = 0; }
+                    else if (obs.type === 'vertical') { sx = sw; sy = 0; }
+                    else if (obs.type === 'croc') { sx = 0; sy = sh; }
+                    else if (obs.type === 'hippo') { sx = sw; sy = sh; }
+
+                    const margin = 4;
+                    // v1.99.19.09: ONLY set drawSuccess if we actually drew a supported tileset type
+                    if (obs.type === 'rock' || obs.type === 'vertical' || obs.type === 'croc' || obs.type === 'hippo' || obs.type === 'redHippo') {
+                        ctx.save();
                         if (obs.type === 'redHippo') {
                             ctx.filter = "sepia(1) saturate(100) hue-rotate(-50deg) brightness(0.8)"; // Elite Red Rage
-                            sx = sw; sy = sh; // Hippo texture offset in grid
+                            sx = sw; sy = sh; // Hippo texture offset
                         }
-                        ctx.drawImage(tile, sx + margin, sy + margin, sw - margin * 2, sh - margin * 2, obs.x, obs.y, obs.width, obs.height);
-                    }
-                    ctx.restore();
+                        
+                        if (obs.type === 'vertical') {
+                            ctx.translate(obs.x + obs.width / 2, obs.y + obs.height / 2);
+                            ctx.rotate(Math.PI / 2 + (obs.rotation || 0));
+                            ctx.drawImage(tile, sx + margin, sy + margin, sw - margin * 2, sh - margin * 2, -obs.height / 2, -obs.width / 2, obs.height, obs.width);
+                        } else if (obs.type === 'croc') {
+                            ctx.translate(obs.x + obs.width / 2, obs.y + obs.height / 2);
+                            ctx.rotate(Math.PI);
+                            ctx.drawImage(tile, sx + margin, sy + margin, sw - margin * 2, sh - margin * 2, -obs.width / 2, -obs.height / 2, obs.width, obs.height);
+                        } else {
+                            // Hippo, RedHippo, Rock
+                            if (obs.type === 'redHippo') {
+                                ctx.filter = "sepia(1) saturate(100) hue-rotate(-50deg) brightness(0.8)"; // Elite Red Rage
+                                sx = sw; sy = sh; // Hippo texture offset in grid
+                            }
+                            ctx.drawImage(tile, sx + margin, sy + margin, sw - margin * 2, sh - margin * 2, obs.x, obs.y, obs.width, obs.height);
+                        }
+                        ctx.restore();
 
-                    drawSuccess = true;
+                        drawSuccess = true;
+                    }
                 }
-            }
         }
 
         // --- FALLBACKS (If Tileset/Elite fails) ---
