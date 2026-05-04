@@ -483,6 +483,10 @@ class AmbientLife {
             ctx.stroke();
             ctx.restore();
         } else if (this.type === 'shadow' && layer === 'bottom') {
+            // v1.99.64.88: HIDE SHADOWS IN SUMMER FOR CLARITY
+            const bIdx = Math.floor((currentLevel - 1) / STAGES_PER_BIOME) % BIOME_COUNT;
+            if (bIdx === 1) return;
+            
             ctx.save();
             ctx.fillStyle = "rgba(0,0,0,0.12)";
             ctx.beginPath();
@@ -4196,7 +4200,19 @@ function draw(dt) {
     const rRight = canvas.width * (1 - (syncLAsset.margin || 0.15));
     const rWidth = rRight - rLeft;
 
-    // Subtle water shimmer only — no solid fill on top of background texture
+    // v1.99.64.88: PROCEDURAL WATER FILL (Ensures Turquoise is visible)
+    const isProcedural = syncLAsset.visuals ? syncLAsset.visuals.isProcedural : false;
+    if (isProcedural) {
+        ctx.fillStyle = syncLAsset.visuals.waterColor || "rgba(0, 229, 255, 0.35)";
+        ctx.fillRect(rLeft, 0, rWidth, canvas.height);
+    }
+
+    // v1.99.64.88: PROCEDURAL WATER FILL (Ensures Turquoise is visible)
+    if (syncLAsset.visuals && syncLAsset.visuals.isProcedural) {
+        ctx.fillStyle = syncLAsset.visuals.waterColor || "rgba(0, 229, 255, 0.35)";
+        ctx.fillRect(rLeft, 0, rWidth, canvas.height);
+    }
+
     drawProceduralWater(dt, syncLAsset);
 
     // --- BIOME GUARD: NEON BOUNDARIES ---
@@ -4235,8 +4251,8 @@ function draw(dt) {
 
     // YARI SAYDAM PARALLAX SİS/BULUT TABAKASI
     clouds.forEach(c => {
-        // v1.99.33.71: Shadow skip for Lava/Void/Lagoon/Cyber/Toxic
-        if (syncBIdx >= 4) return;
+        // v1.99.64.88: HIDE CLOUDS IN SUMMER (Visual Clarity Fix)
+        if (syncBIdx === 1 || syncBIdx >= 4) return;
         ctx.beginPath();
         ctx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(255, 255, 255, ${c.opacity})`;

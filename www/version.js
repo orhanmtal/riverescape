@@ -8,10 +8,10 @@
  */
 
 // River Escape Elite - Central Version Control
-// v1.99.64.87 - Elite Summer Minimalist Theme (Straight Margins)
+// v1.99.64.88 - Summer Clarity & Invisible Scene Fix (Clean)
 window.ELITE_CONFIG = {
-    VERSION: "v1.99.64.87",
-    VERSION_CODE: "19964870",
+    VERSION: "v1.99.64.88",
+    VERSION_CODE: "19964880",
     LEVEL_MARGIN: 0.15,
     BG_KEY_SYNC: true,
     NATURAL_TILING: true,
