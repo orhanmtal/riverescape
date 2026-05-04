@@ -1411,6 +1411,18 @@ function updateArmorUI() {
     if (aBadgePill && aBadgePill.textContent !== String(armorCharge)) aBadgePill.textContent = armorCharge;
 
     if (aIndi) {
+        // v1.99.64.75: ARMOR ICON AUTO-RESTORE (Restores complex HUD layout if corrupted)
+        if (!aIndi.querySelector('#armor-badge-pill')) {
+            aIndi.innerHTML = `
+                <div style="position: relative; display: flex; align-items: center; justify-content: center;">
+                    <span style="font-size: 32px; filter: drop-shadow(0 0 8px #9b59b6);">💎</span>
+                    <div id="armor-badge-pill"
+                        style="position: absolute; top: -10px; right: -10px; background: #00b8d4; color: white; font-size: 13px; font-weight: 900; padding: 3px 8px; border-radius: 12px; border: 2px solid #fff; box-shadow: 0 0 10px rgba(0,0,0,0.5);">
+                        ${armorCharge}</div>
+                </div>
+                <span id="armor-badge" style="display:none;">${armorCharge}</span>`;
+        }
+
         // v1.99.64.02: Forced visibility during gameplay
         if (isPlaying) {
             aIndi.style.display = 'flex';

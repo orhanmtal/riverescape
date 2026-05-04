@@ -8,10 +8,10 @@
  */
 
 // River Escape Elite - Central Version Control
-// v1.99.64.75 - Elite Stability & HUD Sync (Final Fix)
+// v1.99.64.77 - Elite Stability & HUD Sync (Final Fix - No PS)
 window.ELITE_CONFIG = {
-    VERSION: "v1.99.64.75",
-    VERSION_CODE: "19964750",
+    VERSION: "v1.99.64.77",
+    VERSION_CODE: "19964770",
     LEVEL_MARGIN: 0.15,
     BG_KEY_SYNC: true,
     NATURAL_TILING: true,
