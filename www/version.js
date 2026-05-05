@@ -1,5 +1,5 @@
 /**
- * RİVER ESCAPE ELİTE - v1.99.64.125 (STABLE AAB RELEASE)
+ * RİVER ESCAPE ELİTE - v1.99.64.126 (STABLE AAB RELEASE)
  * 1. NO PLACEHOLDERS - Always use premium assets or procedural generation.
  * 2. PERFORMANCE FIRST - Optimize update loops and DOM access.
  * 3. VISUAL EXCELLENCE - Use HSL colors, smooth gradients, and micro-animations.
@@ -8,10 +8,10 @@
  */
 
 // River Escape Elite - Central Version Control
-// v1.99.64.125 - Anchor-point touch engine (no teleport, full responsiveness)
+// v1.99.64.126 - Dash recharge 50% faster
 window.ELITE_CONFIG = {
-    VERSION: "1.99.64.125",
-    VERSION_CODE: "19964125",
+    VERSION: "1.99.64.126",
+    VERSION_CODE: "19964126",
     LEVEL_MARGIN: 0.15,
     BG_KEY_SYNC: true,
     NATURAL_TILING: true,
