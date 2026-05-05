@@ -1,5 +1,5 @@
 /**
- * RİVER ESCAPE ELİTE - v1.99.64.118 (STABLE AAB RELEASE)
+ * RİVER ESCAPE ELİTE - v1.99.64.119 (STABLE AAB RELEASE)
  * 1. NO PLACEHOLDERS - Always use premium assets or procedural generation.
  * 2. PERFORMANCE FIRST - Optimize update loops and DOM access.
  * 3. VISUAL EXCELLENCE - Use HSL colors, smooth gradients, and micro-animations.
@@ -8,10 +8,10 @@
  */
 
 // River Escape Elite - Central Version Control
-// v1.99.64.118 - Elite Winter Scene (Variant 1) Integrated
+// v1.99.64.119 - Fixed NPM build env & Capacitor Sync
 window.ELITE_CONFIG = {
-    VERSION: "1.99.64.118",
-    VERSION_CODE: "19964118",
+    VERSION: "1.99.64.119",
+    VERSION_CODE: "19964119",
     LEVEL_MARGIN: 0.15,
     BG_KEY_SYNC: true,
     NATURAL_TILING: true,
