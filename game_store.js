@@ -60,6 +60,14 @@ const GameStore = {
             }
         });
 
+        // v1.99.64.120: Dinamik Fiyat Güncelleme Tetikleyicisi
+        // Google Play'den yerel fiyatlar (örn: ₺) yüklendiği an butonları otomatik günceller.
+        store.when().updated(() => {
+            if (typeof updateShopUI === 'function') {
+                updateShopUI();
+            }
+        });
+
         store.initialize();
         this.isReady = true;
     },
