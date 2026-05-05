@@ -82,7 +82,7 @@ var isDashing = false;
 var dashTimer = 0;
 const DASH_DURATION = 1.2;
 const MAX_DASH_ENERGY = 100;
-const DASH_RECHARGE_RATE = 15; // Saniyede dolan enerji
+const DASH_RECHARGE_RATE = 30; // v1.99.64.126: ~3.3s recharge (50% faster)
 
 // --- v1.99.31.00: CARTONY SQUASH & STRETCH BOUNCINESS ---
 var pScaleX = 1, pScaleY = 1, pSkew = 0;
