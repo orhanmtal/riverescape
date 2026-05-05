@@ -80,7 +80,7 @@ var lives = 3; // v98: 3 Can Sistemi
 var dashEnergy = 0;
 var isDashing = false;
 var dashTimer = 0;
-const DASH_DURATION = 1.2;
+const DASH_DURATION = 10; // v1.99.64.125: 10 saniye ziplama
 const MAX_DASH_ENERGY = 100;
 const DASH_RECHARGE_RATE = 15; // Saniyede dolan enerji
 
