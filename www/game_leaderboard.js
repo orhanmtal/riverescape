@@ -1,4 +1,4 @@
-/**
+﻿/**
  * RİVER ESCAPE ELİTE - v1.99.40.01 (CLOUD SYNC)
  * Firebase Firestore Global Sıralama ve Profil Senkronizasyon Sistemi
  * v1.99.40.01
@@ -460,7 +460,22 @@ window.Leaderboard = {
 
             console.log("🛰️ [ELITE SYNC] Sending Payload:", payload);
 
-            await this.db.collection('leaderboard').doc(this.playerID).set(payload, { merge: true });
+            if (submitScore) {
+                // v1.99.64.124: FIRESTORE TRANSACTION - Cloud score never regresses
+                const docRef = this.db.collection('leaderboard').doc(this.playerID);
+                await this.db.runTransaction(async (transaction) => {
+                    const snap = await transaction.get(docRef);
+                    const cloudScore = snap.exists ? (Number(snap.data().score) || 0) : 0;
+                    const safeScore = Math.max(localBest, cloudScore);
+                    if (safeScore > localBest) localStorage.setItem('riverEscapeHighScore', safeScore);
+                    transaction.set(docRef, { ...payload, score: safeScore, currentScore: finalScore }, { merge: true });
+                    console.log('[ELITE TX] Cloud:' + cloudScore + ' Local:' + localBest + ' Written:' + safeScore);
+                });
+            } else {
+                // Inventory/gold sync - do NOT touch score field
+                const basePayload = Object.fromEntries(Object.entries(payload).filter(([k]) => k !== 'score' && k !== 'currentScore'));
+                await this.db.collection('leaderboard').doc(this.playerID).set(basePayload, { merge: true });
+            }
             console.log("✅ [ELITE SYNC] Firestore Sync Success!");
             
             // v1.99.63.77: Gelişmiş Analytics Takibi
