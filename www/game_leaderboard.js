@@ -417,8 +417,8 @@ window.Leaderboard = {
         return String.fromCodePoint(...codePoints);
     },
 
-    // v1.99.20.01: MAPPED PROGRESS SYNC (FireStore Schema Enforcement)
-    async submitProgress(score, level) {
+    // v1.99.64.123: submitScore = true only on gameOver, false for shop/ad sync
+    async submitProgress(score, level, submitScore = true) {
         if (!navigator.onLine || !this.db || !this.playerID) {
             console.warn("📡 [ELITE SYNC] Blocked: Offline or Unauthenticated.");
             return;
@@ -427,9 +427,8 @@ window.Leaderboard = {
         const finalScore = Math.floor(score || window.score || 0);
         
         // v1.99.63.77: [ELITE HIGH SCORE PROTECTION]
-        // Sadece en yüksek skoru 'score' olarak kaydet
         let localBest = Number(localStorage.getItem('riverEscapeHighScore') || 0);
-        if (finalScore > localBest) {
+        if (submitScore && finalScore > localBest) {
             localBest = finalScore;
             localStorage.setItem('riverEscapeHighScore', localBest);
         }
@@ -438,8 +437,8 @@ window.Leaderboard = {
             const payload = {
                 id: this.playerID,
                 name: this.playerName,
-                score: localBest, // Her zaman en yüksek olanı gönder
-                currentScore: finalScore, // O anki skoru da ek bilgi olarak tutalım
+                // v1.99.64.123: Only write score field on actual game-over submit
+                ...(submitScore ? { score: localBest, currentScore: finalScore } : {}),
                 totalGold: Math.floor(window.totalGold || 0),
                 magnetLevel: window.magnetLevel || 0,
                 shieldLevel: window.shieldLevel || 0,

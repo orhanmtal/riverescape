@@ -3031,9 +3031,10 @@ window.triggerEliteEconomySync = function (force = false) {
         // Sadece force=true (GameOver, Reklam, Alışveriş, Background) anlarında yaz.
         if (force) {
             if (typeof Leaderboard !== 'undefined' && Leaderboard.submitProgress) {
-
-                Leaderboard.submitProgress();
-                isEconomyDirty = false; // Senkronize edildi, temizlendi
+                // v1.99.64.123: submitScore=false — sadece envanter/altin senkronize et
+                // Skor güncellemesi yalnızca gameOver anında yapılır
+                Leaderboard.submitProgress(undefined, undefined, false);
+                isEconomyDirty = false;
             }
         } else {
 
