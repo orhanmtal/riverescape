@@ -1295,7 +1295,7 @@ const levelAssets = [
     { threshold: 0, bgKey: 'spring', speed: 200, spawn: 0.52, titleEN: translations.en.springRiver, titleTR: translations.tr.springRiver, color: "#00e5ff", pKey: "ilkbahar", margin: 0.15, visuals: { hideAmbients: false, isProcedural: false, waterColor: "rgba(0, 229, 255, 0.35)", groundColor: "#2d5a27", waterEffect: "shimmer" } },
     { threshold: 3000, bgKey: 'summer', speed: 220, spawn: 0.48, titleEN: translations.en.summerRiver, titleTR: translations.tr.summerRiver, color: "#1e90ff", pKey: "yaz", margin: 0.15, visuals: { hideAmbients: false, isProcedural: false, waterColor: "rgba(30, 144, 255, 0.35)", groundColor: "#2d5a27", waterEffect: "shimmer" } },
     { threshold: 6000, bgKey: 'autumn', speed: 230, spawn: 0.45, titleEN: translations.en.autumnRiver, titleTR: translations.tr.autumnRiver, color: "#ff8c00", pKey: "sonbahar", margin: 0.15, visuals: { hideAmbients: false, isProcedural: false, waterColor: "rgba(255, 140, 0, 0.25)", groundColor: "#8b4513", waterEffect: "shimmer" } },
-    { threshold: 9000, bgKey: 'winter', speed: 220, spawn: 0.42, titleEN: translations.en.winterRiver, titleTR: translations.tr.winterRiver, color: "#add8e6", pKey: "kis", margin: 0.15, visuals: { hideAmbients: false, isProcedural: false, waterColor: "rgba(173, 216, 230, 0.45)", groundColor: "#f0f8ff", waterEffect: "shimmer" } },
+    { threshold: 9000, bgKey: 'winter', speed: 220, spawn: 0.42, titleEN: translations.en.winterRiver, titleTR: translations.tr.winterRiver, color: "#add8e6", pKey: "kis", margin: 0.15, visuals: { hideAmbients: false, isProcedural: false, waterColor: "rgba(173, 216, 230, 0.45)", groundColor: "#ffffff", waterEffect: "shimmer", frostGlow: true } },
     { threshold: 12000, bgKey: 'lava', speed: 250, spawn: 0.80, titleEN: translations.en.lavaRiver, titleTR: translations.tr.lavaRiver, color: "#ff4500", pKey: "lava", margin: 0.15, visuals: { hideAmbients: true, isProcedural: false, waterColor: "rgba(255, 69, 0, 0.4)", groundColor: "#1a0000", waterEffect: "lava" } },
     { threshold: 15000, bgKey: 'void', speed: 190, spawn: 0.90, titleEN: translations.en.voidLevel, titleTR: translations.tr.voidLevel, color: "#9b59b6", pKey: "void", margin: 0.15, visuals: { hideAmbients: true, isProcedural: true, neonBorders: true, auraColor: "#9b59b6", waterColor: "rgba(155, 89, 182, 0.2)", groundColor: "#000000", waterEffect: "neonPulse" } },
     { threshold: 18000, bgKey: 'lagoon', speed: 310, spawn: 0.50, titleEN: translations.en.l7Title, titleTR: translations.tr.l7Title, color: "#00e5ff", pKey: "ilkbahar", margin: 0.15, visuals: { hideAmbients: true, isProcedural: false, waterColor: "rgba(0, 229, 255, 0.35)", groundColor: "#2e8b57", waterEffect: "ripples" } },
@@ -2179,7 +2179,8 @@ function spawnObstacle() {
 
     // v1.99.64.96: ELITE BOSS - RED HIPPO (L1) / BLUE CROC (L2)
     const isBossSpawned = window.obstacles.some(o => o.type === 'redHippo' || o.type === 'blueCroc');
-    if (currentLevel <= 6 && !isBossSpawned) {
+    const stageNum = ((currentLevel - 1) % STAGES_PER_BIOME) + 1;
+    if (stageNum === 3 && !isBossSpawned) {
         if (Math.random() < 0.08) { 
             const obsWidth = 38 * gameScale * 1.3;
             const obsHeight = 42 * gameScale * 1.3;
@@ -2231,7 +2232,7 @@ function spawnObstacle() {
     var allowedSpecialTypes = (biomeIndex === 4 || biomeIndex === 5 || biomeIndex === 6 || biomeIndex === 7 || biomeIndex === 8) ? [] : ['rock'];
 
     if (biomeIndex === 0) {
-        allowedSpecialTypes.push('hippo', 'croc', 'vertical', 'horizontal', 'redHippo');
+        allowedSpecialTypes.push('vertical', 'horizontal'); // Spring: Only logs and rocks (rocks are default)
     } else if (biomeIndex === 1) {
         allowedSpecialTypes.push('hippo', 'croc', 'vertical', 'horizontal');
     } else if (biomeIndex === 2) {
