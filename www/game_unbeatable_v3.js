@@ -1871,13 +1871,11 @@ function updateShopUI() {
         }
 
         // BOMBA BUTONU & HUD SYNC
-        // (v1.99.64.33: Redundant badge update removed, handled by syncEliteHUD)
+        // (v1.99.64.121: Bomb is ALWAYS available for everyone)
         var bBtn = document.getElementById('bomb-action-btn');
         if (bBtn) {
-            if (hasWeapon) {
-                bBtn.style.display = 'flex';
-                bBtn.style.filter = (bombCount <= 0) ? "grayscale(100%) opacity(0.6)" : "none";
-            } else { bBtn.style.display = 'none'; }
+            bBtn.style.display = 'flex';
+            bBtn.style.filter = (bombCount <= 0) ? "grayscale(100%) opacity(0.6)" : "none";
         }
         updateArmorUI();
 
@@ -3147,8 +3145,8 @@ function syncEliteHUD() {
         }
         
         if (cachedHud.bBtn) {
-            // hasWeapon artık global bir mühürdür. Menüde de görünmesi için isPlaying şartını gevşetiyoruz.
-            cachedHud.bBtn.style.display = hasWeapon ? 'flex' : 'none';
+            // v1.99.64.121: Bomba ikonu herkes için hep açık
+            cachedHud.bBtn.style.display = 'flex';
             cachedHud.bBtn.style.filter = (currentBombs <= 0) ? "grayscale(100%) opacity(0.6)" : "none";
 
             // v1.99.64.74: BOMB ICON AUTO-RESTORE (Fixes missing SVG after ad simulation)
@@ -3932,7 +3930,7 @@ function fireBomb() {
     if (now - lastFireTime < 250) return; // 250ms Elite Cooldown
     lastFireTime = now;
 
-    if (!isPlaying || isPaused || isGameOver || !hasWeapon) return;
+    if (!isPlaying || isPaused || isGameOver) return; // v1.99.64.121: Removed !hasWeapon check
 
     if (bombCount <= 0) {
         const t = translations[currentLang];
@@ -5831,8 +5829,8 @@ if (resetYes) resetYes.addEventListener('click', () => {
     shieldLevel = 0;
     bombCount = 0;
     armorCharge = 0;
-    ownsArmorLicense = false;
-    hasWeapon = false;
+    ownsArmorLicense = true; // v1.99.64.121: Elite Loadout for all
+    hasWeapon = true; // v1.99.64.121: Elite Loadout for all
     currentLevel = 1;
     score = 0;
     lives = 3;
