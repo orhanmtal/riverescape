@@ -1713,6 +1713,12 @@ function handleArmorIndicatorClick() {
                 armorCharge += 1;
                 saveGame();
                 updateShopUI();
+                
+                // v1.99.64.120: ELITE AUTO-RESUME
+                levelUpInvuln = true;
+                setTimeout(() => { levelUpInvuln = false; }, 5000);
+                if (isPaused) togglePause();
+                
                 showToast("+1 ARMOR! 💎", true);
             });
         }
