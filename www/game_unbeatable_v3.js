@@ -868,11 +868,8 @@ function showRewardedAd(btnElem, defaultText, callback) {
             btnElem.disabled = false;
             window.isAdShowing = false;
             
-            // v1.99.64.73: AUTO-RESUME if simulation paused the game
-            if (isPaused) {
-                console.log("[Ad Sim] Resuming game...");
-                togglePause();
-            }
+            // v1.99.64.120: WEB SIMULATION - DO NOT AUTO-RESUME if in shop
+            // Remove togglePause() so the game doesn't run behind the shop UI.
 
             // Give reward directly - no game loop interference
             try { callback(); } catch(e) { console.error('[Ad Sim] Callback error:', e); }
@@ -1659,14 +1656,17 @@ if (closeShopBtn) {
             shopScreen.classList.add('hidden');
             shopScreen.style.display = 'none';
         }
-        // v1.99.19.09: Akıllı Geri Dönüş
+        // v1.99.64.120: Akıllı Geri Dönüş (Direct Resume with Protection)
         if (isPlaying) {
-            const pauseScr = document.getElementById('pause-screen');
-            if (pauseScr && isPaused) {
-                pauseScr.classList.remove('hidden');
-                pauseScr.classList.add('active');
-                pauseScr.style.display = 'flex';
-                pauseScr.style.zIndex = '10000';
+            if (isPaused && typeof togglePause === 'function') {
+                // Oyuncuya 5 saniye koruma ver ve direkt oyuna döndür (Pause ekranını atla)
+                levelUpInvuln = true;
+                setTimeout(() => { levelUpInvuln = false; }, 5000);
+                
+                // Pause ekranını gizle ve oyunu başlat
+                const pauseScr = document.getElementById('pause-screen');
+                if (pauseScr) pauseScr.classList.add('hidden');
+                togglePause();
             }
         } else {
             const menuScr = document.getElementById('start-screen');
