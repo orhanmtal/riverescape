@@ -1,5 +1,5 @@
 /**
- * RİVER ESCAPE ELİTE - v1.99.64.121 (STABLE AAB RELEASE)
+ * RİVER ESCAPE ELİTE - v1.99.64.122 (STABLE AAB RELEASE)
  * 1. NO PLACEHOLDERS - Always use premium assets or procedural generation.
  * 2. PERFORMANCE FIRST - Optimize update loops and DOM access.
  * 3. VISUAL EXCELLENCE - Use HSL colors, smooth gradients, and micro-animations.
@@ -8,10 +8,10 @@
  */
 
 // River Escape Elite - Central Version Control
-// v1.99.64.121 - Bomb Icon unlocked for all users
+// v1.99.64.122 - Relative touch engine, Wake Ellipse Fix
 window.ELITE_CONFIG = {
-    VERSION: "v1.99.64.121",
-    VERSION_CODE: "19964121",
+    VERSION: "v1.99.64.122",
+    VERSION_CODE: "19964122",
     LEVEL_MARGIN: 0.15,
     BG_KEY_SYNC: true,
     NATURAL_TILING: true,

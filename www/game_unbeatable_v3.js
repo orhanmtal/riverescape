@@ -368,8 +368,8 @@ function drawParticles() {
             ctx.fillStyle = p.color;
             ctx.beginPath();
             if (t === 'wake') {
-                // v1.99.64.81: ELITE WAKE RENDERING (Elliptical Foam)
-                ctx.ellipse(p.x, p.y, p.size * (1 + (1 - p.life)), p.size * 0.6, 0, 0, Math.PI * 2);
+                // v1.99.64.122: Fix Ellipse negative radius IndexSizeError
+                ctx.ellipse(p.x, p.y, Math.abs(p.size * (1 + (1 - p.life))), Math.abs(p.size * 0.6), 0, 0, Math.PI * 2);
             } else {
                 ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
             }
@@ -2019,26 +2019,27 @@ window.addEventListener('keyup', (e) => {
 
 var touchX = null;
 var touchY = null;
-var moveTouchId = null; // v1.99.61.81: MULTI-TOUCH TRACKING
+var touchDeltaX = 0; // v1.99.64.122: RELATIVE TOUCH ENGINE
+var touchDeltaY = 0;
+var moveTouchId = null;
 
 canvas.addEventListener('touchstart', (e) => {
     e.preventDefault();
     if (typeof initAudio === 'function') initAudio();
 
-    // v1.99.61.81: Akıllı Multi-Touch Sistemi
     for (var i = 0; i < e.changedTouches.length; i++) {
         var touch = e.changedTouches[i];
         var rect = canvas.getBoundingClientRect();
         var tx = touch.clientX - rect.left;
         var ty = touch.clientY - rect.top;
 
-        // v1.99.63.55: UNIFIED TOUCH-START (Anywhere on canvas can start movement)
         if (moveTouchId === null) {
             moveTouchId = touch.identifier;
             touchX = tx;
             touchY = ty;
+            touchDeltaX = 0;
+            touchDeltaY = 0;
 
-            // DOUBLE TAP DASH (Sadece yönlendirme parmağı için)
             var now = performance.now();
             if (window.lastTap && (now - window.lastTap) < 300) {
                 activateDash();
@@ -2054,8 +2055,17 @@ canvas.addEventListener('touchmove', (e) => {
         var touch = e.changedTouches[i];
         if (touch.id === moveTouchId || touch.identifier === moveTouchId) {
             var rect = canvas.getBoundingClientRect();
-            touchX = touch.clientX - rect.left;
-            touchY = touch.clientY - rect.top;
+            var currentTx = touch.clientX - rect.left;
+            var currentTy = touch.clientY - rect.top;
+            
+            // v1.99.64.122: Accumulate relative movement deltas
+            if (touchX !== null && touchY !== null) {
+                touchDeltaX += (currentTx - touchX);
+                touchDeltaY += (currentTy - touchY);
+            }
+            
+            touchX = currentTx;
+            touchY = currentTy;
         }
     }
 }, { passive: false });
@@ -2067,6 +2077,8 @@ canvas.addEventListener('touchend', (e) => {
             moveTouchId = null;
             touchX = null;
             touchY = null;
+            touchDeltaX = 0;
+            touchDeltaY = 0;
         }
     }
 });
@@ -2078,6 +2090,8 @@ canvas.addEventListener('touchcancel', (e) => {
             moveTouchId = null;
             touchX = null;
             touchY = null;
+            touchDeltaX = 0;
+            touchDeltaY = 0;
         }
     }
 });
@@ -3846,27 +3860,25 @@ function updatePlayer(dt) {
     if (keys.ArrowUp || keys.w) targetDy = -1;
     else if (keys.ArrowDown || keys.s) targetDy = 1;
 
-    // 2. Touch Input — v1.99.63.63: ELITE PRECISION FOLLOW ENGINE (Distance-Based)
-    if (moveTouchId !== null && touchX !== null) {
-        const playerCenterX = player.x + player.width / 2;
-        const dist = touchX - playerCenterX;
+    // 2. Touch Input — v1.99.64.122: ELITE RELATIVE TOUCH ENGINE (Delta-Based)
+    if (moveTouchId !== null && (touchDeltaX !== 0 || touchDeltaY !== 0)) {
+        // v1.99.64.122: Convert finger drag pixels directly into boat velocity
+        // 1.5 multiplier makes it feel responsive but smooth
+        let dragSensitivity = 2.0; 
         
-        // Hassasiyet Alanı: Kayıktan 80px uzaklıkta maksimum hıza ulaşır.
-        // Bu sayede dibine dokunursan yavaş (hassas), uzağa dokunursan "şak" diye gider.
-        let sensitivityZone = 80 * gameScale;
-        targetDx = dist / sensitivityZone;
+        targetDx = (touchDeltaX * dragSensitivity) / (80 * gameScale);
         
         if (targetDx > 1) targetDx = 1;
         if (targetDx < -1) targetDx = -1;
 
         // Dikey hareket (Nebula biome için)
-        const playerCenterY = player.y + player.height / 2;
-        if (touchY !== null) {
-            const dyZone = 25 * gameScale;
-            targetDy = (touchY - playerCenterY) / dyZone;
-            if (targetDy > 1) targetDy = 1;
-            if (targetDy < -1) targetDy = -1;
-        }
+        targetDy = (touchDeltaY * dragSensitivity) / (25 * gameScale);
+        if (targetDy > 1) targetDy = 1;
+        if (targetDy < -1) targetDy = -1;
+        
+        // Reset deltas after applying them to velocity target
+        touchDeltaX = 0;
+        touchDeltaY = 0;
     }
 
     // v1.99.64.82: Snappy Response & Smooth Flow for Web Keyboard & Touch
