@@ -2641,12 +2641,12 @@ function spawnObstacle() {
     var logRot = 0;
     var logRotSpeed = 0;
 
-    // v1.99.61.91: Nizamlı Düz Akış (Straight Highway Flow)
-    // Engeller artık sağa sola savrulmayacak, araba yolu gibi nizamlı ve düz gelecek.
-    logSpeedX = 0;
+    // v1.99.64.120: Doğal Nehir Akışı (Natural River Flow)
+    // Kütükler tamamen donuk durmasın ama diğerleri gibi çok savrulmasın.
+    logSpeedX = (Math.random() - 0.5) * (baseSpeed * 0.15); // Çok hafif yanal hareket
     if (biomeIndex === 0) logSpeedX = 0; // Spring
-    logRot = 0;
-    logRotSpeed = 0;
+    logRot = (Math.random() - 0.5) * 0.2; // Hafif başlangıç açısı
+    logRotSpeed = (Math.random() - 0.5) * 1.5; // Çok yavaş dönüş
 
     obstacles.push({
         type: 'vertical',
@@ -2656,9 +2656,9 @@ function spawnObstacle() {
         width: 40,
         height: 55,
         speedY: baseSpeed,
-        speedX: speedX, // v1.99.61.92 - Elite Wide River Engineular Chaos
-        angle: angle,
-        rotationSpeed: rotationSpeed
+        speedX: logSpeedX,
+        angle: logRot,
+        rotationSpeed: logRotSpeed
     });
 }
 
@@ -3393,11 +3393,8 @@ function update(dt) {
         emitParticles(pxL, pyL, pColor, 'wake', 1);
     }
 
-    // --- SONBAHAR YAPRAKLARI (AUTUMN LEAVES) v1.99.64.33 ---
-    if (bIdxUpdate === 2 && isPlaying && !isPaused && Math.random() < 0.12) {
-        const leafColor = Math.random() > 0.5 ? "rgba(255, 140, 0, 0.8)" : "rgba(218, 165, 32, 0.8)"; // Turuncu veya Altın
-        emitParticles(Math.random() * canvas.width, -20, leafColor, 'leaf', 1);
-    }
+    // --- SONBAHAR YAPRAKLARI İPTAL EDİLDİ ---
+    // User requested to remove flying leaves in autumn.
 
     // --- KAR YAĞIŞI (SNOWFALL) v1.99.33.71 ---
     if (bIdxUpdate === 3 && Math.random() < 0.1) {
