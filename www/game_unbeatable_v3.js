@@ -2019,8 +2019,10 @@ window.addEventListener('keyup', (e) => {
 
 var touchX = null;
 var touchY = null;
-var touchDeltaX = 0; // v1.99.64.122: RELATIVE TOUCH ENGINE
-var touchDeltaY = 0;
+var touchAnchorX = null;  // v1.99.64.125: Anchor-point touch engine
+var touchAnchorY = null;
+var playerAnchorX = null; // Kayigin dokundugundaki merkezi
+var playerAnchorY = null;
 var moveTouchId = null;
 
 canvas.addEventListener('touchstart', (e) => {
@@ -2037,8 +2039,11 @@ canvas.addEventListener('touchstart', (e) => {
             moveTouchId = touch.identifier;
             touchX = tx;
             touchY = ty;
-            touchDeltaX = 0;
-            touchDeltaY = 0;
+            // Cipa noktasi: parmak nereye bastu + o an kayik nerede
+            touchAnchorX = tx;
+            touchAnchorY = ty;
+            playerAnchorX = player.x + player.width / 2;
+            playerAnchorY = player.y + player.height / 2;
 
             var now = performance.now();
             if (window.lastTap && (now - window.lastTap) < 300) {
@@ -2055,17 +2060,8 @@ canvas.addEventListener('touchmove', (e) => {
         var touch = e.changedTouches[i];
         if (touch.id === moveTouchId || touch.identifier === moveTouchId) {
             var rect = canvas.getBoundingClientRect();
-            var currentTx = touch.clientX - rect.left;
-            var currentTy = touch.clientY - rect.top;
-            
-            // v1.99.64.122: Accumulate relative movement deltas
-            if (touchX !== null && touchY !== null) {
-                touchDeltaX += (currentTx - touchX);
-                touchDeltaY += (currentTy - touchY);
-            }
-            
-            touchX = currentTx;
-            touchY = currentTy;
+            touchX = touch.clientX - rect.left;
+            touchY = touch.clientY - rect.top;
         }
     }
 }, { passive: false });
@@ -2075,10 +2071,9 @@ canvas.addEventListener('touchend', (e) => {
         var touch = e.changedTouches[i];
         if (touch.identifier === moveTouchId) {
             moveTouchId = null;
-            touchX = null;
-            touchY = null;
-            touchDeltaX = 0;
-            touchDeltaY = 0;
+            touchX = null; touchY = null;
+            touchAnchorX = null; touchAnchorY = null;
+            playerAnchorX = null; playerAnchorY = null;
         }
     }
 });
@@ -2088,10 +2083,9 @@ canvas.addEventListener('touchcancel', (e) => {
         var touch = e.changedTouches[i];
         if (touch.identifier === moveTouchId) {
             moveTouchId = null;
-            touchX = null;
-            touchY = null;
-            touchDeltaX = 0;
-            touchDeltaY = 0;
+            touchX = null; touchY = null;
+            touchAnchorX = null; touchAnchorY = null;
+            playerAnchorX = null; playerAnchorY = null;
         }
     }
 });
@@ -3861,25 +3855,25 @@ function updatePlayer(dt) {
     if (keys.ArrowUp || keys.w) targetDy = -1;
     else if (keys.ArrowDown || keys.s) targetDy = 1;
 
-    // 2. Touch Input — v1.99.64.122: ELITE RELATIVE TOUCH ENGINE (Delta-Based)
-    if (moveTouchId !== null && (touchDeltaX !== 0 || touchDeltaY !== 0)) {
-        // v1.99.64.122: Convert finger drag pixels directly into boat velocity
-        // 1.5 multiplier makes it feel responsive but smooth
-        let dragSensitivity = 2.0; 
+    // 2. Touch Input — v1.99.64.125: ANCHOR POINT ENGINE
+    // Parmak cipa noktasindan ne kadar uzaklasirsa kayik o kadar hizli gider
+    // Teleport yok (mutlak koordinat kullanmiyor), hassasiyet de tam (toplam offset)
+    if (moveTouchId !== null && touchX !== null && touchAnchorX !== null) {
+        const offsetX = touchX - touchAnchorX; // Cipadan toplam X kayisi
+        const offsetY = touchY - touchAnchorY; // Cipadan toplam Y kayisi
         
-        targetDx = (touchDeltaX * dragSensitivity) / (80 * gameScale);
+        // 120px sapma = max hiz. Ekran boyutuna gore olceklendi.
+        const sensitivityX = 120 * gameScale;
+        const sensitivityY = 60 * gameScale;
         
+        targetDx = offsetX / sensitivityX;
         if (targetDx > 1) targetDx = 1;
         if (targetDx < -1) targetDx = -1;
 
-        // Dikey hareket (Nebula biome için)
-        targetDy = (touchDeltaY * dragSensitivity) / (25 * gameScale);
+        // Dikey hareket (Nebula biome icin)
+        targetDy = offsetY / sensitivityY;
         if (targetDy > 1) targetDy = 1;
         if (targetDy < -1) targetDy = -1;
-        
-        // Reset deltas after applying them to velocity target
-        touchDeltaX = 0;
-        touchDeltaY = 0;
     }
 
     // v1.99.64.82: Snappy Response & Smooth Flow for Web Keyboard & Touch
