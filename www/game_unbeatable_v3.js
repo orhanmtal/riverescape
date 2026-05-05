@@ -80,7 +80,7 @@ var lives = 3; // v98: 3 Can Sistemi
 var dashEnergy = 0;
 var isDashing = false;
 var dashTimer = 0;
-const DASH_DURATION = 10; // v1.99.64.125: 10 saniye ziplama
+const DASH_DURATION = 1.2;
 const MAX_DASH_ENERGY = 100;
 const DASH_RECHARGE_RATE = 15; // Saniyede dolan enerji
 
@@ -273,7 +273,7 @@ class Particle {
         this.targetX = targetX;
         this.targetY = targetY;
         this.size = (type === 'glitch') ? (Math.random() * 6 + 2) : (Math.random() * 4 + 2);
-        
+
         // v1.99.63.88: [ELITE BURST] Patlama yayılımını daralt ve yeni partiküller ekle
         if (type === 'glitch') {
             this.speedX = (Math.random() - 0.5) * 10;
@@ -306,7 +306,7 @@ class Particle {
 
     update(dt) {
         if (!this.active) return;
-        
+
         // v1.99.64.68: Safety Guard (NaN/Infinity Protection)
         const safeDt = Math.min(0.1, dt || 0.016);
 
@@ -402,9 +402,9 @@ function drawParticles() {
             ctx.translate(p.x, p.y);
             ctx.rotate(p.angle);
             ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
-            
+
             // v1.99.64.70: Fix - Use setTransform sparingly or reset correctly
-            ctx.setTransform(1, 0, 0, 1, 0, 0); 
+            ctx.setTransform(1, 0, 0, 1, 0, 0);
             const dpr = window.devicePixelRatio || 1;
             ctx.scale(dpr, dpr);
             const zoomPivotX = canvas.width / (2 * dpr);
@@ -486,7 +486,7 @@ class AmbientLife {
             // v1.99.64.88: HIDE SHADOWS IN SUMMER FOR CLARITY
             const bIdx = Math.floor((currentLevel - 1) / STAGES_PER_BIOME) % BIOME_COUNT;
             if (bIdx === 1) return;
-            
+
             ctx.save();
             ctx.fillStyle = "rgba(0,0,0,0.12)";
             ctx.beginPath();
@@ -680,7 +680,7 @@ function showToast(msg, isReward = false) {
 
 // --- ADMOB YÖNETİCİSİ v3 (@capacitor-community/admob — Capacitor Native API) ---
 const ADMOB_APP_ID = "ca-app-pub-7739440971804169~2645131828"; // v1.99.61.112
-const REWARDED_AD_UNIT_ID = "ca-app-pub-7739440971804169/6392805140"; 
+const REWARDED_AD_UNIT_ID = "ca-app-pub-7739440971804169/6392805140";
 const INTERSTITIAL_AD_UNIT_ID = "ca-app-pub-7739440971804169/1882426485"; // PRODUCTION INTERSTITIAL
 
 var admobInitialized = false;
@@ -732,19 +732,19 @@ async function initAdMob() {
         }
 
         // --- GLOBAL REWARD LISTENERS v3.5 (BULLETPROOF) ---
-        
+
         const executeReward = () => {
             if (pendingRewardCallback) {
                 console.log('[AdMob] 🎁 EXECUTING REWARD CALLBACK...');
                 const callback = pendingRewardCallback;
                 pendingRewardCallback = null;
                 adExecuted = false; // Reset for next ad
-                
+
                 // v1.99.64.66: Post-Ad Invincibility
                 hasShield = true; levelUpInvuln = true;
                 setTimeout(() => { hasShield = false; levelUpInvuln = false; }, 4000);
-                
-                try { callback(); } catch(e) { console.error('[AdMob] Callback fail:', e); }
+
+                try { callback(); } catch (e) { console.error('[AdMob] Callback fail:', e); }
             }
         };
 
@@ -789,7 +789,7 @@ async function initAdMob() {
         AdMob.addListener('interstitialAdDismissed', () => {
             console.log('[AdMob] Interstitial Dismissed. Resuming Game...');
             window.isAdShowing = false;
-            lastTime = performance.now(); 
+            lastTime = performance.now();
             // v1.99.61.117: Sesi Geri Getir
             if (window.audioCtx && audioCtx.state === 'suspended') {
                 audioCtx.resume();
@@ -862,17 +862,17 @@ function showRewardedAd(btnElem, defaultText, callback) {
         btnElem.disabled = true;
         btnElem.innerText = "Simulating...";
         showToast("🎬 Simülasyon Reklamı...");
-        
+
         setTimeout(() => {
             btnElem.innerHTML = defaultText;
             btnElem.disabled = false;
             window.isAdShowing = false;
-            
+
             // v1.99.64.120: WEB SIMULATION - DO NOT AUTO-RESUME if in shop
             // Remove togglePause() so the game doesn't run behind the shop UI.
 
             // Give reward directly - no game loop interference
-            try { callback(); } catch(e) { console.error('[Ad Sim] Callback error:', e); }
+            try { callback(); } catch (e) { console.error('[Ad Sim] Callback error:', e); }
         }, 1000);
         return;
     }
@@ -933,19 +933,19 @@ async function showInterstitialAd() {
     }
 
     // 1. ANINDA DONDURMA (Gecikmeyi önle)
-    window.isAdShowing = true; 
+    window.isAdShowing = true;
     if (window.audioCtx) audioCtx.suspend();
-    
+
     (async () => {
         try {
             if (!admobInitialized) await initAdMob();
-            
+
             console.log('[AdMob] Preparing Interstitial (Pre-Freeze Active)...');
             await AdMob.prepareInterstitial({
                 adId: INTERSTITIAL_AD_UNIT_ID,
                 isTesting: false
             });
-            
+
             await AdMob.showInterstitial();
         } catch (e) {
             console.error('[AdMob] Ad-Sync caught Interstitial Error:', e);
@@ -1602,7 +1602,7 @@ if (settingsOpenBtnElite) settingsOpenBtnElite.addEventListener('click', () => {
 
 const closeSettingsElite = () => {
     saveGame(); // Elite v1.99.19.09: Her zaman kaydet
-    
+
     const settingsTitle = document.getElementById('settings-title');
     settingsScreen.classList.remove('active');
     settingsScreen.classList.add('hidden');
@@ -1662,7 +1662,7 @@ if (closeShopBtn) {
                 // Oyuncuya 5 saniye koruma ver ve direkt oyuna döndür (Pause ekranını atla)
                 levelUpInvuln = true;
                 setTimeout(() => { levelUpInvuln = false; }, 5000);
-                
+
                 // Pause ekranını gizle ve oyunu başlat
                 const pauseScr = document.getElementById('pause-screen');
                 if (pauseScr) pauseScr.classList.add('hidden');
@@ -1683,7 +1683,7 @@ if (closeShopBtn) {
 }
 
 // v1.99.64.22: HTML onclick compatibility
-window.closeShop = function() {
+window.closeShop = function () {
     const btn = document.getElementById('shop-close-btn');
     if (btn) btn.click();
 };
@@ -1696,7 +1696,7 @@ if (armorIndicator) armorIndicator.addEventListener('click', handleArmorIndicato
 function handleArmorIndicatorClick() {
     if (!isPlaying || isGameOver) return;
     const t = translations[currentLang];
-    
+
     if (!isPaused && typeof togglePause === 'function') {
         togglePause();
     }
@@ -1713,12 +1713,12 @@ function handleArmorIndicatorClick() {
                 armorCharge += 1;
                 saveGame();
                 updateShopUI();
-                
+
                 // v1.99.64.120: ELITE AUTO-RESUME
                 levelUpInvuln = true;
                 setTimeout(() => { levelUpInvuln = false; }, 5000);
                 if (isPaused) togglePause();
-                
+
                 showToast("+1 ARMOR! 💎", true);
             });
         }
@@ -2193,12 +2193,12 @@ function spawnObstacle() {
     const isBossSpawned = window.obstacles.some(o => o.type === 'redHippo' || o.type === 'blueCroc');
     const stageNum = ((currentLevel - 1) % STAGES_PER_BIOME) + 1;
     if (stageNum === 3 && !isBossSpawned) {
-        if (Math.random() < 0.08) { 
+        if (Math.random() < 0.08) {
             const obsWidth = 38 * gameScale * 1.3;
             const obsHeight = 42 * gameScale * 1.3;
             const riverWidth = (canvas.width * (1 - 2 * spawnMargin)) - obsWidth;
             const randomX = (canvas.width * spawnMargin) + riverShift + (Math.random() * riverWidth);
-            
+
             // v1.99.64.98: BIOME-SPECIFIC BOSS (L1: RedHippo, L2: BlueCroc)
             const bossType = (biomeIndex === 1) ? 'blueCroc' : 'redHippo';
             const isCroc = (bossType === 'blueCroc');
@@ -2542,7 +2542,7 @@ function spawnObstacle() {
             const riverW = (riverRight - riverLeft) + 80;
             const lWidth = riverW * 0.50; // Covers 50% of the river
             const playerCenterX = player.x + (player.width / 2);
-            
+
             let lX = playerCenterX - (lWidth / 2);
             // Clamp within river bounds
             if (lX < riverLeft) lX = riverLeft;
@@ -2963,7 +2963,7 @@ function gameOver(reason = 'unknown') {
     window.resumeLives = 3;
     window.resumeLevel = 1; // v1.99.61.81: Reset progression on death
     window.totalGold = Number(window.totalGold || 0) + Number(goldCount || 0);
-    
+
     // v1.99.63.77: [ELITE HIGH SCORE PROTECTION]
     const currentBest = Number(localStorage.getItem('riverEscapeHighScore') || 0);
     if (score > currentBest) {
@@ -3082,7 +3082,7 @@ function syncEliteHUD() {
     const now = performance.now();
     if (now - lastHudSync < 100) return; // Only sync once every 100ms
     lastHudSync = now;
-    
+
     try {
         const langPack = translations[currentLang] || translations.en;
 
@@ -3141,7 +3141,7 @@ function syncEliteHUD() {
         }
 
         // v1.99.64.22: Profil ismi güncellemesi syncEliteHUD'dan kaldırıldı (Performans optimizasyonu)
-        
+
         // v1.99.64.22: AMMO & ARMOR BADGE SYNC (Ultra-Stable Sync)
         const currentBombs = Math.max(0, Math.floor(bombCount || 0));
         if (cachedHud.bBadge) {
@@ -3152,7 +3152,7 @@ function syncEliteHUD() {
                 cachedHud.bBadge.textContent = currentBombs;
             }
         }
-        
+
         if (cachedHud.bBtn) {
             // v1.99.64.121: Bomba ikonu herkes için hep açık
             cachedHud.bBtn.style.display = 'flex';
@@ -3170,9 +3170,9 @@ function syncEliteHUD() {
 
         // Zırh (Elmas) senkronu
         if (typeof updateArmorUI === 'function') updateArmorUI();
-        
-    } catch (e) { 
-        console.warn("HUD Sync Warning:", e.message); 
+
+    } catch (e) {
+        console.warn("HUD Sync Warning:", e.message);
     }
 }
 
@@ -3402,7 +3402,7 @@ function update(dt) {
         var pColor = "rgba(240, 248, 255, 0.5)"; // Soft Foam White
         if (bIdxUpdate === 4) pColor = "rgba(255, 69, 0, 0.6)"; // Lava keeps its heat
         else if (bIdxUpdate === 8) pColor = "rgba(173, 255, 47, 0.4)"; // Toxic Green
-        
+
         emitParticles(pxL, pyL, pColor, 'wake', 1);
     }
 
@@ -3497,9 +3497,9 @@ function update(dt) {
         var dyM = cy - g.y;
         var distSqM = dxM * dxM + dyM * dyM;
         var magnetRangeSq = magnetRange * magnetRange;
-        
+
         if (magnetRange > 0 && distSqM < magnetRangeSq) {
-            var distM = Math.sqrt(distSqM); 
+            var distM = Math.sqrt(distSqM);
             var pullSpeed = (powerupTimer > 0) ? 450 : 250;
             g.x += (dxM / distM) * pullSpeed * dt;
             g.y += (dyM / distM) * pullSpeed * dt;
@@ -3666,7 +3666,7 @@ function update(dt) {
             obs.speedX = dx * 0.95; // Çok hızlı takip
             obs.rotation = Math.atan2(obs.speedY || 200, dx) - Math.PI / 2;
         } else if (obs.type === 'hippo' || obs.type === 'redHippo' || obs.type === 'blueCroc') {
-            
+
             if (obs.type === 'redHippo' || obs.type === 'blueCroc') {
                 // v1.99.64.102: ELITE BOSS AI - AGGRESSIVE TRACKING & LOOK-AT
                 const bossCenterX = obs.x + obs.width / 2;
@@ -3684,9 +3684,9 @@ function update(dt) {
             if (obs.timer <= 0) {
                 if (obs.state === 'warning') {
                     obs.state = 'active';
-                    obs.timer = 2.5; 
+                    obs.timer = 2.5;
                 } else {
-                    obs.isExpired = true; 
+                    obs.isExpired = true;
                 }
             }
         }
@@ -3861,11 +3861,11 @@ function updatePlayer(dt) {
     if (moveTouchId !== null && touchX !== null && touchAnchorX !== null) {
         const offsetX = touchX - touchAnchorX; // Cipadan toplam X kayisi
         const offsetY = touchY - touchAnchorY; // Cipadan toplam Y kayisi
-        
+
         // 120px sapma = max hiz. Ekran boyutuna gore olceklendi.
         const sensitivityX = 120 * gameScale;
         const sensitivityY = 60 * gameScale;
-        
+
         targetDx = offsetX / sensitivityX;
         if (targetDx > 1) targetDx = 1;
         if (targetDx < -1) targetDx = -1;
@@ -3878,7 +3878,7 @@ function updatePlayer(dt) {
 
     // v1.99.64.82: Snappy Response & Smooth Flow for Web Keyboard & Touch
     // Klavye/Web için hızlanma ivmesini (moveLerp) %40 düşürerek ani fırlamaları engelledik.
-    const moveLerp = (targetDx === 0) ? 0.18 : 0.12; 
+    const moveLerp = (targetDx === 0) ? 0.18 : 0.12;
     player.dx += (targetDx - player.dx) * moveLerp;
     player.dy += (targetDy - player.dy) * moveLerp;
 
@@ -3890,9 +3890,9 @@ function updatePlayer(dt) {
 
     const moveDt = dt || 0.016;
     const isDZ = (typeof getDZStatus === 'function') ? getDZStatus() : false;
-    
+
     // Force consistent pixels-per-second base speed to fix "teleporting" movement
-    const baseSpeed = 450 * gameScale; 
+    const baseSpeed = 450 * gameScale;
     const finalSpeed = (isDashing ? baseSpeed * 2.5 : baseSpeed) * (isDZ ? 1.3 : 1.0);
 
     // Horizontal Movement
@@ -3955,7 +3955,7 @@ function fireBomb() {
                 showRewardedAd(btn, btn.innerHTML, () => {
                     bombCount += 10;
                     // v1.99.64.68: Remove redundant saveGame (togglePause will handle it)
-                    
+
                     levelUpInvuln = true;
                     setTimeout(() => { levelUpInvuln = false; }, 5000);
 
@@ -4006,20 +4006,20 @@ function renderBackgroundLayer(bg, scrollY, alpha = 1.0) {
     if (!bg || bg.width <= 0) return;
     ctx.save();
     ctx.globalAlpha *= alpha;
-    
+
     var H = Math.ceil(canvas.height) * 2;
     const sy = Math.floor(scrollY);
-    
+
     // v1.99.63.44: ELITE FULL-SPECTRUM MAPPING
     // We map the entire image: Left Grass (compressed), Center Water (stretched), Right Grass (compressed)
     // This restores the original colors, textures, and "soul" of the asset.
-    
+
     const sMargin = 0.35; // Legacy bank line (35%)
     const dMargin = 0.15; // Elite bank line (15%)
-    
+
     const sGrassW = bg.width * sMargin;
     const dGrassW = canvas.width * dMargin;
-    
+
     const sWaterW = bg.width * (1 - 2 * sMargin);
     const dWaterW = canvas.width * (1 - 2 * dMargin);
 
@@ -4058,18 +4058,18 @@ function drawProceduralBG(lvl, alpha = 1.0) {
     if (lvl <= 3 || lvl === 6) { // Spring, Summer, Autumn, Winter, Lagoon
         // v1.99.64.87: STRAIGHT MARGIN MODE for Summer (Inspired by Level 1 Clarity)
         const isSummer = (lvl === 1);
-        
+
         // Natural Grass/Bank texture & FLOWERS (v1.99.64.90)
         ctx.fillStyle = isSummer ? "rgba(255, 255, 255, 0.03)" : "rgba(0, 0, 0, 0.08)";
         const flowers = ["#ffeb3b", "#ff1744", "#ffffff", "#ff9100"]; // Summer Palette
-        
+
         for (var i = 0; i < 80; i++) { // Increased count for life
             var seed = (i * 791) % 1000;
             var bx = (seed * 1.5) % canvas.width;
             if (bx > rLeft && bx < rRight) continue; // Skip water
-            
+
             var by = (performance.now() / 10 + seed * 5) % canvas.height;
-            
+
             // Draw Grass/Texture
             ctx.fillStyle = isSummer ? "rgba(255, 255, 255, 0.03)" : "rgba(0, 0, 0, 0.08)";
             ctx.beginPath();
@@ -4090,7 +4090,7 @@ function drawProceduralBG(lvl, alpha = 1.0) {
         let gradL = ctx.createLinearGradient(rLeft - 30, 0, rLeft, 0);
         gradL.addColorStop(0, "rgba(0,0,0,0)"); gradL.addColorStop(1, `rgba(0,0,0,${shadowOpacity})`);
         ctx.fillStyle = gradL; ctx.fillRect(rLeft - 30, 0, 30, canvas.height);
-        
+
         let gradR = ctx.createLinearGradient(rRight, 0, rRight + 30, 0);
         gradR.addColorStop(0, `rgba(0,0,0,${shadowOpacity})`); gradR.addColorStop(1, "rgba(0,0,0,0)");
         ctx.fillStyle = gradR; ctx.fillRect(rRight, 0, 30, canvas.height);
@@ -4357,57 +4357,57 @@ function draw(dt) {
                 }
             }
             // Legacy/Grid Tileset System (Levels 1, 3, 4, 5, 6)
-                // v1.99.64.102: INDIVIDUAL ELITE ASSET (Blue Crocodile)
-                if (obs.type === 'blueCroc') {
-                    const blueTile = obsTiles['blueCroc'];
-                    if (blueTile) {
-                        ctx.save();
-                        ctx.translate(obs.x + obs.width / 2, obs.y + obs.height / 2);
-                        // Dynamic Look-At Rotation
-                        ctx.rotate(obs.angle || Math.PI);
-                        ctx.drawImage(blueTile, -obs.width / 2, -obs.height / 2, obs.width, obs.height);
-                        ctx.restore();
-                        drawSuccess = true;
-                    }
-                } else if (tile.tagName === 'CANVAS' || tile.complete) {
-                    const sw = Math.floor(tile.width / 2);
-                    const sh = Math.floor(tile.height / 2);
-                    var sx = 0, sy = 0;
-                    if (obs.type === 'rock') { sx = 0; sy = 0; }
-                    else if (obs.type === 'vertical') { sx = sw; sy = 0; }
-                    else if (obs.type === 'croc') { sx = 0; sy = sh; }
-                    else if (obs.type === 'hippo') { sx = sw; sy = sh; }
+            // v1.99.64.102: INDIVIDUAL ELITE ASSET (Blue Crocodile)
+            if (obs.type === 'blueCroc') {
+                const blueTile = obsTiles['blueCroc'];
+                if (blueTile) {
+                    ctx.save();
+                    ctx.translate(obs.x + obs.width / 2, obs.y + obs.height / 2);
+                    // Dynamic Look-At Rotation
+                    ctx.rotate(obs.angle || Math.PI);
+                    ctx.drawImage(blueTile, -obs.width / 2, -obs.height / 2, obs.width, obs.height);
+                    ctx.restore();
+                    drawSuccess = true;
+                }
+            } else if (tile.tagName === 'CANVAS' || tile.complete) {
+                const sw = Math.floor(tile.width / 2);
+                const sh = Math.floor(tile.height / 2);
+                var sx = 0, sy = 0;
+                if (obs.type === 'rock') { sx = 0; sy = 0; }
+                else if (obs.type === 'vertical') { sx = sw; sy = 0; }
+                else if (obs.type === 'croc') { sx = 0; sy = sh; }
+                else if (obs.type === 'hippo') { sx = sw; sy = sh; }
 
-                    const margin = 4;
-                    // v1.99.19.09: ONLY set drawSuccess if we actually drew a supported tileset type
-                    if (obs.type === 'rock' || obs.type === 'vertical' || obs.type === 'croc' || obs.type === 'hippo' || obs.type === 'redHippo') {
-                        ctx.save();
+                const margin = 4;
+                // v1.99.19.09: ONLY set drawSuccess if we actually drew a supported tileset type
+                if (obs.type === 'rock' || obs.type === 'vertical' || obs.type === 'croc' || obs.type === 'hippo' || obs.type === 'redHippo') {
+                    ctx.save();
+                    if (obs.type === 'redHippo') {
+                        ctx.filter = "sepia(1) saturate(100) hue-rotate(-50deg) brightness(0.8)"; // Elite Red Rage
+                        sx = sw; sy = sh; // Hippo texture offset
+                    }
+
+                    if (obs.type === 'vertical') {
+                        ctx.translate(obs.x + obs.width / 2, obs.y + obs.height / 2);
+                        ctx.rotate(Math.PI / 2 + (obs.rotation || 0));
+                        ctx.drawImage(tile, sx + margin, sy + margin, sw - margin * 2, sh - margin * 2, -obs.height / 2, -obs.width / 2, obs.height, obs.width);
+                    } else if (obs.type === 'croc') {
+                        ctx.translate(obs.x + obs.width / 2, obs.y + obs.height / 2);
+                        ctx.rotate(Math.PI);
+                        ctx.drawImage(tile, sx + margin, sy + margin, sw - margin * 2, sh - margin * 2, -obs.width / 2, -obs.height / 2, obs.width, obs.height);
+                    } else {
+                        // Hippo, RedHippo, Rock
                         if (obs.type === 'redHippo') {
                             ctx.filter = "sepia(1) saturate(100) hue-rotate(-50deg) brightness(0.8)"; // Elite Red Rage
-                            sx = sw; sy = sh; // Hippo texture offset
+                            sx = sw; sy = sh; // Hippo texture offset in grid
                         }
-                        
-                        if (obs.type === 'vertical') {
-                            ctx.translate(obs.x + obs.width / 2, obs.y + obs.height / 2);
-                            ctx.rotate(Math.PI / 2 + (obs.rotation || 0));
-                            ctx.drawImage(tile, sx + margin, sy + margin, sw - margin * 2, sh - margin * 2, -obs.height / 2, -obs.width / 2, obs.height, obs.width);
-                        } else if (obs.type === 'croc') {
-                            ctx.translate(obs.x + obs.width / 2, obs.y + obs.height / 2);
-                            ctx.rotate(Math.PI);
-                            ctx.drawImage(tile, sx + margin, sy + margin, sw - margin * 2, sh - margin * 2, -obs.width / 2, -obs.height / 2, obs.width, obs.height);
-                        } else {
-                            // Hippo, RedHippo, Rock
-                            if (obs.type === 'redHippo') {
-                                ctx.filter = "sepia(1) saturate(100) hue-rotate(-50deg) brightness(0.8)"; // Elite Red Rage
-                                sx = sw; sy = sh; // Hippo texture offset in grid
-                            }
-                            ctx.drawImage(tile, sx + margin, sy + margin, sw - margin * 2, sh - margin * 2, obs.x, obs.y, obs.width, obs.height);
-                        }
-                        ctx.restore();
-
-                        drawSuccess = true;
+                        ctx.drawImage(tile, sx + margin, sy + margin, sw - margin * 2, sh - margin * 2, obs.x, obs.y, obs.width, obs.height);
                     }
+                    ctx.restore();
+
+                    drawSuccess = true;
                 }
+            }
         }
 
         // --- FALLBACKS (If Tileset/Elite fails) ---
@@ -5792,7 +5792,7 @@ if (hardResetBtnUI) hardResetBtnUI.addEventListener('click', () => {
 // v122: Restart - Altınları kasaya aktar ve yeni oyun başla
 if (restartBtn) restartBtn.addEventListener('click', () => {
     if (typeof playUIClick === 'function') playUIClick();
-    
+
     // v1.99.63.77: [ELITE RESET] Önceki seans verilerini tamamen temizle
     window.resumeScore = 0;
     window.resumeLives = 3;
@@ -5890,7 +5890,7 @@ const adGoldBtn = document.getElementById('ad-gold-btn');
 if (adGoldBtn) {
     adGoldBtn.addEventListener('click', () => {
         showRewardedAd(adGoldBtn, translations[currentLang].adGoldBtn, () => {
-            totalGold += 50; 
+            totalGold += 50;
             triggerEliteEconomySync(true);
             saveGame();
             updateShopUI();
@@ -5952,7 +5952,7 @@ function loadGame() {
         isVibrationEnabled = (data.vib !== undefined) ? data.vib : true;
         hasWeapon = true; // v1.99.64.02: Force true regardless of save
         ownsArmorLicense = true; // v1.99.64.02: Force true regardless of save
-        
+
         // v1.99.64.67: Fix - Apply pending gifts after loading base values
         armorCharge = (data.armorCharge || 0) + (window.starterGiftsPending ? window.starterGiftsPending.armor : 0);
         bombCount = (data.bombs || 0) + (window.starterGiftsPending ? window.starterGiftsPending.bombs : 0);
