@@ -31,9 +31,6 @@ window.Leaderboard = {
             localStorage.setItem('riverEscapeName', this.playerName);
             localStorage.setItem('riverEscapeID', this.playerID);
         }
-
-        
-        
         try {
             // Firebase Başlat (Eğer SDK yüklendiyse)
             if (typeof firebase !== 'undefined') {
@@ -575,8 +572,12 @@ window.Leaderboard = {
 
     // v1.99.3.30: TÜM VERİLERİ ZORLA EŞİTLE (Cloud Backup)
     // v1.99.20.02: ELITE SYNC BRIDGE (Logic Merge)
-    async forceSync() {
-        return this.submitProgress();
+    async getTopScores() {
+        if (window.isCrazyGames && window.CrazyGames && window.CrazyGames.SDK) {
+            return []; 
+        }
+        if (!this.db) return [];
+        this.submitProgress();
     },
 
     // v1.99.3.30: BULUTTAN VERİLERİ KURTAR (Restore Assets)
@@ -734,6 +735,29 @@ window.Leaderboard = {
         } catch (e) {
             console.error("Logout failed:", e);
             location.reload();
+        }
+    },
+
+    // SKOR RAPORLA
+    async reportScore(score) {
+        // v1.99.65.10: CrazyGames Leaderboard Integration
+        if (window.isCrazyGames && window.CrazyGames && window.CrazyGames.SDK) {
+            try {
+                await window.CrazyGames.SDK.leaderboard.postScore('TopRiders', score);
+                console.log("🏆 [ELITE] Score posted to CrazyGames Leaderboard:", score);
+            } catch(e) { console.warn("CrazyGames Leaderboard post error:", e); }
+            return;
+        }
+
+        if (!this.db || !this.playerID) return;
+        
+        try {
+            await this.db.collection('leaderboard').doc(this.playerID).set({
+                score: score,
+                lastUpdate: firebase.firestore.FieldValue.serverTimestamp()
+            }, { merge: true });
+        } catch (e) {
+            console.error("Score report failed:", e);
         }
     },
 

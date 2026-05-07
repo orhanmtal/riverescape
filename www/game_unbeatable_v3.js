@@ -1489,16 +1489,20 @@ function saveGame() {
         bombs: bombCount,
         armorLicense: ownsArmorLicense,
         armorCharge: armorCharge,
-        // v1.99.19.09.9: Elite Persistence (Session Restore) 💾
         sessionScore: Math.floor(score || 0),
         sessionLives: lives || 3,
         sessionProgress: levelProgressTime || 0,
         sessionLevel: currentLevel || 1
     };
-    localStorage.setItem('riverEscapeSave', JSON.stringify(data));
+    
+    const dataStr = JSON.stringify(data);
+    localStorage.setItem('riverEscapeSave', dataStr);
 
-    // v1.99.27.05: Cloud sync removed from saveGame to prevent bomb-firing leaks.
-    // Cloud sync is now strictly forced ONLY on GameOver and Shop Transactions.
+    // v1.99.65.10: CrazyGames Cloud Save
+    if (isCrazyGames && window.CrazyGames && window.CrazyGames.SDK && window.CrazyGames.SDK.user) {
+        window.CrazyGames.SDK.user.data.setItem('riverEscapeSave', dataStr)
+            .catch(e => console.warn("🛰️ [ELITE SAVE] CrazyGames Cloud Save Error:", e));
+    }
 
     updateShopUI();
 }
@@ -6098,15 +6102,32 @@ function loadGame() {
     if (localStorage.getItem('riverEscape_FirstGiftClaimed') !== 'true') {
         window.starterGiftsPending = { bombs: 10, armor: 5 };
         localStorage.setItem('riverEscape_FirstGiftClaimed', 'true');
-        console.log("🎁 [ELITE ECONOMY] Starter Gift Queued: 10 Bombs, 5 Armor");
+        console.log("🌟 [ELITE ECONOMY] Starter Gift Queued: 10 Bombs, 5 Armor");
     }
 
     const saved = localStorage.getItem('riverEscapeSave');
     if (saved) {
-        const data = JSON.parse(saved);
+        applySaveData(saved);
+    }
+
+    // v1.99.65.10: CrazyGames Cloud Load (Async)
+    if (isCrazyGames && window.CrazyGames && window.CrazyGames.SDK && window.CrazyGames.SDK.user) {
+        window.CrazyGames.SDK.user.data.getItem('riverEscapeSave')
+            .then(cloudSaved => {
+                if (cloudSaved) {
+                    console.log("🛰️ [ELITE LOAD] Cloud Save Found. Synchronizing...");
+                    applySaveData(cloudSaved);
+                }
+            })
+            .catch(e => console.warn("🛰️ [ELITE LOAD] CrazyGames Cloud Load Error:", e));
+    }
+}
+
+function applySaveData(savedJSON) {
+    try {
+        const data = JSON.parse(savedJSON);
         totalGold = Number(data.gold || 0);
         window.totalGold = totalGold;
-        // v1.99.33.76: ID MIGRATION (ilkbahar -> spring)
         let loadedBoats = data.ownedBoats || ['spring'];
         window.ownedBoats = loadedBoats.map(id => id === 'ilkbahar' ? 'spring' : id);
         if (!window.ownedBoats.includes('spring')) window.ownedBoats.push('spring');
@@ -6115,27 +6136,26 @@ function loadGame() {
         isMusicVolume = (data.musicVol !== undefined) ? data.musicVol : 1.0;
         isSFXVolume = (data.sfxVol !== undefined) ? data.sfxVol : 1.0;
         isVibrationEnabled = (data.vib !== undefined) ? data.vib : true;
-        hasWeapon = true; // v1.99.64.02: Force true regardless of save
-        ownsArmorLicense = true; // v1.99.64.02: Force true regardless of save
+        hasWeapon = true;
+        ownsArmorLicense = true;
 
-        // v1.99.64.67: Fix - Apply pending gifts after loading base values
         armorCharge = (data.armorCharge || 0) + (window.starterGiftsPending ? window.starterGiftsPending.armor : 0);
         bombCount = (data.bombs || 0) + (window.starterGiftsPending ? window.starterGiftsPending.bombs : 0);
-        delete window.starterGiftsPending;
+        
+        if (window.starterGiftsPending) {
+            delete window.starterGiftsPending;
+            saveGame(); 
+        }
 
-        saveGame(); // Save corrected values immediately
-
-        // v1.99.19.09.9: Devam Etme Bilgileri
         window.resumeScore = data.sessionScore || 0;
         window.resumeLives = data.sessionLives || 3;
         window.resumeLevel = data.sessionLevel || 1;
         window.resumeProgressTime = data.sessionProgress || 0;
 
-        // UI'yı güncelle
+        // UI Sync
         const mSli = document.getElementById('music-slider');
         const sSli = document.getElementById('sfx-slider');
         const vTog = document.getElementById('vibration-toggle');
-
         if (mSli) { mSli.value = isMusicVolume * 100; document.getElementById('music-vol-txt').innerText = (isMusicVolume * 100) + '%'; }
         if (sSli) { sSli.value = isSFXVolume * 100; document.getElementById('sfx-vol-txt').innerText = (isSFXVolume * 100) + '%'; }
         if (vTog) vTog.checked = isVibrationEnabled;
