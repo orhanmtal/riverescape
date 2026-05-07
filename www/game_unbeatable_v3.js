@@ -5,8 +5,12 @@
  * 6. CLOUD SEAL v66
  */
 
-const VERSION = "v1.99.64.66";
-const VERSION_CODE = 19964660;
+const VERSION = "v1.99.65.10";
+const VERSION_CODE = 1996510;
+
+// Elite Platform Detect
+const isAndroid = window.isAndroid;
+const isCrazyGames = window.isCrazyGames;
 
 // --- v1.99.36.80: ELITE GLOBAL CONSTANTS (Locked & Sealed) ---
 const STAGES_PER_BIOME = 3;
@@ -872,6 +876,20 @@ async function preloadRewardedAd() {
     }
 }
 
+// v1.99.65.00: HYBRID AD & GAMEPLAY MANAGER
+const EliteAdManager = {
+    gameplayStart: function() {
+        if (isCrazyGames && window.CrazyGames && window.CrazyGames.SDK) {
+            try { window.CrazyGames.SDK.game.gameplayStart(); } catch(e){}
+        }
+    },
+    gameplayStop: function() {
+        if (isCrazyGames && window.CrazyGames && window.CrazyGames.SDK) {
+            try { window.CrazyGames.SDK.game.gameplayStop(); } catch(e){}
+        }
+    }
+};
+
 // v1.99.64.72: ELITE AD ENGINE - Clean separation of Web simulation vs real AdMob
 function showRewardedAd(btnElem, defaultText, callback) {
     const t = translations[currentLang];
@@ -880,6 +898,30 @@ function showRewardedAd(btnElem, defaultText, callback) {
     if (!navigator.onLine) {
         showToast(t.adLoadFail);
         return;
+    }
+
+    // CRAZYGAMES PATH
+    if (isCrazyGames) {
+        if (window.CrazyGames && window.CrazyGames.SDK) {
+            window.CrazyGames.SDK.ad.requestAd('rewarded', {
+                adStarted: () => {
+                    if (window.audioCtx) window.audioCtx.suspend();
+                    EliteAdManager.gameplayStop();
+                },
+                adFinished: () => {
+                    if (window.audioCtx) window.audioCtx.resume();
+                    EliteAdManager.gameplayStart();
+                    callback();
+                },
+                adError: (error) => {
+                    console.error("CrazyGames Reward Error:", error);
+                    if (window.audioCtx) window.audioCtx.resume();
+                    EliteAdManager.gameplayStart();
+                    callback(); // Fallback reward for better UX in web
+                }
+            });
+            return;
+        }
     }
 
     // WEB SIMULATION PATH - No togglePause, no game state changes, just give reward
@@ -949,6 +991,26 @@ function showRewardedAd(btnElem, defaultText, callback) {
 }
 
 async function showInterstitialAd() {
+    if (isCrazyGames) {
+        if (window.CrazyGames && window.CrazyGames.SDK) {
+            window.CrazyGames.SDK.ad.requestAd('midgame', {
+                adStarted: () => {
+                    if (window.audioCtx) window.audioCtx.suspend();
+                    EliteAdManager.gameplayStop();
+                },
+                adFinished: () => {
+                    if (window.audioCtx) window.audioCtx.resume();
+                    EliteAdManager.gameplayStart();
+                },
+                adError: (error) => {
+                    if (window.audioCtx) window.audioCtx.resume();
+                    EliteAdManager.gameplayStart();
+                }
+            });
+            return;
+        }
+    }
+
     // v1.99.63.57: ELITE AD-SYNC ENGINE (Immediate Freeze)
     // Reklam hazırlanırken (loading) oyunun arkada devam etmesini engellemek için anında donduruyoruz.
     const AdMob = getCapacitorAdMob();
@@ -1283,25 +1345,34 @@ function syncPlayerDimensions() {
 
 // v1.99.61.106: ELITE RESPONSIVE ENGINE (Direct CSS Pixel Mapping)
 function resizeCanvas() {
-    const baseWidth = window.innerWidth > 600 ? 600 : window.innerWidth;
+    // v1.99.65.00: CrazyGames Responsive Fix
+    const isWeb = !isAndroid || isCrazyGames;
+    let baseWidth = window.innerWidth;
+    let baseHeight = window.innerHeight;
+
+    if (isWeb) {
+        // Force a nice portrait aspect ratio on web if screen is too wide
+        const targetAspect = 9/16;
+        if (baseWidth / baseHeight > targetAspect) {
+            baseWidth = baseHeight * targetAspect;
+        }
+    } else {
+        baseWidth = window.innerWidth > 600 ? 600 : window.innerWidth;
+    }
 
     // v1.99.61.106: Direct CSS pixel mapping (no DPR transform)
-    // This ensures canvas.width/height === CSS dimensions throughout the engine
-    gameScale = 1.0;
+    gameScale = baseWidth / 360; // Normalize scale based on standard width
 
     canvas.width = baseWidth;
-    canvas.height = window.innerHeight;
+    canvas.height = baseHeight;
 
-    // CSS layout size
     canvas.style.width = baseWidth + 'px';
-    canvas.style.height = window.innerHeight + 'px';
+    canvas.style.height = baseHeight + 'px';
 
-    // Update player dimensions and POSITION
     syncPlayerDimensions();
 
     if (player && !isPlaying) {
         player.x = (baseWidth / 2) - (player.width / 2);
-        // v1.99.61.106: Bottom-anchored positioning (85% of canvas)
         player.y = canvas.height * 0.90 - player.height;
     }
 }
@@ -1385,12 +1456,19 @@ var currentLAsset = currentAsset;
 
 var totalGold = 0;
 window.totalGold = 0;
-var currentVersion = "v1.99.64.66"; // ELITE ECONOMY REVOLUTION
+var currentVersion = "v1.99.65.00"; // CRAZYGAMES HYBRID REVOLUTION
 
 var magnetLevel = 0;
 var shieldLevel = 0;
 var hasWeapon = true; // v1.99.64.02: ALWAYS ENABLED
 var bombCount = 0;
+
+// v1.99.65.00: CrazyGames Starter Gift
+if (isCrazyGames && !localStorage.getItem('cg_starter_gift_v1')) {
+    bombCount = 10;
+    localStorage.setItem('cg_starter_gift_v1', 'true');
+    console.log("🎁 [ELITE] 10 Bombs gift granted for CrazyGames player!");
+}
 var powerupTimer = 0;
 var hasShield = false;
 var lastShotTime = 0;
@@ -2806,6 +2884,11 @@ function togglePause() {
 
     const t = translations[currentLang];
     if (isPaused) {
+        // v1.99.65.00: CrazyGames Gameplay Stop Hook
+        if (typeof EliteAdManager !== 'undefined' && EliteAdManager.gameplayStop) {
+            EliteAdManager.gameplayStop();
+        }
+
         if (pauseScreen) {
             pauseScreen.classList.remove('hidden');
             pauseScreen.classList.add('active');
@@ -2820,12 +2903,23 @@ function togglePause() {
             pauseScreen.style.display = 'none';
         }
         if (pauseBtn) pauseBtn.innerText = "⏸";
+        
+        // v1.99.65.00: CrazyGames Gameplay Start Hook
+        if (typeof EliteAdManager !== 'undefined' && EliteAdManager.gameplayStart) {
+            EliteAdManager.gameplayStart();
+        }
+
         lastTime = performance.now();
         saveGame();
         if (typeof triggerEliteEconomySync === 'function') triggerEliteEconomySync(true); // v1.99.64.22: Resume Sync Seal
     }
 }
 function startGame() {
+    // v1.99.65.00: CrazyGames Gameplay Start Hook
+    if (typeof EliteAdManager !== 'undefined' && EliteAdManager.gameplayStart) {
+        EliteAdManager.gameplayStart();
+    }
+
     isPlaying = true;
     isPaused = false;
 
@@ -2962,6 +3056,11 @@ if (lbCloseBtn) lbCloseBtn.addEventListener('click', () => {
 
 function gameOver(reason = 'unknown') {
     if (isGameOver) return;
+
+    // v1.99.65.00: CrazyGames Gameplay Stop Hook
+    if (typeof EliteAdManager !== 'undefined' && EliteAdManager.gameplayStop) {
+        EliteAdManager.gameplayStop();
+    }
 
     lives--;
 
@@ -5655,6 +5754,12 @@ function goToMainMenu() {
     isPaused = false;
     isPlaying = false;
     isGameOver = false;
+
+    // v1.99.65.00: CrazyGames Gameplay Stop Hook
+    if (typeof EliteAdManager !== 'undefined' && EliteAdManager.gameplayStop) {
+        EliteAdManager.gameplayStop();
+    }
+
     if (gameLoopRequestId) cancelAnimationFrame(gameLoopRequestId);
     if (typeof stopAllAudio === 'function') stopAllAudio();
 

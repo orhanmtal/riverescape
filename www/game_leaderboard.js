@@ -1,4 +1,4 @@
-﻿/**
+/**
  * RİVER ESCAPE ELİTE - v1.99.40.01 (CLOUD SYNC)
  * Firebase Firestore Global Sıralama ve Profil Senkronizasyon Sistemi
  * v1.99.40.01
@@ -23,6 +23,15 @@ window.Leaderboard = {
     playerFlag: "🌍",
 
     init() {
+        // v1.99.65.00: CrazyGames Auth Bypass
+        if (window.isCrazyGames) {
+            console.log("🎮 [ELITE AUTH] CrazyGames Bypass Active.");
+            this.playerID = this.playerID || "cg_" + Math.random().toString(36).substr(2, 9);
+            this.playerName = this.playerName || "GUEST PLAYER";
+            localStorage.setItem('riverEscapeName', this.playerName);
+            localStorage.setItem('riverEscapeID', this.playerID);
+        }
+
         
         
         try {
@@ -152,6 +161,14 @@ window.Leaderboard = {
                     }
                     if (securityLoginBtn) securityLoginBtn.style.display = 'none';
                 } else if (!isLoggedIn) {
+                    // v1.99.65.00: CrazyGames Security Bypass
+                    if (window.isCrazyGames) {
+                        securityOverlay.style.display = 'none';
+                        securityOverlay.style.visibility = 'hidden';
+                        securityOverlay.style.opacity = '0';
+                        return;
+                    }
+
                     securityOverlay.style.display = 'flex';
                     securityOverlay.style.visibility = 'visible';
                     securityOverlay.style.opacity = '1';

@@ -66,6 +66,20 @@ const GameStore = {
 
     // Satın Alma İşlemini Başlat
     buy(productId) {
+        // v1.99.65.00: CrazyGames Ad-based Purchase Bypass
+        if (window.isCrazyGames) {
+            console.log("🎮 [STORE] CrazyGames Ad-Purchase Triggered for:", productId);
+            if (typeof showRewardedAd === 'function') {
+                // Pass a dummy element since it's a card click
+                showRewardedAd({ disabled: false, innerText: "" }, "Ad", () => {
+                    this.handleFinalizePurchase(productId);
+                });
+            } else {
+                this.handleFinalizePurchase(productId);
+            }
+            return;
+        }
+
         if (!window.CdvPurchase) {
             // v1.99.61.82: Silence error in simulation/browser mode
             const isSim = window.location.protocol === 'file:' || window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost';
@@ -153,6 +167,9 @@ const GameStore = {
 
     // v1.99.61.100: ELITE CURRENCY LOCALIZER
     getLocalizedPrice(productId) {
+        // v1.99.65.00: CrazyGames Ad Label
+        if (window.isCrazyGames) return "AD (FREE)";
+
         const p = this.PRODUCTS.find(item => item.id === productId);
         if (!p) return "";
         
