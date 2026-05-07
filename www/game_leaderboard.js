@@ -514,6 +514,15 @@ window.Leaderboard = {
 
     // En İyi 10 Oyuncuyu Firebase'den Çek
     async getGlobalRankings(callback) {
+        // v1.99.65.10: CrazyGames Leaderboard Sync Bypass
+        if (window.isCrazyGames && window.CrazyGames && window.CrazyGames.SDK) {
+            console.log("📊 [ELITE] CrazyGames Mode: Silencing Firebase Rankings.");
+            const localHS = parseInt(localStorage.getItem('riverEscapeHighScore')) || 0;
+            // Return empty list but keep the player's own local score for the "Your Score" section
+            callback([], { rank: '-', name: this.playerName, score: localHS, flag: this.playerFlag });
+            return;
+        }
+
         if (!navigator.onLine || !this.db) {
             console.warn("⚠️ [LEADERBOARD] Cannot fetch rankings: Offline or No DB.");
             const localHS = parseInt(localStorage.getItem('riverEscapeHighScore')) || 0;

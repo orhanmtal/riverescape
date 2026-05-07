@@ -1369,6 +1369,16 @@ function resizeCanvas() {
     canvas.style.width = baseWidth + 'px';
     canvas.style.height = baseHeight + 'px';
 
+    // v1.99.65.10: [ELITE LAYOUT] Sync container with canvas to anchor UI elements
+    const container = document.getElementById('game-container');
+    if (container) {
+        container.style.width = baseWidth + 'px';
+        container.style.height = baseHeight + 'px';
+        container.style.position = 'relative';
+        container.style.margin = '0 auto';
+        container.style.overflow = 'hidden';
+    }
+
     syncPlayerDimensions();
 
     if (player && !isPlaying) {
