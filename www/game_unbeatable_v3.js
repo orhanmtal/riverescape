@@ -648,6 +648,31 @@ function updateSpinButtonText() {
 
 document.addEventListener('DOMContentLoaded', initLanguage);
 
+// v1.99.64.126: ELITE ADMOB PROACTIVE BOOT
+// AdMob, kullanıcı butona basmadan önce başlatılıyor (lazy yerine eager init)
+// Bu sayede ilk reklam gösteriminde gecikme yaşanmaz.
+function bootAdMob() {
+    // Capacitor plugin hazır mı kontrol et
+    if (!getCapacitorAdMob()) {
+        console.log('[AdMob Boot] Capacitor AdMob plugin henüz hazır değil, 1000ms sonra tekrar denenecek.');
+        setTimeout(bootAdMob, 1000);
+        return;
+    }
+    initAdMob().then(() => {
+        console.log('[AdMob Boot] ✅ Proaktif başlatma tamamlandı.');
+    }).catch(e => {
+        console.warn('[AdMob Boot] Başlatma hatası:', e);
+    });
+}
+
+// Cordova/Capacitor ile deviceready sonrası başlat
+document.addEventListener('deviceready', bootAdMob, false);
+// Fallback: Eğer deviceready gelmezse (web veya bazı Capacitor versiyonları),
+// DOMContentLoaded + 1 saniyelik gecikme ile başlat
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(bootAdMob, 1000);
+});
+
 
 
 function showToast(msg, isReward = false) {
@@ -1212,11 +1237,11 @@ function giveReward() {
 }
 
 var gameScale = 1;
-// v1.99.63.55: PERFORMANCE — saveGame Throttle
+// v1.99.64.127: PERFORMANCE — saveGame Throttle (5 sn — önceden 3 sn)
 // Her altın toplamada localStorage'a yazmak freeze'e neden olur.
-// 3 saniyede bir otomatik kaydeder, kritik anlarda (level up, game over) zorla kaydeder.
+// 5 saniyede bir otomatik kaydeder, kritik anlarda (level up, game over) zorla kaydeder.
 var _saveThrottleTimer = 0;
-var _saveThrottleInterval = 3.0; // saniye
+var _saveThrottleInterval = 5.0; // v1.99.64.127: 3→5 sn (localStorage spike azaltma)
 var _pendingSave = false;
 function throttledSave(force = false) {
     if (force) { saveGame(); _saveThrottleTimer = 0; _pendingSave = false; return; }
@@ -1462,6 +1487,9 @@ function openShop() {
         sScr.style.zIndex = '30000';
         sScr.style.opacity = '1';
 
+        // v1.99.64.127: PERF — overlay flag set
+        _isOverlayOpenFlag = true;
+
         // v1.99.27.11: ELITE SCROLL RESET (Fix for "Starts at River Cannon" bug)
         const sArea = sScr.querySelector('.shop-scroll-area');
         if (sArea) {
@@ -1656,6 +1684,9 @@ if (closeShopBtn) {
             shopScreen.classList.add('hidden');
             shopScreen.style.display = 'none';
         }
+        // v1.99.64.127: PERF — overlay flag clear
+        _isOverlayOpenFlag = false;
+
         // v1.99.64.120: Akıllı Geri Dönüş (Direct Resume with Protection)
         if (isPlaying) {
             if (isPaused && typeof togglePause === 'function') {
@@ -4344,8 +4375,19 @@ function draw(dt) {
                         // Hippo, RedHippo, Rock
                         ctx.save();
                         if (obs.type === 'redHippo') {
-                            ctx.filter = "sepia(1) saturate(100) hue-rotate(-50deg) brightness(0.8)"; // Elite Red Rage
                             img = tile['hippo'] || obsTiles['hippo']; // Use hippo texture
+                            if (img && (img.tagName === 'CANVAS' || img.complete)) {
+                                // v1.99.64.127: PERF - Cache filtered image to avoid heavy GPU filter
+                                if (!renderCache.redHippoInd) {
+                                    const oc = document.createElement('canvas');
+                                    oc.width = img.width; oc.height = img.height;
+                                    const oCtx = oc.getContext('2d');
+                                    oCtx.filter = "sepia(1) saturate(100) hue-rotate(-50deg) brightness(0.8)";
+                                    oCtx.drawImage(img, 0, 0);
+                                    renderCache.redHippoInd = oc;
+                                }
+                                img = renderCache.redHippoInd;
+                            }
                         }
                         if (img && (img.tagName === 'CANVAS' || img.complete)) {
                             ctx.translate(obs.x + obs.width / 2, obs.y + obs.height / 2);
@@ -4383,7 +4425,6 @@ function draw(dt) {
                 if (obs.type === 'rock' || obs.type === 'vertical' || obs.type === 'croc' || obs.type === 'hippo' || obs.type === 'redHippo') {
                     ctx.save();
                     if (obs.type === 'redHippo') {
-                        ctx.filter = "sepia(1) saturate(100) hue-rotate(-50deg) brightness(0.8)"; // Elite Red Rage
                         sx = sw; sy = sh; // Hippo texture offset
                     }
 
@@ -4397,11 +4438,26 @@ function draw(dt) {
                         ctx.drawImage(tile, sx + margin, sy + margin, sw - margin * 2, sh - margin * 2, -obs.width / 2, -obs.height / 2, obs.width, obs.height);
                     } else {
                         // Hippo, RedHippo, Rock
+                        let tImg = tile;
+                        let tSx = sx + margin;
+                        let tSy = sy + margin;
+                        let tSw = sw - margin * 2;
+                        let tSh = sh - margin * 2;
+                        
                         if (obs.type === 'redHippo') {
-                            ctx.filter = "sepia(1) saturate(100) hue-rotate(-50deg) brightness(0.8)"; // Elite Red Rage
-                            sx = sw; sy = sh; // Hippo texture offset in grid
+                            // v1.99.64.127: PERF - Cache tileset filtered redHippo
+                            if (!renderCache.redHippoTile) {
+                                const oc = document.createElement('canvas');
+                                oc.width = tSw; oc.height = tSh;
+                                const oCtx = oc.getContext('2d');
+                                oCtx.filter = "sepia(1) saturate(100) hue-rotate(-50deg) brightness(0.8)";
+                                oCtx.drawImage(tile, tSx, tSy, tSw, tSh, 0, 0, tSw, tSh);
+                                renderCache.redHippoTile = oc;
+                            }
+                            tImg = renderCache.redHippoTile;
+                            tSx = 0; tSy = 0;
                         }
-                        ctx.drawImage(tile, sx + margin, sy + margin, sw - margin * 2, sh - margin * 2, obs.x, obs.y, obs.width, obs.height);
+                        ctx.drawImage(tImg, tSx, tSy, tSw, tSh, obs.x, obs.y, obs.width, obs.height);
                     }
                     ctx.restore();
 
@@ -4454,42 +4510,40 @@ function draw(dt) {
                 ctx.rotate(obs.rotation * Math.PI / 180);
 
                 // 1. Ana Girdap (Turuncu-Altın Gradyan) - v1.99.61.81 CACHED
-                if (!renderCache.leafTornado || renderCache.lastCanvasWidth !== canvas.width) {
+                // v1.99.64.127: PERF - key değişince yeniden oluştur, aksi takdirde cache kullan
+                const tornadoCacheKey = Math.round(obs.width);
+                if (!renderCache.leafTornado || renderCache.leafTornadoKey !== tornadoCacheKey) {
                     var grad = ctx.createRadialGradient(0, 0, 5, 0, 0, obs.width / 2);
-                    grad.addColorStop(0, "rgba(255, 109, 0, 0.45)"); // Deep Orange
+                    grad.addColorStop(0, "rgba(255, 109, 0, 0.45)");
                     grad.addColorStop(1, "transparent");
                     renderCache.leafTornado = grad;
+                    renderCache.leafTornadoKey = tornadoCacheKey;
                 }
                 ctx.fillStyle = renderCache.leafTornado;
                 ctx.beginPath();
                 ctx.arc(0, 0, obs.width / 2, 0, Math.PI * 2);
                 ctx.fill();
 
-                // 2. Spiral Rüzgar Çizgileri
-                ctx.strokeStyle = "rgba(255, 215, 0, 0.6)"; // Gold
+                // 2. Spiral Rüzgar Çizgileri (v1.99.64.127: 4→2 loop, görsel etki aynı)
+                ctx.strokeStyle = "rgba(255, 215, 0, 0.6)";
                 ctx.lineWidth = 2;
-                for (var j = 0; j < 4; j++) {
+                for (var j = 0; j < 2; j++) {
                     ctx.beginPath();
-                    ctx.arc(0, 0, (obs.width / 2.2) * (1 - j * 0.2), 0, Math.PI * 1.5);
+                    ctx.arc(0, 0, (obs.width / 2.2) * (1 - j * 0.35), 0, Math.PI * 1.5);
                     ctx.stroke();
                 }
 
-                // 3. Uçuşan Yaprak Partikülleri (Procedural)
-                ctx.fillStyle = "#ff6d00"; // Autumn Orange
-                for (var k = 0; k < 8; k++) {
-                    var angle = (performance.now() / 150 + k * 45) * Math.PI / 180;
-                    var r = (obs.width / 3) + Math.sin(performance.now() / 200 + k) * 5;
+                // 3. Uçuşan Yaprak Partikülleri (v1.99.64.127: PERF 8→4 parçacık)
+                // save/restore yerine tek seferde translate+rotate çizim
+                const _now = performance.now();
+                ctx.fillStyle = "#ff6d00";
+                for (var k = 0; k < 4; k++) {
+                    var angle = (_now / 150 + k * 90) * Math.PI / 180;
+                    var r = (obs.width / 3) + Math.sin(_now / 200 + k) * 5;
                     var lx = Math.cos(angle) * r;
                     var ly = Math.sin(angle) * r;
-
-                    ctx.save();
-                    ctx.translate(lx, ly);
-                    ctx.rotate(angle + Math.PI / 4);
-                    // Küçük yaprak şekli
-                    ctx.beginPath();
-                    ctx.ellipse(0, 0, 4, 7, 0, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.restore();
+                    // Basit dikdörtgen yaprak — ellipse() yerine fillRect (2-3x hızlı)
+                    ctx.fillRect(lx - 3, ly - 5, 6, 10);
                 }
 
                 ctx.restore();
@@ -5450,16 +5504,23 @@ function drawProceduralWater(dt, overrideAsset = null) {
             ctx.fillRect(gx, gy, 2, 2);
         }
     } else if (effect === "lava") {
+        // v1.99.64.127: PERF - lava gradient frame cache (createLinearGradient çok pahalı)
         ctx.globalAlpha = 0.35;
-        for (var i = 0; i < 6; i++) {
-            var ly = (performance.now() / 8 + i * 150) % canvas.height;
-            var sizzle = Math.sin(performance.now() / 200 + i) * 15;
-            var grad = ctx.createLinearGradient(rLeft, ly, rRight, ly);
-            grad.addColorStop(0, "rgba(255, 69, 0, 0)");
-            grad.addColorStop(0.5, "rgba(255, 140, 0, 0.6)");
-            grad.addColorStop(1, "rgba(255, 69, 0, 0)");
-            ctx.fillStyle = grad;
-            ctx.fillRect(rLeft + sizzle, ly, rRight - rLeft, 25);
+        const _lavaNow = performance.now();
+        if (!renderCache.lavaGrad || renderCache.lavaGradRLeft !== rLeft || renderCache.lavaGradRRight !== rRight) {
+            var _lg = ctx.createLinearGradient(rLeft, 0, rRight, 0);
+            _lg.addColorStop(0, "rgba(255, 69, 0, 0)");
+            _lg.addColorStop(0.5, "rgba(255, 140, 0, 0.6)");
+            _lg.addColorStop(1, "rgba(255, 69, 0, 0)");
+            renderCache.lavaGrad = _lg;
+            renderCache.lavaGradRLeft = rLeft;
+            renderCache.lavaGradRRight = rRight;
+        }
+        ctx.fillStyle = renderCache.lavaGrad;
+        // v1.99.64.127: 6→3 stripe (görsel etki korundu)
+        for (var i = 0; i < 3; i++) {
+            var ly = (_lavaNow / 10 + i * (canvas.height / 3)) % canvas.height;
+            ctx.fillRect(rLeft, ly, rWidth, 25);
         }
     } else if (effect === "neonPulse") {
         // Subtle neon glow pulse on river edges only
@@ -5499,17 +5560,16 @@ function drawProceduralWater(dt, overrideAsset = null) {
     ctx.restore();
 }
 
-function gameLoop(timestamp) {
-    // v1.96.6.1 FIX: Menüdeyken de döngünün çalışmasına izin ver (Sarsıntı ve arka plan akışı için)
-    const isOverlayOpen =
-        document.getElementById('shop-screen').classList.contains('active') ||
-        document.getElementById('spin-screen').classList.contains('active') ||
-        document.getElementById('settings-screen').classList.contains('active');
+// v1.99.64.127: PERF — Overlay durumu her frame DOM sorgusu yerine event-driven flag
+var _isOverlayOpenFlag = false;
 
-    if (!isPlaying && !isGameOver && !startScreen.classList.contains('active') && !isOverlayOpen) return;
+function gameLoop(timestamp) {
+    // v1.99.64.127: PERF — DOM sorgusu kaldırıldı, flag kullanılıyor
+    if (!isPlaying && !isGameOver && !startScreen.classList.contains('active') && !_isOverlayOpenFlag) return;
 
     var dt = (timestamp - lastTime) / 1000;
-    if (dt > 0.05) dt = 0.05; // v1.99.63.55: PERF — 0.1'den 0.05'e düşürüldü (büyük spike'lar freeze simüle ederdi)
+    // v1.99.64.127: PERF — dt cap 0.05→0.033 (30fps minimum guarantee, spike azaltma)
+    if (dt > 0.033) dt = 0.033;
     lastTime = timestamp;
     tickSaveThrottle(dt); // v1.99.63.55: PERF — Throttled save tick
 
