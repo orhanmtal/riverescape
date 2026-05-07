@@ -6175,7 +6175,7 @@ function applySaveData(savedJSON) {
 
         // v1.99.33.74: Final UI Sync to reflect loaded gold
         triggerEliteEconomySync(true);
-    }
+    } catch(e) { console.error("[ELITE] applySaveData error:", e); }
 }
 
 
