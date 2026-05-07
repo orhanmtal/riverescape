@@ -514,12 +514,49 @@ window.Leaderboard = {
 
     // En İyi 10 Oyuncuyu Firebase'den Çek
     async getGlobalRankings(callback) {
-        // v1.99.65.10: CrazyGames Leaderboard Sync Bypass
-        if (window.isCrazyGames && window.CrazyGames && window.CrazyGames.SDK) {
-            console.log("📊 [ELITE] CrazyGames Mode: Silencing Firebase Rankings.");
+        // v1.99.65.10: CrazyGames SDK Leaderboard Implementation
+        const isCG = window.isCrazyGames || (window.CrazyGames && window.CrazyGames.SDK);
+        
+        if (isCG) {
+            console.log("📊 [ELITE] Routing to CrazyGames Leaderboard SDK...");
+            if (window.CrazyGames && window.CrazyGames.SDK && window.CrazyGames.SDK.leaderboard) {
+                try {
+                    window.CrazyGames.SDK.leaderboard.getScores({
+                        leaderboardName: 'Global',
+                        order: 'desc',
+                        limit: 10
+                    }, (err, response) => {
+                        if (err) {
+                            console.error("❌ [ELITE] CG Leaderboard Fetch Error:", err);
+                            callback([], { rank: '-', name: this.playerName, score: 0, flag: '🏁' });
+                            return;
+                        }
+                        
+                        const scores = response.items || [];
+                        const rankings = scores.map((s, idx) => ({
+                            rank: idx + 1,
+                            name: (s.user.username || 'Guest').toUpperCase(),
+                            score: s.score,
+                            flag: '🏁',
+                            id: s.user.userId
+                        }));
+                        
+                        // User's own rank
+                        const myRank = rankings.find(r => r.name === this.playerName.toUpperCase()) || { 
+                            rank: '-', name: this.playerName, score: parseInt(localStorage.getItem('riverEscapeHighScore')) || 0, flag: '🏁' 
+                        };
+                        
+                        callback(rankings, myRank);
+                    });
+                    return; // Prevent Firebase fallback
+                } catch (sdkErr) {
+                    console.warn("⚠️ [ELITE] CG SDK Leaderboard fail:", sdkErr);
+                }
+            }
+            
+            // Fallback for CG environment if SDK not ready
             const localHS = parseInt(localStorage.getItem('riverEscapeHighScore')) || 0;
-            // Return empty list but keep the player's own local score for the "Your Score" section
-            callback([], { rank: '-', name: this.playerName, score: localHS, flag: this.playerFlag });
+            callback([], { rank: '-', name: this.playerName, score: localHS, flag: '🏁' });
             return;
         }
 
