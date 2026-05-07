@@ -1,5 +1,5 @@
 /**
- * RİVER ESCAPE ELİTE - v1.99.64.127 (PERFORMANCE OVERHAUL)
+ * RİVER ESCAPE ELİTE - v1.99.65.00 (MAJOR UPDATE)
  * 1. NO PLACEHOLDERS - Always use premium assets or procedural generation.
  * 2. PERFORMANCE FIRST - Optimize update loops and DOM access.
  * 3. VISUAL EXCELLENCE - Use HSL colors, smooth gradients, and micro-animations.
@@ -8,10 +8,10 @@
  */
 
 // River Escape Elite - Central Version Control
-// v1.99.64.127 - Full Performance Overhaul (No Stutter, No Freeze)
+// v1.99.65.00 - Elite Major Update
 window.ELITE_CONFIG = {
-    VERSION: "1.99.64.127",
-    VERSION_CODE: "19964127",
+    VERSION: "1.99.65.00",
+    VERSION_CODE: "19965000",
     LEVEL_MARGIN: 0.15,
     BG_KEY_SYNC: true,
     NATURAL_TILING: true,
