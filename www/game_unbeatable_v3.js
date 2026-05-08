@@ -2037,7 +2037,7 @@ if (reviveGoldBtn) reviveGoldBtn.addEventListener('click', reviveWithGold);
 function reviveWithGold() {
     // v3.31.0: ELITE BALANCED ECONOMY
     const t = translations[currentLang];
-    const cost = 100; // Artık 1 Reklam = 1 Canlanma bedeli (100 Altın)
+    const cost = 250; // Artık 250 Altın = 3 Can
 
     if (totalGold >= cost) {
         totalGold -= cost;
@@ -5846,7 +5846,7 @@ if (reviveBtn) reviveBtn.addEventListener('click', () => {
         isGameOver = false;
         isPlaying = true;
         isPaused = false;
-        lives = 1;
+        lives = 3 + (window.extraLives || 0); // v1.99.65: Reklam izleyene 3 can verilir
         hasShield = true;
         levelUpInvuln = true; // v1.99.40.06: Absolute Grace Period Ignition
         obstacles = [];      // v1.99.40.06: Clear the death trap

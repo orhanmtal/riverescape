@@ -127,74 +127,7 @@ window.Leaderboard = {
     updateAuthUI(isLoggedIn, displayName, isOffline = false, photoURL = null) {
         try {
             // v1.99.20.01: HARD GATE ENFORCEMENT
-            const securityOverlay = document.getElementById('security-lock-overlay');
-            const securityTitle = document.getElementById('security-msg-title');
-            const securityBody = document.getElementById('security-msg-body');
-            const securityIcon = document.getElementById('security-icon-box');
-            const securityLoginBtn = document.getElementById('security-login-trigger');
-            const statusText = document.getElementById('auth-status-text');
-            const t = translations[currentLang];
-
-            const isOnline = navigator.onLine;
-
-            if (securityOverlay) {
-                if (!isOnline) {
-                    securityOverlay.style.display = 'flex';
-                    securityOverlay.style.visibility = 'visible';
-                    securityOverlay.style.opacity = '1';
-                    securityTitle.innerText = t.securityInternetRequired;
-                    if (securityBody) {
-                        securityBody.style.display = 'block';
-                        securityBody.style.opacity = '0.7';
-                        securityBody.innerText = t.securityNoInternet;
-                    }
-                    if (securityIcon) {
-                        securityIcon.innerHTML = `
-                            <svg viewBox="0 0 24 24" style="width: 80px; height: 80px; fill: none; stroke: #EA4335; stroke-width: 1.5; filter: drop-shadow(0 0 15px rgba(234,67,53,0.4));">
-                                <circle cx="12" cy="12" r="10" stroke-dasharray="4 4"></circle>
-                                <path d="M12 8v4M12 16h.01"></path>
-                            </svg>
-                        `;
-                    }
-                    if (securityLoginBtn) securityLoginBtn.style.display = 'none';
-                } else if (!isLoggedIn) {
-                    // v1.99.65.00: CrazyGames Security Bypass
-                    if (window.isCrazyGames) {
-                        securityOverlay.style.display = 'none';
-                        securityOverlay.style.visibility = 'hidden';
-                        securityOverlay.style.opacity = '0';
-                        return;
-                    }
-
-                    securityOverlay.style.display = 'flex';
-                    securityOverlay.style.visibility = 'visible';
-                    securityOverlay.style.opacity = '1';
-                    securityTitle.innerText = t.securityAuthRequired;
-                    if (securityBody) securityBody.style.display = 'none';
-                    if (securityIcon) {
-                        securityIcon.innerHTML = `
-                            <svg viewBox="0 0 24 24" style="width: 80px; height: 80px; fill: none; stroke: rgba(255, 215, 0, 0.8); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.4)); animation: elitePulse 2.3s infinite ease-in-out;">
-                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                                <circle cx="12" cy="16" r="1"></circle>
-                            </svg>
-                        `;
-                    }
-                    if (securityLoginBtn) {
-                        securityLoginBtn.style.display = 'flex';
-                        securityLoginBtn.onclick = () => this.loginWithGoogle();
-                        const loginTxt = document.getElementById('google-login-text');
-                        if (loginTxt) loginTxt.innerText = t.googleLogin;
-                    }
-                } else {
-                    // ALL SECURE - REMOVE LOCK
-                    securityOverlay.style.opacity = '0';
-                    setTimeout(() => { 
-                        securityOverlay.style.visibility = 'hidden'; 
-                        securityOverlay.style.display = 'none';
-                    }, 500);
-                }
-            }
+            // Legacy security overlay logic removed
 
             if (statusText) {
                 if (isLoggedIn) {
