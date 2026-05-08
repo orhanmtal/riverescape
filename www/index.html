@@ -452,7 +452,7 @@ window.ELITE_CONFIG = {
             var div = document.createElement('div');
             div.id = 'emergency-debug';
             div.style.cssText = 'position:fixed;top:0;left:0;width:100%;z-index:30000;background:rgba(255,0,0,0.9);color:white;padding:15px;font-size:12px;font-family:monospace;word-break:break-all;pointer-events:auto;';
-            div.innerHTML = 'ğŸš© ELITE ERROR DETECTED:<br>' + msg + '<br><br>URL: ' + url + '<br>LINE: ' + line + '<br><button onclick="this.parentElement.remove()" style="margin-top:10px;padding:5px 10px;background:#fff;color:#000;border:none;border-radius:5px;font-weight:bold;">KAPAT</button>';
+            div.innerHTML = '🚩 ELITE ERROR DETECTED:<br>' + msg + '<br><br>URL: ' + url + '<br>LINE: ' + line + '<br><button onclick="this.parentElement.remove()" style="margin-top:10px;padding:5px 10px;background:#fff;color:#000;border:none;border-radius:5px;font-weight:bold;">KAPAT</button>';
             document.body.appendChild(div);
             };
     </script>
@@ -464,7 +464,7 @@ window.ELITE_CONFIG = {
         }
     </script>
     <link rel="icon"
-        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>ğŸŒŠ</text></svg>">
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌊</text></svg>">
 </head>
 
 <body>
@@ -479,7 +479,7 @@ window.ELITE_CONFIG = {
             <!-- TOP ROW: PROFILE & SETTINGS -->
             <div class="elite-menu-header">
                 <div id="player-profile-elite" class="account-info-elite" style="position: relative; pointer-events: auto !important; z-index: 9999;">
-                    <button id="google-login-btn" style="position: absolute; top:0; left:0; width:100%; height:100%; background: transparent; border: none; cursor: pointer; z-index: 10000; pointer-events: auto !important;"></button>
+                    
                     <div id="player-photo-container" style="width: 45px; height: 45px; border-radius: 50%; background: linear-gradient(135deg, rgba(255,215,0,0.2), rgba(255,215,0,0.1)); display: flex; align-items: center; justify-content: center; font-weight: 900; color: #FFD700; font-size: 18px; box-shadow: 0 0 15px rgba(255, 215, 0, 0.2); overflow: hidden; border: 1px solid rgba(255,215,0,0.3);">
                         <img id="player-pfp-img" src="" style="width: 100%; height: 100%; object-fit: cover; display: none;" onerror="this.style.display='none'; document.getElementById('player-pfp-initial').style.display='flex';">
                         <div id="player-pfp-initial" style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%;">
@@ -490,7 +490,7 @@ window.ELITE_CONFIG = {
                     </div>
                     <div style="display: flex; flex-direction: column;">
                         <div id="player-name-elite" style="font-family: 'Outfit'; font-weight: 900; font-size: 16px; letter-spacing: 0.5px; line-height: 1.1;">ELITE PLAYER</div>
-                        <div id="auth-status-text" style="font-size: 9px; color: #FFD700; font-weight: bold; opacity: 0.8;">DOÄRULANIYOR... ğŸ›°ï¸</div>
+                        
                     </div>
                 </div>
 
@@ -500,7 +500,7 @@ window.ELITE_CONFIG = {
                     <span id="totalGoldValue" style="color: #FFD700; font-family: 'Outfit'; font-weight: 900; font-size: 18px; text-shadow: 0 0 10px rgba(255,215,0,0.5);">0</span>
                 </div>
 
-                <button id="open-settings-btn" class="elite-btn-square" style="width: 11.5vmin; height: 11.5vmin; font-size: 5vmin;">âš™ï¸</button>
+                <button id="open-settings-btn" class="elite-btn-square" style="width: 11.5vmin; height: 11.5vmin; font-size: 5vmin;">⚙️</button>
             </div>
 
             <!-- CENTER ZONE: LOGO & PLAY -->
@@ -513,7 +513,7 @@ window.ELITE_CONFIG = {
                 </div>
 
                 <div style="position: relative; flex-shrink: 0;">
-                    <button id="start-btn" class="master-play-btn">OYNA ğŸŒŠ</button>
+                    <button id="start-btn" class="master-play-btn">OYNA 🌊</button>
                     <div class="pulse-ring"></div>
                 </div>
 
@@ -551,7 +551,7 @@ window.ELITE_CONFIG = {
 
             <!-- BOTTOM ROW: ACTIONS -->
             <div class="elite-action-row" style="flex-shrink: 0; position: relative; z-index: 10;">
-                <button id="open-shop-btn" class="elite-btn-square" style="width: 18vmin; height: 18vmin; font-size: 8vmin;">ğŸ›’</button>
+                <button id="open-shop-btn" class="elite-btn-square" style="width: 18vmin; height: 18vmin; font-size: 8vmin;">🛒</button>
                 <button id="leaderboard-btn" class="elite-btn-square" style="width: 18vmin; height: 18vmin; font-size: 8vmin; border-color: rgba(255, 215, 0, 0.4); background: rgba(255, 215, 0, 0.05); box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);">ğŸ†</button>
                 <button id="spin-btn" class="elite-btn-square" style="width: 18vmin; height: 18vmin; font-size: 8vmin;">ğŸ¡</button>
             </div>
@@ -573,7 +573,7 @@ window.ELITE_CONFIG = {
         <!-- ELITE CONFIRM MODAL v1.99.64.01 -->
         <div id="confirm-modal" class="elite-modal-overlay">
             <div class="elite-modal-content" style="border-color: rgba(255,61,0,0.4);">
-                <div id="confirm-modal-emoji" style="font-size: 50px; margin-bottom: 10px;">ğŸ›¡ï¸</div>
+                <div id="confirm-modal-emoji" style="font-size: 50px; margin-bottom: 10px;">🛡️</div>
                 <div id="confirm-modal-title" style="font-size: 20px; font-weight: 900; color: #fff; text-transform: uppercase; letter-spacing: 1px;">EMİN MİSİNİZ?</div>
                 <div id="confirm-modal-body" style="font-size: 13px; margin: 15px 0 25px 0; opacity: 0.8; line-height: 1.5;">Bu işlemi geri alamazsınız.</div>
                 <div style="display: flex; gap: 12px;">
@@ -592,7 +592,7 @@ window.ELITE_CONFIG = {
                 <button id="resume-btn" class="elite-btn-large"
                     style="background: linear-gradient(135deg, #00e5ff, #004d40);">DEVAM ET</button>
                 <button id="pause-shop-btn" class="elite-btn-large"
-                    style="background: linear-gradient(135deg, #ffd700, #ff8c00); color: #000;">MAÄAZA ğŸ›’</button>
+                    style="background: linear-gradient(135deg, #ffd700, #ff8c00); color: #000;">MAÄAZA 🛒</button>
                 <button id="quit-btn" class="elite-btn-large"
                     style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);">ANA
                     MENÜ</button>
@@ -850,7 +850,7 @@ window.ELITE_CONFIG = {
                     <!-- Kalkan -->
                     <div class="showroom-item">
                         <div class="item-aura-box" style="border-color: #00e5ff;">
-                            <span style="font-size: 32px;">ğŸ›¡ï¸</span>
+                            <span style="font-size: 32px;">🛡️</span>
                         </div>
                         <div class="showroom-info">
                             <div id="shop-shd-title" class="showroom-title">KALKAN</div>
