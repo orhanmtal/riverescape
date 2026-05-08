@@ -541,10 +541,17 @@ window.Leaderboard = {
                             id: s.user.userId
                         }));
                         
-                        // User's own rank
-                        const myRank = rankings.find(r => r.name === this.playerName.toUpperCase()) || { 
-                            rank: '-', name: this.playerName, score: parseInt(localStorage.getItem('riverEscapeHighScore')) || 0, flag: '🏁' 
-                        };
+                        // v1.99.65.11: [ELITE] Improved User Rank Detection
+                        let myRank = rankings.find(r => r.name === this.playerName.toUpperCase());
+                        
+                        if (!myRank && window.CrazyGames && window.CrazyGames.SDK.user) {
+                            // If not in Top 10, try to get user's specific info
+                            const user = window.CrazyGames.SDK.user.systemInfo; 
+                            const localHS = parseInt(localStorage.getItem('riverEscapeHighScore')) || 0;
+                            myRank = { rank: '??', name: (user && user.username ? user.username : this.playerName).toUpperCase(), score: localHS, flag: '🏁' };
+                        } else if (!myRank) {
+                             myRank = { rank: '-', name: this.playerName, score: parseInt(localStorage.getItem('riverEscapeHighScore')) || 0, flag: '🏁' };
+                        }
                         
                         callback(rankings, myRank);
                     });
