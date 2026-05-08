@@ -6006,47 +6006,15 @@ const resetYes = document.getElementById('confirm-reset-yes');
 const resetNo = document.getElementById('confirm-reset-no');
 
 if (resetYes) resetYes.addEventListener('click', () => {
-    // 🛑 TAM EKONOMİ SIFIRLAMASI (Hard Reset) v1.99.27.06
-    // Top Riders rekorları KORUNUR, envanter silinir.
-
-    // 1. Durum Değişkenlerini Sıfırla
-    totalGold = 0;
-    magnetLevel = 0;
-    shieldLevel = 0;
-    bombCount = 0;
-    armorCharge = 0;
-    ownsArmorLicense = true; // v1.99.64.121: Elite Loadout for all
-    hasWeapon = true; // v1.99.64.121: Elite Loadout for all
-    currentLevel = 1;
-    score = 0;
-    lives = 3;
-
-    // 2. Görsel Geçişleri Sıfırla
-    displayScore = 0;
-    displayGold = 0;
-    displayTotalGold = 0;
-
-    // 3. Görevleri ve Döngüleri Sıfırla v1.99.30.06
-    if (window.MissionManager) window.MissionManager.reset();
-
-    // 4. Envanter (Kayıklar) Sıfırla v1.99.37.00
-    window.ownedBoats = ['spring'];
-    if (window.currentAsset) window.currentAsset.pKey = 'spring';
-    if (window.players && window.players['spring']) {
-        window.playerImg = window.players['spring'];
+    // 🛑 TAM EKONOMİ SIFIRLAMASI (Hard Reset) v1.99.68
+    if (typeof Leaderboard !== 'undefined' && Leaderboard.hardReset) {
+        Leaderboard.hardReset();
+    } else {
+        // Fallback if leaderboard is not ready
+        localStorage.clear();
+        window.location.reload();
     }
-    saveGame();
-
-    // 4. Bulut Mührü (Firebase Sync) - Force=true
-    if (typeof triggerEliteEconomySync === 'function') {
-
-        triggerEliteEconomySync(true);
-    }
-
-    // 4. Yerel Hafıza Temizliği (Hassas Dosyalar)
-    localStorage.removeItem('riverEscapeSave');
-    localStorage.removeItem('riverEscapeCurrentSession');
-    // Not: re_best_score (Liderlik rekoru) sarsılmaz bir kararlılıkla KORUNUYOR.
+});
 
     // 5. Elite Reboot
     setTimeout(() => {
