@@ -6016,12 +6016,6 @@ if (resetYes) resetYes.addEventListener('click', () => {
     }
 });
 
-    // 5. Elite Reboot
-    setTimeout(() => {
-        location.reload();
-    }, 500);
-});
-
 if (resetNo) resetNo.addEventListener('click', () => {
     const resetOverlay = document.getElementById('reset-confirm-overlay');
     if (resetOverlay) {
