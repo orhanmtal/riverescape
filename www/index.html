@@ -550,6 +550,60 @@ window.ELITE_CONFIG = {
                     style="background: linear-gradient(135deg, #ffd700, #ff8c00); color: #000;">MAÃ„ÂAZA 🛒</button>
                 <button id="quit-btn" class="elite-btn-large"
                     style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);">ANA
+                    <div id="elite-main-version" style="color: #FFD700; font-family: 'Press Start 2P', cursive; font-size: 1.8vmin; font-weight: bold; margin-top: 10px; letter-spacing: 0.8vmin; opacity: 0.9; text-shadow: 0 0 15px rgba(255,215,0,0.4);">
+                        <script>document.write("ELITE v" + (window.ELITE_CONFIG ? window.ELITE_CONFIG.VERSION : "1.99.65.12"));</script>
+                    </div>
+                </div>
+
+                <div style="position: relative; flex-shrink: 0;">
+                    <button id="start-btn" class="master-play-btn">OYNA 🌊</button>
+                    <div class="pulse-ring"></div>
+                </div>
+
+                </div>
+            </div>
+
+            
+        </div>
+
+        <!-- IDENTITY MODAL v1.99.64.01 -->
+        <div id="identity-modal" class="elite-modal-overlay">
+            <div class="elite-modal-content">
+                <div id="edit-username-title" style="font-size: 21px; font-weight: 900; color: #FFD700; letter-spacing: 1px;">KULLANICI ADI DÃœZENLEME</div>
+                <div id="edit-username-desc" style="font-size: 12px; margin-top: 5px; opacity: 0.6; text-transform: uppercase;">Yeni Elite adÄ±nÄ±zÄ± belirleyin</div>
+                <input type="text" id="player-name-input" class="elite-input-v22" placeholder="YENÄ° ADINIZ..." maxlength="15">
+                <div style="display: flex; gap: 10px;">
+                    <button id="close-identity-btn" class="elite-modal-btn" style="background: rgba(255,255,255,0.1); color: white;">Ä°PTAL</button>
+                    <button id="save-identity-btn" class="elite-modal-btn">DÃœZENLE</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ELITE CONFIRM MODAL v1.99.64.01 -->
+        <div id="confirm-modal" class="elite-modal-overlay">
+            <div class="elite-modal-content" style="border-color: rgba(255,61,0,0.4);">
+                <div id="confirm-modal-emoji" style="font-size: 50px; margin-bottom: 10px;">🛡️ Â </div>
+                <div id="confirm-modal-title" style="font-size: 20px; font-weight: 900; color: #fff; text-transform: uppercase; letter-spacing: 1px;">EMİN MİSİNİZ?</div>
+                <div id="confirm-modal-body" style="font-size: 13px; margin: 15px 0 25px 0; opacity: 0.8; line-height: 1.5;">Bu iÅŸlemi geri alamazsÄ±nÄ±z.</div>
+                <div style="display: flex; gap: 12px;">
+                    <button id="confirm-cancel-btn" class="elite-modal-btn" style="background: rgba(255,255,255,0.1); color: white;">VAZGEÇ</button>
+                    <button id="confirm-ok-btn" class="elite-modal-btn" style="background: linear-gradient(135deg, #ff3d00, #d50000); color: white;">ONAYLA</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAUSE SCREEN (ELITE FULL-SCREEN v1.99.64.01) -->
+        <div id="pause-screen" class="screen hidden">
+            <h2 id="pause-screen-title"
+                style="font-family: 'Outfit'; font-weight: 900; color: white; font-size: 8vmin; margin-bottom: 5vmin; letter-spacing: 1vmin;">
+                DURAKLATILDI</h2>
+            <div style="display: flex; flex-direction: column; gap: 2.8vmin; width: 65%; max-width: 300px;">
+                <button id="resume-btn" class="elite-btn-large"
+                    style="background: linear-gradient(135deg, #00e5ff, #004d40);">DEVAM ET</button>
+                <button id="pause-shop-btn" class="elite-btn-large"
+                    style="background: linear-gradient(135deg, #ffd700, #ff8c00); color: #000;">MAÃ„ÂžAZA 🛒</button>
+                <button id="quit-btn" class="elite-btn-large"
+                    style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);">ANA
                     MENÃœ</button>
             </div>
         </div>
@@ -575,7 +629,7 @@ window.ELITE_CONFIG = {
                         style="color: rgba(255,255,255,0.9); font-family: 'Outfit', sans-serif; font-size: 9px; font-weight: bold; letter-spacing: 1px; text-transform: uppercase;">LEVEL
                         1</span>
                     <span id="lives-hud"
-                        style="font-size: 10px; filter: drop-shadow(0 0 5px rgba(255,82,82,0.4));">Ã¢ÂÂ¤Ã¯Â¸ÂÃ¢ÂÂ¤Ã¯Â¸ÂÃ¢ÂÂ¤Ã¯Â¸Â</span>
+                        style="font-size: 10px; filter: drop-shadow(0 0 5px rgba(255,82,82,0.4));">&#10084;&#65039; &#10084;&#65039; &#10084;&#65039;</span>
                 </div>
                 <div id="progress-container-hud"
                     style="width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden; border: 1px solid rgba(0, 229, 255, 0.2);">
@@ -602,7 +656,7 @@ window.ELITE_CONFIG = {
             box-shadow: 0 0 20px rgba(155, 89, 182, 0.2);
         ">
             <div style="position: relative; display: flex; align-items: center; justify-content: center;">
-                <span style="font-size: 32px; filter: drop-shadow(0 0 8px #9b59b6);">ğŸ’Â</span>
+                <span style="font-size: 32px; filter: drop-shadow(0 0 8px #9b59b6);">ğŸ’ŽÂŽ</span>
                 <div id="armor-badge-pill"
                     style="position: absolute; top: -10px; right: -10px; background: #00b8d4; color: white; font-size: 13px; font-weight: 900; padding: 3px 8px; border-radius: 12px; border: 2px solid #fff; box-shadow: 0 0 10px rgba(0,0,0,0.5);">
                     0</div>
@@ -636,10 +690,10 @@ window.ELITE_CONFIG = {
                     style="background: linear-gradient(135deg, #FFD700, #ff8c00); color: #000;">+3 CAN (100
                     ALTIN)</button>
                 <button id="restart-btn" class="elite-btn-large" style="background: rgba(255,255,255,0.15);">YENÄ°DEN
-                    BAÃ…ÂLA ⚠️â€</button>
+                    BAÃ…ÂžLA ⚠️ â€ž</button>
                 <button id="quit-btn-gameover"
                     style="background: none; border: none; color: rgba(255,255,255,0.4); font-family: 'Outfit'; font-weight: bold; font-size: 3.5vmin; cursor: pointer; margin-top: 1.5vmin;">ANA
-                    MENÃœYE DÃ–N ÄŸÅ¸ÂÂ </button>
+                    MENÃœYE DÃ–N ÄŸÅ¸Â Â </button>
             </div>
 
         </div>
@@ -661,7 +715,7 @@ window.ELITE_CONFIG = {
                     style="width: 100%; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 5vmin; box-sizing: border-box; display: flex; flex-direction: column; gap: 5vmin;">
                     <div class="settings-item-col">
                         <div class="settings-label-row">
-                            <span class="settings-label" id="music-label-text">ÄŸÅ¸ÂÂµ MÃ¼zik Sesi</span>
+                            <span class="settings-label" id="music-label-text">ÄŸÅ¸ÂŽÂµ MÃ¼zik Sesi</span>
                             <span id="music-vol-txt"
                                 style="color: #FFD700; font-weight: bold; font-size: 3.5vmin;">100%</span>
                         </div>
@@ -670,7 +724,7 @@ window.ELITE_CONFIG = {
 
                     <div class="settings-item-col">
                         <div class="settings-label-row">
-                            <span class="settings-label" id="sfx-label-text">⚠️Å  Efekt Sesi</span>
+                            <span class="settings-label" id="sfx-label-text">⚠️ Å  Efekt Sesi</span>
                             <span id="sfx-vol-txt"
                                 style="color: #FFD700; font-weight: bold; font-size: 3.5vmin;">100%</span>
                         </div>
@@ -686,13 +740,13 @@ window.ELITE_CONFIG = {
                     
                     
                     <button id="hard-reset-btn"
-                        style="background: rgba(255, 68, 68, 0.05); border: 1px solid rgba(255, 68, 68, 0.2); color: #ff4444; padding: 3vmin; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 3vmin;">⚠️
+                        style="background: rgba(255, 68, 68, 0.05); border: 1px solid rgba(255, 68, 68, 0.2); color: #ff4444; padding: 3vmin; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 3vmin;">⚠️ 
                         TÃœM VERÄ°LERÄ° SIFIRLA</button>
                 </div>
 
                 <button id="settings-back-btn"
                     style="background: none; border: none; color: rgba(255,255,255,0.3); font-family: 'Outfit'; font-weight: bold; font-size: 2.8vmin; cursor: pointer; margin-top: auto;"><span id="settings-back-btn-text">GERÄ°
-                    DÃ–N ÄŸÅ¸ÂÂ </span></button>
+                    DÃ–N ÄŸÅ¸Â Â </span></button>
             </div>
         </div>
 
@@ -706,25 +760,25 @@ window.ELITE_CONFIG = {
                 style="width: 85%; max-width: 380px; background: rgba(20, 10, 10, 0.95); border: 2px solid #ff4444; border-radius: 30px; padding: 40px 30px; text-align: center; box-shadow: 0 30px 100px rgba(255, 68, 68, 0.4);">
                 <div
                     style="font-size: 70px; margin-bottom: 20px; filter: drop-shadow(0 0 20px rgba(255, 68, 68, 0.5));">
-                    ⚠️</div>
+                    ⚠️ </div>
                 <h2
                     style="color: #ff4444; font-family: 'Outfit'; font-weight: 900; font-size: 28px; margin-bottom: 15px; letter-spacing: 1px;">
                     EMİN MİSİNİZ?</h2>
                 <p
                     style="color: #fff; font-family: 'Outfit'; font-size: 16px; margin-bottom: 35px; line-height: 1.6; opacity: 0.9;">
-                    Bu iÅŸlem **TÜM ALTINLARINIZI, GELÄ°Ã…ÂTÄ°RMELERÄ°NÄ°ZÄ° VE REKORLARINIZI** kalÄ±cÄ± olarak silecektir. Bu
+                    Bu iÅŸlem **TÜM ALTINLARINIZI, GELÄ°Ã…ÂžTÄ°RMELERÄ°NÄ°ZÄ° VE REKORLARINIZI** kalÄ±cÄ± olarak silecektir. Bu
                     işlemin geri dönüşü YOKTUR!</p>
                 <div style="display: flex; flex-direction: column; gap: 15px; width: 100%;">
                     <button id="confirm-reset-yes"
                         style="background: #ff4444; color: #fff; border: none; padding: 18px; border-radius: 18px; font-weight: 900; font-family: 'Outfit'; cursor: pointer; font-size: 18px; box-shadow: 0 8px 25px rgba(255, 68, 68, 0.3);">EVET,
-                        HER Ã…ÂEYÄ° SÄ°L</button>
+                        HER Ã…ÂžEYÄ° SÄ°L</button>
                     <button id="confirm-reset-no"
                         style="background: rgba(255,255,255,0.05); color: #fff; border: 1px solid rgba(255,255,255,0.2); padding: 15px; border-radius: 18px; font-weight: 800; font-family: 'Outfit'; cursor: pointer; font-size: 16px;">VAZGEÇ</button>
                 </div>
             </div>
         </div>
 
-        <!-- MODERN ELITE MAÃ„ÂAZA (FIXED HEADER + SCROLL BODY) -->
+        <!-- MODERN ELITE MAÃ„ÂžAZA (FIXED HEADER + SCROLL BODY) -->
         <div id="shop-screen" class="screen hidden"
             style="background: linear-gradient(135deg, #050a10 0%, #0a1525 100%); display: flex; flex-direction: column; overflow: hidden; padding: 0;">
             
@@ -732,7 +786,7 @@ window.ELITE_CONFIG = {
             <div class="shop-sticky-header">
                 <h2 id="shop-title-main"
                     style="color: #FFD700; font-family: 'Outfit'; font-weight: 900; font-size: 9vmin; margin: 0; margin-bottom: 2vmin; letter-spacing: 1px; text-shadow: 0 10px 30px rgba(0,0,0,0.5);">
-                    MAÃ„ÂAZA</h2>
+                    MAÃ„ÂžAZA</h2>
                 <div id="shop-balance-pill" class="elite-balance-pill" style="margin-bottom: 0;">
                     <span id="shop-balance-label" class="elite-balance-label">BAKÄ°YE</span>
                     <span id="totalGoldValue-shop" class="elite-balance-value">0</span>
@@ -757,28 +811,28 @@ window.ELITE_CONFIG = {
                             <div id="shop-mag-desc" class="showroom-desc"><span id="magnet-duration"></span> | <span id="magnet-lvl"></span></div>
                         </div>
                         <div class="buy-action-group">
-                            <button id="buy-magnet-btn" class="elite-upgrade-btn btn-gold">GELÄ°Ã…ÂTÄ°R</button>
+                            <button id="buy-magnet-btn" class="elite-upgrade-btn btn-gold">GELÄ°Ã…ÂžTÄ°R</button>
                         </div>
                     </div>
 
                     <!-- Kalkan -->
                     <div class="showroom-item">
                         <div class="item-aura-box" style="border-color: #00e5ff;">
-                            <span style="font-size: 32px;">🛡️Â</span>
+                            <span style="font-size: 32px;">&#128737;&#65039;</span>
                         </div>
                         <div class="showroom-info">
                             <div id="shop-shd-title" class="showroom-title">KALKAN</div>
                             <div id="shop-shd-desc" class="showroom-desc"><span id="shield-chance"></span> | <span id="shield-lvl"></span></div>
                         </div>
                         <div class="buy-action-group">
-                            <button id="buy-shield-btn" class="elite-upgrade-btn btn-cyan">GELÄ°Ã…ÂTÄ°R</button>
+                            <button id="buy-shield-btn" class="elite-upgrade-btn btn-cyan">GELÄ°Ã…ÂžTÄ°R</button>
                         </div>
                     </div>
 
                     <!-- MÃ¼himmat Doldur -->
                     <div class="showroom-item">
                         <div class="item-aura-box" style="border-color: #ff8c00;">
-                            <span style="font-size: 32px;">Ã¢Ëœâ€Ã¯Â¸Â</span>
+                            <span style="font-size: 32px;">&#128640;</span>
                         </div>
                         <div class="showroom-info">
                             <div id="shop-magma-title" class="showroom-title" style="color: #ff8c00;">CEPHANE</div>
@@ -793,10 +847,10 @@ window.ELITE_CONFIG = {
                     <!-- ZÄ±rh Doldur -->
                     <div class="showroom-item">
                         <div class="item-aura-box" style="border-color: #00acc1;">
-                            <span style="font-size: 32px;">⚠️â€¹</span>
+                            <span style="font-size: 32px;">&#9889;</span>
                         </div>
                         <div class="showroom-info">
-                            <div id="shop-void-armor-title" class="showroom-title">ZIRH Ã…ÂARJI</div>
+                            <div id="shop-void-armor-title" class="showroom-title">ZIRH Ã…ÂžARJI</div>
                             <div id="shop-void-armor-desc" class="showroom-desc">+30 Zırh Birimi</div>
                         </div>
                         <div class="buy-action-group">
@@ -810,7 +864,7 @@ window.ELITE_CONFIG = {
                     <!-- ALTIN MARKET 💰 v1.99.64.01 PRESTIGE UI -->
                     <div class="gold-market-container">
                         <h3 id="shop-gold-market-title" class="gold-market-title">GÜNLÜK HEDİYE 💰</h3>
-                        <div style="display: flex; justify-content: center;"><button onclick="showRewardedAd(this, 'ALINDI', () => { goldCount += 1000; saveGame(); updateShopUI(); showToast('+1000 ALTIN! 💰', true); })" class="gold-card" style="width: 100%; border-color: #FFD700; background: rgba(255,215,0,0.05); padding: 30px;"><span style="font-size: 42px; margin-bottom: 10px;">💰</span><span class="amount" style="color: #FFD700; font-size: 28px;">1.000 GOLD</span><span class="price" style="background: #FFD700; color: #000; padding: 5px 20px; font-size: 14px; border-radius: 8px;">REKLAM İZLE ğŸ“½ï¸</span></button></div></div>
+                        <div style="display: flex; justify-content: center;"><button onclick="showRewardedAd(this, 'ALINDI', () => { goldCount += 1000; saveGame(); updateShopUI(); showToast('+1000 ALTIN! 💰', true); })" class="gold-card" style="width: 100%; border-color: #FFD700; background: rgba(255,215,0,0.05); padding: 30px;"><span style="font-size: 42px; margin-bottom: 10px;">💰</span><span class="amount" style="color: #FFD700; font-size: 28px;">1.000 GOLD</span><span class="price" style="background: #FFD700; color: #000; padding: 5px 20px; font-size: 14px; border-radius: 8px;">REKLAM İZLE ğŸ“½ï¸ </span></button></div></div>
                 </div>
     
                 <button id="shop-close-btn" class="elite-btn-large" style="background: rgba(255,255,255,0.05); color: #FFD700; border: 1px solid rgba(255,215,0,0.4); margin-top: 2vh;">GERİ DÖN</button>
@@ -838,7 +892,7 @@ window.ELITE_CONFIG = {
             </div>
         </div>
 
-        <!-- LUCKY SPIN (Ã…ÂANS Ã‡ARKI) EKRANI v1.99.64.01 -->
+        <!-- LUCKY SPIN (Ã…ÂžANS Ã‡ARKI) EKRANI v1.99.64.01 -->
         <div id="spin-screen" class="screen hidden"
             style="z-index: 17000; background: rgba(0,0,0,0.92); width: 100vw; height: 100vh; max-width: 100%; border-radius: 0;">
             <div id="spin-container">
@@ -862,10 +916,10 @@ window.ELITE_CONFIG = {
                         style="background: rgba(255,255,255,0.1); color: #ccc; border: none; padding: 12px; font-weight: bold; border-radius: 12px; font-size: 14px; outline: none; cursor: pointer;">KAPAT</button>
                 </div>
             </div>
-            <!-- POPUP: REWARD NOTIFICATION (Restored) -->
+            <!-- POPUP: REWARD NOTIFICATION (Restored) -->
             <div id="spin-reward-popup"
                 style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%) scale(0); background: rgba(10, 20, 30, 0.95); border: 3px solid #FFD700; border-radius: 25px; padding: 30px; z-index: 18000; text-align: center; opacity: 0; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); backdrop-filter: blur(10px); box-shadow: 0 0 50px rgba(255, 215, 0, 0.3);">
-                <div id="spin-popup-emoji" style="font-size: 70px; margin-bottom: 10px;">ÄŸÅ¸Ââ€°</div>
+                <div id="spin-popup-emoji" style="font-size: 70px; margin-bottom: 10px;">ÄŸÅ¸ÂŽâ€°</div>
                 <div id="spin-popup-label"
                     style="color: #fff; font-family: 'Outfit'; font-weight: 800; font-size: 22px; letter-spacing: 1px;">
                     Ã–DÃœN KAZANILIYOR</div>
@@ -888,10 +942,7 @@ window.ELITE_CONFIG = {
             </div>
             
             <div style="position: relative; pointer-events: none;">
-                <div id="bomb-action-btn" style="position: absolute; bottom: 20px; left: calc(50vw - 230px) !important; width: 60px; height: 60px; border-radius: 50%; background: rgba(0, 0, 0, 0.4); border: 2px solid rgba(255, 255, 255, 0.2); display: flex; align-items: center; justify-content: center; z-index: 1000; cursor: pointer; user-select: none; -webkit-user-select: none; display: none; backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); transition: transform 0.1s ease, border-color 0.2s ease;"><span style="font-size: 24px; pointer-events: none; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));">💣</span><div id="bomb-badge" style="position: absolute; top: -5px; right: -5px; background: #f12711; color: white; font-size: 13px; font-weight: 900; padding: 3px 8px; border-radius: 12px; border: 2px solid #fff; z-index: 1001; display: none;">0</div></div>
-                <div id="bomb-badge"
-                    style="position: absolute; top: -5px; right: -5px; background: #f12711; color: white; font-size: 13px; font-weight: 900; padding: 3px 8px; border-radius: 12px; border: 2px solid #fff; z-index: 1001; display: none;">
-                    0</div>
+                <div id="bomb-action-btn" style="position: absolute; bottom: 20px; left: calc(50vw - 230px) !important; width: 60px; height: 60px; border-radius: 50%; background: rgba(0, 0, 0, 0.4); border: 2px solid rgba(255, 255, 255, 0.2); display: flex; align-items: center; justify-content: center; z-index: 1000; cursor: pointer; user-select: none; -webkit-user-select: none; display: none; backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); transition: transform 0.1s ease, border-color 0.2s ease;"><span style="font-size: 24px; pointer-events: none; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));">&#128163;</span><div id="bomb-badge" style="position: absolute; top: -5px; right: -5px; background: #f12711; color: white; font-size: 13px; font-weight: 900; padding: 3px 8px; border-radius: 12px; border: 2px solid #fff; z-index: 1001; display: none;">0</div></div>
             </div>
         </div>
 
