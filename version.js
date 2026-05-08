@@ -10,8 +10,8 @@
 // River Escape Elite - Central Version Control
 // v1.99.65.10 - Elite Major Update
 window.ELITE_CONFIG = {
-    VERSION: "1.99.65.10",
-    VERSION_CODE: "19965010",
+    VERSION: "1.99.65.11",
+    VERSION_CODE: "19965011",
     LEVEL_MARGIN: 0.15,
     BG_KEY_SYNC: true,
     NATURAL_TILING: true,
