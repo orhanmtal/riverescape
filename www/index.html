@@ -466,46 +466,10 @@ window.ELITE_CONFIG = {
     <link rel="icon"
         href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>ğŸŒŠ</text></svg>">
 
-    <!-- ELITE DESKTOP HUD CENTERING (v1.99.66) -->
-    <style>
-        @media (min-width: 800px) {
-            /* Move Top-Left HUD closer to the canvas */
-            #hud-v2, .elite-hud-v2 {
-                left: calc(50vw - 320px) !important; 
-            }
-            
-            /* Move Bottom-Left Bomb Button closer to the canvas */
-            #bomb-action-btn {
-                left: calc(50vw - 320px) !important;
-            }
-            
-            /* Move Bottom-Right Controls closer to the canvas */
-            #controls-ui, #fire-action-btn, #dash-action-btn {
-                right: calc(50vw - 320px) !important;
-            }
-        }
-    </style>
+    
 
 
-    <!-- ELITE HUD LOCK (v1.99.68) -->
-    <style>
-        @media (min-width: 600px) {
-            /* Force the top-left HUD to stick to the left side of the 500px game canvas */
-            #hud-v2, .elite-hud-container {
-                left: calc(50vw - 230px) !important;
-            }
-            
-            /* Force the bottom-left Bomb Button to stick to the left side of the canvas */
-            #bomb-action-btn {
-                left: calc(50vw - 230px) !important;
-            }
-            
-            /* Force the bottom-right controls to stick to the right side of the canvas */
-            #controls-ui {
-                right: calc(50vw - 230px) !important;
-            }
-        }
-    </style>
+    
 
 </head>
 
@@ -922,7 +886,7 @@ window.ELITE_CONFIG = {
             </div>
         </div>
 
-        <div id="controls-ui" style="
+        <div id="controls-ui" style="right: calc(50vw - 230px) !important; position: absolute; bottom: calc(20px + env(safe-area-inset-bottom));" style="
             position: absolute; 
             bottom: calc(20px + env(safe-area-inset-bottom)); 
             right: calc(20px + env(safe-area-inset-right)); 
@@ -941,7 +905,7 @@ window.ELITE_CONFIG = {
             </div>
             
             <div style="position: relative; pointer-events: none;">
-                <div id="bomb-action-btn" style="position: absolute; bottom: 20px; left: 20px; width: 60px; height: 60px; border-radius: 50%; background: rgba(0, 0, 0, 0.4); border: 2px solid rgba(255, 255, 255, 0.2); display: flex; align-items: center; justify-content: center; z-index: 1000; cursor: pointer; user-select: none; -webkit-user-select: none; display: none; backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); transition: transform 0.1s ease, border-color 0.2s ease;"><span style="font-size: 24px; pointer-events: none; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));">💣</span><div id="bomb-badge" style="position: absolute; top: -5px; right: -5px; background: #f12711; color: white; font-size: 13px; font-weight: 900; padding: 3px 8px; border-radius: 12px; border: 2px solid #fff; z-index: 1001; display: none;">0</div></div>
+                <div id="bomb-action-btn" style="left: calc(50vw - 230px) !important; position: absolute; bottom: 20px;" style="position: absolute; bottom: 20px; left: 20px; width: 60px; height: 60px; border-radius: 50%; background: rgba(0, 0, 0, 0.4); border: 2px solid rgba(255, 255, 255, 0.2); display: flex; align-items: center; justify-content: center; z-index: 1000; cursor: pointer; user-select: none; -webkit-user-select: none; display: none; backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); transition: transform 0.1s ease, border-color 0.2s ease;"><span style="font-size: 24px; pointer-events: none; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));">💣</span><div id="bomb-badge" style="position: absolute; top: -5px; right: -5px; background: #f12711; color: white; font-size: 13px; font-weight: 900; padding: 3px 8px; border-radius: 12px; border: 2px solid #fff; z-index: 1001; display: none;">0</div></div>
                 <div id="bomb-badge"
                     style="position: absolute; top: -5px; right: -5px; background: #f12711; color: white; font-size: 13px; font-weight: 900; padding: 3px 8px; border-radius: 12px; border: 2px solid #fff; z-index: 1001; display: none;">
                     0</div>
