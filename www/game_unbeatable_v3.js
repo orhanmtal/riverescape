@@ -917,7 +917,7 @@ function showRewardedAd(btnElem, defaultText, callback) {
     }
 
     // CRAZYGAMES PATH
-    if (isCrazyGames) {
+    if (window.isCrazyGames) {
         if (window.CrazyGames && window.CrazyGames.SDK) {
             window.CrazyGames.SDK.ad.requestAd('rewarded', {
                 adStarted: () => {
@@ -1007,7 +1007,7 @@ function showRewardedAd(btnElem, defaultText, callback) {
 }
 
 async function showInterstitialAd() {
-    if (isCrazyGames) {
+    if (window.isCrazyGames) {
         if (window.CrazyGames && window.CrazyGames.SDK) {
             window.CrazyGames.SDK.ad.requestAd('midgame', {
                 adStarted: () => {
@@ -5805,6 +5805,14 @@ function goToMainMenu() {
     // v1.99.65.00: CrazyGames Gameplay Stop Hook
     if (typeof EliteAdManager !== 'undefined' && EliteAdManager.gameplayStop) {
         EliteAdManager.gameplayStop();
+    }
+
+    // v1.99.65.17: CrazyGames Leaderboard Score Submit
+    if (typeof Leaderboard !== 'undefined' && Leaderboard.submitProgress) {
+        const finalScore = Math.floor(window.score || 0);
+        const finalLevel = window.currentLevel || 1;
+        Leaderboard.submitProgress(finalScore, finalLevel, true);
+        console.log("🏆 [ELITE SCORE] Submitted to CrazyGames:", finalScore);
     }
 
     if (gameLoopRequestId) cancelAnimationFrame(gameLoopRequestId);
