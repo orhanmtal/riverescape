@@ -911,10 +911,10 @@ window.ELITE_CONFIG = {
         </div>
 
         <!-- LEFT CONTROLS (Dash - Lightning) -->
-        <div id="left-controls-ui" style="position: absolute; bottom: calc(20px + env(safe-area-inset-bottom)); left: 20px; display: none; z-index: 1000; pointer-events: none;">
+        <div id="left-controls-ui" style="position: absolute; bottom: calc(20px + env(safe-area-inset-bottom)); left: calc(50vw - 170px); display: none; z-index: 1000; pointer-events: none;">
             <div id="dash-action-btn"
-                style="width: 60px; height: 60px; border-radius: 50%; background: rgba(0, 229, 255, 0.15); border: 2px solid rgba(0, 229, 255, 0.4); display: flex; align-items: center; justify-content: center; cursor: pointer; pointer-events: auto;">
-                <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="#00e5ff" stroke-width="2">
+                style="width: 55px; height: 55px; border-radius: 50%; background: rgba(0, 229, 255, 0.15); border: 2px solid rgba(0, 229, 255, 0.4); display: flex; align-items: center; justify-content: center; cursor: pointer; pointer-events: auto;">
+                <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#00e5ff" stroke-width="2">
                     <polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polyline>
                 </svg>
                 <div id="dash-energy-bar"
@@ -925,27 +925,27 @@ window.ELITE_CONFIG = {
         </div>
 
         <!-- RIGHT CONTROLS (Armor - Diamond & Bomb) -->
-        <div id="right-controls-ui" style="position: absolute; bottom: calc(20px + env(safe-area-inset-bottom)); right: 20px; display: none; flex-direction: column; gap: 20px; z-index: 1005; pointer-events: none;">
+        <div id="right-controls-ui" style="position: absolute; bottom: calc(20px + env(safe-area-inset-bottom)); right: calc(50vw - 170px); display: none; flex-direction: column; gap: 15px; z-index: 1005; pointer-events: none;">
             
             <!-- Armor (Top - Diamond) -->
-            <div id="armor-ui-indicator" onclick="handleArmorIndicatorClick()" style="width: 55px; height: 55px; border-radius: 50%; background: rgba(0, 229, 255, 0.15); border: 2px solid rgba(0, 229, 255, 0.4); display: flex; align-items: center; justify-content: center; cursor: pointer; pointer-events: auto; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);">
+            <div id="armor-ui-indicator" onclick="handleArmorIndicatorClick()" style="width: 50px; height: 50px; border-radius: 50%; background: rgba(0, 229, 255, 0.15); border: 2px solid rgba(0, 229, 255, 0.4); display: flex; align-items: center; justify-content: center; cursor: pointer; pointer-events: auto; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);">
                  <div style="position: relative; display: flex; align-items: center; justify-content: center;">
-                    <span style="font-size: 26px; filter: drop-shadow(0 0 8px #00e5ff);">💎</span>
+                    <span style="font-size: 24px; filter: drop-shadow(0 0 8px #00e5ff);">💎</span>
                     <div id="armor-badge-pill"
-                        style="position: absolute; top: -10px; right: -10px; background: #00b8d4; color: white; font-size: 11px; font-weight: 900; padding: 2px 6px; border-radius: 10px; border: 1.5px solid #fff; box-shadow: 0 0 10px rgba(0,0,0,0.5);">
+                        style="position: absolute; top: -8px; right: -8px; background: #00b8d4; color: white; font-size: 10px; font-weight: 900; padding: 2px 5px; border-radius: 10px; border: 1.5px solid #fff; box-shadow: 0 0 10px rgba(0,0,0,0.5);">
                         0</div>
                 </div>
                 <span id="armor-badge" style="display:none;">0</span>
             </div>
 
             <!-- Bomb (Bottom - Modern Tactical) -->
-            <div id="bomb-action-btn" style="width: 55px; height: 55px; border-radius: 18px; background: rgba(5, 15, 30, 0.7); border: 1px solid rgba(255, 61, 0, 0.4); display: flex; align-items: center; justify-content: center; cursor: pointer; user-select: none; -webkit-user-select: none; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); transition: all 0.2s ease; box-shadow: 0 8px 20px rgba(0,0,0,0.4); pointer-events: auto;">
-                <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="#ff3d00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="filter: drop-shadow(0 0 10px rgba(255,61,0,0.6));">
+            <div id="bomb-action-btn" style="width: 50px; height: 50px; border-radius: 15px; background: rgba(5, 15, 30, 0.7); border: 1px solid rgba(255, 61, 0, 0.4); display: flex; align-items: center; justify-content: center; cursor: pointer; user-select: none; -webkit-user-select: none; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); transition: all 0.2s ease; box-shadow: 0 8px 20px rgba(0,0,0,0.4); pointer-events: auto;">
+                <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#ff3d00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="filter: drop-shadow(0 0 10px rgba(255,61,0,0.6));">
                     <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path>
                     <circle cx="12" cy="12" r="5" fill="#ff3d00" fill-opacity="0.2"></circle>
                     <circle cx="12" cy="12" r="2" fill="#ff3d00"></circle>
                 </svg>
-                <div id="bomb-badge" style="position: absolute; top: -8px; right: -8px; background: #ff3d00; color: white; font-size: 11px; font-weight: 900; padding: 2px 6px; border-radius: 10px; border: 1.5px solid #fff; box-shadow: 0 0 15px rgba(255, 61, 0, 0.5); z-index: 1006;">0</div>
+                <div id="bomb-badge" style="position: absolute; top: -8px; right: -8px; background: #ff3d00; color: white; font-size: 10px; font-weight: 900; padding: 2px 5px; border-radius: 10px; border: 1.5px solid #fff; box-shadow: 0 0 15px rgba(255, 61, 0, 0.5); z-index: 1006;">0</div>
             </div>
             
         </div>
