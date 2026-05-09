@@ -1,5 +1,5 @@
 /**
- * RİVER ESCAPE ELİTE - v1.99.65.15 (MAJOR UPDATE)
+ * RİVER ESCAPE ELİTE - v1.99.65.16 (MAJOR UPDATE)
  * 1. NO PLACEHOLDERS - Always use premium assets or procedural generation.
  * 2. PERFORMANCE FIRST - Optimize update loops and DOM access.
  * 3. VISUAL EXCELLENCE - Use HSL colors, smooth gradients, and micro-animations.
@@ -8,9 +8,9 @@
  */
 
 // River Escape Elite - Central Version Control
-// v1.99.65.15 - Elite Major Update
+// v1.99.65.16 - Elite Major Update
 window.ELITE_CONFIG = {
-    VERSION: "1.99.65.15",
+    VERSION: "1.99.65.16",
     VERSION_CODE: "19965150",
     LEVEL_MARGIN: 0.15,
     BG_KEY_SYNC: true,
