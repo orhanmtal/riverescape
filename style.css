@@ -121,9 +121,23 @@ button, .switch, .toggle-slider, #gameCanvas {
     overflow: hidden;
     pointer-events: auto;
     z-index: 10000;
-    padding: 6vmin;
+    padding: clamp(20px, 5vmin, 40px);
     box-sizing: border-box;
 }
+
+/* v1.99.65.11: [ELITE] Full-Screen Responsive Fixes */
+#game-over-screen, #start-screen, #pause-screen, #settings-screen, #shop-screen {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: 600px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+}
+
+#gameover-title { font-size: clamp(32px, 9vmin, 54px) !important; line-height: 1.1 !important; }
+#score-title-final { font-size: clamp(40px, 12vmin, 80px) !important; line-height: 1.1 !important; margin: 15px 0 !important; }
+#final-gold-container { font-size: clamp(18px, 5vmin, 26px) !important; }
+.elite-btn-large { font-size: clamp(14px, 4vmin, 20px) !important; padding: clamp(10px, 3vmin, 20px) !important; }
 
 /* Glass HUD Master Styles v1.99.30.05 */
 #modern-hud {
@@ -282,7 +296,7 @@ h1 {
 .bottom-right-group {
     position: absolute !important;
     bottom: 30px !important;
-    right: 30px !important;
+    left: 30px !important;
     pointer-events: auto !important;
     z-index: 2000 !important;
 }
