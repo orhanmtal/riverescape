@@ -12,8 +12,14 @@ window.Leaderboard = {
     init() {
         console.log("🎮 [ELITE AUTH] CrazyGames SDK Initialization...");
         
-        // v1.99.65.00: CrazyGames Auth System
+        // v1.99.65.00: CrazyGames Auth System - MANDATORY SDK INIT
         if (window.CrazyGames && window.CrazyGames.SDK) {
+            try {
+                window.CrazyGames.SDK.init();
+                console.log("✅ [ELITE AUTH] CrazyGames SDK Initialized.");
+            } catch (e) {
+                console.warn("CrazyGames SDK Init Error:", e);
+            }
             this.playerID = this.playerID || "cg_" + Math.random().toString(36).substr(2, 9);
             this.playerName = this.playerName || "ELITE PLAYER";
             

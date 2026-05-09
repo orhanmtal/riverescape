@@ -886,16 +886,22 @@ async function preloadRewardedAd() {
     }
 }
 
-// v1.99.65.00: HYBRID AD & GAMEPLAY MANAGER
+// v1.99.65.00: HYBRID AD & GAMEPLAY MANAGER (Robust Platform Detection)
 const EliteAdManager = {
     gameplayStart: function() {
-        if (isCrazyGames && window.CrazyGames && window.CrazyGames.SDK) {
-            try { window.CrazyGames.SDK.game.gameplayStart(); } catch(e){}
+        if (window.isCrazyGames && window.CrazyGames && window.CrazyGames.SDK && window.CrazyGames.SDK.game) {
+            try { 
+                window.CrazyGames.SDK.game.gameplayStart(); 
+                console.log("🎮 [SDK] gameplayStart sent");
+            } catch(e){}
         }
     },
     gameplayStop: function() {
-        if (isCrazyGames && window.CrazyGames && window.CrazyGames.SDK) {
-            try { window.CrazyGames.SDK.game.gameplayStop(); } catch(e){}
+        if (window.isCrazyGames && window.CrazyGames && window.CrazyGames.SDK && window.CrazyGames.SDK.game) {
+            try { 
+                window.CrazyGames.SDK.game.gameplayStop(); 
+                console.log("🎮 [SDK] gameplayStop sent");
+            } catch(e){}
         }
     }
 };

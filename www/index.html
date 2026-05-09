@@ -975,6 +975,14 @@ window.ELITE_CONFIG = {
     <!-- v1.99.64.102 ELITE BATCH SYNC ENGINE -->
     <script src="game_store.js?v=v1.99.64.102"></script>
     <script src="game_unbeatable_v3.js?v=v1.99.64.102"></script>
+    <script>
+        // v1.99.65.00: MANDATORY ELITE INITIALIZATION
+        window.onload = function() {
+            if (typeof Leaderboard !== 'undefined' && Leaderboard.init) {
+                Leaderboard.init();
+            }
+        };
+    </script>
 </body>
 
 </html>
