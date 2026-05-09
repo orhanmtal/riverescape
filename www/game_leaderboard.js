@@ -251,9 +251,21 @@ window.Leaderboard = {
 
         try {
             console.log("Fetching High Scores for 'TopRiders'...");
-            const results = await cg.SDK.leaderboard.getHighScores('TopRiders');
-            console.log("Leaderboard success:", results);
-            this.renderLeaderboard(results.items || []);
+            // CrazyGames SDK v2: getHighScores returns array of { rank, score, user: { userId, username } }
+            const results = await cg.SDK.leaderboard.getHighScores('TopRiders', { limit: 5 });
+            console.log("Leaderboard raw result:", results);
+
+            // Normalize SDK v2 response → { name, score, userId, rank }
+            const rawList = Array.isArray(results) ? results : (results.scores || results.items || []);
+            const items = rawList.slice(0, 5).map((item, idx) => ({
+                name:   (item.user?.username || item.name || 'PLAYER').toUpperCase(),
+                score:  item.score,
+                userId: item.user?.userId || item.userId,
+                rank:   item.rank || (idx + 1)
+            }));
+
+            console.log("Leaderboard normalized:", items);
+            this.renderLeaderboard(items);
         } catch (e) {
             console.error("Leaderboard fetch error:", e);
             const errorText = translations[currentLang].rankingsFetchError || "FETCH ERROR";
