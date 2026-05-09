@@ -464,7 +464,7 @@ window.ELITE_CONFIG = {
         }
     </script>
     <link rel="icon"
-        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>ğŸŒŠ</text></svg>">
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌊</text></svg>">
 
     
 
@@ -483,12 +483,22 @@ window.ELITE_CONFIG = {
         <!-- ELITE FULL-SCREEN UI v1.99.64.01 -->
         <div id="start-screen" class="screen master-start-v21" style="justify-content: center; gap: 5vh;">
             <!-- TOP ROW: PROFILE & SETTINGS -->
-            <div class="elite-menu-header" style="justify-content: flex-end; gap: 15px;">
-                <!-- Minimal Gold Display -->
-                <div style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,215,0,0.4); border-radius: 15px; padding: 5px 12px; display: flex; align-items: center; gap: 6px; backdrop-filter: blur(10px);">
+            <div class="elite-menu-header" style="justify-content: flex-end; padding: 0 10px; gap: 10px;">
+                <!-- New Order: Gold -> Shop -> Leaderboard -> Settings (from left to right in the group) -->
+                
+                <!-- 1. Gold display -->
+                <div style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,215,0,0.4); border-radius: 15px; padding: 5px 12px; display: flex; align-items: center; gap: 6px; backdrop-filter: blur(10px); height: 10vmin; box-sizing: border-box;">
                     <span style="font-size: 12px;">💰</span>
                     <span id="totalGoldValue" style="color: #FFD700; font-family: 'Outfit'; font-weight: 900; font-size: 16px;">0</span>
                 </div>
+
+                <!-- 2. Shop -->
+                <button id="open-shop-btn" class="elite-btn-square" style="width: 10vmin; height: 10vmin; font-size: 5vmin; border-radius: 12px; background: rgba(255, 215, 0, 0.1); border-color: rgba(255, 215, 0, 0.3);">🛒</button>
+
+                <!-- 3. Leaderboard -->
+                <button id="open-leaderboard-btn" class="elite-btn-square" style="width: 10vmin; height: 10vmin; font-size: 5vmin; border-radius: 12px;">🏆</button>
+                
+                <!-- 4. Settings (Far Right) -->
                 <button id="open-settings-btn" class="elite-btn-square" style="width: 10vmin; height: 10vmin; font-size: 5vmin; border-radius: 12px;">⚙️</button>
             </div>
                     
@@ -549,19 +559,9 @@ window.ELITE_CONFIG = {
                 <button id="pause-shop-btn" class="elite-btn-large"
                     style="background: linear-gradient(135deg, #ffd700, #ff8c00); color: #000;">MAÃ„ÂAZA 🛒</button>
                 <button id="quit-btn" class="elite-btn-large"
-                    style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);">ANA
-                    <div id="elite-main-version" style="color: #FFD700; font-family: 'Press Start 2P', cursive; font-size: 1.8vmin; font-weight: bold; margin-top: 10px; letter-spacing: 0.8vmin; opacity: 0.9; text-shadow: 0 0 15px rgba(255,215,0,0.4);">
-                        <script>document.write("ELITE v" + (window.ELITE_CONFIG ? window.ELITE_CONFIG.VERSION : "1.99.65.12"));</script>
-                    </div>
-                </div>
-
-                <div style="position: relative; flex-shrink: 0;">
-                    <button id="start-btn" class="master-play-btn">OYNA 🌊</button>
-                    <div class="pulse-ring"></div>
-                </div>
-
-                </div>
+                    style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);">ANA MENÜ</button>
             </div>
+        </div>
 
             
         </div>
@@ -644,26 +644,7 @@ window.ELITE_CONFIG = {
             </div>
         </div>
 
-        <div id="armor-ui-indicator" onclick="handleArmorIndicatorClick()" style="
-            position: absolute; 
-            bottom: calc(100px + env(safe-area-inset-bottom)); 
-            right: calc(50vw - 180px) !important; 
-            width: 70px; height: 70px;
-            background: rgba(0,0,0,0.4); backdrop-filter: blur(8px);
-            border-radius: 50%; border: 2px solid rgba(155, 89, 182, 0.5);
-            display: none; align-items: center; justify-content: center;
-            z-index: 1000; cursor: pointer; transition: all 0.3s ease;
-            box-shadow: 0 0 20px rgba(155, 89, 182, 0.2);
-        ">
-            <div style="position: relative; display: flex; align-items: center; justify-content: center;">
-                <span style="font-size: 32px; filter: drop-shadow(0 0 8px #9b59b6);">&#128142;</span>
-                <div id="armor-badge-pill"
-                    style="position: absolute; top: -10px; right: -10px; background: #00b8d4; color: white; font-size: 13px; font-weight: 900; padding: 3px 8px; border-radius: 12px; border: 2px solid #fff; box-shadow: 0 0 10px rgba(0,0,0,0.5);">
-                    0</div>
-            </div>
-            <!-- Hidden Legacy Badge for Sync -->
-            <span id="armor-badge" style="display:none;">0</span>
-        </div>
+
 
         <!-- GAME OVER SCREEN (ELITE FULL-SCREEN v1.99.64.01) -->
         <div id="game-over-screen" class="screen hidden">
@@ -859,12 +840,12 @@ window.ELITE_CONFIG = {
                         </div>
                     </div>
 
-                    <button id="ad-gold-btn" class="elite-ad-gold-btn" style="margin-top: 10px;" onclick="showRewardedAd(this, '+250 ALTIN', () => { goldCount += 250; saveGame(); updateShopUI(); showToast('+250 ALTIN! 💰', true); })">+250 ALTIN (REKLAM İZLE)</button>
+                    <button id="ad-gold-btn" class="elite-ad-gold-btn" style="margin-top: 10px;" onclick="claimDailyAdGold(this)">+200 ALTIN (REKLAM İZLE)</button>
     
                     <!-- ALTIN MARKET 💰 v1.99.64.01 PRESTIGE UI -->
                     <div class="gold-market-container">
                         <h3 id="shop-gold-market-title" class="gold-market-title">GÜNLÜK HEDİYE 💰</h3>
-                        <div style="display: flex; justify-content: center;"><button onclick="showRewardedAd(this, 'ALINDI', () => { goldCount += 1000; saveGame(); updateShopUI(); showToast('+1000 ALTIN! 💰', true); })" class="gold-card" style="width: 100%; border-color: #FFD700; background: rgba(255,215,0,0.05); padding: 30px;"><span style="font-size: 42px; margin-bottom: 10px;">💰</span><span class="amount" style="color: #FFD700; font-size: 28px;">1.000 GOLD</span><span class="price" style="background: #FFD700; color: #000; padding: 5px 20px; font-size: 14px; border-radius: 8px;">REKLAM İZLE ğŸ“½ï¸ </span></button></div></div>
+                        <div style="display: flex; justify-content: center;"><button onclick="showRewardedAd(this, 'ALINDI', () => { window.totalGold = (window.totalGold || 0) + 1000; saveGame(); updateShopUI(); if(document.getElementById('totalGoldValue')) document.getElementById('totalGoldValue').innerText = window.totalGold; showToast('+1000 ALTIN! 💰', true); })" class="gold-card" style="width: 100%; border-color: #FFD700; background: rgba(255,215,0,0.05); padding: 30px;"><span style="font-size: 42px; margin-bottom: 10px;">💰</span><span class="amount" style="color: #FFD700; font-size: 28px;">1.000 GOLD</span><span class="price" style="background: #FFD700; color: #000; padding: 5px 20px; font-size: 14px; border-radius: 8px;">REKLAM İZLE 📽️ </span></button></div></div>
                 </div>
     
                 <button id="shop-close-btn" class="elite-btn-large" style="background: rgba(255,255,255,0.05); color: #FFD700; border: 1px solid rgba(255,215,0,0.4); margin-top: 2vh;">GERİ DÖN</button>
@@ -929,7 +910,8 @@ window.ELITE_CONFIG = {
             </div>
         </div>
 
-        <div id="controls-ui" style="position: absolute; bottom: calc(20px + env(safe-area-inset-bottom)); left: calc(50vw - 180px) !important; display: none; flex-direction: column; gap: 80px; z-index: 1000; pointer-events: none;">
+        <!-- LEFT CONTROLS (Dash - Lightning) -->
+        <div id="left-controls-ui" style="position: absolute; bottom: calc(20px + env(safe-area-inset-bottom)); left: 20px; display: none; z-index: 1000; pointer-events: none;">
             <div id="dash-action-btn"
                 style="width: 60px; height: 60px; border-radius: 50%; background: rgba(0, 229, 255, 0.15); border: 2px solid rgba(0, 229, 255, 0.4); display: flex; align-items: center; justify-content: center; cursor: pointer; pointer-events: auto;">
                 <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="#00e5ff" stroke-width="2">
@@ -940,11 +922,36 @@ window.ELITE_CONFIG = {
                     <div id="dash-energy-fill" style="width: 0%; height: 100%; background: #00e5ff;"></div>
                 </div>
             </div>
-            
-            <div style="position: relative; pointer-events: none;">
-                <div id="bomb-action-btn" style="position: absolute; bottom: 0px; right: calc(-50vw + 330px) !important; width: 60px; height: 60px; border-radius: 50%; background: rgba(0, 0, 0, 0.4); border: 2px solid rgba(255, 255, 255, 0.2); display: flex; align-items: center; justify-content: center; z-index: 1000; cursor: pointer; user-select: none; -webkit-user-select: none; display: none; backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); transition: transform 0.1s ease, border-color 0.2s ease;"><span style="font-size: 24px; pointer-events: none; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));">&#128163;</span><div id="bomb-badge" style="position: absolute; top: -5px; right: -5px; background: #f12711; color: white; font-size: 13px; font-weight: 900; padding: 3px 8px; border-radius: 12px; border: 2px solid #fff; z-index: 1001; display: none;">0</div></div>
-            </div>
         </div>
+
+        <!-- RIGHT CONTROLS (Armor - Diamond & Bomb) -->
+        <div id="right-controls-ui" style="position: absolute; bottom: calc(20px + env(safe-area-inset-bottom)); right: 20px; display: none; flex-direction: column; gap: 20px; z-index: 1005; pointer-events: none;">
+            
+            <!-- Armor (Top - Diamond) -->
+            <div id="armor-ui-indicator" onclick="handleArmorIndicatorClick()" style="width: 55px; height: 55px; border-radius: 50%; background: rgba(0, 229, 255, 0.15); border: 2px solid rgba(0, 229, 255, 0.4); display: flex; align-items: center; justify-content: center; cursor: pointer; pointer-events: auto; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);">
+                 <div style="position: relative; display: flex; align-items: center; justify-content: center;">
+                    <span style="font-size: 26px; filter: drop-shadow(0 0 8px #00e5ff);">💎</span>
+                    <div id="armor-badge-pill"
+                        style="position: absolute; top: -10px; right: -10px; background: #00b8d4; color: white; font-size: 11px; font-weight: 900; padding: 2px 6px; border-radius: 10px; border: 1.5px solid #fff; box-shadow: 0 0 10px rgba(0,0,0,0.5);">
+                        0</div>
+                </div>
+                <span id="armor-badge" style="display:none;">0</span>
+            </div>
+
+            <!-- Bomb (Bottom - Modern Tactical) -->
+            <div id="bomb-action-btn" style="width: 55px; height: 55px; border-radius: 18px; background: rgba(5, 15, 30, 0.7); border: 1px solid rgba(255, 61, 0, 0.4); display: flex; align-items: center; justify-content: center; cursor: pointer; user-select: none; -webkit-user-select: none; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); transition: all 0.2s ease; box-shadow: 0 8px 20px rgba(0,0,0,0.4); pointer-events: auto;">
+                <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="#ff3d00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="filter: drop-shadow(0 0 10px rgba(255,61,0,0.6));">
+                    <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path>
+                    <circle cx="12" cy="12" r="5" fill="#ff3d00" fill-opacity="0.2"></circle>
+                    <circle cx="12" cy="12" r="2" fill="#ff3d00"></circle>
+                </svg>
+                <div id="bomb-badge" style="position: absolute; top: -8px; right: -8px; background: #ff3d00; color: white; font-size: 11px; font-weight: 900; padding: 2px 6px; border-radius: 10px; border: 1.5px solid #fff; box-shadow: 0 0 15px rgba(255, 61, 0, 0.5); z-index: 1006;">0</div>
+            </div>
+            
+        </div>
+
+        <!-- Legacy Container (Empty) -->
+        <div id="controls-ui" style="display: none;"></div>
 
 
         <!-- Removed legacy security lock overlay -->

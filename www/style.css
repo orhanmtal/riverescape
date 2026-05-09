@@ -296,7 +296,7 @@ h1 {
 .bottom-right-group {
     position: absolute !important;
     bottom: 30px !important;
-    right: 30px !important;
+    left: 30px !important;
     pointer-events: auto !important;
     z-index: 2000 !important;
 }

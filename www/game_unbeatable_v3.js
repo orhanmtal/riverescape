@@ -612,9 +612,19 @@ function updateLanguageUI() {
     if (document.getElementById('active-goals-title')) document.getElementById('active-goals-title').innerText = t.activeGoals;
     if (document.getElementById('armor-badge-label')) document.getElementById('armor-badge-label').innerText = t.armorBadgeLabel;
 
-    setText('spin-title', t.spinWheelTitle);
     setText('spin-close-btn', t.spinClose);
     setText('quit-btn-gameover', t.mainMenu);
+
+    // v1.99.68: UI & Leaderboard Localization
+    setText('pause-screen-title', t.pauseTitle);
+    setText('resume-btn', t.resumeBtn);
+    setText('pause-shop-btn', t.shopBtn);
+    setText('quit-btn', t.quitBtn);
+    
+    setText('leaderboard-screen-title', t.leaderboardTitle);
+    setText('leaderboard-screen-sub', t.leaderboardSub);
+    setText('leaderboard-back-btn', t.leaderboardBack);
+    
     updateSpinButtonText();
 }
 
@@ -658,7 +668,7 @@ document.addEventListener('DOMContentLoaded', initLanguage);
 function bootAdMob() {
     // Capacitor plugin hazır mı kontrol et
     if (!getCapacitorAdMob()) {
-        console.log('[AdMob Boot] Capacitor AdMob plugin henüz hazır değil, 1000ms sonra tekrar denenecek.');
+        // console.log('[AdMob Boot] Capacitor AdMob plugin henüz hazır değil, 1000ms sonra tekrar denenecek.');
         setTimeout(bootAdMob, 1000);
         return;
     }
@@ -1531,13 +1541,13 @@ function updateArmorUI() {
     }
 
     if (aIndi) {
-        // v1.99.64.75: ARMOR ICON AUTO-RESTORE (Restores complex HUD layout if corrupted)
+        // v1.99.64.75: ARMOR ICON AUTO-RESTORE (Updated for Diamond Icon HUD)
         if (!aIndi.querySelector('#armor-badge-pill')) {
             aIndi.innerHTML = `
                 <div style="position: relative; display: flex; align-items: center; justify-content: center;">
-                    <span style="font-size: 32px; filter: drop-shadow(0 0 8px #9b59b6);">💎</span>
+                    <span style="font-size: 26px; filter: drop-shadow(0 0 8px #00e5ff);">💎</span>
                     <div id="armor-badge-pill"
-                        style="position: absolute; top: -10px; right: -10px; background: #00b8d4; color: white; font-size: 13px; font-weight: 900; padding: 3px 8px; border-radius: 12px; border: 2px solid #fff; box-shadow: 0 0 10px rgba(0,0,0,0.5);">
+                        style="position: absolute; top: -10px; right: -10px; background: #00b8d4; color: white; font-size: 11px; font-weight: 900; padding: 2px 6px; border-radius: 10px; border: 1.5px solid #fff; box-shadow: 0 0 10px rgba(0,0,0,0.5);">
                         ${armorCharge}</div>
                 </div>
                 <span id="armor-badge" style="display:none;">${armorCharge}</span>`;
@@ -1827,13 +1837,13 @@ function handleArmorIndicatorClick() {
     // v1.99.64.02: ELITE AD REFILL OFFER
     showEliteConfirm(
         t.armorChargeTitle || "ZIRH ŞARJI",
-        (currentLang === 'tr' ? "Zırhın bitti! Reklam izleyip +1 Zırh almak ister misin?" : "Out of Armor! Watch ad for +1 Armor?"),
+        (currentLang === 'tr' ? "Zırhın bitti! Reklam izleyip +3 Zırh almak ister misin?" : "Out of Armor! Watch ad for +3 Armor?"),
         (currentLang === 'tr' ? "İZLE & AL" : "WATCH & GET"),
         "💎",
         () => {
             const btn = document.getElementById('armor-ui-indicator');
             showRewardedAd(btn, "💎", () => {
-                armorCharge += 1;
+                armorCharge += 3;
                 saveGame();
                 updateShopUI();
 
@@ -2007,7 +2017,26 @@ function updateShopUI() {
 
     } catch (e) { console.warn("Shop UI Error:", e); }
 }
-
+// v1.99.65: Daily Gold Ad
+window.claimDailyAdGold = function(btn) {
+    const today = new Date().toDateString();
+    const lastClaim = localStorage.getItem('riverEscape_DailyAdGold');
+    if (lastClaim === today) {
+        showToast((currentLang === 'tr') ? 'BUGÜNLÜK HAKKINIZ BİTTİ! ⏳' : 'DAILY LIMIT REACHED! ⏳', false);
+        return;
+    }
+    showRewardedAd(btn, (currentLang === 'tr') ? 'ALINDI' : 'CLAIMED', () => { 
+        window.totalGold = (window.totalGold || 0) + 200; 
+        if (typeof totalGold !== 'undefined') totalGold = window.totalGold;
+        localStorage.setItem('riverEscape_DailyAdGold', today);
+        saveGame(); 
+        updateShopUI(); 
+        if (typeof syncEliteHUD === 'function') syncEliteHUD(); 
+        const goldValUI = document.getElementById('totalGoldValue');
+        if (goldValUI) goldValUI.innerText = window.totalGold;
+        showToast('+200 ALTIN! 💰', true); 
+    });
+};
 
 
 if (buyAmmoBtn) buyAmmoBtn.addEventListener('click', () => {
@@ -2964,6 +2993,9 @@ function startGame() {
     const cUi = document.getElementById('controls-ui');
     if (cUi) { cUi.classList.remove('hidden'); cUi.style.display = 'flex'; }
 
+    const rUi = document.getElementById('right-controls-ui');
+    if (rUi) { rUi.classList.remove('hidden'); rUi.style.display = 'flex'; }
+
     const lUi = document.getElementById('left-controls-ui');
     if (lUi) { lUi.classList.remove('hidden'); lUi.style.display = 'flex'; }
 
@@ -3012,7 +3044,11 @@ function startGame() {
         pauseBtn.style.opacity = '0.5';
         pauseBtn.innerText = "⏸";
     }
-    if (bombActionBtn && hasWeapon) bombActionBtn.style.display = 'flex';
+    if (bombActionBtn) {
+        bombCount = Math.max(bombCount, 5); // v1.99.68: Starter Gift - 5 Bombs
+        armorCharge = Math.max(armorCharge, 3); // v1.99.68: Starter Gift - 3 Armor
+        bombActionBtn.style.display = 'flex';
+    }
     updateShopUI();
 
     // Revive butonlarını UI üzerinde sıfırla
@@ -3301,15 +3337,6 @@ function syncEliteHUD() {
             // v1.99.64.121: Bomba ikonu herkes için hep açık
             cachedHud.bBtn.style.display = 'flex';
             cachedHud.bBtn.style.filter = (currentBombs <= 0) ? "grayscale(100%) opacity(0.6)" : "none";
-
-            // v1.99.64.74: BOMB ICON AUTO-RESTORE (Fixes missing SVG after ad simulation)
-            if (!cachedHud.bBtn.querySelector('svg')) {
-                cachedHud.bBtn.innerHTML = `
-                    <svg viewBox="0 0 24 24" width="40" height="40" fill="#ff3d00" style="filter: drop-shadow(0 0 8px rgba(255,61,0,0.8));">
-                        <circle cx="12" cy="12" r="3"></circle>
-                        <path d="M3 12h3m12 0h3M12 3v3m0 12v3" stroke="#fff" stroke-width="2" stroke-linecap="round"></path>
-                    </svg>`;
-            }
         }
 
         // Zırh (Elmas) senkronu
@@ -3964,9 +3991,9 @@ function update(dt) {
                     // v1.99.64.77: RED HIPPO REWARD (50G)
                     // v1.99.64.96: ELITE BOSS REWARD (50G)
                     if (obs.type === 'redHippo' || obs.type === 'blueCroc') {
-                        totalGold += 50;
+                        totalGold += 200;
                         window.totalGold = totalGold;
-                        showToast("+50 GOLD! 💰", true);
+                        showToast("+200 GOLD! 💰", true);
                         // Visual coin explosion effect towards score UI
                         for (var p = 0; p < 8; p++) {
                             setTimeout(() => { playCoinSound(); }, p * 100);
@@ -4092,7 +4119,7 @@ function fireBomb() {
             t.noAmmoTitle || "MÜHİMMAT BİTTİ",
             (currentLang === 'tr' ? "Bombaların bitti! Reklam izleyip +10 Bomba almak ister misin?" : "Out of Bombs! Watch ad for +10 Bombs?"),
             (currentLang === 'tr' ? "İZLE & AL" : "WATCH & GET"),
-            "💣",
+            "🎯",
             () => {
                 const btn = document.getElementById('bomb-action-btn');
                 // v1.99.64.66: Save innerHTML to preserve the crosshair icon
@@ -5816,9 +5843,11 @@ function goToMainMenu() {
     // 4. HUD ve Kontrolleri Sarsılmaz Bir Hızla Gizle
     const hud = document.getElementById('modern-hud');
     const controls = document.getElementById('controls-ui');
+    const rControls = document.getElementById('right-controls-ui');
     const pauseBtnEl = document.getElementById('pause-btn');
     if (hud) hud.style.display = 'none';
     if (controls) controls.style.display = 'none';
+    if (rControls) rControls.style.display = 'none';
     if (pauseBtnEl) pauseBtnEl.style.display = 'none';
 
     // 5. Durumu Kaydet ve Hazırla
@@ -6002,6 +6031,13 @@ if (cloudSyncBtn) cloudSyncBtn.addEventListener('click', () => {
     }
 });
 
+const openLeaderboardBtn = document.getElementById('open-leaderboard-btn');
+if (openLeaderboardBtn) {
+    openLeaderboardBtn.addEventListener('click', () => {
+        if (window.Leaderboard) window.Leaderboard.showLeaderboard();
+    });
+}
+
 const resetYes = document.getElementById('confirm-reset-yes');
 const resetNo = document.getElementById('confirm-reset-no');
 
@@ -6031,11 +6067,11 @@ const adGoldBtn = document.getElementById('ad-gold-btn');
 if (adGoldBtn) {
     adGoldBtn.addEventListener('click', () => {
         showRewardedAd(adGoldBtn, translations[currentLang].adGoldBtn, () => {
-            totalGold += 50;
+            totalGold += 200;
             triggerEliteEconomySync(true);
             saveGame();
             updateShopUI();
-            showToast(`${translations[currentLang].rewardPrefix} 50 GOLD! 💰`, true);
+            showToast(`${translations[currentLang].rewardPrefix} 200 GOLD! 💰`, true);
             for (var i = 0; i < 4; i++) setTimeout(playCoinSound, i * 100);
         });
     });
@@ -6055,11 +6091,11 @@ if (adAmmoBtn) {
 const adArmorBtn = document.getElementById('ad-armor-btn');
 if (adArmorBtn) {
     adArmorBtn.addEventListener('click', () => {
-        showRewardedAd(adArmorBtn, "+1 💎 (AD)", () => {
-            armorCharge += 1;
+        showRewardedAd(adArmorBtn, "+3 💎 (AD)", () => {
+            armorCharge += 3;
             levelUpInvuln = true;
             setTimeout(() => { levelUpInvuln = false; }, 5000);
-            showToast("+1 ARMOR! 💎", true);
+            showToast("+3 ARMOR! 💎", true);
             if (typeof updateArmorUI === 'function') updateArmorUI();
             if (typeof syncEliteHUD === 'function') syncEliteHUD();
             setTimeout(() => { saveGame(); updateShopUI(); }, 200);
