@@ -2023,6 +2023,32 @@ function updateShopUI() {
 
     } catch (e) { console.warn("Shop UI Error:", e); }
 }
+// v1.99.65.17: Daily Gift (1000 Gold) - Günlük sınırlı ödül
+window.claimDailyGift = function(btn) {
+    const today = new Date().toDateString();
+    const lastClaim = localStorage.getItem('riverEscape_DailyGift');
+    if (lastClaim === today) {
+        showToast((currentLang === 'tr') ? 'BUGÜNLÜK HEDIYENIZI ALDINIZ! ⏳' : 'DAILY GIFT ALREADY CLAIMED! ⏳', false);
+        // Update button to show claimed state
+        if (btn) { btn.innerHTML = (currentLang === 'tr') ? 'ALINDI ✅' : 'CLAIMED ✅'; btn.disabled = true; btn.style.opacity = '0.5'; }
+        return;
+    }
+    const claimedLabel = (currentLang === 'tr') ? 'ALINDI ✅' : 'CLAIMED ✅';
+    showRewardedAd(btn, claimedLabel, () => {
+        window.totalGold = (window.totalGold || 0) + 1000;
+        if (typeof totalGold !== 'undefined') totalGold = window.totalGold;
+        localStorage.setItem('riverEscape_DailyGift', today);
+        saveGame();
+        updateShopUI();
+        if (typeof syncEliteHUD === 'function') syncEliteHUD();
+        const goldValUI = document.getElementById('totalGoldValue');
+        if (goldValUI) goldValUI.innerText = window.totalGold;
+        showToast((currentLang === 'tr') ? '+1000 ALTIN! 💰' : '+1000 GOLD! 💰', true);
+        // Lock button for the rest of the day
+        if (btn) { btn.disabled = true; btn.style.opacity = '0.5'; }
+    });
+};
+
 // v1.99.65: Daily Gold Ad
 window.claimDailyAdGold = function(btn) {
     const today = new Date().toDateString();
