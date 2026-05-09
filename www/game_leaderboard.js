@@ -12,14 +12,29 @@ window.Leaderboard = {
     init() {
         console.log("🎮 [ELITE AUTH] CrazyGames SDK Initialization...");
         
-        // v1.99.65.00: CrazyGames Auth System - MANDATORY SDK INIT
-        if (window.CrazyGames && window.CrazyGames.SDK) {
-            try {
-                window.CrazyGames.SDK.init();
-                console.log("✅ [ELITE AUTH] CrazyGames SDK Initialized.");
-            } catch (e) {
-                console.warn("CrazyGames SDK Init Error:", e);
+        // v1.99.65.16: Robust SDK Initialization with Polling
+        const checkSDK = setInterval(() => {
+            if (window.CrazyGames && window.CrazyGames.SDK) {
+                clearInterval(checkSDK);
+                try {
+                    window.CrazyGames.SDK.init();
+                    console.log("✅ [ELITE AUTH] CrazyGames SDK Initialized Successfully.");
+                    this.performPostInitSync();
+                } catch (e) {
+                    console.warn("CrazyGames SDK Init Error:", e);
+                }
             }
+        }, 200);
+
+        // Timeout after 5 seconds
+        setTimeout(() => clearInterval(checkSDK), 5000);
+
+        this.bindEvents();
+        this.restoreFromCloud(); 
+    },
+
+    performPostInitSync() {
+        if (window.CrazyGames && window.CrazyGames.SDK) {
             this.playerID = this.playerID || "cg_" + Math.random().toString(36).substr(2, 9);
             this.playerName = this.playerName || "ELITE PLAYER";
             

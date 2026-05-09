@@ -33,7 +33,10 @@ window.ELITE_CONFIG = {
     <script>
         // Elite Platform Bridge
         window.isAndroid = window.Capacitor && window.Capacitor.getPlatform() === 'android';
-        window.isCrazyGames = window.location.hostname.includes('crazygames') || window.location.hostname.includes('localhost'); 
+        window.isCrazyGames = window.location.hostname.includes('crazygames') || 
+                              window.location.hostname.includes('localhost') || 
+                              window.location.hostname.includes('127.0.0.1') ||
+                              window.location.href.includes('crazygames.com'); 
 
         (function () {
             const v = window.ELITE_CONFIG ? window.ELITE_CONFIG.VERSION : "1.99.63.63";
