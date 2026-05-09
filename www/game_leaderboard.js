@@ -211,7 +211,7 @@ window.Leaderboard = {
         let cg = window.CrazyGames;
         let retries = 0;
         
-        // Mock for Localhost if SDK fails to load
+        // Mock for Localhost OR when SDK fails to load (AdBlock etc.)
         if ((!cg || !cg.SDK) && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
             console.warn("SDK not found on localhost. Using Mock Data for UI Testing.");
             this.renderLeaderboard([
@@ -232,16 +232,20 @@ window.Leaderboard = {
         }
 
         if (!cg || !cg.SDK || !cg.SDK.leaderboard) {
-            console.error("CrazyGames SDK initialization timed out.");
-            const errorText = translations[currentLang].firebaseNoConnection || "CONNECTION ERROR";
-            let debugInfo = "";
-            if (!window.CrazyGames) debugInfo = "SDK Script Not Loaded (AdBlock?)";
-            else if (!window.CrazyGames.SDK) debugInfo = "SDK Object Empty";
-            else if (!window.CrazyGames.SDK.leaderboard) debugInfo = "Leaderboard Module Missing";
-
-            lbList.innerHTML = `<div style="text-align: center; color: #ff5252; padding: 40px; font-family: 'Outfit'; font-weight: bold;">${errorText}<br>
-                <span style="font-size: 11px; color: #ffa726; margin-top: 15px; display: block; text-transform: uppercase;">${debugInfo}</span>
-                <span style="font-size: 9px; opacity: 0.4; margin-top: 10px; display: block;">TIMEOUT (5000ms)</span></div>`;
+            // Graceful fallback: show local best score instead of error
+            const localBest = Number(localStorage.getItem('riverEscapeHighScore') || 0);
+            const playerName = (localStorage.getItem('riverEscapeName') || 'YOU').toUpperCase();
+            console.warn("CrazyGames SDK not available. Showing local scores.");
+            
+            this.renderLeaderboard([
+                { rank: 1, name: playerName, score: localBest, userId: this.playerID }
+            ]);
+            
+            // Show a subtle offline notice
+            const notice = document.createElement('div');
+            notice.style.cssText = 'text-align:center; color:rgba(255,255,255,0.3); font-size:10px; font-family:Outfit; margin-top:10px; letter-spacing:1px;';
+            notice.innerText = '⚠️ OFFLINE MODE — ONLINE RANKINGS UNAVAILABLE';
+            if (lbList) lbList.appendChild(notice);
             return;
         }
 
