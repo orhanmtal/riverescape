@@ -5858,10 +5858,12 @@ function goToMainMenu() {
     const hud = document.getElementById('modern-hud');
     const controls = document.getElementById('controls-ui');
     const rControls = document.getElementById('right-controls-ui');
+    const lControls = document.getElementById('left-controls-ui');
     const pauseBtnEl = document.getElementById('pause-btn');
     if (hud) hud.style.display = 'none';
     if (controls) controls.style.display = 'none';
     if (rControls) rControls.style.display = 'none';
+    if (lControls) lControls.style.display = 'none';
     if (pauseBtnEl) pauseBtnEl.style.display = 'none';
 
     // 5. Durumu Kaydet ve Hazırla
