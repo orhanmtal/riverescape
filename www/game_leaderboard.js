@@ -9,56 +9,54 @@ window.Leaderboard = {
     playerCountry: localStorage.getItem('riverEscapeCountry') || "??",
     playerFlag: "🌍",
 
-    init() {
+    async init() {
         console.log("🎮 [ELITE AUTH] CrazyGames SDK Initialization...");
-        
-        // v1.99.65.16: Robust SDK Initialization with Polling
-        const checkSDK = setInterval(() => {
-            if (window.CrazyGames && window.CrazyGames.SDK) {
-                clearInterval(checkSDK);
-                try {
-                    window.CrazyGames.SDK.init();
-                    console.log("✅ [ELITE AUTH] CrazyGames SDK Initialized Successfully.");
-                    this.performPostInitSync();
-                } catch (e) {
-                    console.warn("CrazyGames SDK Init Error:", e);
+
+        // v1.99.65.17: Wait for SDK to be available, then await init()
+        let retries = 0;
+        while ((!window.CrazyGames || !window.CrazyGames.SDK) && retries < 25) {
+            await new Promise(r => setTimeout(r, 200));
+            retries++;
+        }
+
+        if (!window.CrazyGames || !window.CrazyGames.SDK) {
+            console.warn("⚠️ [ELITE AUTH] CrazyGames SDK not available after 5s.");
+            this.bindEvents();
+            this.restoreFromCloud();
+            return;
+        }
+
+        try {
+            await window.CrazyGames.SDK.init();
+            console.log("✅ [ELITE AUTH] CrazyGames SDK init() resolved successfully!");
+        } catch (e) {
+            console.warn("⚠️ [ELITE AUTH] SDK init() threw:", e);
+        }
+
+        // Post-init user sync
+        this.playerID = this.playerID || "cg_" + Math.random().toString(36).substr(2, 9);
+        this.playerName = this.playerName || "ELITE PLAYER";
+        localStorage.setItem('riverEscapeName', this.playerName);
+        localStorage.setItem('riverEscapeID', this.playerID);
+
+        if (window.CrazyGames.SDK.user && typeof window.CrazyGames.SDK.user.getUser === 'function') {
+            try {
+                const user = await window.CrazyGames.SDK.user.getUser();
+                if (user) {
+                    this.playerName = user.username;
+                    this.playerID = user.userId;
+                    localStorage.setItem('riverEscapeName', this.playerName);
+                    localStorage.setItem('riverEscapeID', this.playerID);
+                    this.updateAuthUI(true, this.playerName, false, user.profilePictureUrl);
                 }
-            }
-        }, 200);
-
-        // Timeout after 5 seconds
-        setTimeout(() => clearInterval(checkSDK), 5000);
-
-        this.bindEvents();
-        this.restoreFromCloud(); 
-    },
-
-    performPostInitSync() {
-        if (window.CrazyGames && window.CrazyGames.SDK) {
-            this.playerID = this.playerID || "cg_" + Math.random().toString(36).substr(2, 9);
-            this.playerName = this.playerName || "ELITE PLAYER";
-            
-            localStorage.setItem('riverEscapeName', this.playerName);
-            localStorage.setItem('riverEscapeID', this.playerID);
-            
-            // Sync with CrazyGames User if available
-            if (window.CrazyGames.SDK.user && typeof window.CrazyGames.SDK.user.getUser === 'function') {
-                window.CrazyGames.SDK.user.getUser().then(user => {
-                    if (user) {
-                        this.playerName = user.username;
-                        this.playerID = user.userId;
-                        localStorage.setItem('riverEscapeName', this.playerName);
-                        localStorage.setItem('riverEscapeID', this.playerID);
-                        this.updateAuthUI(true, this.playerName, false, user.profilePictureUrl);
-                    }
-                }).catch(e => console.warn("CrazyGames User not available:", e));
+            } catch(e) {
+                console.warn("CrazyGames User not available:", e);
             }
         }
 
         this.bindEvents();
-        this.restoreFromCloud(); // İlk açılışta buluttan verileri çek
+        this.restoreFromCloud();
 
-        // Ülke tespiti
         if (this.playerCountry === "??") {
             setTimeout(() => this.detectCountry(), 1000);
         } else {
