@@ -27,8 +27,11 @@ window.ELITE_CONFIG = {
 </script>
     <script src="version.js?v=v1.99.65.00"></script>
     
-    <!-- CrazyGames SDK -->
     <script src="https://sdk.crazygames.com/v2.js"></script>
+    <script>
+        console.log("🛰️ [SDK DEBUG] CrazyGames v2 Script Loaded at Top");
+        window.isCrazyGames = true; // Force true for QA panel
+    </script>
 
     <script>
         // Elite Platform Bridge
@@ -979,10 +982,17 @@ window.ELITE_CONFIG = {
     <script src="game_store.js?v=v1.99.64.102"></script>
     <script src="game_unbeatable_v3.js?v=v1.99.64.102"></script>
     <script>
-        // v1.99.65.00: MANDATORY ELITE INITIALIZATION
-        if (typeof Leaderboard !== 'undefined' && Leaderboard.init) {
-            Leaderboard.init();
+        // v1.99.65.17: ULTRA-AGGRESSIVE SDK INIT
+        function triggerEliteInit() {
+            console.log("🛰️ [SDK DEBUG] Triggering Leaderboard.init...");
+            if (typeof Leaderboard !== 'undefined' && Leaderboard.init) {
+                Leaderboard.init();
+            }
         }
+        document.addEventListener('DOMContentLoaded', triggerEliteInit);
+        window.onload = triggerEliteInit;
+        // Immediate fallback
+        setTimeout(triggerEliteInit, 1000);
     </script>
 </body>
 
