@@ -2040,7 +2040,7 @@ window.claimDailyAdGold = function(btn) {
         if (typeof syncEliteHUD === 'function') syncEliteHUD(); 
         const goldValUI = document.getElementById('totalGoldValue');
         if (goldValUI) goldValUI.innerText = window.totalGold;
-        showToast('+200 ALTIN! 💰', true); 
+        showToast((currentLang === 'tr') ? '+200 ALTIN! 💰' : '+200 GOLD! 💰', true); 
     });
 };
 
