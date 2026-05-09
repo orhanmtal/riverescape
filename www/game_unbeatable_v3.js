@@ -620,11 +620,11 @@ function updateLanguageUI() {
     setText('resume-btn', t.resumeBtn);
     setText('pause-shop-btn', t.shopBtn);
     setText('quit-btn', t.quitBtn);
-    
+
     setText('leaderboard-screen-title', t.leaderboardTitle);
     setText('leaderboard-screen-sub', t.leaderboardSub);
     setText('leaderboard-back-btn', t.leaderboardBack);
-    
+
     updateSpinButtonText();
 }
 
@@ -888,20 +888,20 @@ async function preloadRewardedAd() {
 
 // v1.99.65.00: HYBRID AD & GAMEPLAY MANAGER (Robust Platform Detection)
 const EliteAdManager = {
-    gameplayStart: function() {
+    gameplayStart: function () {
         if (window.isCrazyGames && window.CrazyGames && window.CrazyGames.SDK && window.CrazyGames.SDK.game) {
-            try { 
-                window.CrazyGames.SDK.game.gameplayStart(); 
+            try {
+                window.CrazyGames.SDK.game.gameplayStart();
                 console.log("🎮 [SDK] gameplayStart sent");
-            } catch(e){}
+            } catch (e) { }
         }
     },
-    gameplayStop: function() {
+    gameplayStop: function () {
         if (window.isCrazyGames && window.CrazyGames && window.CrazyGames.SDK && window.CrazyGames.SDK.game) {
-            try { 
-                window.CrazyGames.SDK.game.gameplayStop(); 
+            try {
+                window.CrazyGames.SDK.game.gameplayStop();
                 console.log("🎮 [SDK] gameplayStop sent");
-            } catch(e){}
+            } catch (e) { }
         }
     }
 };
@@ -1368,7 +1368,7 @@ function resizeCanvas() {
 
     if (isWeb) {
         // Force a nice portrait aspect ratio on web if screen is too wide
-        const targetAspect = 9/16;
+        const targetAspect = 9 / 16;
         if (baseWidth / baseHeight > targetAspect) {
             baseWidth = baseHeight * targetAspect;
         }
@@ -1520,7 +1520,7 @@ function saveGame() {
         sessionProgress: levelProgressTime || 0,
         sessionLevel: currentLevel || 1
     };
-    
+
     const dataStr = JSON.stringify(data);
     localStorage.setItem('riverEscapeSave', dataStr);
 
@@ -2023,50 +2023,89 @@ function updateShopUI() {
 
     } catch (e) { console.warn("Shop UI Error:", e); }
 }
-// v1.99.65.17: Daily Gift (1000 Gold) - Günlük sınırlı ödül
-window.claimDailyGift = function(btn) {
-    const today = new Date().toDateString();
-    const lastClaim = localStorage.getItem('riverEscape_DailyGift');
-    if (lastClaim === today) {
-        showToast((currentLang === 'tr') ? 'BUGÜNLÜK HEDIYENIZI ALDINIZ! ⏳' : 'DAILY GIFT ALREADY CLAIMED! ⏳', false);
-        // Update button to show claimed state
-        if (btn) { btn.innerHTML = (currentLang === 'tr') ? 'ALINDI ✅' : 'CLAIMED ✅'; btn.disabled = true; btn.style.opacity = '0.5'; }
+// v1.99.65.17: Daily Gift (1000 Gold) - Takvim günü bazlı, Bulut + LocalStorage
+window.claimDailyGift = async function (btn) {
+    const LOCAL_KEY = 'riverEscape_DailyGift_date';
+    const CLOUD_KEY = 'dailyGift_date';
+    const today     = new Date().toDateString(); // ör: "Sat May 10 2026"
+
+    const lockBtn = () => {
+        if (!btn) return;
+        btn.innerHTML = (currentLang === 'tr') ? 'ALINDI ✅' : 'CLAIMED ✅';
+        btn.disabled  = true;
+        btn.style.opacity = '0.5';
+    };
+
+    // 1. LocalStorage hızlı kontrol
+    if (localStorage.getItem(LOCAL_KEY) === today) {
+        showToast((currentLang === 'tr') ? 'BUGÜNKÜ HEDİYENİZİ ALDINIZ! ⏳' : 'DAILY GIFT ALREADY CLAIMED! ⏳', false);
+        lockBtn();
         return;
     }
+
+    // 2. Bulut kontrolü (SDK varsa — tarayıcı temizlense bile geçerli)
+    if (window.CrazyGames && window.CrazyGames.SDK && window.CrazyGames.SDK.data) {
+        try {
+            const cloudDate = await window.CrazyGames.SDK.data.getItem(CLOUD_KEY);
+            if (cloudDate === today) {
+                localStorage.setItem(LOCAL_KEY, today); // Local'i senkronize et
+                showToast((currentLang === 'tr') ? 'BUGÜNKÜ HEDİYENİZİ ALDINIZ! ⏳' : 'DAILY GIFT ALREADY CLAIMED! ⏳', false);
+                lockBtn();
+                return;
+            }
+        } catch (e) {
+            console.warn('[DailyGift] Cloud check failed, proceeding with local:', e);
+        }
+    }
+
+    // 3. Kontrol geçti — reklamı göster ve ödülü ver
     const claimedLabel = (currentLang === 'tr') ? 'ALINDI ✅' : 'CLAIMED ✅';
-    showRewardedAd(btn, claimedLabel, () => {
+    showRewardedAd(btn, claimedLabel, async () => {
         window.totalGold = (window.totalGold || 0) + 1000;
         if (typeof totalGold !== 'undefined') totalGold = window.totalGold;
-        localStorage.setItem('riverEscape_DailyGift', today);
+
+        // LocalStorage'a kaydet
+        localStorage.setItem(LOCAL_KEY, today);
+
+        // Buluta kaydet (SDK varsa)
+        if (window.CrazyGames && window.CrazyGames.SDK && window.CrazyGames.SDK.data) {
+            try {
+                await window.CrazyGames.SDK.data.setItem(CLOUD_KEY, today);
+                console.log('✅ [DailyGift] Cloud date saved:', today);
+            } catch (e) {
+                console.warn('[DailyGift] Cloud save failed:', e);
+            }
+        }
+
         saveGame();
         updateShopUI();
         if (typeof syncEliteHUD === 'function') syncEliteHUD();
         const goldValUI = document.getElementById('totalGoldValue');
         if (goldValUI) goldValUI.innerText = window.totalGold;
         showToast((currentLang === 'tr') ? '+1000 ALTIN! 💰' : '+1000 GOLD! 💰', true);
-        // Lock button for the rest of the day
-        if (btn) { btn.disabled = true; btn.style.opacity = '0.5'; }
+        lockBtn();
     });
 };
 
+
 // v1.99.65: Daily Gold Ad
-window.claimDailyAdGold = function(btn) {
+window.claimDailyAdGold = function (btn) {
     const today = new Date().toDateString();
     const lastClaim = localStorage.getItem('riverEscape_DailyAdGold');
     if (lastClaim === today) {
         showToast((currentLang === 'tr') ? 'BUGÜNLÜK HAKKINIZ BİTTİ! ⏳' : 'DAILY LIMIT REACHED! ⏳', false);
         return;
     }
-    showRewardedAd(btn, (currentLang === 'tr') ? 'ALINDI' : 'CLAIMED', () => { 
-        window.totalGold = (window.totalGold || 0) + 200; 
+    showRewardedAd(btn, (currentLang === 'tr') ? 'ALINDI' : 'CLAIMED', () => {
+        window.totalGold = (window.totalGold || 0) + 200;
         if (typeof totalGold !== 'undefined') totalGold = window.totalGold;
         localStorage.setItem('riverEscape_DailyAdGold', today);
-        saveGame(); 
-        updateShopUI(); 
-        if (typeof syncEliteHUD === 'function') syncEliteHUD(); 
+        saveGame();
+        updateShopUI();
+        if (typeof syncEliteHUD === 'function') syncEliteHUD();
         const goldValUI = document.getElementById('totalGoldValue');
         if (goldValUI) goldValUI.innerText = window.totalGold;
-        showToast((currentLang === 'tr') ? '+200 ALTIN! 💰' : '+200 GOLD! 💰', true); 
+        showToast((currentLang === 'tr') ? '+200 ALTIN! 💰' : '+200 GOLD! 💰', true);
     });
 };
 
@@ -2978,7 +3017,7 @@ function togglePause() {
             pauseScreen.style.display = 'none';
         }
         if (pauseBtn) pauseBtn.innerText = "⏸";
-        
+
         // v1.99.65.00: CrazyGames Gameplay Start Hook
         if (typeof EliteAdManager !== 'undefined' && EliteAdManager.gameplayStart) {
             EliteAdManager.gameplayStart();
@@ -4615,7 +4654,7 @@ function draw(dt) {
                         let tSy = sy + margin;
                         let tSw = sw - margin * 2;
                         let tSh = sh - margin * 2;
-                        
+
                         if (obs.type === 'redHippo') {
                             // v1.99.64.127: PERF - Cache tileset filtered redHippo
                             if (!renderCache.redHippoTile) {
@@ -6191,10 +6230,10 @@ function applySaveData(savedJSON) {
 
         armorCharge = (data.armorCharge || 0) + (window.starterGiftsPending ? window.starterGiftsPending.armor : 0);
         bombCount = (data.bombs || 0) + (window.starterGiftsPending ? window.starterGiftsPending.bombs : 0);
-        
+
         if (window.starterGiftsPending) {
             delete window.starterGiftsPending;
-            saveGame(); 
+            saveGame();
         }
 
         window.resumeScore = data.sessionScore || 0;
@@ -6225,7 +6264,7 @@ function applySaveData(savedJSON) {
 
         // v1.99.33.74: Final UI Sync to reflect loaded gold
         triggerEliteEconomySync(true);
-    } catch(e) { console.error("[ELITE] applySaveData error:", e); }
+    } catch (e) { console.error("[ELITE] applySaveData error:", e); }
 }
 
 
