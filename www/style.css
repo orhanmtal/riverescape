@@ -22,7 +22,7 @@ body::before {
     content: '';
     position: absolute;
     top: 0; left: 0; width: 100%; height: 100%;
-    background: url('https://www.transparenttextures.com/patterns/dark-matter.png');
+    background: radial-gradient(circle at 50% 50%, rgba(0,229,255,0.05) 0%, transparent 70%);
     opacity: 0.15;
     pointer-events: none;
 }
@@ -125,27 +125,35 @@ button, .switch, .toggle-slider, #gameCanvas {
     box-sizing: border-box;
 }
 
-/* v1.99.65.11: [ELITE] Full-Screen Responsive Fixes */
+/* v1.99.65.11: [ELITE] Full-Screen Responsive Fixes - REFINED FOR ELEGANCE */
 #game-over-screen, #start-screen, #pause-screen, #settings-screen, #shop-screen {
     width: 100% !important;
     height: 100% !important;
     max-width: 600px !important;
     left: 50% !important;
     transform: translateX(-50%) !important;
+    padding: clamp(15px, 4vmin, 30px) !important;
 }
 
-#gameover-title { font-size: clamp(32px, 9vmin, 54px) !important; line-height: 1.1 !important; }
-#score-title-final { font-size: clamp(40px, 12vmin, 80px) !important; line-height: 1.1 !important; margin: 15px 0 !important; }
-#final-gold-container { font-size: clamp(18px, 5vmin, 26px) !important; }
-.elite-btn-large { font-size: clamp(13px, 3.5vmin, 17px) !important; padding: clamp(8px, 2.5vmin, 14px) clamp(12px, 3vmin, 20px) !important; }
+#gameover-title { font-size: clamp(28px, 8vmin, 48px) !important; line-height: 1.1 !important; }
+#score-title-final { font-size: clamp(35px, 10vmin, 70px) !important; line-height: 1.1 !important; margin: 10px 0 !important; }
+#final-gold-container { font-size: clamp(16px, 4.5vmin, 22px) !important; }
+.elite-btn-large { 
+    font-size: clamp(12px, 3vmin, 16px) !important; 
+    padding: clamp(10px, 2.2vmin, 15px) !important;
+    max-width: 320px;
+    margin: 0 auto;
+}
 
-/* Glass HUD Master Styles v1.99.30.05 */
+/* Glass HUD Master Styles v1.99.30.05 - ZARİF DOKUNUŞ */
 #modern-hud {
-    background: rgba(0, 25, 50, 0.35) !important;
-    backdrop-filter: blur(25px) saturate(180%) !important;
-    -webkit-backdrop-filter: blur(25px) saturate(180%) !important;
-    border: 1px solid rgba(0, 229, 255, 0.3) !important;
-    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 229, 255, 0.1) !important;
+    background: rgba(0, 20, 40, 0.4) !important;
+    backdrop-filter: blur(20px) saturate(160%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(160%) !important;
+    border: 1px solid rgba(0, 229, 255, 0.25) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+    padding: 8px 15px !important;
+    border-radius: 12px !important;
 }
 
 

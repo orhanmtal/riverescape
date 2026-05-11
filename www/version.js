@@ -1,5 +1,5 @@
 /**
- * RİVER ESCAPE ELİTE - v1.99.65.16 (MAJOR UPDATE)
+ * RİVER ESCAPE ELİTE - v1.99.70.07 (YANDEX GAMES RELEASE)
  * 1. NO PLACEHOLDERS - Always use premium assets or procedural generation.
  * 2. PERFORMANCE FIRST - Optimize update loops and DOM access.
  * 3. VISUAL EXCELLENCE - Use HSL colors, smooth gradients, and micro-animations.
@@ -8,19 +8,19 @@
  */
 
 // River Escape Elite - Central Version Control
-// v1.99.65.16 - Elite Major Update
+// v1.99.70.00 - Yandex Games Elite Release
 window.ELITE_CONFIG = {
-    VERSION: "1.99.65.16",
-    VERSION_CODE: "19965150",
+    VERSION: "1.99.70.07",
+    VERSION_CODE: "19970007",
     LEVEL_MARGIN: 0.15,
     BG_KEY_SYNC: true,
     NATURAL_TILING: true,
     REMOVE_MIST: true,
     L8_LASER_LOGIC: "optimized",
 
-    BUILD_LEVEL: "Elite Production",
+    BUILD_LEVEL: "Elite Yandex",
     SYNC_ENGINE: "v3.Elite.Secure",
-    LAST_UPDATED: "2026-05-09"
+    LAST_UPDATED: "2026-05-12"
 };
 
 console.log("🚀 [ELITE PERFORMANCE SYSTEM] Active:", window.ELITE_CONFIG.VERSION);

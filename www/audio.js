@@ -41,7 +41,7 @@ let isSFXVolume = 1.0;
 let isVibrationEnabled = true;
 
 function playMelodyNote(noteIndex, time, isPanic = false) {
-    if(!window.audioCtx) return;
+    if(!window.audioCtx || window.isAdShowing) return;
     const osc = window.audioCtx.createOscillator();
     const gainNode = window.audioCtx.createGain();
     
@@ -63,7 +63,7 @@ function playMelodyNote(noteIndex, time, isPanic = false) {
 }
 
 function playCoinSound() {
-    if(!window.audioCtx) return;
+    if(!window.audioCtx || window.isAdShowing) return;
     const now = window.audioCtx.currentTime;
     
     // v1.99.14.31: Elite Golden Shine (Two-tone crystal chime)
@@ -90,7 +90,7 @@ function playCoinSound() {
 }
 
 function playCrashSound() {
-    if(!window.audioCtx) return;
+    if(!window.audioCtx || window.isAdShowing) return;
     const now = window.audioCtx.currentTime;
     
     // v1.99.14.30: Elite Hit Sound (Shorter, punchy version of death)
@@ -139,7 +139,7 @@ function playEliteDeathEffect() {
 }
 
 function playPowerupSound() {
-    if(!window.audioCtx) return;
+    if(!window.audioCtx || window.isAdShowing) return;
     const osc = window.audioCtx.createOscillator();
     const gainNode = window.audioCtx.createGain();
     osc.type = 'sine';
@@ -153,7 +153,7 @@ function playPowerupSound() {
 }
 
 function playSpinClick() {
-    if(!window.audioCtx) return;
+    if(!window.audioCtx || window.isAdShowing) return;
     const osc = window.audioCtx.createOscillator();
     const gain = window.audioCtx.createGain();
     osc.type = 'triangle';
@@ -165,7 +165,7 @@ function playSpinClick() {
 }
 
 function playSpinReward() {
-    if(!window.audioCtx) return;
+    if(!window.audioCtx || window.isAdShowing) return;
     const notes = [659.25, 830.61, 987.77, 1318.51]; // E5, G#5, B5, E6
     const now = window.audioCtx.currentTime;
     notes.forEach((f, i) => {
@@ -181,7 +181,7 @@ function playSpinReward() {
 }
 
 function playVictoryFanfare() {
-    if(!window.audioCtx) return;
+    if(!window.audioCtx || window.isAdShowing) return;
     const notes = [523.25, 659.25, 783.99, 1046.50, 1318.51, 1567.98, 2093.00]; // C5, E5, G5, C6, E6, G6, C7
     const now = window.audioCtx.currentTime;
     notes.forEach((f, i) => {
@@ -205,7 +205,7 @@ function triggerVibration(pattern) {
 // Procedural ambient sounds removed to restore original sound profile.
 
 function playWhooshSound() {
-    if(!window.audioCtx) return;
+    if(!window.audioCtx || window.isAdShowing) return;
     const now = window.audioCtx.currentTime;
     const noise = window.audioCtx.createBufferSource();
     const bSize = window.audioCtx.sampleRate * 0.25;
@@ -227,7 +227,7 @@ function playWhooshSound() {
 }
 
 function playUIClick() {
-    if(!window.audioCtx) return;
+    if(!window.audioCtx || window.isAdShowing) return;
     const osc = window.audioCtx.createOscillator();
     const g = window.audioCtx.createGain();
     osc.type = 'sine';
@@ -241,7 +241,7 @@ function playUIClick() {
 
 // v1.99.61.81: ELITE ACTION SOUNDS
 function playShootSound() {
-    if(!window.audioCtx) return;
+    if(!window.audioCtx || window.isAdShowing) return;
     const now = window.audioCtx.currentTime;
     const osc = window.audioCtx.createOscillator();
     const g = window.audioCtx.createGain();
@@ -255,7 +255,7 @@ function playShootSound() {
 }
 
 function playArmorSound() {
-    if(!window.audioCtx) return;
+    if(!window.audioCtx || window.isAdShowing) return;
     const now = window.audioCtx.currentTime;
     const osc = window.audioCtx.createOscillator();
     const g = window.audioCtx.createGain();
@@ -270,7 +270,7 @@ function playArmorSound() {
 }
 
 function playJumpSound() {
-    if(!window.audioCtx) return;
+    if(!window.audioCtx || window.isAdShowing) return;
     const now = window.audioCtx.currentTime;
     const osc = window.audioCtx.createOscillator();
     const g = window.audioCtx.createGain();

@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
     <!--
- * RÄ°VER ESCAPE ELÄ°TE - v1.99.64.33 (ELÄ°TE ECONOMY SYNC SEAL)
+ * RİVER ESCAPE ELİTE - v1.99.70.07 (ULTRA MASTER SYNC)
  * 1. NO PLACEHOLDERS - Always use premium assets or procedural generation.
  * 2. PERFORMANCE FIRST - Optimize update loops and DOM access.
  * 3. VISUAL EXCELLENCE - Use HSL colors, smooth gradients, and micro-animations.
@@ -16,33 +16,35 @@
 
 <script>
 // River Escape Elite - Central Version Control
-// v1.99.64.127 - Full Performance Overhaul (No Stutter, No Freeze)
+// v1.99.70.07 - Full Performance Overhaul (No Stutter, No Freeze)
 window.ELITE_CONFIG = {
-    VERSION: "v1.99.65.00",
-    VERSION_CODE: "19965000",
-    BUILD_LEVEL: "Elite Production",
+    VERSION: "1.99.70.07",
+    VERSION_CODE: "19970007",
+    BUILD_LEVEL: "Elite Yandex",
     SYNC_ENGINE: "v3.Elite.Secure",
-    LAST_UPDATED: "2026-05-08"
+    LAST_UPDATED: "2026-05-12"
 };
+
+if (!['localhost', '127.0.0.1'].includes(window.location.hostname)) {
+    console.log = function () {};
+    console.debug = function () {};
+    console.info = function () {};
+}
 </script>
-    <script src="version.js?v=v1.99.65.00"></script>
+    <script src="version.js?v=1.99.70.07"></script>
     
-    <script src="https://sdk.crazygames.com/v2.js"></script>
+    <script src="https://yandex.ru/games/sdk/v2"></script>
     <script>
-        console.log("🛰️ [SDK DEBUG] CrazyGames v2 Script Loaded at Top");
-        window.isCrazyGames = true; // Force true for QA panel
+        console.log("🛰️ [SDK DEBUG] Yandex Games SDK Loaded at Top");
     </script>
 
     <script>
         // Elite Platform Bridge
         window.isAndroid = window.Capacitor && window.Capacitor.getPlatform() === 'android';
-        window.isCrazyGames = window.location.hostname.includes('crazygames') || 
-                              window.location.hostname.includes('localhost') || 
-                              window.location.hostname.includes('127.0.0.1') ||
-                              window.location.href.includes('crazygames.com'); 
+        window.isYandexGames = true;
 
         (function () {
-            const v = window.ELITE_CONFIG ? window.ELITE_CONFIG.VERSION : "1.99.63.63";
+            const v = window.ELITE_CONFIG ? window.ELITE_CONFIG.VERSION : "1.99.70.07";
             document.title = "River Escape Elite v" + v;
             // Update Meta immediately
             const updateMeta = (name, val) => {
@@ -51,17 +53,17 @@ window.ELITE_CONFIG = {
                 m.content = val;
             };
             updateMeta("version", v);
-            updateMeta("version-code", window.ELITE_CONFIG ? window.ELITE_CONFIG.VERSION_CODE : "19963055");
+            updateMeta("version-code", window.ELITE_CONFIG ? window.ELITE_CONFIG.VERSION_CODE : "19970007");
         })();
     </script>
 
-    <link rel="stylesheet" href="style.css?v=v1.99.64.01">
-    <!-- MASTER UI OVERRIDE// RÄ°VER ESCAPE PRESTIGE - v1.99.64.01 (POSITION SYNC) -->
+    <link rel="stylesheet" href="style.css?v=1.99.70.07">
+    <!-- MASTER UI OVERRIDE// RİVER ESCAPE PRESTIGE - v1.99.70.07 (POSITION SYNC) -->
 
     <style>
 /* MASTER UI OVERRIDE//
- * RÄ°VER ESCAPE ELÄ°TE - v1.99.64.01 (STABLE RELEASE)
- * Firebase Firestore Global SÄ±ralama ve Profil Senkronizasyon Sistemi
+ * RİVER ESCAPE ELİTE - v1.99.64.01 (STABLE RELEASE)
+ * Firebase Firestore Global Sıralama ve Profil Senkronizasyon Sistemi
  * v1.99.64.01
  */
 .master-start-v21 {
@@ -76,7 +78,7 @@ window.ELITE_CONFIG = {
     top: 0 !important;
     left: 0 !important;
     width: 100% !important;
-    /* dvh: eski telefonlarda adres barÄ± hesaba katar, 100vh yerine daha doÄŸru */
+    /* dvh: eski telefonlarda adres barı hesaba katar, 100vh yerine daha doğru */
     height: 100dvh !important;
     height: 100vh !important; /* fallback for older browsers */
     z-index: 1000 !important;
@@ -121,8 +123,8 @@ window.ELITE_CONFIG = {
 
 .master-play-btn {
     position: relative;
-    width: 75vmin !important;
-    height: 14vmin !important;
+    width: clamp(260px, 72vmin, 450px) !important;
+    height: clamp(50px, 13vmin, 80px) !important;
     background: linear-gradient(135deg, rgba(0, 229, 255, 0.15), rgba(0, 229, 255, 0.05)) !important;
     border: 2px solid rgba(0, 229, 255, 0.6) !important;
     border-radius: 100px !important;
@@ -253,8 +255,8 @@ window.ELITE_CONFIG = {
 
 .master-play-btn {
     position: relative;
-    width: 48vmin;
-    height: 48vmin;
+    width: clamp(160px, 45vmin, 240px);
+    height: clamp(160px, 45vmin, 240px);
     border-radius: 50%;
     background: linear-gradient(135deg, #00e5ff 0%, #12c2e9 50%, #c471ed 100%);
     border: 1.5vmin solid rgba(255, 255, 255, 0.9);
@@ -315,6 +317,8 @@ window.ELITE_CONFIG = {
         .elite-btn-square {
             background: rgba(255, 255, 255, 0.1) !important;
             border: 0.5vmin solid rgba(215, 215, 215, 0.3) !important;
+            width: clamp(35px, 9vmin, 55px) !important;
+            height: clamp(35px, 9vmin, 55px) !important;
             border-radius: 20% !important;
             display: flex !important;
             align-items: center !important;
@@ -471,12 +475,6 @@ window.ELITE_CONFIG = {
     </script>
     <link rel="icon"
         href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌊</text></svg>">
-
-    
-
-
-    
-
 </head>
 
 <body>
@@ -484,16 +482,14 @@ window.ELITE_CONFIG = {
         <canvas id="gameCanvas"></canvas>
 
         <button id="pause-btn"
-            style="position: absolute; top: calc(20px + env(safe-area-inset-top)); right: calc(20px + env(safe-area-inset-right)); display: none; background: rgba(0,0,0,0.4); color: white; border: 1px solid rgba(255,229,255,0.4); padding: 8px; font-family: 'Outfit', sans-serif; font-size: 18px; z-index: 1001; border-radius: 50%; width: 45px; height: 45px; pointer-events: auto; cursor: pointer; backdrop-filter: blur(4px); line-height: 1;">Ã¢ÂÂ¸</button>
+            style="position: absolute; top: calc(20px + env(safe-area-inset-top)); right: calc(20px + env(safe-area-inset-right)); display: none; background: rgba(0,0,0,0.4); color: white; border: 1px solid rgba(255,229,255,0.4); padding: 8px; font-family: 'Outfit', sans-serif; font-size: 18px; z-index: 1001; border-radius: 50%; width: 45px; height: 45px; pointer-events: auto; cursor: pointer; backdrop-filter: blur(4px); line-height: 1;">⏸</button>
 
         <!-- ELITE FULL-SCREEN UI v1.99.64.01 -->
         <div id="start-screen" class="screen master-start-v21" style="justify-content: center; gap: 5vh;">
             <!-- TOP ROW: PROFILE & SETTINGS -->
             <div class="elite-menu-header" style="justify-content: flex-end; padding: 0 10px; gap: 10px;">
-                <!-- New Order: Gold -> Shop -> Leaderboard -> Settings (from left to right in the group) -->
-                
                 <!-- 1. Gold display -->
-                <div style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,215,0,0.4); border-radius: 15px; padding: 5px 12px; display: flex; align-items: center; gap: 6px; backdrop-filter: blur(10px); height: 10vmin; box-sizing: border-box;">
+                <div style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,215,0,0.4); border-radius: 15px; padding: 5px 12px; display: flex; align-items: center; gap: 6px; backdrop-filter: blur(10px); height: clamp(35px, 9vmin, 55px); box-sizing: border-box;">
                     <span style="font-size: 12px;">💰</span>
                     <span id="totalGoldValue" style="color: #FFD700; font-family: 'Outfit'; font-weight: 900; font-size: 16px;">0</span>
                 </div>
@@ -509,11 +505,11 @@ window.ELITE_CONFIG = {
             </div>
                     
 
-            <div style="display: flex; flex-direction: column; align-items: center; gap: clamp(8px, 2vh, 30px); width: 100%; flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden; scrollbar-width: none; -ms-overflow-style: none; padding-bottom: 8px;">
+            <div style="display: flex; flex-direction: column; align-items: center; gap: clamp(8px, 2vh, 30px); width: 100%; flex: 1; min-height: 0; overflow: hidden; scrollbar-width: none; -ms-overflow-style: none; padding-bottom: 8px;">
                 <div style="text-align: center; position: relative; width: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; pointer-events: none; flex-shrink: 0;">
                     <h1 class="floating-logo" style="font-family: 'Outfit', sans-serif; font-weight: 900; color: white; font-size: 13vmin; letter-spacing: -2px; margin: 0; line-height: 0.85; background: linear-gradient(135deg, #fff 20%, #00e5ff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 15px 30px rgba(0,229,255,0.3)); text-transform: uppercase;">RIVER<br><span style="background: linear-gradient(135deg, #00e5ff 0%, #00897b 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">ESCAPE</span></h1>
                     <div id="elite-main-version" style="color: #FFD700; font-family: 'Press Start 2P', cursive; font-size: 1.8vmin; font-weight: bold; margin-top: 10px; letter-spacing: 0.8vmin; opacity: 0.9; text-shadow: 0 0 15px rgba(255,215,0,0.4);">
-                        <script>document.write("ELITE v" + (window.ELITE_CONFIG ? window.ELITE_CONFIG.VERSION : "1.99.65.16"));</script>
+                        <script>document.write("ELITE v" + (window.ELITE_CONFIG ? window.ELITE_CONFIG.VERSION : "1.99.70.07"));</script>
                     </div>
                 </div>
 
@@ -522,21 +518,18 @@ window.ELITE_CONFIG = {
                     <div class="pulse-ring"></div>
                 </div>
 
-                </div>
             </div>
-
-            
         </div>
 
         <!-- IDENTITY MODAL v1.99.64.01 -->
         <div id="identity-modal" class="elite-modal-overlay">
             <div class="elite-modal-content">
-                <div id="edit-username-title" style="font-size: 21px; font-weight: 900; color: #FFD700; letter-spacing: 1px;">KULLANICI ADI DÃœZENLEME</div>
-                <div id="edit-username-desc" style="font-size: 12px; margin-top: 5px; opacity: 0.6; text-transform: uppercase;">Yeni Elite adÄ±nÄ±zÄ± belirleyin</div>
-                <input type="text" id="player-name-input" class="elite-input-v22" placeholder="YENÄ° ADINIZ..." maxlength="15">
+                <div id="edit-username-title" style="font-size: 21px; font-weight: 900; color: #FFD700; letter-spacing: 1px;">KULLANICI ADI DÜZENLEME</div>
+                <div id="edit-username-desc" style="font-size: 12px; margin-top: 5px; opacity: 0.6; text-transform: uppercase;">Yeni Elite adınızı belirleyin</div>
+                <input type="text" id="player-name-input" class="elite-input-v22" placeholder="YENİ ADINIZ..." maxlength="15">
                 <div style="display: flex; gap: 10px;">
-                    <button id="close-identity-btn" class="elite-modal-btn" style="background: rgba(255,255,255,0.1); color: white;">Ä°PTAL</button>
-                    <button id="save-identity-btn" class="elite-modal-btn">DÃœZENLE</button>
+                    <button id="close-identity-btn" class="elite-modal-btn" style="background: rgba(255,255,255,0.1); color: white;">İPTAL</button>
+                    <button id="save-identity-btn" class="elite-modal-btn">DÜZENLE</button>
                 </div>
             </div>
         </div>
@@ -544,9 +537,9 @@ window.ELITE_CONFIG = {
         <!-- ELITE CONFIRM MODAL v1.99.64.01 -->
         <div id="confirm-modal" class="elite-modal-overlay">
             <div class="elite-modal-content" style="border-color: rgba(255,61,0,0.4);">
-                <div id="confirm-modal-emoji" style="font-size: 50px; margin-bottom: 10px;">🛡️Â</div>
+                <div id="confirm-modal-emoji" style="font-size: 50px; margin-bottom: 10px;">🛡️</div>
                 <div id="confirm-modal-title" style="font-size: 20px; font-weight: 900; color: #fff; text-transform: uppercase; letter-spacing: 1px;">EMİN MİSİNİZ?</div>
-                <div id="confirm-modal-body" style="font-size: 13px; margin: 15px 0 25px 0; opacity: 0.8; line-height: 1.5;">Bu iÅŸlemi geri alamazsÄ±nÄ±z.</div>
+                <div id="confirm-modal-body" style="font-size: 13px; margin: 15px 0 25px 0; opacity: 0.8; line-height: 1.5;">Bu işlemi geri alamazsınız.</div>
                 <div style="display: flex; gap: 12px;">
                     <button id="confirm-cancel-btn" class="elite-modal-btn" style="background: rgba(255,255,255,0.1); color: white;">VAZGEÇ</button>
                     <button id="confirm-ok-btn" class="elite-modal-btn" style="background: linear-gradient(135deg, #ff3d00, #d50000); color: white;">ONAYLA</button>
@@ -563,54 +556,9 @@ window.ELITE_CONFIG = {
                 <button id="resume-btn" class="elite-btn-large"
                     style="background: linear-gradient(135deg, #00e5ff, #004d40);">DEVAM ET</button>
                 <button id="pause-shop-btn" class="elite-btn-large"
-                    style="background: linear-gradient(135deg, #ffd700, #ff8c00); color: #000;">MAÃ„ÂAZA 🛒</button>
+                    style="background: linear-gradient(135deg, #ffd700, #ff8c00); color: #000;">MAĞAZA 🛒</button>
                 <button id="quit-btn" class="elite-btn-large"
                     style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);">ANA MENÜ</button>
-            </div>
-        </div>
-
-            
-        </div>
-
-        <!-- IDENTITY MODAL v1.99.64.01 -->
-        <div id="identity-modal" class="elite-modal-overlay">
-            <div class="elite-modal-content">
-                <div id="edit-username-title" style="font-size: 21px; font-weight: 900; color: #FFD700; letter-spacing: 1px;">KULLANICI ADI DÃœZENLEME</div>
-                <div id="edit-username-desc" style="font-size: 12px; margin-top: 5px; opacity: 0.6; text-transform: uppercase;">Yeni Elite adÄ±nÄ±zÄ± belirleyin</div>
-                <input type="text" id="player-name-input" class="elite-input-v22" placeholder="YENÄ° ADINIZ..." maxlength="15">
-                <div style="display: flex; gap: 10px;">
-                    <button id="close-identity-btn" class="elite-modal-btn" style="background: rgba(255,255,255,0.1); color: white;">Ä°PTAL</button>
-                    <button id="save-identity-btn" class="elite-modal-btn">DÃœZENLE</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- ELITE CONFIRM MODAL v1.99.64.01 -->
-        <div id="confirm-modal" class="elite-modal-overlay">
-            <div class="elite-modal-content" style="border-color: rgba(255,61,0,0.4);">
-                <div id="confirm-modal-emoji" style="font-size: 50px; margin-bottom: 10px;">🛡️ Â </div>
-                <div id="confirm-modal-title" style="font-size: 20px; font-weight: 900; color: #fff; text-transform: uppercase; letter-spacing: 1px;">EMİN MİSİNİZ?</div>
-                <div id="confirm-modal-body" style="font-size: 13px; margin: 15px 0 25px 0; opacity: 0.8; line-height: 1.5;">Bu iÅŸlemi geri alamazsÄ±nÄ±z.</div>
-                <div style="display: flex; gap: 12px;">
-                    <button id="confirm-cancel-btn" class="elite-modal-btn" style="background: rgba(255,255,255,0.1); color: white;">VAZGEÇ</button>
-                    <button id="confirm-ok-btn" class="elite-modal-btn" style="background: linear-gradient(135deg, #ff3d00, #d50000); color: white;">ONAYLA</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- PAUSE SCREEN (ELITE FULL-SCREEN v1.99.64.01) -->
-        <div id="pause-screen" class="screen hidden">
-            <h2 id="pause-screen-title"
-                style="font-family: 'Outfit'; font-weight: 900; color: white; font-size: 8vmin; margin-bottom: 5vmin; letter-spacing: 1vmin;">
-                DURAKLATILDI</h2>
-            <div style="display: flex; flex-direction: column; gap: 2.8vmin; width: 65%; max-width: 300px;">
-                <button id="resume-btn" class="elite-btn-large"
-                    style="background: linear-gradient(135deg, #00e5ff, #004d40);">DEVAM ET</button>
-                <button id="pause-shop-btn" class="elite-btn-large"
-                    style="background: linear-gradient(135deg, #ffd700, #ff8c00); color: #000;">MAÃ„ÂžAZA 🛒</button>
-                <button id="quit-btn" class="elite-btn-large"
-                    style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);">ANA
-                    MENÃœ</button>
             </div>
         </div>
 
@@ -635,7 +583,7 @@ window.ELITE_CONFIG = {
                         style="color: rgba(255,255,255,0.9); font-family: 'Outfit', sans-serif; font-size: 9px; font-weight: bold; letter-spacing: 1px; text-transform: uppercase;">LEVEL
                         1</span>
                     <span id="lives-hud"
-                        style="font-size: 10px; filter: drop-shadow(0 0 5px rgba(255,82,82,0.4));">&#10084;&#65039; &#10084;&#65039; &#10084;&#65039;</span>
+                        style="font-size: 10px; filter: drop-shadow(0 0 5px rgba(255,82,82,0.4));">❤️❤️❤️</span>
                 </div>
                 <div id="progress-container-hud"
                     style="width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden; border: 1px solid rgba(0, 229, 255, 0.2);">
@@ -643,14 +591,8 @@ window.ELITE_CONFIG = {
                         style="width: 0%; height: 100%; background: linear-gradient(to right, #00ffea, #00e5ff, #12c2e9); box-shadow: 0 0 12px #00ffea;">
                     </div>
                 </div>
-                <div style="font-family: 'Outfit'; font-size: 7px; color: rgba(0, 229, 255, 0.5); text-align: right; margin-top: 2px; font-weight: 900; letter-spacing: 0.5px;">
-                    <script>document.write("v" + (window.ELITE_CONFIG ? window.ELITE_CONFIG.VERSION : "1.99.63.63"));</script>
-                </div>
-
             </div>
         </div>
-
-
 
         <!-- GAME OVER SCREEN (ELITE FULL-SCREEN v1.99.64.01) -->
         <div id="game-over-screen" class="screen hidden">
@@ -676,18 +618,13 @@ window.ELITE_CONFIG = {
                 <button id="revive-gold-btn" class="elite-btn-large"
                     style="background: linear-gradient(135deg, #FFD700, #ff8c00); color: #000;">+3 CAN (100
                     ALTIN)</button>
-                <button id="restart-btn" class="elite-btn-large" style="background: rgba(255,255,255,0.15);">YENÄ°DEN
-                    BAÃ…ÂžLA ⚠️ â€ž</button>
+                <button id="restart-btn" class="elite-btn-large" style="background: rgba(255,255,255,0.15);">YENİDEN
+                    BAŞLA</button>
                 <button id="quit-btn-gameover"
                     style="background: none; border: none; color: rgba(255,255,255,0.4); font-family: 'Outfit'; font-weight: bold; font-size: 3.5vmin; cursor: pointer; margin-top: 1.5vmin;">ANA
-                    MENÃœYE DÃ–N ÄŸÅ¸Â Â </button>
+                    MENÜYE DÖN</button>
             </div>
-
         </div>
-
-        <!-- LEVEL UP OVERLAY (EMERGENCY FIX v1.99.64.01) -->
-        <div id="level-up-overlay" class="screen hidden"
-            style="z-index: 16000; background: rgba(0,0,0,0.85); pointer-events: none;"></div>
 
         <!-- MODERN ELITE AYARLAR (v1.99.64.01) -->
         <div id="settings-screen" class="screen hidden"
@@ -702,7 +639,7 @@ window.ELITE_CONFIG = {
                     style="width: 100%; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 5vmin; box-sizing: border-box; display: flex; flex-direction: column; gap: 5vmin;">
                     <div class="settings-item-col">
                         <div class="settings-label-row">
-                            <span class="settings-label" id="music-label-text">ÄŸÅ¸ÂŽÂµ MÃ¼zik Sesi</span>
+                            <span class="settings-label" id="music-label-text">Müzik Sesi</span>
                             <span id="music-vol-txt"
                                 style="color: #FFD700; font-weight: bold; font-size: 3.5vmin;">100%</span>
                         </div>
@@ -711,33 +648,25 @@ window.ELITE_CONFIG = {
 
                     <div class="settings-item-col">
                         <div class="settings-label-row">
-                            <span class="settings-label" id="sfx-label-text">⚠️ Å  Efekt Sesi</span>
+                            <span class="settings-label" id="sfx-label-text">Efekt Sesi</span>
                             <span id="sfx-vol-txt"
                                 style="color: #FFD700; font-weight: bold; font-size: 3.5vmin;">100%</span>
                         </div>
                         <input type="range" id="sfx-slider" min="0" max="100" value="100" class="vol-slider">
                     </div>
-
-                    
                 </div>
 
                 <div style="width: 100%; display: flex; flex-direction: column; gap: 3vmin; margin-top: 1.5vmin;">
                     <button id="settings-close-btn"
                         style="background: linear-gradient(135deg, #2ecc71, #27ae60); color: #fff; border: none; padding: 2.8vmin; border-radius: 15px; font-weight: 900; font-family: 'Outfit'; cursor: pointer; font-size: 4.5vmin; box-shadow: 0 5px 15px rgba(46, 204, 113, 0.2);">KAYDET</button>
                     
-                    
                     <button id="hard-reset-btn"
-                        style="background: rgba(255, 68, 68, 0.05); border: 1px solid rgba(255, 68, 68, 0.2); color: #ff4444; padding: 3vmin; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 3vmin;">⚠️ 
-                        TÃœM VERÄ°LERÄ° SIFIRLA</button>
+                        style="background: rgba(255, 68, 68, 0.05); border: 1px solid rgba(255, 68, 68, 0.2); color: #ff4444; padding: 3vmin; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 3vmin;">⚠️ TÜM VERİLERİ SIFIRLA</button>
                 </div>
 
                 <button id="settings-back-btn"
-                    style="background: none; border: none; color: rgba(255,255,255,0.3); font-family: 'Outfit'; font-weight: bold; font-size: 2.8vmin; cursor: pointer; margin-top: auto;"><span id="settings-back-btn-text">GERÄ°
-                    DÃ–N ÄŸÅ¸Â Â </span></button>
+                    style="background: none; border: none; color: rgba(255,255,255,0.3); font-family: 'Outfit'; font-weight: bold; font-size: 2.8vmin; cursor: pointer; margin-top: auto;"><span id="settings-back-btn-text">GERİ DÖN</span></button>
             </div>
-        </div>
-
-        
         </div>
 
         <!-- MODERN RESET CONFIRM MODAL (v1.99.64.01) -->
@@ -753,19 +682,17 @@ window.ELITE_CONFIG = {
                     EMİN MİSİNİZ?</h2>
                 <p
                     style="color: #fff; font-family: 'Outfit'; font-size: 16px; margin-bottom: 35px; line-height: 1.6; opacity: 0.9;">
-                    Bu iÅŸlem **TÜM ALTINLARINIZI, GELÄ°Ã…ÂžTÄ°RMELERÄ°NÄ°ZÄ° VE REKORLARINIZI** kalÄ±cÄ± olarak silecektir. Bu
-                    işlemin geri dönüşü YOKTUR!</p>
+                    Bu işlem **TÜM ALTINLARINIZI, GELİŞTİRMELERİNİZİ VE REKORLARINIZI** kalıcı olarak silecektir. Bu işlemin geri dönüşü YOKTUR!</p>
                 <div style="display: flex; flex-direction: column; gap: 15px; width: 100%;">
                     <button id="confirm-reset-yes"
-                        style="background: #ff4444; color: #fff; border: none; padding: 18px; border-radius: 18px; font-weight: 900; font-family: 'Outfit'; cursor: pointer; font-size: 18px; box-shadow: 0 8px 25px rgba(255, 68, 68, 0.3);">EVET,
-                        HER Ã…ÂžEYÄ° SÄ°L</button>
+                        style="background: #ff4444; color: #fff; border: none; padding: 18px; border-radius: 18px; font-weight: 900; font-family: 'Outfit'; cursor: pointer; font-size: 18px; box-shadow: 0 8px 25px rgba(255, 68, 68, 0.3);">EVET, HER ŞEYİ SİL</button>
                     <button id="confirm-reset-no"
                         style="background: rgba(255,255,255,0.05); color: #fff; border: 1px solid rgba(255,255,255,0.2); padding: 15px; border-radius: 18px; font-weight: 800; font-family: 'Outfit'; cursor: pointer; font-size: 16px;">VAZGEÇ</button>
                 </div>
             </div>
         </div>
 
-        <!-- MODERN ELITE MAÃ„ÂžAZA (FIXED HEADER + SCROLL BODY) -->
+        <!-- MODERN ELITE MAĞAZA (FIXED HEADER + SCROLL BODY) -->
         <div id="shop-screen" class="screen hidden"
             style="background: linear-gradient(135deg, #050a10 0%, #0a1525 100%); display: flex; flex-direction: column; overflow: hidden; padding: 0;">
             
@@ -773,9 +700,9 @@ window.ELITE_CONFIG = {
             <div class="shop-sticky-header">
                 <h2 id="shop-title-main"
                     style="color: #FFD700; font-family: 'Outfit'; font-weight: 900; font-size: 9vmin; margin: 0; margin-bottom: 2vmin; letter-spacing: 1px; text-shadow: 0 10px 30px rgba(0,0,0,0.5);">
-                    MAÃ„ÂžAZA</h2>
+                    MAĞAZA</h2>
                 <div id="shop-balance-pill" class="elite-balance-pill" style="margin-bottom: 0;">
-                    <span id="shop-balance-label" class="elite-balance-label">BAKÄ°YE</span>
+                    <span id="shop-balance-label" class="elite-balance-label">BAKİYE</span>
                     <span id="totalGoldValue-shop" class="elite-balance-value">0</span>
                     <span id="shop-gold-unit" style="color: #FFD700; font-size: 14px;">GOLD</span>
                 </div>
@@ -785,10 +712,8 @@ window.ELITE_CONFIG = {
             <div class="shop-scroll-area">
                 <div style="width: 100%; max-width: 500px; margin: 0 auto; display: flex; flex-direction: column;">
                     
-                    <!-- v1.99.64.02: BOATHOUSE REMOVED -->
-
                     <div class="showroom-container" style="display: flex; flex-direction: column; width: 100%;">
-                    <!-- MÄ±knatÄ±s -->
+                    <!-- Mıknatıs -->
                     <div class="showroom-item">
                         <div class="item-aura-box" style="border-color: #FFD700;">
                             <span style="font-size: 32px;">🧲</span>
@@ -798,28 +723,28 @@ window.ELITE_CONFIG = {
                             <div id="shop-mag-desc" class="showroom-desc"><span id="magnet-duration"></span> | <span id="magnet-lvl"></span></div>
                         </div>
                         <div class="buy-action-group">
-                            <button id="buy-magnet-btn" class="elite-upgrade-btn btn-gold">GELÄ°Ã…ÂžTÄ°R</button>
+                            <button id="buy-magnet-btn" class="elite-upgrade-btn btn-gold">GELİŞTİR</button>
                         </div>
                     </div>
 
                     <!-- Kalkan -->
                     <div class="showroom-item">
                         <div class="item-aura-box" style="border-color: #00e5ff;">
-                            <span style="font-size: 32px;">&#128737;&#65039;</span>
+                            <span style="font-size: 32px;">🛡️</span>
                         </div>
                         <div class="showroom-info">
                             <div id="shop-shd-title" class="showroom-title">KALKAN</div>
                             <div id="shop-shd-desc" class="showroom-desc"><span id="shield-chance"></span> | <span id="shield-lvl"></span></div>
                         </div>
                         <div class="buy-action-group">
-                            <button id="buy-shield-btn" class="elite-upgrade-btn btn-cyan">GELÄ°Ã…ÂžTÄ°R</button>
+                            <button id="buy-shield-btn" class="elite-upgrade-btn btn-cyan">GELİŞTİR</button>
                         </div>
                     </div>
 
-                    <!-- MÃ¼himmat Doldur -->
+                    <!-- Mühimmat Doldur -->
                     <div class="showroom-item">
                         <div class="item-aura-box" style="border-color: #ff8c00;">
-                            <span style="font-size: 32px;">&#128640;</span>
+                            <span style="font-size: 32px;">🚀</span>
                         </div>
                         <div class="showroom-info">
                             <div id="shop-magma-title" class="showroom-title" style="color: #ff8c00;">CEPHANE</div>
@@ -831,13 +756,13 @@ window.ELITE_CONFIG = {
                         </div>
                     </div>
 
-                    <!-- ZÄ±rh Doldur -->
+                    <!-- Zırh Doldur -->
                     <div class="showroom-item">
                         <div class="item-aura-box" style="border-color: #00acc1;">
-                            <span style="font-size: 32px;">&#9889;</span>
+                            <span style="font-size: 32px;">⚡</span>
                         </div>
                         <div class="showroom-info">
-                            <div id="shop-void-armor-title" class="showroom-title">ZIRH Ã…ÂžARJI</div>
+                            <div id="shop-void-armor-title" class="showroom-title">ZIRH ŞARJI</div>
                             <div id="shop-void-armor-desc" class="showroom-desc">+30 Zırh Birimi</div>
                         </div>
                         <div class="buy-action-group">
@@ -848,10 +773,17 @@ window.ELITE_CONFIG = {
 
                     <button id="ad-gold-btn" class="elite-ad-gold-btn" style="margin-top: 10px;" onclick="claimDailyAdGold(this)">+200 ALTIN (REKLAM İZLE)</button>
     
-                    <!-- ALTIN MARKET 💰 v1.99.64.01 PRESTIGE UI -->
+                    <!-- ALTIN MARKET 💰 -->
                     <div class="gold-market-container">
                         <h3 id="shop-gold-market-title" class="gold-market-title">GÜNLÜK HEDİYE 💰</h3>
-                        <div style="display: flex; justify-content: center;"><button id="daily-gift-btn" onclick="claimDailyGift(this)" class="gold-card" style="width: 100%; border-color: #FFD700; background: rgba(255,215,0,0.08); padding: 20px; display:flex; flex-direction:column; align-items:center; gap:8px; color: #ffffff; font-family:'Outfit',sans-serif; font-weight:800; font-size:16px; letter-spacing:1px;"><span style="font-size: 36px;">💰</span><span class="amount" style="color: #FFD700; font-size: 22px; font-weight:900;">1.000 GOLD</span><span class="price" style="background: #FFD700; color: #000; padding: 6px 22px; font-size: 13px; font-weight:800; border-radius: 8px; letter-spacing:1px;">📽️ WATCH AD</span></button></div></div>
+                        <div style="display: flex; justify-content: center;">
+                            <button id="daily-gift-btn" onclick="claimDailyGift(this)" class="gold-card" style="width: 100%; border-color: #FFD700; background: rgba(255,215,0,0.08); padding: 20px; display:flex; flex-direction:column; align-items:center; gap:8px; color: #ffffff; font-family:'Outfit',sans-serif; font-weight:800; font-size:16px; letter-spacing:1px;">
+                                <span style="font-size: 36px;">💰</span>
+                                <span class="amount" style="color: #FFD700; font-size: 22px; font-weight:900;">1.000 GOLD</span>
+                                <span class="price" style="background: #FFD700; color: #000; padding: 6px 22px; font-size: 13px; font-weight:800; border-radius: 8px; letter-spacing:1px;">📽️ WATCH AD</span>
+                            </button>
+                        </div>
+                    </div>
                 </div>
     
                 <button id="shop-close-btn" class="elite-btn-large" style="background: rgba(255,255,255,0.05); color: #FFD700; border: 1px solid rgba(255,215,0,0.4); margin-top: 2vh;">GERİ DÖN</button>
@@ -880,7 +812,7 @@ window.ELITE_CONFIG = {
             </div>
         </div>
 
-        <!-- LUCKY SPIN (Ã…ÂžANS Ã‡ARKI) EKRANI v1.99.64.01 -->
+        <!-- LUCKY SPIN (ŞANS ÇARKI) EKRANI v1.99.64.01 -->
         <div id="spin-screen" class="screen hidden"
             style="z-index: 17000; background: rgba(0,0,0,0.92); width: 100vw; height: 100vh; max-width: 100%; border-radius: 0;">
             <div id="spin-container">
@@ -896,7 +828,7 @@ window.ELITE_CONFIG = {
                     <canvas id="wheel-canvas" width="400" height="400"></canvas>
                 </div>
                 <div class="buttons" style="width: 100%; display: flex; flex-direction: column; gap: 10px;">
-                    <button id="spin-btn-main">Ã‡EVÄ°R (AD)</button>
+                    <button id="spin-btn-main">ÇEVİR (AD)</button>
                     <div id="spin-reward-msg"
                         style="color: #64dd17; font-family: 'Press Start 2P', cursive; font-size: 8px; margin-top: 5px; text-align: center; min-height: 10px;">
                     </div>
@@ -904,16 +836,14 @@ window.ELITE_CONFIG = {
                         style="background: rgba(255,255,255,0.1); color: #ccc; border: none; padding: 12px; font-weight: bold; border-radius: 12px; font-size: 14px; outline: none; cursor: pointer;">KAPAT</button>
                 </div>
             </div>
-            <!-- POPUP: REWARD NOTIFICATION (Restored) -->
+            <!-- POPUP: REWARD NOTIFICATION -->
             <div id="spin-reward-popup"
                 style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%) scale(0); background: rgba(10, 20, 30, 0.95); border: 3px solid #FFD700; border-radius: 25px; padding: 30px; z-index: 18000; text-align: center; opacity: 0; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); backdrop-filter: blur(10px); box-shadow: 0 0 50px rgba(255, 215, 0, 0.3);">
-                <div id="spin-popup-emoji" style="font-size: 70px; margin-bottom: 10px;">ÄŸÅ¸ÂŽâ€°</div>
+                <div id="spin-popup-emoji" style="font-size: 70px; margin-bottom: 10px;">🎉</div>
                 <div id="spin-popup-label"
-                    style="color: #fff; font-family: 'Outfit'; font-weight: 800; font-size: 22px; letter-spacing: 1px;">
-                    Ã–DÃœN KAZANILIYOR</div>
+                    style="color: #fff; font-family: 'Outfit'; font-weight: 800; font-size: 22px; letter-spacing: 1px;">ÖDÜN KAZANILIYOR</div>
                 <div id="spin-popup-value"
-                    style="color: #FFD700; font-family: 'Outfit'; font-weight: 900; font-size: 32px; margin-top: 5px;">
-                    +0</div>
+                    style="color: #FFD700; font-family: 'Outfit'; font-weight: 900; font-size: 32px; margin-top: 5px;">+0</div>
             </div>
         </div>
 
@@ -939,8 +869,7 @@ window.ELITE_CONFIG = {
                  <div style="position: relative; display: flex; align-items: center; justify-content: center;">
                     <span style="font-size: 24px; filter: drop-shadow(0 0 8px #00e5ff);">💎</span>
                     <div id="armor-badge-pill"
-                        style="position: absolute; top: -8px; right: -8px; background: #00b8d4; color: white; font-size: 10px; font-weight: 900; padding: 2px 5px; border-radius: 10px; border: 1.5px solid #fff; box-shadow: 0 0 10px rgba(0,0,0,0.5);">
-                        0</div>
+                        style="position: absolute; top: -8px; right: -8px; background: #00b8d4; color: white; font-size: 10px; font-weight: 900; padding: 2px 5px; border-radius: 10px; border: 1.5px solid #fff; box-shadow: 0 0 10px rgba(0,0,0,0.5);">0</div>
                 </div>
                 <span id="armor-badge" style="display:none;">0</span>
             </div>
@@ -954,40 +883,38 @@ window.ELITE_CONFIG = {
                 </svg>
                 <div id="bomb-badge" style="position: absolute; top: -8px; right: -8px; background: #ff3d00; color: white; font-size: 10px; font-weight: 900; padding: 2px 5px; border-radius: 10px; border: 1.5px solid #fff; box-shadow: 0 0 15px rgba(255, 61, 0, 0.5); z-index: 1006;">0</div>
             </div>
-            
         </div>
 
         <!-- Legacy Container (Empty) -->
         <div id="controls-ui" style="display: none;"></div>
 
-
-        <!-- Removed legacy security lock overlay -->
-
-
     <!-- ELITE TOAST SYSTEM (v1.99.30) -->
     <div id="game-toast" style="display: none; position: absolute; bottom: 12vh; left: 50%; transform: translate(-50%, 0) scale(0.9); background: rgba(0,0,0,0.85); color: white; padding: 14px 28px; border-radius: 50px; font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 16px; z-index: 30000; pointer-events: none; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); opacity: 0; box-shadow: 0 10px 40px rgba(0,0,0,0.4); white-space: nowrap; text-align: center; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);">
-        <span id="toast-text">BÄ°LDÄ°RÄ°M</span>
+        <span id="toast-text">BİLDİRİM</span>
     </div>
 
-
-
-    <!-- Scriptleri YÃ¼kle (v1.99.64.102 Cache Buster) -->
-    <script src="translations.js?v=v1.99.64.102"></script>
-    <script src="audio.js?v=v1.99.64.102"></script>
-    <script src="collections.js?v=v1.99.64.102"></script>
-    <script src="perk_engine.js?v=v1.99.64.102"></script>
-    <script src="assets.js?v=v1.99.64.102"></script>
-    <script src="game_leaderboard.js?v=v1.99.64.102"></script>
-    <script src="mission_manager.js?v=v1.99.64.102"></script>
-    <!-- v1.99.64.102 ELITE BATCH SYNC ENGINE -->
-    <script src="game_store.js?v=v1.99.64.102"></script>
-    <script src="game_unbeatable_v3.js?v=v1.99.64.102"></script>
+    <!-- Scriptleri Yükle (v1.99.70.07 Cache Buster) -->
+    <script src="translations.js?v=1.99.70.07"></script>
+    <script src="audio.js?v=1.99.70.07"></script>
+    <script src="collections.js?v=1.99.70.07"></script>
+    <script src="perk_engine.js?v=1.99.70.07"></script>
+    <script src="assets.js?v=1.99.70.07"></script>
+    <script src="game_leaderboard.js?v=1.99.70.07"></script>
+    <script src="mission_manager.js?v=1.99.70.07"></script>
+    <!-- v1.99.70.07 ELITE BATCH SYNC ENGINE -->
+    <script src="game_store.js?v=1.99.70.07"></script>
+    <script src="game_unbeatable_v3.js?v=1.99.70.07"></script>
     <script>
-        // v1.99.65.17: ULTRA-AGGRESSIVE SDK INIT
+        // v1.99.65.18: single SDK init guard
+        let eliteInitStarted = false;
         function triggerEliteInit() {
+            if (eliteInitStarted) return;
+            eliteInitStarted = true;
             console.log("🛰️ [SDK DEBUG] Triggering Leaderboard.init...");
             if (typeof Leaderboard !== 'undefined' && Leaderboard.init) {
                 Leaderboard.init();
+            } else {
+                eliteInitStarted = false;
             }
         }
         document.addEventListener('DOMContentLoaded', triggerEliteInit);
@@ -996,15 +923,4 @@ window.ELITE_CONFIG = {
         setTimeout(triggerEliteInit, 1000);
     </script>
 </body>
-
 </html>
-
-
-
-
-
-
-
-
-
-
