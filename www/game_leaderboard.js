@@ -1,6 +1,6 @@
 /**
- * RİVER ESCAPE ELİTE - v1.99.68 (CRAZYGAMES CLOUD SYNC)
- * CrazyGames SDK Veri Senkronizasyon Sistemi
+ * RİVER ESCAPE ELİTE - v1.99.70 (YANDEX GAMES SYNC)
+ * Yandex Games SDK Veri Senkronizasyon Sistemi
  */
 
 window.Leaderboard = {
@@ -8,61 +8,79 @@ window.Leaderboard = {
     playerName: localStorage.getItem('riverEscapeName') || "ELITE PLAYER",
     playerCountry: localStorage.getItem('riverEscapeCountry') || "??",
     playerFlag: "🌍",
+    initialized: false,
+    initPromise: null,
+    ysdk: null,
+    lb: null,
+    player: null,
 
     async init() {
-        console.log("🎮 [ELITE AUTH] CrazyGames SDK Initialization...");
+        if (this.initialized) return;
+        if (this.initPromise) return this.initPromise;
+        this.initPromise = this.initInternal();
+        return this.initPromise;
+    },
 
-        // v1.99.65.17: Wait for SDK to be available, then await init()
-        let retries = 0;
-        while ((!window.CrazyGames || !window.CrazyGames.SDK) && retries < 25) {
-            await new Promise(r => setTimeout(r, 200));
-            retries++;
-        }
+    async initInternal() {
+        console.log("🎮 [YANDEX AUTH] SDK Initialization...");
 
-        if (!window.CrazyGames || !window.CrazyGames.SDK) {
-            console.warn("⚠️ [ELITE AUTH] CrazyGames SDK not available after 5s.");
-            this.bindEvents();
-            this.restoreFromCloud();
-            return;
-        }
-
-        try {
-            await window.CrazyGames.SDK.init();
-            console.log("✅ [ELITE AUTH] CrazyGames SDK init() resolved successfully!");
-        } catch (e) {
-            console.warn("⚠️ [ELITE AUTH] SDK init() threw:", e);
-        }
-
-        // Post-init user sync
-        this.playerID = this.playerID || "cg_" + Math.random().toString(36).substr(2, 9);
-        this.playerName = this.playerName || "ELITE PLAYER";
-        localStorage.setItem('riverEscapeName', this.playerName);
-        localStorage.setItem('riverEscapeID', this.playerID);
-
-        if (window.CrazyGames.SDK.user && typeof window.CrazyGames.SDK.user.getUser === 'function') {
+        if (window.YaGames) {
             try {
-                const user = await window.CrazyGames.SDK.user.getUser();
-                if (user) {
-                    this.playerName = user.username;
-                    this.playerID = user.userId;
-                    localStorage.setItem('riverEscapeName', this.playerName);
-                    localStorage.setItem('riverEscapeID', this.playerID);
-                    this.updateAuthUI(true, this.playerName, false, user.profilePictureUrl);
+                this.ysdk = await window.YaGames.init();
+                window.ysdk = this.ysdk; // Global access
+                this.lb = this.ysdk.leaderboards || null;
+
+                // v1.99.70.10: Yandex Developer Panel Pause Sync
+                this.ysdk.onPause(() => {
+                    console.log("⏸️ [YANDEX PANEL] Pause Requested");
+                    if (window.isPlaying && !window.isPaused && typeof window.togglePause === 'function') {
+                        window.togglePause();
+                    }
+                });
+                this.ysdk.onResume(() => {
+                    console.log("▶️ [YANDEX PANEL] Resume Requested");
+                    if (window.isPlaying && window.isPaused && typeof window.togglePause === 'function') {
+                        window.togglePause();
+                    }
+                });
+                
+                // Auth Player
+                try {
+                    this.player = await this.ysdk.getPlayer({ scopes: false });
+                    if (this.player) {
+                        this.playerName = this.player.getName();
+                        this.playerID = this.player.getUniqueID();
+                        localStorage.setItem('riverEscapeName', this.playerName);
+                        localStorage.setItem('riverEscapeID', this.playerID);
+                        this.updateAuthUI(true, this.playerName, false, this.player.getPhoto('small'));
+                    }
+                } catch(e) {
+                    console.warn("Yandex Player Auth Error (Guest Mode):", e);
                 }
-            } catch(e) {
-                console.warn("CrazyGames User not available:", e);
+
+                // v1.99.70.12: Yandex Language Sync
+                const yandexLang = this.ysdk.environment.i18n.lang;
+                if (yandexLang && ['tr', 'en', 'ru'].includes(yandexLang)) {
+                    console.log("🌍 [YANDEX LANG] SDK Language Detected:", yandexLang);
+                    window.currentLang = yandexLang;
+                    localStorage.setItem('riverEscapeLang', yandexLang);
+                    // Force UI Update if possible
+                    if (typeof window.updateLanguageUI === 'function') {
+                        window.updateLanguageUI();
+                    }
+                }
+
+                this.restoreFromCloud();
+                this.ysdk.features?.LoadingAPI?.ready();
+            } catch (e) {
+                console.error("Yandex SDK Init Failed:", e);
             }
+        } else {
+            console.warn("⚠️ YaGames SDK not found on page.");
         }
 
         this.bindEvents();
-        this.restoreFromCloud();
-
-        if (this.playerCountry === "??") {
-            setTimeout(() => this.detectCountry(), 1000);
-        } else {
-            this.playerFlag = this.getFlagEmoji(this.playerCountry);
-            this.updateUI();
-        }
+        this.initialized = true;
     },
 
     updateAuthUI(isLoggedIn, displayName, isOffline = false, photoURL = null) {
@@ -81,67 +99,76 @@ window.Leaderboard = {
     },
 
     async submitProgress(score, level, submitScore = true) {
-        if (!window.CrazyGames || !window.CrazyGames.SDK || !window.CrazyGames.SDK.data) {
-            return;
-        }
-
         const finalScore = Math.floor(score || window.score || 0);
         let localBest = Number(localStorage.getItem('riverEscapeHighScore') || 0);
+        
         if (submitScore && finalScore > localBest) {
             localBest = finalScore;
             localStorage.setItem('riverEscapeHighScore', localBest);
         }
 
-        try {
-            const data = {
-                totalGold: Math.floor(window.totalGold || 0),
-                highScore: localBest,
-                magnetLevel: window.magnetLevel || 0,
-                shieldLevel: window.shieldLevel || 0,
-                bombCount: window.bombCount || 0,
-                ownsArmorLicense: !!window.ownsArmorLicense,
-                hasWeapon: !!window.hasWeapon,
-                armorCharge: window.armorCharge || 0,
-                level: level || window.currentLevel || 1,
-                country: this.playerCountry,
-                timestamp: Date.now()
-            };
+        const data = {
+            totalGold: Math.floor(window.totalGold || 0),
+            highScore: localBest,
+            magnetLevel: window.magnetLevel || 0,
+            shieldLevel: window.shieldLevel || 0,
+            bombCount: window.bombCount || 0,
+            ownsArmorLicense: !!window.ownsArmorLicense,
+            hasWeapon: !!window.hasWeapon,
+            armorCharge: window.armorCharge || 0,
+            level: level || window.currentLevel || 1,
+            timestamp: Date.now()
+        };
 
-            // CRAZYGAMES CLOUD SAVE 🛰️
-            await window.CrazyGames.SDK.data.setItem('riverEscapeSave', data);
-            console.log("✅ [ELITE SYNC] CrazyGames Cloud Save Success!");
-
-            // Also post to CrazyGames Leaderboard if it's a score update
-            if (submitScore && window.CrazyGames.SDK.leaderboard) {
-                await window.CrazyGames.SDK.leaderboard.postScore('TopRiders', finalScore);
+        // YANDEX CLOUD SAVE 🛰️
+        if (this.player) {
+            try {
+                await this.player.setData({ riverEscapeSave: data }, true);
+                console.log("✅ [YANDEX SYNC] Cloud Save Success!");
+            } catch(e) {
+                console.warn("Yandex Cloud Save Error:", e);
             }
-        } catch (e) {
-            console.error("❌ [ELITE SYNC] CrazyGames Save Error:", e);
+        }
+
+        // YANDEX LEADERBOARD POST 🏆
+        if (submitScore && this.ysdk && this.ysdk.leaderboards) {
+            try {
+                let canSetScore = true;
+                if (typeof this.ysdk.isAvailableMethod === 'function') {
+                    canSetScore = await this.ysdk.isAvailableMethod('leaderboards.setScore');
+                }
+                if (canSetScore) {
+                    await this.ysdk.leaderboards.setScore('TopRiders', finalScore);
+                }
+                console.log("🏆 [YANDEX LB] Score Submitted:", finalScore);
+            } catch(e) {
+                console.warn("Yandex Leaderboard Submit Error:", e);
+            }
         }
     },
 
     async restoreFromCloud(callback) {
-        if (!window.CrazyGames || !window.CrazyGames.SDK || !window.CrazyGames.SDK.data) {
+        if (!this.player) {
             if (callback) callback(false);
             return;
         }
 
         try {
-            const cloudData = await window.CrazyGames.SDK.data.getItem('riverEscapeSave');
-            if (cloudData) {
-                console.log("📥 [ELITE SYNC] Cloud Data Restored:", cloudData);
+            const cloudData = await this.player.getData(['riverEscapeSave']);
+            if (cloudData && cloudData.riverEscapeSave) {
+                const data = cloudData.riverEscapeSave;
+                console.log("📥 [YANDEX SYNC] Data Restored:", data);
                 
-                // Sync Global State
-                window.totalGold = cloudData.totalGold || 0;
-                window.magnetLevel = cloudData.magnetLevel || 0;
-                window.shieldLevel = cloudData.shieldLevel || 0;
-                window.bombCount = cloudData.bombCount || 0;
-                window.ownsArmorLicense = cloudData.ownsArmorLicense || false;
-                window.hasWeapon = cloudData.hasWeapon || false;
-                window.armorCharge = cloudData.armorCharge || 0;
-                window.currentLevel = cloudData.level || 1;
+                window.totalGold = data.totalGold || 0;
+                window.magnetLevel = data.magnetLevel || 0;
+                window.shieldLevel = data.shieldLevel || 0;
+                window.bombCount = data.bombCount || 0;
+                window.ownsArmorLicense = data.ownsArmorLicense || false;
+                window.hasWeapon = data.hasWeapon || false;
+                window.armorCharge = data.armorCharge || 0;
+                window.currentLevel = data.level || 1;
                 
-                localStorage.setItem('riverEscapeHighScore', cloudData.highScore || 0);
+                localStorage.setItem('riverEscapeHighScore', data.highScore || 0);
                 
                 if (typeof saveGame === 'function') saveGame();
                 if (typeof syncEliteHUD === 'function') syncEliteHUD();
@@ -151,29 +178,20 @@ window.Leaderboard = {
                 if (callback) callback(false);
             }
         } catch (e) {
-            console.error("❌ [ELITE SYNC] Restore Error:", e);
+            console.error("❌ [YANDEX SYNC] Restore Error:", e);
             if (callback) callback(false);
         }
     },
 
-    // v1.99.68: HARD RESET CLOUD WIPE 🛑
     async hardReset() {
         console.log("🛑 [ELITE RESET] Performing Hard Reset...");
-        
-        // 1. Clear Local
         localStorage.clear();
-        
-        // 2. Clear CrazyGames Cloud
-        if (window.CrazyGames && window.CrazyGames.SDK && window.CrazyGames.SDK.data) {
+        if (this.player) {
             try {
-                await window.CrazyGames.SDK.data.removeItem('riverEscapeSave');
-                console.log("✅ [ELITE RESET] CrazyGames Cloud Wiped.");
-            } catch (e) {
-                console.warn("Cloud wipe error:", e);
-            }
+                await this.player.setData({ riverEscapeSave: null }, true);
+                console.log("✅ [YANDEX RESET] Cloud Wiped.");
+            } catch(e) {}
         }
-        
-        // 3. Reload Game
         window.location.reload();
     },
 
@@ -196,171 +214,55 @@ window.Leaderboard = {
     async showLeaderboard() {
         const lbScreen = document.getElementById('leaderboard-screen');
         const lbList = document.getElementById('leaderboard-list');
-        
         if (!lbScreen || !lbList) return;
 
         lbScreen.style.display = 'flex';
-        lbScreen.style.flexDirection = 'column';
         lbScreen.classList.remove('hidden');
         lbScreen.classList.add('active');
         
-        const loadingText = translations[currentLang].loadingLeaderboard || "LOADING... 🛰️";
-        lbList.innerHTML = `<div style="text-align: center; color: #00e5ff; padding: 60px; font-weight: 900; font-family: 'Outfit'; letter-spacing: 2px; text-transform: uppercase; animation: pulse 1.5s infinite;">${loadingText}</div>`;
+        const loadingText = (window.translations && window.translations[window.currentLang]) ? window.translations[window.currentLang].loadingLeaderboard : "LOADING...";
+        lbList.innerHTML = `<div style="text-align: center; color: #00e5ff; padding: 60px; font-weight: 900; font-family: 'Outfit'; letter-spacing: 2px; text-transform: uppercase;">${loadingText}</div>`;
 
-        // v1.99.68: Robust SDK Readiness Check with Retry + Mock Fallback
-        let cg = window.CrazyGames;
-        let retries = 0;
-        
-        // Mock for Localhost OR when SDK fails to load (AdBlock etc.)
-        if ((!cg || !cg.SDK) && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
-            console.warn("SDK not found on localhost. Using Mock Data for UI Testing.");
-            this.renderLeaderboard([
-                { rank: 1, name: "Elite_Tester", score: 9999 },
-                { rank: 2, name: "Crazy_Rider", score: 8888 },
-                { rank: 3, name: "River_Master", score: 7777 },
-                { rank: 4, name: "Gold_Seeker", score: 6666 },
-                { rank: 5, name: "Elite_Pilot", score: 5555 }
-            ]);
-            return;
-        }
-
-        while ((!cg || !cg.SDK || !cg.SDK.leaderboard) && retries < 10) {
-            console.log(`Waiting for CrazyGames SDK... Retry ${retries + 1}`);
-            await new Promise(r => setTimeout(r, 500));
-            cg = window.CrazyGames;
-            retries++;
-        }
-
-        if (!cg || !cg.SDK || !cg.SDK.leaderboard) {
-            // Graceful fallback: show local best score instead of error
+        if (!this.ysdk || !this.ysdk.leaderboards) {
+            // Local fallback
             const localBest = Number(localStorage.getItem('riverEscapeHighScore') || 0);
-            const playerName = (localStorage.getItem('riverEscapeName') || 'YOU').toUpperCase();
-            console.warn("CrazyGames SDK not available. Showing local scores.");
-            
-            this.renderLeaderboard([
-                { rank: 1, name: playerName, score: localBest, userId: this.playerID }
-            ]);
-            
-            // Show a subtle offline notice
-            const notice = document.createElement('div');
-            notice.style.cssText = 'text-align:center; color:rgba(255,255,255,0.3); font-size:10px; font-family:Outfit; margin-top:10px; letter-spacing:1px;';
-            notice.innerText = '⚠️ OFFLINE MODE — ONLINE RANKINGS UNAVAILABLE';
-            if (lbList) lbList.appendChild(notice);
+            this.renderLeaderboard([{ rank: 1, name: "YOU (LOCAL)", score: localBest, isMe: true }]);
             return;
         }
 
         try {
-            console.log("Fetching High Scores for 'TopRiders'...");
-            // CrazyGames SDK v2: getHighScores returns array of { rank, score, user: { userId, username } }
-            const results = await cg.SDK.leaderboard.getHighScores('TopRiders', { limit: 5 });
-            console.log("Leaderboard raw result:", results);
-
-            // Normalize SDK v2 response → { name, score, userId, rank }
-            const rawList = Array.isArray(results) ? results : (results.scores || results.items || []);
-            const items = rawList.slice(0, 5).map((item, idx) => ({
-                name:   (item.user?.username || item.name || 'PLAYER').toUpperCase(),
-                score:  item.score,
-                userId: item.user?.userId || item.userId,
-                rank:   item.rank || (idx + 1)
+            const result = await this.ysdk.leaderboards.getEntries('TopRiders', { quantityTop: 5, includeUser: true });
+            const items = result.entries.map(entry => ({
+                name: entry.player.publicName || "PLAYER",
+                score: entry.score,
+                rank: entry.rank,
+                isMe: entry.player.uniqueID === this.playerID
             }));
-
-            console.log("Leaderboard normalized:", items);
             this.renderLeaderboard(items);
         } catch (e) {
             console.error("Leaderboard fetch error:", e);
-            const errorText = translations[currentLang].rankingsFetchError || "FETCH ERROR";
-            lbList.innerHTML = `<div style="text-align: center; color: #ff5252; padding: 40px; font-family: 'Outfit'; font-weight: bold;">${errorText}<br><span style="font-size: 10px; opacity: 0.5; margin-top: 10px; display: block;">${e.message || "Unknown API Error"}</span></div>`;
+            lbList.innerHTML = `<div style="text-align: center; color: #ff5252; padding: 40px;">ERROR LOADING RANKINGS</div>`;
         }
     },
 
     renderLeaderboard(data) {
         const lbList = document.getElementById('leaderboard-list');
-        const myRankContainer = document.getElementById('leaderboard-my-rank');
         if (!lbList) return;
 
-        if (!data || data.length === 0) {
-            const noDataText = translations[currentLang].noLeaderboardData || "NO DATA FOUND";
-            lbList.innerHTML = `<div style="text-align: center; color: rgba(255,255,255,0.4); padding: 60px; font-family: 'Outfit'; font-weight: bold;">${noDataText}</div>`;
-            if (myRankContainer) myRankContainer.style.display = 'none';
-            return;
-        }
-
-        const scoreLabel = translations[currentLang].leaderboardScore || "SCORE";
-        const meLabel = translations[currentLang].leaderboardMe || "YOU";
-
-        // v1.99.68: Top 5 Filter + Personal Rank Logic
-        const top5 = data.slice(0, 5);
-        const myItem = data.find((item, idx) => {
-            if (!item.rank) item.rank = idx + 1;
-            return item.userId === this.playerID || (item.name === "Elite_Tester" && window.location.hostname === 'localhost');
-        });
-
-        // Render Top 5
         let html = '';
-        top5.forEach((item, index) => {
-            const rank = index + 1;
-            const isMe = item.userId === this.playerID || (item.name === "Elite_Tester" && window.location.hostname === 'localhost');
-            html += this.getLeaderboardItemHTML(item, rank, isMe, scoreLabel, meLabel);
+        data.forEach(item => {
+            const isMe = item.isMe;
+            const rankEmoji = item.rank === 1 ? "🥇" : item.rank === 2 ? "🥈" : item.rank === 3 ? "🥉" : "";
+            const itemBg = isMe ? 'rgba(0, 229, 255, 0.15)' : 'rgba(255,255,255,0.02)';
+            
+            html += `
+                <div style="background: ${itemBg}; border-radius: 15px; padding: 15px; margin-bottom: 10px; display: flex; align-items: center; border: 1px solid ${isMe ? '#00e5ff' : 'rgba(255,255,255,0.1)'};">
+                    <div style="width: 40px; font-weight: 900; color: #00e5ff; font-size: 20px;">${rankEmoji || item.rank}</div>
+                    <div style="flex: 1; color: #fff; font-weight: bold; font-family: 'Outfit';">${item.name.toUpperCase()} ${isMe ? '<span style="font-size: 10px; background: #00e5ff; color: #000; padding: 2px 5px; border-radius: 5px; margin-left: 5px;">YOU</span>' : ''}</div>
+                    <div style="color: #00e5ff; font-weight: 900; font-size: 18px;">${item.score.toLocaleString()}</div>
+                </div>
+            `;
         });
         lbList.innerHTML = html;
-
-        // Populate Dedicated Personal Rank Box (The green pill)
-        if (myRankContainer) {
-            if (myItem) {
-                myRankContainer.parentElement.style.display = 'block';
-                myRankContainer.innerHTML = this.getLeaderboardItemHTML(myItem, myItem.rank, true, scoreLabel, meLabel);
-                myRankContainer.style.background = 'transparent'; // Remove duplicate bg
-                myRankContainer.style.border = 'none';
-                myRankContainer.style.padding = '0';
-            } else {
-                // No score yet - Show placeholder
-                myRankContainer.parentElement.style.display = 'block';
-                myRankContainer.innerHTML = `
-                    <div style="width: 100%; text-align: center; color: #00e5ff; font-family: 'Outfit'; font-weight: 900; font-size: 12px; letter-spacing: 1px; opacity: 0.6; padding: 10px;">
-                        ${translations[currentLang].noScoreYet || "HENÜZ SKORUNUZ YOK"}
-                    </div>`;
-            }
-        }
-    },
-
-    getLeaderboardItemHTML(item, rank, isMe, scoreLabel, meLabel) {
-        const rankEmoji = rank === 1 ? "🥇" : rank === 2 ? "🥈" : rank === 3 ? "🥉" : "";
-        const rankColor = rank === 1 ? "#FFD700" : rank === 2 ? "#E0E0E0" : rank === 3 ? "#CD7F32" : "rgba(255,255,255,0.4)";
-        const itemBg = isMe ? 'linear-gradient(90deg, rgba(0, 229, 255, 0.15) 0%, rgba(0, 229, 255, 0.05) 100%)' : 'rgba(255,255,255,0.02)';
-        const itemBorder = isMe ? '1px solid rgba(0, 229, 255, 0.4)' : '1px solid rgba(255,255,255,0.05)';
-
-        return `
-            <div style="background: ${itemBg}; border: ${itemBorder}; border-radius: 20px; padding: 18px 22px; display: flex; align-items: center; gap: 18px; box-shadow: ${isMe ? '0 0 30px rgba(0, 229, 255, 0.15)' : 'none'}; transition: transform 0.3s ease;">
-                <div style="width: 50px; height: 50px; border-radius: 14px; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; font-weight: 950; color: ${rankColor}; font-size: 20px; font-family: 'Outfit'; border: 2px solid ${rank <= 3 ? rankColor : 'rgba(255,255,255,0.1)'};">
-                    ${rankEmoji || rank}
-                </div>
-                <div style="flex: 1;">
-                    <div style="color: #fff; font-family: 'Outfit'; font-weight: 900; font-size: 17px; display: flex; align-items: center; gap: 10px; letter-spacing: 0.5px;">
-                        ${(item.username || item.name || "ELITE RIDER").toUpperCase()} 
-                        ${isMe ? `<span style="font-size: 9px; background: #00e5ff; color: #000; padding: 3px 8px; border-radius: 20px; font-weight: 900; letter-spacing: 1px;">${meLabel}</span>` : ''}
-                    </div>
-                </div>
-                <div style="text-align: right;">
-                    <div style="color: #00e5ff; font-family: 'Outfit'; font-weight: 900; font-size: 20px; letter-spacing: 0.5px; text-shadow: 0 0 15px rgba(0,229,255,0.3);">${item.score.toLocaleString()}</div>
-                    <div style="color: rgba(255,255,255,0.2); font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 1.5px; margin-top: 2px;">${scoreLabel}</div>
-                </div>
-            </div>
-        `;
-    },
-
-    detectCountry() {
-        // IP detection logic...
-        this.playerCountry = "TR"; // Default or detect
-        this.playerFlag = "🇹🇷";
-        localStorage.setItem('riverEscapeCountry', this.playerCountry);
-    },
-
-    getFlagEmoji(countryCode) {
-        if (!countryCode || countryCode === "??") return "🌍";
-        return countryCode.toUpperCase().replace(/./g, char => String.fromCodePoint(char.charCodeAt(0) + 127397));
-    },
-
-    updateUI() {
-        // Update flag and country text in UI
     }
 };

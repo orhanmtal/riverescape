@@ -1,0 +1,227 @@
+// River Escape - Varlık Yükleyici (Asset Loader) - v1.99.33.74 (SCOPE PROTECTION)
+const version = "1.99.33.74";
+window.players = { spring: null, yaz: null, sonbahar: null, kis: null, lava: null, void: null, nostalji: null };
+var iPI = null; // v1.99.31.00: Universal Default Ship Identifier
+var playerImg = null;
+
+// GÖRSELLERİ ŞEFFAFLAŞTIRAN SİHİRLİ FONKSİYON - v110 (Yüksek Çözünürlük & Local Mühür)
+function makeWhiteTransparent(imageElement, isAggressive = false) {
+    if (imageElement.src.includes('ArkaPlan')) return imageElement;
+
+    const offCanvas = document.createElement('canvas');
+    const w = imageElement.naturalWidth || imageElement.width;
+    const h = imageElement.naturalHeight || imageElement.height;
+
+    // Çözünürlüğü mühürle
+    offCanvas.width = w;
+    offCanvas.height = h;
+    const offCtx = offCanvas.getContext('2d');
+
+    offCtx.drawImage(imageElement, 0, 0);
+    try {
+        const imgData = offCtx.getImageData(0, 0, w, h);
+        const data = imgData.data;
+
+        for (var i = 0; i < data.length; i += 4) {
+            let r = data[i], g = data[i + 1], b = data[i + 2];
+            // ELITE v1.99.64.98: Conservative white cleanup (245+) to protect light blue assets
+            if (r > 245 && g > 245 && b > 245) {
+                data[i + 3] = 0;
+            } else if (isAggressive) {
+                // Anti-Alias Halation Cleanup (Grey/White fringing pixels)
+                let maxDiff = Math.max(Math.abs(r - g), Math.abs(r - b), Math.abs(g - b));
+                if (r > 60 && g > 60 && b > 60 && maxDiff < 40) {
+                    data[i + 3] = 0;
+                }
+            }
+        }
+        offCtx.putImageData(imgData, 0, 0);
+    } catch (e) {
+        console.warn("Transparency processing failed:", e);
+    }
+
+    return offCanvas; // v1.99.64.22: Return canvas directly (High Performance)
+}
+
+
+let bgImgs = {};
+function loadBg(key, src) {
+    let img = new Image();
+    img.crossOrigin = "anonymous";
+    img.onload = () => {
+        try {
+            let offCtx = document.createElement('canvas');
+            offCtx.width = img.width;
+            offCtx.height = img.height * 2;
+            let c = offCtx.getContext('2d');
+            c.drawImage(img, 0, 0, img.width, img.height);
+            c.save();
+            c.translate(0, img.height * 2);
+            c.scale(1, -1);
+            c.drawImage(img, 0, 0, img.width, img.height);
+            c.restore();
+            bgImgs[key] = offCtx;
+            console.log(`🖼️ [ELITE ASSETS] Arka Plan Yüklendi: ${key} (${src})`);
+            trackAsset(key);
+        } catch (e) {
+            console.error(`❌ [ELITE ASSETS] Arka Plan İşleme Hatası (${key}):`, e);
+        }
+    };
+    img.onerror = (e) => {
+        console.error(`❌ [ELITE ASSETS] Arka Plan Yükleme Hatası (${key}):`, src);
+        trackAsset(key + " (FAIL)");
+    };
+    img.src = src;
+    return img;
+}
+
+// RİVER ESCAPE ELITE - v1.99.32.03 (PRECISION TUNE)
+console.log("🎨 [ELITE ASSETS] Başlatılıyor...");
+
+let assetsLoadedCount = 0;
+function trackAsset(name) {
+    assetsLoadedCount++;
+    console.log(`🖼️ [ELITE ASSETS] Yüklendi: ${name} (${assetsLoadedCount})`);
+}
+
+function safeLoad(name, src, processor = null) {
+    let img = new Image();
+    img.crossOrigin = "anonymous";
+    img.onload = () => {
+        try {
+            if (processor) processor(img);
+            trackAsset(name);
+        } catch (e) {
+            console.error(`❌ [ELITE ASSETS] İşleme Hatası (${name}):`, e);
+            trackAsset(name + " (FAIL)");
+        }
+    };
+    img.onerror = (e) => {
+        console.error(`❌ [ELITE ASSETS] Yükleme Hatası (${name}):`, src);
+        trackAsset(name + " (FATAL)");
+    };
+    img.src = src;
+    return img;
+}
+
+// ASSETS YÜKLEME
+let bgImgSpring = loadBg('spring', 'assets/ArkaPlan_Elite_Spring_Straight.png');
+let bgImgSummer = loadBg('summer', 'assets/summer_premium.png');
+let bgImgAutumn = loadBg('autumn', 'assets/ArkaPlan_Sonbahar.png');
+let bgImgWinter = loadBg('winter', 'assets/ArkaPlan_Elite_Winter_Straight.png');
+let bgImgLava = loadBg('lava', 'assets/ArkaPlan_Lav.png');
+let bgImgVoid = null; // v1.99.33.71: Restore Procedural Starfield (User Sync)
+let bgImgLagoon = loadBg('lagoon', 'assets/ArkaPlan_Lagoon.png'); // v1.99.14.0: ELITE LAGOON
+
+// v1.99.30.06: MODULAR COLLECTION LOADER
+if (window.ELITE_COLLECTIONS && window.ELITE_COLLECTIONS.boats) {
+    window.ELITE_COLLECTIONS.boats.forEach(boat => {
+        safeLoad('Boat_' + boat.id, boat.asset, (img) => {
+            players[boat.id] = makeWhiteTransparent(img);
+            // Default player image assignment
+            if (boat.id === 'spring') {
+                iPI = players.spring;
+                playerImg = players.spring;
+            }
+        });
+    });
+}
+
+let bgImg = bgImgSpring;
+// playerImg initialized globally above
+
+let obsImg = safeLoad('Kutuk', 'assets/Kutuk.png', (img) => { obsImg = makeWhiteTransparent(img); });
+let magImg = safeLoad('Miknatis', 'assets/Miknatis.png', (img) => { magImg = makeWhiteTransparent(img); });
+let shdImg = safeLoad('Kalkan', 'assets/Kalkan.png', (img) => { shdImg = makeWhiteTransparent(img); });
+let crocImg = safeLoad('Timsah', 'assets/Timsah.png', (img) => { crocImg = makeWhiteTransparent(img); });
+let hippoImg = safeLoad('Hippo', 'assets/Hippo.png', (img) => { hippoImg = makeWhiteTransparent(img); });
+
+// --- v2.00 INDIVIDUAL ELITE ASSETS (No more Grid!) ---
+let obsTiles = {};
+function loadIndividualTiles(key, rockSrc, logSrc, crocSrc, hippoSrc) {
+    obsTiles[key] = { isIndividual: true };
+    const load = (type, src) => {
+        if (!src) return;
+        safeLoad(`${key}_${type}`, src, (img) => {
+            const processed = makeWhiteTransparent(img, key === 'lava');
+            obsTiles[key][type] = processed;
+
+            // v1.99.64.100: PRE-RENDER BLUE ELITE CROCODILE
+            if (type === 'croc' && !obsTiles['blueCroc']) {
+                const off = document.createElement('canvas');
+                off.width = processed.width; off.height = processed.height;
+                const oCtx = off.getContext('2d');
+                oCtx.filter = "hue-rotate(140deg) saturate(3) brightness(1.1)";
+                oCtx.drawImage(processed, 0, 0);
+                obsTiles['blueCroc'] = off;
+                console.log("🐊 [ELITE ASSETS] Blue Crocodile Pre-Rendered");
+            }
+        });
+    };
+    load('rock', rockSrc);
+    load('horizontal_log', logSrc);
+    load('vertical_log', logSrc);
+    load('vertical', logSrc); // Geri uyumluluk
+    load('croc', crocSrc);
+    load('hippo', hippoSrc);
+}
+
+// Level-Specific Assets (Elite Individual System)
+loadIndividualTiles('spring', 'assets/rock_elite_spring.png', 'assets/Kutuk.png', 'assets/Timsah.png', 'assets/Hippo.png');
+loadIndividualTiles('summer', 'assets/rock_elite_summer.png', 'assets/Kutuk.png', 'assets/Timsah.png', 'assets/Hippo.png');
+loadIndividualTiles('autumn', 'assets/rock_elite_autumn.png', 'assets/Kutuk.png', 'assets/Timsah.png', 'assets/Hippo.png');
+
+loadIndividualTiles('winter', 'assets/rock_elite_winter.png', 'assets/Kutuk.png', 'assets/Timsah.png', 'assets/Hippo.png');
+loadIndividualTiles('lava', 'assets/rock_elite_lava.png', 'assets/Kutuk.png', 'assets/Timsah.png', 'assets/Hippo.png');
+safeLoad('lava_geyser', 'assets/lava_geyser.png', (img) => {
+    obsTiles['lava_geyser'] = makeWhiteTransparent(img, true);
+});
+safeLoad('kite_elite', 'assets/kite_elite.png', (img) => {
+    obsTiles['kite_elite'] = makeWhiteTransparent(img, false);
+});
+loadIndividualTiles('void', '', 'assets/Kutuk.png', 'assets/Timsah.png', 'assets/Hippo.png');
+loadIndividualTiles('lagoon', 'assets/duck_elite.png', 'assets/Kutuk.png', 'assets/Timsah.png', 'assets/Hippo.png');
+safeLoad('plane_elite', 'assets/plane_elite.png', (img) => {
+    obsTiles['plane_elite'] = makeWhiteTransparent(img, false);
+});
+
+// v1.99.14.4: INDIVIDUAL SCATTERED BALLOONS (Elite)
+safeLoad('balloon_red', 'assets/balloon_red_elite.png', (img) => { obsTiles['balloon_red'] = makeWhiteTransparent(img, false); });
+safeLoad('balloon_blue', 'assets/balloon_blue_elite.png', (img) => { obsTiles['balloon_blue'] = makeWhiteTransparent(img, false); });
+safeLoad('balloon_yellow', 'assets/balloon_yellow_elite.png', (img) => { obsTiles['balloon_yellow'] = makeWhiteTransparent(img, false); });
+
+// PARALLAX SİSTEMİ (BULUTLAR/SİS)
+let clouds = [];
+function initClouds() {
+    clouds = [];
+    for (let i = 0; i < 8; i++) {
+        clouds.push({
+            x: Math.random() * 800 - 100,
+            y: Math.random() * 800,
+            r: Math.random() * 100 + 50,
+            opacity: Math.random() * 0.15 + 0.05
+        });
+    }
+}
+initClouds();
+
+// v1.99.70.05: ELITE ASSET INTEGRITY SCANNER
+window.checkAssetIntegrity = function() {
+    console.log("🔍 [ELITE SCAN] Verifying Game Assets...");
+    const required = ['spring', 'summer', 'autumn', 'winter', 'lava', 'lagoon', 'Miknatis', 'Kalkan', 'Timsah', 'Hippo', 'Kutuk'];
+    let missing = [];
+    
+    if (!bgImgs['spring']) missing.push('Spring BG');
+    if (!playerImg) missing.push('Player Image');
+    if (!obsImg || obsImg.tagName !== 'CANVAS') missing.push('Log (Kutuk)');
+    
+    if (missing.length > 0) {
+        console.error("🚩 [ELITE SCAN] MISSING CRITICAL ASSETS:", missing);
+    } else {
+        console.log("✅ [ELITE SCAN] All critical assets loaded successfully.");
+    }
+    return missing;
+};
+
+// Start integrity scan after 5 seconds
+setTimeout(window.checkAssetIntegrity, 5000);

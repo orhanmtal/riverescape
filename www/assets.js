@@ -6,7 +6,7 @@ var playerImg = null;
 
 // GÖRSELLERİ ŞEFFAFLAŞTIRAN SİHİRLİ FONKSİYON - v110 (Yüksek Çözünürlük & Local Mühür)
 function makeWhiteTransparent(imageElement, isAggressive = false) {
-    if (imageElement.src.includes('ArkaPlan')) return imageElement;
+    if (imageElement && imageElement.src && imageElement.src.includes('ArkaPlan')) return imageElement;
 
     const offCanvas = document.createElement('canvas');
     const w = imageElement.naturalWidth || imageElement.width;
@@ -44,58 +44,123 @@ function makeWhiteTransparent(imageElement, isAggressive = false) {
 }
 
 
+// v1.99.70.12: ELITE ROBUST PATH HUNTER
+const assetLoadStats = { total: 0, loaded: 0, failed: 0, logs: [] };
+
+function resolveAssetPath(src) {
+    // v1.99.70.12: Try multiple variations for Linux/Yandex compatibility
+    const variations = [];
+    variations.push(src); // 1. Original (e.g. assets/Kayik.png)
+    
+    if (src.startsWith('assets/')) {
+        variations.push(src.replace('assets/', '')); // 2. Root (e.g. Kayik.png)
+        variations.push(src.replace('assets/', 'Assets/')); // 3. Capitalized Folder
+    }
+    
+    return variations;
+}
+
+function trackAssetLoad(name, success, path) {
+    assetLoadStats.total++;
+    if (success) {
+        assetLoadStats.loaded++;
+    } else {
+        assetLoadStats.failed++;
+        assetLoadStats.logs.push(`❌ FAILED: ${name} (${path})`);
+    }
+    
+    // v1.99.70.12: Emergency Screen Log if too many fails
+    if (assetLoadStats.failed > 5 && !document.getElementById('asset-error-log')) {
+        const logDiv = document.createElement('div');
+        logDiv.id = 'asset-error-log';
+        logDiv.style.cssText = 'position:fixed;bottom:0;left:0;width:100%;z-index:99999;background:rgba(0,0,0,0.8);color:#ff3d00;font-size:10px;padding:10px;max-height:100px;overflow-y:auto;pointer-events:none;';
+        logDiv.innerHTML = '<b>[ELITE ASSET ERROR LOG]</b><br>' + assetLoadStats.logs.join('<br>');
+        document.body.appendChild(logDiv);
+    }
+}
+
 let bgImgs = {};
 function loadBg(key, src) {
-    let img = new Image();
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    const variations = resolveAssetPath(src);
+    let currentVariation = 0;
+
+    const attemptLoad = (path) => {
+        img.src = path;
+    };
+
     img.onload = () => {
         try {
-            let offCtx = document.createElement('canvas');
-            offCtx.width = img.width;
-            offCtx.height = img.height * 2;
-            let c = offCtx.getContext('2d');
+            const offCanvas = document.createElement('canvas');
+            offCanvas.width = img.width;
+            offCanvas.height = img.height * 2;
+            const c = offCanvas.getContext('2d');
             c.drawImage(img, 0, 0, img.width, img.height);
             c.save();
             c.translate(0, img.height * 2);
             c.scale(1, -1);
             c.drawImage(img, 0, 0, img.width, img.height);
             c.restore();
-            bgImgs[key] = offCtx;
-            console.log(`🖼️ [ELITE ASSETS] Arka Plan Yüklendi: ${key}`);
+            bgImgs[key] = offCanvas;
+            trackAssetLoad(key, true, variations[currentVariation]);
+            console.log(`✅ [ELITE BG] ${key} loaded via ${variations[currentVariation]}`);
         } catch (e) {
-            console.error(`❌ [ELITE ASSETS] Arka Plan Hatası (${key}):`, e);
+            console.error(`❌ [ELITE BG] Process Error (${key}):`, e);
         }
     };
-    const vStr = (window.ELITE_CONFIG && window.ELITE_CONFIG.VERSION) ? window.ELITE_CONFIG.VERSION : 'v1.99.64.33';
-    img.src = src + "?v=" + vStr;
+
+    img.onerror = () => {
+        currentVariation++;
+        if (currentVariation < variations.length) {
+            console.warn(`🔄 [ELITE BG] 404 for ${key}, trying fallback: ${variations[currentVariation]}`);
+            attemptLoad(variations[currentVariation]);
+        } else {
+            console.error(`❌ [ELITE BG] FATAL 404 for ${key}:`, src);
+            trackAssetLoad(key, false, src);
+        }
+    };
+
+    attemptLoad(variations[0]);
     return img;
 }
 
-// RİVER ESCAPE ELITE - v1.99.32.03 (PRECISION TUNE)
-console.log("🎨 [ELITE ASSETS] Başlatılıyor...");
-
-let assetsLoadedCount = 0;
-function trackAsset(name) {
-    assetsLoadedCount++;
-    console.log(`🖼️ [ELITE ASSETS] Yüklendi: ${name} (${assetsLoadedCount})`);
-}
-
 function safeLoad(name, src, processor = null) {
-    let img = new Image();
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    const variations = resolveAssetPath(src);
+    let currentVariation = 0;
+
+    const attemptLoad = (path) => {
+        img.src = path;
+    };
+
     img.onload = () => {
         try {
             if (processor) processor(img);
-            trackAsset(name);
+            trackAssetLoad(name, true, variations[currentVariation]);
+            console.log(`✅ [ELITE ASSET] ${name} loaded via ${variations[currentVariation]}`);
         } catch (e) {
-            console.error(`❌ [ELITE ASSETS] İşleme Hatası (${name}):`, e);
-            trackAsset(name + " (FAIL)");
+            console.error(`❌ [ELITE ASSET] Process Error (${name}):`, e);
         }
     };
-    img.onerror = (e) => {
-        console.error(`❌ [ELITE ASSETS] Yükleme Hatası (${name}):`, src);
-        trackAsset(name + " (FATAL)");
+
+    img.onerror = () => {
+        currentVariation++;
+        if (currentVariation < variations.length) {
+            console.warn(`🔄 [ELITE ASSET] 404 for ${name}, trying fallback: ${variations[currentVariation]}`);
+            attemptLoad(variations[currentVariation]);
+        } else {
+            console.error(`❌ [ELITE ASSET] FATAL 404 for ${name}:`, src);
+            trackAssetLoad(name, false, src);
+            // Create a dummy pixel fallback to prevent engine freeze
+            const dummy = document.createElement('canvas');
+            dummy.width = 1; dummy.height = 1;
+            if (processor) processor(dummy);
+        }
     };
-    const vStr = (window.ELITE_CONFIG && window.ELITE_CONFIG.VERSION) ? window.ELITE_CONFIG.VERSION : 'v1.99.64.33';
-    img.src = src + "?v=" + vStr;
+
+    attemptLoad(variations[0]);
     return img;
 }
 
@@ -176,6 +241,8 @@ safeLoad('kite_elite', 'assets/kite_elite.png', (img) => {
 });
 loadIndividualTiles('void', '', 'assets/Kutuk.png', 'assets/Timsah.png', 'assets/Hippo.png');
 loadIndividualTiles('lagoon', 'assets/duck_elite.png', 'assets/Kutuk.png', 'assets/Timsah.png', 'assets/Hippo.png');
+loadIndividualTiles('cyber', 'assets/pixel_phantom.png', 'assets/Kutuk.png', 'assets/Timsah.png', 'assets/Hippo.png');
+loadIndividualTiles('toxic', 'assets/nebula_zenith.png', 'assets/Kutuk.png', 'assets/Timsah.png', 'assets/Hippo.png');
 safeLoad('plane_elite', 'assets/plane_elite.png', (img) => {
     obsTiles['plane_elite'] = makeWhiteTransparent(img, false);
 });

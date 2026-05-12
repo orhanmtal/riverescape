@@ -8,8 +8,11 @@ window.Leaderboard = {
     playerName: localStorage.getItem('riverEscapeName') || "ELITE PLAYER",
     playerCountry: localStorage.getItem('riverEscapeCountry') || "??",
     playerFlag: "🌍",
+    initialized: false,
 
     init() {
+        if (this.initialized) return;
+        this.initialized = true;
         console.log("🎮 [ELITE AUTH] CrazyGames SDK Initialization...");
         
         // v1.99.65.00: CrazyGames Auth System

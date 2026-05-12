@@ -1,26 +1,10 @@
 /**
- * RİVER ESCAPE ELİTE - v1.99.70.07 (YANDEX GAMES RELEASE)
- * 1. NO PLACEHOLDERS - Always use premium assets or procedural generation.
- * 2. PERFORMANCE FIRST - Optimize update loops and DOM access.
- * 3. VISUAL EXCELLENCE - Use HSL colors, smooth gradients, and micro-animations.
- * 4. CODE Integrity - Never access variables before initialization.
- * 5. ELITE SYNC - Maintain version consistency across all modules.
+ * RIVER ESCAPE ELITE - v1.99.70.12 (YANDEX GAMES RELEASE)
  */
 
-// River Escape Elite - Central Version Control
-// v1.99.70.00 - Yandex Games Elite Release
-window.ELITE_CONFIG = {
-    VERSION: "1.99.70.07",
-    VERSION_CODE: "19970007",
-    LEVEL_MARGIN: 0.15,
-    BG_KEY_SYNC: true,
-    NATURAL_TILING: true,
-    REMOVE_MIST: true,
-    L8_LASER_LOGIC: "optimized",
-
-    BUILD_LEVEL: "Elite Yandex",
-    SYNC_ENGINE: "v3.Elite.Secure",
-    LAST_UPDATED: "2026-05-12"
+window.ELITE_VERSION_DATA = {
+    VERSION: "1.99.70.12",
+    VERSION_CODE: "19970012",
+    BUILD_ID: "ELITE_YANDEX_V3",
+    ENVIRONMENT: "PRODUCTION"
 };
-
-console.log("🚀 [ELITE PERFORMANCE SYSTEM] Active:", window.ELITE_CONFIG.VERSION);

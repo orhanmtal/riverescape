@@ -1,10 +1,12 @@
-/*
- * RİVER ESCAPE ELİTE - v1.99.70.07 (ENGINE v3)
- * ELITE PERFORMANCE & SYNC SYSTEM
+/* RİVER ESCAPE ELİTE - v1.99.64.66 (STABLE AAB RELEASE)
+ * DEVELOPMENT RULES:
+ * 1. NO PLACEHOLDERS 2. PERFORMANCE FIRST 3. VISUAL EXCELLENCE
+ * 4. CODE INTEGRITY 5. ELITE SYNC
+ * 6. CLOUD SEAL v66
  */
 
-const VERSION = "v1.99.70.07";
-const VERSION_CODE = 19970007;
+const VERSION = "v1.99.70.00";
+const VERSION_CODE = 19970000;
 
 // Elite Platform Detect
 const isAndroid = window.isAndroid;
@@ -513,12 +515,7 @@ function getRiverShift(y) {
     return Math.sin(((bgY + y) * frequency) + phase) * amplitude;
 }
 
-function initLanguage() {
-    const lang = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
-    currentLang = lang.startsWith('tr') ? 'tr' : 'en';
-    updateLanguageUI();
-}
-
+function initLanguage() { let saved = localStorage.getItem("riverEscapeLang"); if (saved && ["tr", "en", "ru"].includes(saved)) { currentLang = saved; } else { const lang = (navigator.language || navigator.userLanguage || "en").toLowerCase(); if (lang.startsWith("tr")) currentLang = "tr"; else if (lang.startsWith("ru")) currentLang = "ru"; else currentLang = "en"; } updateLanguageUI(); }
 function updateLanguageUI() {
     const t = translations[currentLang];
     const setText = (id, text) => { const el = document.getElementById(id); if (el) el.innerText = text; };
@@ -569,13 +566,39 @@ function updateLanguageUI() {
 
     // SHOP SMALL DESC v149
     if (document.getElementById('shop-mag-desc')) {
-        document.getElementById('shop-mag-desc').innerHTML = `${t.magnetDesc} <span id="magnet-duration" style="color:#00e5ff;">0s</span><br>(${translations[currentLang].levelLabel} <span id="magnet-lvl">0</span>)`;
+        document.getElementById('shop-mag-desc').innerHTML = `${t.magnetDesc} <span id="magnet-duration" style="color:#00e5ff;">0s</span> | ${t.levelLabel} <span id="magnet-lvl">0</span>`;
     }
     if (document.getElementById('shop-shd-desc')) {
-        document.getElementById('shop-shd-desc').innerHTML = `${t.shieldDesc} <span id="shield-chance" style="color:#64dd17;">%0</span><br>(${translations[currentLang].levelLabel} <span id="shield-lvl">0</span>)`;
+        document.getElementById('shop-shd-desc').innerHTML = `${t.shieldDesc} <span id="shield-chance" style="color:#64dd17;">%0</span> | ${t.levelLabel} <span id="shield-lvl">0</span>`;
     }
-    if (document.getElementById('shop-weapon-desc')) document.getElementById('shop-weapon-desc').innerText = t.weaponDesc;
-    if (document.getElementById('shop-void-armor-desc')) document.getElementById('shop-void-armor-desc').innerText = t.voidArmorDesc;
+    if (document.getElementById('shop-magma-desc')) {
+        const count = typeof bombCount !== 'undefined' ? bombCount : 0;
+        document.getElementById('shop-magma-desc').innerHTML = `${t.magmaCannonDesc.replace('{count}', '<span id="shop-bomb-count" style="color:#fff;">'+count+'</span>')}`;
+    }
+    if (document.getElementById('shop-void-armor-desc')) {
+        const count = typeof armorAmmo !== 'undefined' ? armorAmmo : 0;
+        document.getElementById('shop-void-armor-desc').innerHTML = `${t.armorChargeDesc.replace('{count}', '<span id="shop-armor-count" style="color:#fff;">'+count+'</span>')}`;
+    }
+
+    // Daily Gift Labels
+    if (document.querySelector('#daily-gift-btn .amount')) document.querySelector('#daily-gift-btn .amount').innerText = `1.000 ${t.goldLabel || "GOLD"}`;
+    const adWord = t.spinNextBtn ? t.spinNextBtn.split(' ')[1].replace(/[()]/g, '') : "AD";
+    if (document.querySelector('#daily-gift-btn .price')) document.querySelector('#daily-gift-btn .price').innerText = `📽️ ${adWord}`;
+    if (document.getElementById('daily-gift-desc')) document.getElementById('daily-gift-desc').innerText = t.magmaCannonDesc ? t.magmaCannonDesc.split('|')[0].trim().replace('Owned:', '').replace('Mevcut:', '').replace('Есть:', '').trim() + " 1.000 " + (t.goldLabel || "GOLD") : "1.000 GOLD";
+    
+    // Better way for daily gift desc: let's just use a dedicated translation if it exists or generic one
+    if (document.getElementById('daily-gift-desc')) {
+        const giftDesc = (currentLang === 'tr') ? "Her gun 1.000 Altin!" : (currentLang === 'ru' ? "1.000 Золота каждый день!" : "1,000 Gold every day!");
+        document.getElementById('daily-gift-desc').innerText = giftDesc;
+    }
+
+    // Upgrade/Buy Button Texts
+    setText('buy-mag-btn', t.upgradeBtn || "UPGRADE");
+    setText('buy-shield-btn', t.upgradeBtn || "UPGRADE");
+    setText('buy-ammo-btn', "1000 G");
+    setText('buy-armor-btn', "1000 G");
+    if (document.getElementById('ad-ammo-btn')) document.getElementById('ad-ammo-btn').innerText = `+10 (${adWord})`;
+    if (document.getElementById('ad-armor-btn')) document.getElementById('ad-armor-btn').innerText = `+3 (${adWord})`;
 
     setText('ad-gold-btn', t.adGoldBtn);
     setText('shop-close-btn', t.closeBtn);
@@ -596,10 +619,6 @@ function updateLanguageUI() {
     setText('confirm-logout-btn', t.logoutYes);
     setText('cancel-logout-btn', t.cancelBtnModal);
 
-    if (document.querySelector('#reset-confirm-overlay h2')) document.querySelector('#reset-confirm-overlay h2').innerText = t.resetConfirmTitleModal || t.resetWarning;
-    if (document.querySelector('#reset-confirm-overlay p')) document.querySelector('#reset-confirm-overlay p').innerText = t.resetConfirmDesc || t.resetDesc;
-    setText('confirm-reset-yes', t.resetYesAction || t.resetYes);
-    setText('confirm-reset-no', t.cancelBtnModal || t.resetNo);
 
     if (document.getElementById('edit-username-title')) document.getElementById('edit-username-title').innerText = t.editUsernameTitle;
     if (document.getElementById('edit-username-desc')) document.getElementById('edit-username-desc').innerText = t.setEliteNameDesc;
@@ -710,23 +729,9 @@ const EliteAdManager = {
     }
 };
 
-// v1.99.70.08: ELITE AD SYNC - Fixed isPaused conflict
+// v1.99.70.01: Yandex Games rewarded ads. Reward is granted only from onRewarded.
 function showRewardedAd(btnElem, defaultText, callback) {
     const t = translations[currentLang];
-
-    // 1. Reklam başlamadan önce sesi durdur ve reklam bayrağını aç
-    if (window.audioCtx && window.audioCtx.state === 'running') {
-        window.audioCtx.suspend();
-    }
-    window.isAdShowing = true;
-    if (typeof EliteAdManager !== 'undefined') EliteAdManager.gameplayStop();
-
-    const resetAdState = () => {
-        window.isAdShowing = false;
-        // isPaused değerine dokunmuyoruz! Mağaza/Pause durumu korunmalı.
-        if (window.audioCtx) window.audioCtx.resume();
-        if (typeof EliteAdManager !== 'undefined') EliteAdManager.gameplayStart();
-    };
 
     if (!window.ysdk || !window.ysdk.adv) {
         const isLocalTest = ['localhost', '127.0.0.1'].includes(window.location.hostname);
@@ -740,31 +745,44 @@ function showRewardedAd(btnElem, defaultText, callback) {
                     btnElem.innerHTML = defaultText;
                     btnElem.disabled = false;
                 }
-                resetAdState();
                 callback();
             }, 1000);
             return;
         }
-        resetAdState();
         showToast(t.adLoadFail);
         return;
     }
 
+    const wasPausedBeforeAd = isPaused;
+
     window.ysdk.adv.showRewardedVideo({
         callbacks: {
             onOpen: () => {
-                console.log('[Yandex Ad] Rewarded Video Open');
+                if (window.audioCtx) window.audioCtx.suspend();
+                isPaused = true;
+                window.isAdShowing = true;
+                EliteAdManager.gameplayStop();
             },
             onRewarded: () => {
                 callback();
             },
             onClose: () => {
-                resetAdState();
-                console.log('[Yandex Ad] Rewarded Video Closed');
+                if (window.audioCtx) window.audioCtx.resume();
+                // v1.99.70.09: Only restore if not already resumed by callback
+                if (isPaused) {
+                    isPaused = wasPausedBeforeAd;
+                }
+                window.isAdShowing = false;
+                EliteAdManager.gameplayStart();
             },
             onError: (e) => {
                 console.error('Yandex Reward Error:', e);
-                resetAdState();
+                if (window.audioCtx) window.audioCtx.resume();
+                if (isPaused) {
+                    isPaused = wasPausedBeforeAd;
+                }
+                window.isAdShowing = false;
+                EliteAdManager.gameplayStart();
                 showToast(t.adLoadFail);
             }
         }
@@ -773,32 +791,22 @@ function showRewardedAd(btnElem, defaultText, callback) {
 
 async function showInterstitialAd() {
     if (!window.ysdk || !window.ysdk.adv) return;
-
-    // v1.99.70.08: Immediate pause (Audio Only - Loop handles the rest)
-    if (window.audioCtx && window.audioCtx.state === 'running') {
-        window.audioCtx.suspend();
-    }
-    window.isAdShowing = true;
-    if (typeof EliteAdManager !== 'undefined') EliteAdManager.gameplayStop();
-
-    const resetAdState = () => {
-        window.isAdShowing = false;
-        // isPaused korunuyor.
-        if (window.audioCtx) window.audioCtx.resume();
-        if (typeof EliteAdManager !== 'undefined') EliteAdManager.gameplayStart();
-    };
-
     window.ysdk.adv.showFullscreenAdv({
         callbacks: {
             onOpen: () => {
-                console.log('[Yandex Ad] Interstitial Open');
+                if (window.audioCtx) window.audioCtx.suspend();
+                window.isAdShowing = true;
+                EliteAdManager.gameplayStop();
             },
             onClose: () => {
-                resetAdState();
-                console.log('[Yandex Ad] Interstitial Closed');
+                if (window.audioCtx) window.audioCtx.resume();
+                window.isAdShowing = false;
+                EliteAdManager.gameplayStart();
             },
             onError: () => {
-                resetAdState();
+                if (window.audioCtx) window.audioCtx.resume();
+                window.isAdShowing = false;
+                EliteAdManager.gameplayStart();
             }
         }
     });
@@ -1327,7 +1335,10 @@ function openShop() {
 
     if (sScr) {
         if (pScr) pScr.classList.add('hidden');
-        if (startScr) startScr.classList.add('hidden');
+        if (startScr) {
+            startScr.classList.add('hidden');
+            startScr.style.display = 'none';
+        }
 
         sScr.classList.remove('hidden');
         sScr.classList.add('active');
@@ -1450,7 +1461,7 @@ if (spinCloseBtn) spinCloseBtn.onclick = () => {
         sScr.style.display = 'none';
     }
     const menuScr = document.getElementById('start-screen');
-    if (!isPlaying && menuScr) {
+    if (isPlaying) { if (isPaused && typeof togglePause === "function") { togglePause(); } } else if (menuScr) {
         menuScr.classList.remove('hidden');
         menuScr.classList.add('active');
         menuScr.style.display = 'flex';
@@ -1471,23 +1482,45 @@ if (settingsOpenBtnElite) settingsOpenBtnElite.addEventListener('click', () => {
     const menuScr = document.getElementById('start-screen');
     settingsScreen.classList.remove('hidden');
     settingsScreen.classList.add('active');
-    if (menuScr) menuScr.classList.add('hidden'); // Menüyü gizle
+    if (menuScr) {
+        menuScr.classList.add('hidden');
+        menuScr.style.display = 'none';
+    }
     settingsScreen.style.display = 'flex';
     settingsScreen.style.zIndex = '20000'; // En üstte
 });
 
 const closeSettingsElite = () => {
-    saveGame(); // Elite v1.99.19.09: Her zaman kaydet
+    saveGame(); 
 
-    const settingsTitle = document.getElementById('settings-title');
-    settingsScreen.classList.remove('active');
-    settingsScreen.classList.add('hidden');
-    settingsScreen.style.display = 'none';
-    const menuScr = document.getElementById('start-screen');
-    if (!isPlaying && menuScr) {
-        menuScr.classList.remove('hidden');
-        menuScr.classList.add('active');
-        menuScr.style.display = 'flex';
+    if (settingsScreen) {
+        settingsScreen.classList.remove('active');
+        settingsScreen.classList.add('hidden');
+        settingsScreen.style.display = 'none';
+    }
+    
+    _isOverlayOpenFlag = false;
+
+    if (isPlaying) {
+        // v1.99.70.30: Smart Resume from Sub-Screen
+        if (isPaused && typeof togglePause === "function") {
+            // Give 3s protection and resume directly
+            levelUpInvuln = true;
+            setTimeout(() => { levelUpInvuln = false; }, 3000);
+            
+            // Hide pause menu if it's there
+            const pauseScr = document.getElementById('pause-screen');
+            if (pauseScr) pauseScr.classList.add('hidden');
+            
+            togglePause(); // This will set isPaused to false and resume
+        }
+    } else {
+        const menuScr = document.getElementById('start-screen');
+        if (menuScr) {
+            menuScr.classList.remove('hidden');
+            menuScr.classList.add('active');
+            menuScr.style.display = 'flex';
+        }
     }
 };
 
@@ -5810,15 +5843,6 @@ if (confirmLogoutBtn) confirmLogoutBtn.addEventListener('click', async () => {
 */
 
 // Hard Reset moved to settings v121
-const hardResetBtnUI = document.getElementById('hard-reset-btn');
-if (hardResetBtnUI) hardResetBtnUI.addEventListener('click', () => {
-    const resetOverlay = document.getElementById('reset-confirm-overlay');
-    if (resetOverlay) {
-        resetOverlay.classList.remove('hidden');
-        resetOverlay.classList.add('active');
-        resetOverlay.style.display = 'flex';
-    }
-});
 
 // v122: Restart - Altınları kasaya aktar ve yeni oyun başla
 if (restartBtn) restartBtn.addEventListener('click', () => {
@@ -5861,28 +5885,6 @@ if (openLeaderboardBtn) {
     });
 }
 
-const resetYes = document.getElementById('confirm-reset-yes');
-const resetNo = document.getElementById('confirm-reset-no');
-
-if (resetYes) resetYes.addEventListener('click', () => {
-    // 🛑 TAM EKONOMİ SIFIRLAMASI (Hard Reset) v1.99.68
-    if (typeof Leaderboard !== 'undefined' && Leaderboard.hardReset) {
-        Leaderboard.hardReset();
-    } else {
-        // Fallback if leaderboard is not ready
-        localStorage.clear();
-        window.location.reload();
-    }
-});
-
-if (resetNo) resetNo.addEventListener('click', () => {
-    const resetOverlay = document.getElementById('reset-confirm-overlay');
-    if (resetOverlay) {
-        resetOverlay.classList.remove('active');
-        resetOverlay.classList.add('hidden');
-        resetOverlay.style.display = 'none';
-    }
-});
 
 
 
@@ -6002,7 +6004,7 @@ if (settingsCloseBtn) {
     settingsCloseBtn.addEventListener('click', () => {
         saveGame();
         settingsScreen.classList.remove('active');
-        settingsScreen.classList.add('hidden');
+        settingsScreen.classList.add('hidden'); if (isPlaying && isPaused && typeof togglePause === "function") { togglePause(); }
     });
 }
 

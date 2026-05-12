@@ -652,32 +652,7 @@ function updateSpinButtonText() {
 
 document.addEventListener('DOMContentLoaded', initLanguage);
 
-// v1.99.64.126: ELITE ADMOB PROACTIVE BOOT
-// AdMob, kullanıcı butona basmadan önce başlatılıyor (lazy yerine eager init)
-// Bu sayede ilk reklam gösteriminde gecikme yaşanmaz.
-function bootAdMob() {
-    // Capacitor plugin hazır mı kontrol et
-    if (!getCapacitorAdMob()) {
-        // console.log('[AdMob Boot] Capacitor AdMob plugin henüz hazır değil, 1000ms sonra tekrar denenecek.');
-        setTimeout(bootAdMob, 1000);
-        return;
-    }
-    initAdMob().then(() => {
-        console.log('[AdMob Boot] ✅ Proaktif başlatma tamamlandı.');
-    }).catch(e => {
-        console.warn('[AdMob Boot] Başlatma hatası:', e);
-    });
-}
-
-// Cordova/Capacitor ile deviceready sonrası başlat
-document.addEventListener('deviceready', bootAdMob, false);
-// Fallback: Eğer deviceready gelmezse (web veya bazı Capacitor versiyonları),
-// DOMContentLoaded + 1 saniyelik gecikme ile başlat
-document.addEventListener('DOMContentLoaded', () => {
-    setTimeout(bootAdMob, 1000);
-});
-
-
+window.isAdShowing = false;
 
 function showToast(msg, isReward = false) {
     const toast = document.getElementById('game-toast');
@@ -707,176 +682,7 @@ function showToast(msg, isReward = false) {
     }, 1500); // v1.68 Fix: 1.5 saniye ekranda kalacak!
 }
 
-// --- ADMOB YÖNETİCİSİ v3 (@capacitor-community/admob — Capacitor Native API) ---
-const ADMOB_APP_ID = "ca-app-pub-7739440971804169~2645131828"; // v1.99.61.112
-const REWARDED_AD_UNIT_ID = "ca-app-pub-7739440971804169/6392805140";
-const INTERSTITIAL_AD_UNIT_ID = "ca-app-pub-7739440971804169/1882426485"; // PRODUCTION INTERSTITIAL
-
-var admobInitialized = false;
-var rewardedAdReady = false;
-var interstitialAdReady = false;
-var rewardedAdLoading = false;
-window.isAdShowing = false; // v1.99.61.118: Global Ad Pause Flag (Visible to audio.js)
-
-function getCapacitorAdMob() {
-    try {
-        if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.AdMob) {
-            return window.Capacitor.Plugins.AdMob;
-        }
-    } catch (e) { }
-    return null;
-}
-
-// Ödül için global değişkenler
-var pendingRewardCallback = null;
-var adExecuted = false;
-
-async function initAdMob() {
-    if (admobInitialized) return;
-    const AdMob = getCapacitorAdMob();
-    if (!AdMob) {
-        console.warn('[AdMob] Capacitor AdMob plugin bulunamadı.');
-        return;
-    }
-    try {
-        await AdMob.initialize({
-            // FAMILIES POLICY: requestTrackingAuthorization MUST be false.
-            // Requesting tracking permission is a COPPA violation for child-directed apps.
-            requestTrackingAuthorization: false,
-            testingDevices: [],
-            initializeForTesting: false,
-        });
-
-        // --- v1.99.63.55: AUDIENCE 13+ — TAM HEDEFLEME AKTİF ---
-        // Families Policy devre dışı (13+ kitle). Interstitial + Rewarded her ikisi aktif.
-        try {
-            await AdMob.setRequestConfiguration({
-                maxAdContentRating: 'T',             // T = Teen (13+) — daha fazla reklam tipi
-                tagForChildDirectedTreatment: false,  // 13+: Çocuk yönlendirmesi kapalı
-                tagForUnderAgeOfConsent: false,       // 13+: Rıza yaşı kısıtı kapalı
-            });
-            console.log('[AdMob] ✅ 13+ Config Active: Teen Rating, Full Targeting, Interstitial Enabled.');
-        } catch (confErr) {
-            console.error('[AdMob] Configuration failed:', confErr);
-        }
-
-        // --- GLOBAL REWARD LISTENERS v3.5 (BULLETPROOF) ---
-
-        const executeReward = () => {
-            if (pendingRewardCallback) {
-                console.log('[AdMob] 🎁 EXECUTING REWARD CALLBACK...');
-                const callback = pendingRewardCallback;
-                pendingRewardCallback = null;
-                adExecuted = false; // Reset for next ad
-
-                // v1.99.64.66: Post-Ad Invincibility
-                hasShield = true; levelUpInvuln = true;
-                setTimeout(() => { hasShield = false; levelUpInvuln = false; }, 4000);
-
-                try { callback(); } catch (e) { console.error('[AdMob] Callback fail:', e); }
-            }
-        };
-
-        // 1. Reward Received (Direct execution support)
-        const rewardHandler = (info) => {
-            console.log('[AdMob] 🏆 REWARD RECEIVED EVENT:', info);
-            adExecuted = true;
-            // Bazı cihazlarda dismissed geç gelebilir, burada direkt veriyoruz!
-            executeReward();
-        };
-        AdMob.addListener('onRewardedVideoAdReward', rewardHandler);
-        AdMob.addListener('rewardedVideoAdRewardReceived', rewardHandler);
-
-        // 2. Ad Dismissed (Backup execution)
-        const dismissedHandler = () => {
-            console.log('[AdMob] 🎬 AD DISMISSED');
-            if (adExecuted) executeReward();
-
-            setTimeout(() => {
-                adExecuted = false;
-                rewardedAdReady = false;
-                preloadRewardedAd();
-                const lastBtn = window.lastAdButton;
-                if (lastBtn) {
-                    lastBtn.innerHTML = window.lastAdButtonText;
-                    lastBtn.disabled = false;
-                }
-                window.isAdShowing = false;
-            }, 400);
-        };
-        AdMob.addListener('onRewardedVideoAdDismissed', dismissedHandler);
-        AdMob.addListener('rewardedVideoAdDismissed', dismissedHandler);
-
-        // 3. Yükleme Hatası (Fail) durumunda
-        AdMob.addListener('onRewardedVideoAdFailedToLoad', (error) => {
-            console.warn('[AdMob] Yükleme Hatası:', error);
-            rewardedAdReady = false;
-            rewardedAdLoading = false;
-        });
-
-        // --- INTERSTITIAL LISTENERS v1.99.61.118 ---
-        AdMob.addListener('interstitialAdDismissed', () => {
-            console.log('[AdMob] Interstitial Dismissed. Resuming Game...');
-            window.isAdShowing = false;
-            lastTime = performance.now();
-            // v1.99.61.117: Sesi Geri Getir
-            if (window.audioCtx && audioCtx.state === 'suspended') {
-                audioCtx.resume();
-            }
-            // v1.99.61.118: Reklam Sonrası 3 Saniye Ölümsüzlük
-            hasShield = true;
-            levelUpInvuln = true;
-            setTimeout(() => {
-                hasShield = false;
-                levelUpInvuln = false;
-            }, 3000);
-        });
-
-        AdMob.addListener('interstitialAdFailedToShow', () => {
-            console.warn('[AdMob] Interstitial Failed to Show.');
-            window.isAdShowing = false;
-            // v1.99.61.117: Sesi Geri Getir
-            if (window.audioCtx && audioCtx.state === 'suspended') {
-                audioCtx.resume();
-            }
-            // v1.99.61.118: Fail durumunda da koruma ver (Haksız ölümleri engelle)
-            hasShield = true;
-            levelUpInvuln = true;
-            setTimeout(() => {
-                hasShield = false;
-                levelUpInvuln = false;
-            }, 3000);
-        });
-
-        admobInitialized = true;
-
-        preloadRewardedAd();
-    } catch (e) {
-        console.error('[AdMob] initialize failed:', e);
-    }
-}
-
-async function preloadRewardedAd() {
-    if (rewardedAdLoading || rewardedAdReady) return;
-    const AdMob = getCapacitorAdMob();
-    if (!AdMob || !admobInitialized) return;
-    try {
-        rewardedAdLoading = true;
-        await AdMob.prepareRewardVideoAd({
-            adId: REWARDED_AD_UNIT_ID,
-            isTesting: false, // v1.74: TEST REKLAMI
-        });
-        rewardedAdReady = true;
-        rewardedAdLoading = false;
-
-    } catch (e) {
-        rewardedAdLoading = false;
-        rewardedAdReady = false;
-        console.warn('[AdMob] Preload failed:', e);
-    }
-}
-
-// v1.99.65.00: HYBRID AD & GAMEPLAY MANAGER
+// CrazyGames-only ad and gameplay manager
 const EliteAdManager = {
     gameplayStart: function() {
         if (isCrazyGames && window.CrazyGames && window.CrazyGames.SDK) {
@@ -890,156 +696,72 @@ const EliteAdManager = {
     }
 };
 
-// v1.99.64.72: ELITE AD ENGINE - Clean separation of Web simulation vs real AdMob
+// v1.99.65.18: CrazyGames-only rewarded ads. Reward is granted only from adFinished.
 function showRewardedAd(btnElem, defaultText, callback) {
     const t = translations[currentLang];
-    const AdMob = getCapacitorAdMob();
 
     if (!navigator.onLine) {
         showToast(t.adLoadFail);
         return;
     }
 
-    // CRAZYGAMES PATH
-    if (isCrazyGames) {
-        if (window.CrazyGames && window.CrazyGames.SDK) {
-            window.CrazyGames.SDK.ad.requestAd('rewarded', {
-                adStarted: () => {
-                    if (window.audioCtx) window.audioCtx.suspend();
-                    EliteAdManager.gameplayStop();
-                },
-                adFinished: () => {
-                    if (window.audioCtx) window.audioCtx.resume();
-                    EliteAdManager.gameplayStart();
-                    callback();
-                },
-                adError: (error) => {
-                    console.error("CrazyGames Reward Error:", error);
-                    if (window.audioCtx) window.audioCtx.resume();
-                    EliteAdManager.gameplayStart();
-                    callback(); // Fallback reward for better UX in web
-                }
-            });
-            return;
-        }
+    if (window.isCrazyGames && window.CrazyGames && window.CrazyGames.SDK && window.CrazyGames.SDK.ad) {
+        window.CrazyGames.SDK.ad.requestAd('rewarded', {
+            adStarted: () => {
+                if (window.audioCtx) window.audioCtx.suspend();
+                EliteAdManager.gameplayStop();
+            },
+            adFinished: () => {
+                if (window.audioCtx) window.audioCtx.resume();
+                EliteAdManager.gameplayStart();
+                callback();
+            },
+            adError: (error) => {
+                console.error('CrazyGames Reward Error:', error);
+                if (window.audioCtx) window.audioCtx.resume();
+                EliteAdManager.gameplayStart();
+                showToast(t.adLoadFail);
+            }
+        });
+        return;
     }
 
-    // WEB SIMULATION PATH - No togglePause, no game state changes, just give reward
-    if (!AdMob) {
-        btnElem.disabled = true;
-        btnElem.innerText = "Simulating...";
-        showToast("🎬 Simülasyon Reklamı...");
-
+    const isLocalTest = ['localhost', '127.0.0.1'].includes(window.location.hostname);
+    if (isLocalTest) {
+        if (btnElem) {
+            btnElem.disabled = true;
+            btnElem.innerText = 'Simulating...';
+        }
         setTimeout(() => {
-            btnElem.innerHTML = defaultText;
-            btnElem.disabled = false;
-            window.isAdShowing = false;
-
-            // v1.99.64.120: WEB SIMULATION - DO NOT AUTO-RESUME if in shop
-            // Remove togglePause() so the game doesn't run behind the shop UI.
-
-            // Give reward directly - no game loop interference
+            if (btnElem) {
+                btnElem.innerHTML = defaultText;
+                btnElem.disabled = false;
+            }
             try { callback(); } catch (e) { console.error('[Ad Sim] Callback error:', e); }
         }, 1000);
         return;
     }
 
-    // REAL ADMOB PATH - Only runs on Android with real plugin
-    window.isAdShowing = true;
-    if (!isPaused) togglePause();
-
-    btnElem.disabled = true;
-    var countdown = 8;
-    btnElem.innerText = `${t.loadingAd} (${countdown})`;
-    window.lastAdButton = btnElem;
-    window.lastAdButtonText = defaultText;
-
-    var countdownTimer = setInterval(() => {
-        countdown--;
-        if (countdown > 0) {
-            btnElem.innerText = `${t.loadingAd} (${countdown})`;
-        } else {
-            clearInterval(countdownTimer);
-            if (btnElem.disabled && !adExecuted) {
-                console.warn('[AdMob] Timeout Reset.');
-                window.isAdShowing = false;
-                btnElem.innerHTML = defaultText;
-                btnElem.disabled = false;
-                showToast(t.adLoadFail);
-            }
-        }
-    }, 1000);
-
-    (async () => {
-        try {
-            if (!admobInitialized) await initAdMob();
-            if (!rewardedAdReady) {
-                await AdMob.prepareRewardVideoAd({ adId: REWARDED_AD_UNIT_ID, isTesting: false });
-                rewardedAdReady = true;
-            }
-            if (rewardedAdReady) {
-                clearInterval(countdownTimer);
-                pendingRewardCallback = callback;
-                adExecuted = false;
-                await AdMob.showRewardVideoAd();
-            }
-        } catch (e) {
-            console.error('[AdMob] Async Error:', e);
-            rewardedAdReady = false;
-        }
-    })();
+    showToast(t.adLoadFail);
 }
 
 async function showInterstitialAd() {
-    if (isCrazyGames) {
-        if (window.CrazyGames && window.CrazyGames.SDK) {
-            window.CrazyGames.SDK.ad.requestAd('midgame', {
-                adStarted: () => {
-                    if (window.audioCtx) window.audioCtx.suspend();
-                    EliteAdManager.gameplayStop();
-                },
-                adFinished: () => {
-                    if (window.audioCtx) window.audioCtx.resume();
-                    EliteAdManager.gameplayStart();
-                },
-                adError: (error) => {
-                    if (window.audioCtx) window.audioCtx.resume();
-                    EliteAdManager.gameplayStart();
-                }
-            });
-            return;
-        }
+    if (window.isCrazyGames && window.CrazyGames && window.CrazyGames.SDK && window.CrazyGames.SDK.ad) {
+        window.CrazyGames.SDK.ad.requestAd('midgame', {
+            adStarted: () => {
+                if (window.audioCtx) window.audioCtx.suspend();
+                EliteAdManager.gameplayStop();
+            },
+            adFinished: () => {
+                if (window.audioCtx) window.audioCtx.resume();
+                EliteAdManager.gameplayStart();
+            },
+            adError: () => {
+                if (window.audioCtx) window.audioCtx.resume();
+                EliteAdManager.gameplayStart();
+            }
+        });
     }
-
-    // v1.99.63.57: ELITE AD-SYNC ENGINE (Immediate Freeze)
-    // Reklam hazırlanırken (loading) oyunun arkada devam etmesini engellemek için anında donduruyoruz.
-    const AdMob = getCapacitorAdMob();
-    if (!AdMob) {
-        console.log("[AdMob Simulation] Interstitial Ad Simulated.");
-        return;
-    }
-
-    // 1. ANINDA DONDURMA (Gecikmeyi önle)
-    window.isAdShowing = true;
-    if (window.audioCtx) audioCtx.suspend();
-
-    (async () => {
-        try {
-            if (!admobInitialized) await initAdMob();
-
-            console.log('[AdMob] Preparing Interstitial (Pre-Freeze Active)...');
-            await AdMob.prepareInterstitial({
-                adId: INTERSTITIAL_AD_UNIT_ID,
-                isTesting: false
-            });
-
-            await AdMob.showInterstitial();
-        } catch (e) {
-            console.error('[AdMob] Ad-Sync caught Interstitial Error:', e);
-            window.isAdShowing = false;
-            if (window.audioCtx) audioCtx.resume();
-        }
-    })();
 }
 
 // --- HAPTICS (TİTREŞİM SİSTEMİ) v3.2 ---
@@ -1508,9 +1230,9 @@ function saveGame() {
     const dataStr = JSON.stringify(data);
     localStorage.setItem('riverEscapeSave', dataStr);
 
-    // v1.99.65.10: CrazyGames Cloud Save
-    if (isCrazyGames && window.CrazyGames && window.CrazyGames.SDK && window.CrazyGames.SDK.user) {
-        window.CrazyGames.SDK.user.data.setItem('riverEscapeSave', dataStr)
+    // v1.99.65.18: CrazyGames Cloud Save via SDK.data only
+    if (isCrazyGames && window.CrazyGames && window.CrazyGames.SDK && window.CrazyGames.SDK.data) {
+        window.CrazyGames.SDK.data.setItem('riverEscapeSave', dataStr)
             .catch(e => console.warn("🛰️ [ELITE SAVE] CrazyGames Cloud Save Error:", e));
     }
 
@@ -6094,9 +5816,9 @@ function loadGame() {
         applySaveData(saved);
     }
 
-    // v1.99.65.10: CrazyGames Cloud Load (Async)
-    if (isCrazyGames && window.CrazyGames && window.CrazyGames.SDK && window.CrazyGames.SDK.user) {
-        window.CrazyGames.SDK.user.data.getItem('riverEscapeSave')
+    // v1.99.65.18: CrazyGames Cloud Load via SDK.data only
+    if (isCrazyGames && window.CrazyGames && window.CrazyGames.SDK && window.CrazyGames.SDK.data) {
+        window.CrazyGames.SDK.data.getItem('riverEscapeSave')
             .then(cloudSaved => {
                 if (cloudSaved) {
                     console.log("🛰️ [ELITE LOAD] Cloud Save Found. Synchronizing...");
@@ -6308,7 +6030,7 @@ function showLevelUp(levelNum) {
     // v1.99.63.55: 13+ AUDIENCE — Interstitial YENİDEN AKTİF.
     // Families Policy 13+ için geçerli değil, tüm reklam türleri serbestçe kullanılabilir.
     if (levelNum > 1) {
-        console.log(`[AdMob] Level Interstitial: Level ${levelNum}`);
+        console.log(`[CrazyGames Ad] Level Interstitial: Level ${levelNum}`);
         showInterstitialAd();
     }
 
