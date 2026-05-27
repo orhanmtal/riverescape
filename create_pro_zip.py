@@ -12,4 +12,4 @@ def create_zip(zip_name, folder_path):
     print(f"Zip created successfully: {zip_name}")
 
 if __name__ == "__main__":
-    create_zip('RiverEscapeElite_Yandex_v1.99.70.12_FINAL_PRO.zip', 'www')
+    create_zip('RiverEscapeElite_Yandex_v1.90.77.33_FINAL_PRO.zip', 'www')

@@ -1,12 +1,12 @@
-/* RİVER ESCAPE ELİTE - v1.99.64.66 (STABLE AAB RELEASE)
+/* RİVER ESCAPE ELİTE - v1.90.77.33 (STABLE AAB RELEASE)
  * DEVELOPMENT RULES:
  * 1. NO PLACEHOLDERS 2. PERFORMANCE FIRST 3. VISUAL EXCELLENCE
  * 4. CODE INTEGRITY 5. ELITE SYNC
  * 6. CLOUD SEAL v66
  */
 
-const VERSION = "v1.99.70.00";
-const VERSION_CODE = 19970000;
+const VERSION = "v1.90.77.33";
+const VERSION_CODE = 19077033;
 
 // Elite Platform Detect
 const isAndroid = window.isAndroid;
@@ -174,7 +174,7 @@ function buyArmorLicense() {
         if (typeof playPowerupSound === 'function') playPowerupSound();
         setTimeout(() => { for (var i = 0; i < 3; i++) setTimeout(playCoinSound, i * 150); }, 150);
         if (typeof triggerEliteEconomySync === 'function') triggerEliteEconomySync(true);
-        // v1.99.64.66: Post-Purchase Invincibility
+        // v1.90.77.33: Post-Purchase Invincibility
         hasShield = true; levelUpInvuln = true;
         setTimeout(() => { hasShield = false; levelUpInvuln = false; }, 3000);
         showToast(t.armorReloaded, true);
@@ -237,8 +237,8 @@ function showEliteConfirm(title, body, confirmBtnText, emoji, onConfirm) {
     const okBtn = document.getElementById('confirm-ok-btn');
     const cancelBtn = document.getElementById('confirm-cancel-btn');
 
-    okBtn.innerText = confirmBtnText || t.confirmBtn || (currentLang === 'tr' ? 'ONAYLA' : 'CONFIRM');
-    cancelBtn.innerText = t.cancelBtn || (currentLang === 'tr' ? 'VAZGEÇ' : 'CANCEL');
+    okBtn.innerText = confirmBtnText || t.confirmBtn || (currentLang === 'tr' ? 'ONAYLA' : (currentLang === 'ru' ? 'ПОДТВЕРДИТЬ' : 'CONFIRM'));
+    cancelBtn.innerText = t.cancelBtn || (currentLang === 'tr' ? 'VAZGEÇ' : (currentLang === 'ru' ? 'ОТМЕНА' : 'CANCEL'));
 
     modal.style.display = 'flex';
     setTimeout(() => modal.classList.add('active'), 10);
@@ -422,7 +422,7 @@ function drawParticles() {
 }
 
 // v1.99.61.81: ELITE PARTICLE POOL
-// v1.99.64.66: PERF - Reduced pool size from 250 to 120 for browser stability
+// v1.90.77.33: PERF - Reduced pool size from 250 to 120 for browser stability
 const PARTICLE_POOL_SIZE = 120;
 const particlePool = Array.from({ length: PARTICLE_POOL_SIZE }, () => new Particle());
 
@@ -515,7 +515,51 @@ function getRiverShift(y) {
     return Math.sin(((bgY + y) * frequency) + phase) * amplitude;
 }
 
-function initLanguage() { let saved = localStorage.getItem("riverEscapeLang"); if (saved && ["tr", "en", "ru"].includes(saved)) { currentLang = saved; } else { const lang = (navigator.language || navigator.userLanguage || "en").toLowerCase(); if (lang.startsWith("tr")) currentLang = "tr"; else if (lang.startsWith("ru")) currentLang = "ru"; else currentLang = "en"; } updateLanguageUI(); }
+function initLanguage() {
+    let finalLang = null;
+    try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlLang = urlParams.get('lang');
+        if (urlLang) {
+            const cleanLang = urlLang.toLowerCase().split('-')[0];
+            if (['tr', 'en', 'ru'].includes(cleanLang)) {
+                finalLang = cleanLang;
+            } else if (['be', 'kk', 'uk', 'uz'].includes(cleanLang)) {
+                finalLang = 'ru';
+            }
+        }
+    } catch (e) {
+        console.warn("Failed to parse URL lang parameter", e);
+    }
+    if (!finalLang && window.ysdk && window.ysdk.environment && window.ysdk.environment.i18n) {
+        const yandexLang = window.ysdk.environment.i18n.lang;
+        if (yandexLang) {
+            const cleanLang = yandexLang.toLowerCase().split('-')[0];
+            if (['tr', 'en', 'ru'].includes(cleanLang)) {
+                finalLang = cleanLang;
+            } else if (['be', 'kk', 'uk', 'uz'].includes(cleanLang)) {
+                finalLang = 'ru';
+            }
+        }
+    }
+    if (!finalLang) {
+        let saved = localStorage.getItem("riverEscapeLang");
+        if (saved && ["tr", "en", "ru"].includes(saved)) {
+            finalLang = saved;
+        }
+    }
+    if (!finalLang) {
+        const lang = (navigator.language || navigator.userLanguage || "en").toLowerCase();
+        if (lang.startsWith("tr")) finalLang = "tr";
+        else if (lang.startsWith("ru")) finalLang = "ru";
+        else finalLang = "en";
+    }
+    currentLang = finalLang;
+    window.currentLang = finalLang;
+    localStorage.setItem('riverEscapeLang', currentLang);
+    updateLanguageUI();
+}
+window.initLanguage = initLanguage;
 function updateLanguageUI() {
     const t = translations[currentLang];
     const setText = (id, text) => { const el = document.getElementById(id); if (el) el.innerText = text; };
@@ -729,7 +773,7 @@ const EliteAdManager = {
     }
 };
 
-// v1.99.70.01: Yandex Games rewarded ads. Reward is granted only from onRewarded.
+// v1.90.77.33: Yandex Games rewarded ads. Reward is granted only from onRewarded.
 function showRewardedAd(btnElem, defaultText, callback) {
     const t = translations[currentLang];
 
@@ -969,9 +1013,10 @@ function updateSpinLiveBar() {
     const gl = document.getElementById('spin-gold-live');
     const ml = document.getElementById('spin-mag-live');
     const sl = document.getElementById('spin-shd-live');
+    const t = translations[currentLang] || {};
     if (gl) gl.innerText = totalGold || 0;
-    if (ml) ml.innerText = 'LVL ' + (magnetLevel || 0);
-    if (sl) sl.innerText = 'LVL ' + (shieldLevel || 0);
+    if (ml) ml.innerText = (t.levelLabel || 'LVL') + ' ' + (magnetLevel || 0);
+    if (sl) sl.innerText = (t.levelLabel || 'LVL') + ' ' + (shieldLevel || 0);
 }
 
 
@@ -1016,8 +1061,6 @@ function giveReward() {
         if (typeof Leaderboard !== 'undefined' && Leaderboard.analytics) {
             Leaderboard.analytics.logEvent('wheel_spin_result', { reward_type: 'gold', reward_value: reward.value });
         }
-        triggerEliteEconomySync(true); // v1.99.27.00: Çark ödülü sarsılmaz mühür!
-        saveGame();
         rewardLabel = reward.value + ' ' + t.rewardGold;
         popupEmoji = '💰';
         popupLabel = t.rewardGold.toUpperCase();
@@ -1036,23 +1079,27 @@ function giveReward() {
         if (typeof Leaderboard !== 'undefined' && Leaderboard.analytics) {
             Leaderboard.analytics.logEvent('wheel_spin_result', { reward_type: 'magnet_upgrade', level: magnetLevel });
         }
-        rewardLabel = t.rewardMagnet + ' LVL UP!';
+        rewardLabel = t.rewardMagnet + (currentLang === 'tr' ? ' SEVİYE ARTTI!' : (currentLang === 'ru' ? ' УЛУЧШЕН!' : ' LVL UP!'));
         popupEmoji = '🧲';
         popupLabel = t.rewardMagnet.toUpperCase();
-        popupValue = 'LVL ' + magnetLevel;
+        popupValue = (t.levelLabel || 'LVL') + ' ' + magnetLevel;
     } else if (reward.type === 'shield') {
         shieldLevel++;
         if (typeof Leaderboard !== 'undefined' && Leaderboard.analytics) {
             Leaderboard.analytics.logEvent('wheel_spin_result', { reward_type: 'shield_upgrade', level: shieldLevel });
         }
-        rewardLabel = t.rewardShield + ' LVL UP!';
+        rewardLabel = t.rewardShield + (currentLang === 'tr' ? ' SEVİYE ARTTI!' : (currentLang === 'ru' ? ' УЛУЧШЕН!' : ' LVL UP!'));
         popupEmoji = '🛡️';
         popupLabel = t.rewardShield.toUpperCase();
-        popupValue = 'LVL ' + shieldLevel;
+        popupValue = (t.levelLabel || 'LVL') + ' ' + shieldLevel;
     }
 
     // Hemen kaydet ve göster
-    saveGame();
+    if (typeof triggerEliteEconomySync === 'function') {
+        triggerEliteEconomySync(true);
+    } else {
+        saveGame();
+    }
     updateSpinLiveBar(); // Bakiye barını anında güncelle
     if (typeof playSpinReward === 'function') playSpinReward();
 
@@ -1115,23 +1162,35 @@ function syncPlayerDimensions() {
 
 // v1.99.61.106: ELITE RESPONSIVE ENGINE (Direct CSS Pixel Mapping)
 function resizeCanvas() {
-    // v1.99.70.01: Yandex responsive fix
+    // v1.90.77.33: Yandex responsive fix
     const isWeb = !isAndroid || isYandexGames;
     let baseWidth = window.innerWidth;
     let baseHeight = window.innerHeight;
 
     if (isWeb) {
-        // Force a nice portrait aspect ratio on web if screen is too wide
-        const targetAspect = 9 / 16;
-        if (baseWidth / baseHeight > targetAspect) {
-            baseWidth = baseHeight * targetAspect;
+        // Force a nice portrait aspect ratio on web if screen is too wide,
+        // UNLESS we are in landscape screenshot mode (using URL parameter ?screenshot=true or ?landscape=true)
+        const isScreenshotMode = window.location.search.includes('screenshot=true') || window.location.search.includes('landscape=true');
+        if (!isScreenshotMode) {
+            const targetAspect = 9 / 16;
+            if (baseWidth / baseHeight > targetAspect) {
+                baseWidth = baseHeight * targetAspect;
+            }
         }
     } else {
         baseWidth = window.innerWidth > 600 ? 600 : window.innerWidth;
     }
 
     // v1.99.61.106: Direct CSS pixel mapping (no DPR transform)
-    gameScale = baseWidth / 360; // Normalize scale based on standard width
+    let scaleWidth = baseWidth;
+    const isScreenshotMode = window.location.search.includes('screenshot=true') || window.location.search.includes('landscape=true');
+    if (isScreenshotMode) {
+        const targetAspect = 9 / 16;
+        if (baseWidth / baseHeight > targetAspect) {
+            scaleWidth = baseHeight * targetAspect;
+        }
+    }
+    gameScale = scaleWidth / 360; // Normalize scale based on standard width
 
     canvas.width = baseWidth;
     canvas.height = baseHeight;
@@ -1147,6 +1206,14 @@ function resizeCanvas() {
         container.style.position = 'relative';
         container.style.margin = '0 auto';
         container.style.overflow = 'hidden';
+
+        // Remove 600px limit in screenshot mode to allow widescreen screenshots
+        const isScreenshotMode = window.location.search.includes('screenshot=true') || window.location.search.includes('landscape=true');
+        if (isScreenshotMode) {
+            container.style.maxWidth = 'none';
+        } else {
+            container.style.maxWidth = '600px';
+        }
     }
 
     syncPlayerDimensions();
@@ -1165,15 +1232,15 @@ resizeCanvas();
 
 
 const levelAssets = [
-    { threshold: 0, bgKey: 'spring', speed: 200, spawn: 0.52, titleEN: translations.en.springRiver, titleTR: translations.tr.springRiver, color: "#00e5ff", pKey: "ilkbahar", margin: 0.15, visuals: { hideAmbients: false, isProcedural: false, waterColor: "rgba(0, 229, 255, 0.35)", groundColor: "#2d5a27", waterEffect: "shimmer" } },
-    { threshold: 3000, bgKey: 'summer', speed: 220, spawn: 0.48, titleEN: translations.en.summerRiver, titleTR: translations.tr.summerRiver, color: "#1e90ff", pKey: "yaz", margin: 0.15, visuals: { hideAmbients: false, isProcedural: false, waterColor: "rgba(30, 144, 255, 0.35)", groundColor: "#2d5a27", waterEffect: "shimmer" } },
-    { threshold: 6000, bgKey: 'autumn', speed: 230, spawn: 0.45, titleEN: translations.en.autumnRiver, titleTR: translations.tr.autumnRiver, color: "#ff8c00", pKey: "sonbahar", margin: 0.15, visuals: { hideAmbients: false, isProcedural: false, waterColor: "rgba(255, 140, 0, 0.25)", groundColor: "#8b4513", waterEffect: "shimmer" } },
-    { threshold: 9000, bgKey: 'winter', speed: 220, spawn: 0.42, titleEN: translations.en.winterRiver, titleTR: translations.tr.winterRiver, color: "#add8e6", pKey: "kis", margin: 0.15, visuals: { hideAmbients: false, isProcedural: false, waterColor: "rgba(173, 216, 230, 0.45)", groundColor: "#ffffff", waterEffect: "shimmer", frostGlow: true } },
-    { threshold: 12000, bgKey: 'lava', speed: 250, spawn: 0.80, titleEN: translations.en.lavaRiver, titleTR: translations.tr.lavaRiver, color: "#ff4500", pKey: "lava", margin: 0.15, visuals: { hideAmbients: true, isProcedural: false, waterColor: "rgba(255, 69, 0, 0.4)", groundColor: "#1a0000", waterEffect: "lava" } },
-    { threshold: 15000, bgKey: 'void', speed: 190, spawn: 0.90, titleEN: translations.en.voidLevel, titleTR: translations.tr.voidLevel, color: "#9b59b6", pKey: "void", margin: 0.15, visuals: { hideAmbients: true, isProcedural: true, neonBorders: true, auraColor: "#9b59b6", waterColor: "rgba(155, 89, 182, 0.2)", groundColor: "#000000", waterEffect: "neonPulse" } },
-    { threshold: 18000, bgKey: 'lagoon', speed: 310, spawn: 0.50, titleEN: translations.en.l7Title, titleTR: translations.tr.l7Title, color: "#00e5ff", pKey: "ilkbahar", margin: 0.15, visuals: { hideAmbients: true, isProcedural: false, waterColor: "rgba(0, 229, 255, 0.35)", groundColor: "#2e8b57", waterEffect: "ripples" } },
-    { threshold: 21000, bgKey: 'cyber', speed: 340, spawn: 0.40, titleEN: "CYBER CITY", titleTR: "SİBER ŞEHİR", color: "#ff00ff", pKey: "void", margin: 0.15, scrollSpeed: 1.0, visuals: { hideAmbients: true, isProcedural: true, neonBorders: true, auraColor: "#ff00ff", riverFill: "rgba(255, 0, 255, 0.1)", groundColor: "#00050a", waterColor: "rgba(255, 0, 255, 0.15)", waterEffect: "neonPulse" } },
-    { threshold: 24000, bgKey: 'toxic', speed: 320, spawn: 0.65, titleEN: "TOXIC WASTELAND", titleTR: "ZEHİRLİ ATIK", color: "#32CD32", pKey: "lava", margin: 0.15, scrollSpeed: 1.0, visuals: { hideAmbients: true, isProcedural: true, neonBorders: true, auraColor: "#32CD32", riverFill: "rgba(50, 205, 50, 0.12)", groundColor: "#0a1a05", waterColor: "rgba(50, 205, 50, 0.15)", waterEffect: "bubbles" } }
+    { threshold: 0, bgKey: 'spring', speed: 200, spawn: 0.52, titleEN: translations.en.l1Title, titleTR: translations.tr.l1Title, titleRU: translations.ru.l1Title, color: "#00e5ff", pKey: "ilkbahar", margin: 0.15, visuals: { hideAmbients: false, isProcedural: false, waterColor: "rgba(0, 229, 255, 0.35)", groundColor: "#2d5a27", waterEffect: "shimmer" } },
+    { threshold: 3000, bgKey: 'summer', speed: 200, spawn: 0.48, titleEN: translations.en.l2Title, titleTR: translations.tr.l2Title, titleRU: translations.ru.l2Title, color: "#1e90ff", pKey: "yaz", margin: 0.15, visuals: { hideAmbients: false, isProcedural: false, waterColor: "rgba(30, 144, 255, 0.35)", groundColor: "#2d5a27", waterEffect: "shimmer" } },
+    { threshold: 6000, bgKey: 'autumn', speed: 200, spawn: 0.45, titleEN: translations.en.l3Title, titleTR: translations.tr.l3Title, titleRU: translations.ru.l3Title, color: "#ff8c00", pKey: "sonbahar", margin: 0.15, visuals: { hideAmbients: false, isProcedural: false, waterColor: "rgba(255, 140, 0, 0.25)", groundColor: "#8b4513", waterEffect: "shimmer" } },
+    { threshold: 9000, bgKey: 'winter', speed: 200, spawn: 0.42, titleEN: translations.en.l4Title, titleTR: translations.tr.l4Title, titleRU: translations.ru.l4Title, color: "#add8e6", pKey: "kis", margin: 0.15, visuals: { hideAmbients: false, isProcedural: false, waterColor: "rgba(173, 216, 230, 0.45)", groundColor: "#ffffff", waterEffect: "shimmer", frostGlow: true } },
+    { threshold: 12000, bgKey: 'lava', speed: 200, spawn: 0.80, titleEN: translations.en.lavaRiver, titleTR: translations.tr.lavaRiver, titleRU: translations.ru.lavaRiver, color: "#ff4500", pKey: "lava", margin: 0.15, visuals: { hideAmbients: true, isProcedural: false, waterColor: "rgba(255, 69, 0, 0.4)", groundColor: "#1a0000", waterEffect: "lava" } },
+    { threshold: 15000, bgKey: 'void', speed: 200, spawn: 0.90, titleEN: translations.en.voidLevel, titleTR: translations.tr.voidLevel, titleRU: translations.ru.voidLevel, color: "#9b59b6", pKey: "void", margin: 0.15, visuals: { hideAmbients: true, isProcedural: true, neonBorders: true, auraColor: "#9b59b6", waterColor: "rgba(155, 89, 182, 0.2)", groundColor: "#000000", waterEffect: "neonPulse" } },
+    { threshold: 18000, bgKey: 'lagoon', speed: 200, spawn: 0.50, titleEN: translations.en.l7Title, titleTR: translations.tr.l7Title, titleRU: translations.ru.l7Title, color: "#00e5ff", pKey: "ilkbahar", margin: 0.15, visuals: { hideAmbients: true, isProcedural: false, waterColor: "rgba(0, 229, 255, 0.35)", groundColor: "#2e8b57", waterEffect: "ripples" } },
+    { threshold: 21000, bgKey: 'cyber', speed: 200, spawn: 0.40, titleEN: "CYBER CITY", titleTR: "SİBER ŞEHİR", titleRU: "КИБЕРГОРОД", color: "#ff00ff", pKey: "void", margin: 0.15, scrollSpeed: 1.0, visuals: { hideAmbients: true, isProcedural: true, neonBorders: true, auraColor: "#ff00ff", riverFill: "rgba(255, 0, 255, 0.1)", groundColor: "#00050a", waterColor: "rgba(255, 0, 255, 0.15)", waterEffect: "neonPulse" } },
+    { threshold: 24000, bgKey: 'toxic', speed: 200, spawn: 0.65, titleEN: "TOXIC WASTELAND", titleTR: "ZEHİRLİ ATIK", titleRU: "ТОКСИЧНАЯ ПУСТОШЬ", color: "#32CD32", pKey: "lava", margin: 0.15, scrollSpeed: 1.0, visuals: { hideAmbients: true, isProcedural: true, neonBorders: true, auraColor: "#32CD32", riverFill: "rgba(50, 205, 50, 0.12)", groundColor: "#0a1a05", waterColor: "rgba(50, 205, 50, 0.15)", waterEffect: "bubbles" } }
 ];
 
 
@@ -1236,14 +1303,14 @@ var currentLAsset = currentAsset;
 
 var totalGold = 0;
 window.totalGold = 0;
-var currentVersion = "v1.99.70.01"; // YANDEX GAMES RELEASE
+var currentVersion = "v1.90.77.33"; // YANDEX GAMES RELEASE
 
 var magnetLevel = 0;
 var shieldLevel = 0;
 var hasWeapon = true; // v1.99.64.02: ALWAYS ENABLED
 var bombCount = 0;
 
-// v1.99.70.01: Yandex starter gift
+// v1.90.77.33: Yandex starter gift
 if (isYandexGames && !localStorage.getItem('yandex_starter_gift_v1')) {
     bombCount = 10;
     localStorage.setItem('yandex_starter_gift_v1', 'true');
@@ -1615,9 +1682,9 @@ function handleArmorIndicatorClick() {
 
     // v1.99.64.02: ELITE AD REFILL OFFER
     showEliteConfirm(
-        t.armorChargeTitle || "ZIRH ŞARJI",
-        (currentLang === 'tr' ? "Zırhın bitti! Reklam izleyip +3 Zırh almak ister misin?" : "Out of Armor! Watch ad for +3 Armor?"),
-        (currentLang === 'tr' ? "İZLE & AL" : "WATCH & GET"),
+        t.armorChargeTitle || (currentLang === 'tr' ? "ZIRH ŞARJI" : (currentLang === 'ru' ? "ЗАРЯД БРОНИ" : "ARMOR CHARGE")),
+        t.outOfArmorAdMsg || (currentLang === 'tr' ? "Zırhın bitti! Reklam izleyip +3 Zırh almak ister misin?" : (currentLang === 'ru' ? "Броня на исходе! Посмотреть рекламу и получить +3 к броне?" : "Out of Armor! Watch ad for +3 Armor?")),
+        t.watchAndGet || (currentLang === 'tr' ? "İZLE & AL" : (currentLang === 'ru' ? "СМОТРЕТЬ И ПОЛУЧИТЬ" : "WATCH & GET")),
         "💎",
         () => {
             const btn = document.getElementById('armor-ui-indicator');
@@ -1631,7 +1698,7 @@ function handleArmorIndicatorClick() {
                 setTimeout(() => { levelUpInvuln = false; }, 5000);
                 if (isPaused) togglePause();
 
-                showToast("+1 ARMOR! 💎", true);
+                showToast((currentLang === 'tr') ? "+3 ZIRH! 💎" : ((currentLang === 'ru') ? "+3 БРОНИ! 💎" : "+3 ARMOR! 💎"), true);
             });
         }
     );
@@ -1768,7 +1835,7 @@ function updateShopUI() {
         // AMMO BUY BUTTON SYNC (v1.99.61.81)
         const ammoBuyBtn = document.getElementById('buy-ammo-btn');
         if (ammoBuyBtn) {
-            const btnT = (currentLang === 'tr') ? "AL" : "BUY";
+            const btnT = (currentLang === 'tr') ? "AL" : ((currentLang === 'ru') ? "КУПИТЬ" : "BUY");
             ammoBuyBtn.innerText = `${btnT}\n1000 G`;
             ammoBuyBtn.disabled = (totalGold < 1000);
             ammoBuyBtn.classList.add('elite-upgrade-btn');
@@ -1804,14 +1871,14 @@ window.claimDailyGift = async function (btn) {
 
     const lockBtn = () => {
         if (!btn) return;
-        btn.innerHTML = (currentLang === 'tr') ? 'ALINDI ✅' : 'CLAIMED ✅';
+        btn.innerHTML = (currentLang === 'tr') ? 'ALINDI ✅' : ((currentLang === 'ru') ? 'ПОЛУЧЕНО ✅' : 'CLAIMED ✅');
         btn.disabled  = true;
         btn.style.opacity = '0.5';
     };
 
     // 1. LocalStorage hızlı kontrol
     if (localStorage.getItem(LOCAL_KEY) === today) {
-        showToast((currentLang === 'tr') ? 'BUGÜNKÜ HEDİYENİZİ ALDINIZ! ⏳' : 'DAILY GIFT ALREADY CLAIMED! ⏳', false);
+        showToast((currentLang === 'tr') ? 'BUGÜNKÜ HEDİYENİZİ ALDINIZ! ⏳' : ((currentLang === 'ru') ? 'ЕЖЕДНЕВНЫЙ ПОДАРОК УЖЕ ПОЛУЧЕН! ⏳' : 'DAILY GIFT ALREADY CLAIMED! ⏳'), false);
         lockBtn();
         return;
     }
@@ -1824,7 +1891,7 @@ window.claimDailyGift = async function (btn) {
             const cloudDate = cloudData && cloudData[CLOUD_KEY];
             if (cloudDate === today) {
                 localStorage.setItem(LOCAL_KEY, today); // Local'i senkronize et
-                showToast((currentLang === 'tr') ? 'BUGÜNKÜ HEDİYENİZİ ALDINIZ! ⏳' : 'DAILY GIFT ALREADY CLAIMED! ⏳', false);
+                showToast((currentLang === 'tr') ? 'BUGÜNKÜ HEDİYENİZİ ALDINIZ! ⏳' : ((currentLang === 'ru') ? 'ЕЖЕДНЕВНЫЙ ПОДАРОК УЖЕ ПОЛУЧЕН! ⏳' : 'DAILY GIFT ALREADY CLAIMED! ⏳'), false);
                 lockBtn();
                 return;
             }
@@ -1834,31 +1901,37 @@ window.claimDailyGift = async function (btn) {
     }
 
     // 3. Kontrol geçti — reklamı göster ve ödülü ver
-    const claimedLabel = (currentLang === 'tr') ? 'ALINDI ✅' : 'CLAIMED ✅';
-    showRewardedAd(btn, claimedLabel, async () => {
+    const claimedLabel = (currentLang === 'tr') ? 'ALINDI ✅' : ((currentLang === 'ru') ? 'ПОЛУЧЕНО ✅' : 'CLAIMED ✅');
+    showRewardedAd(btn, claimedLabel, () => {
         window.totalGold = (window.totalGold || 0) + 1000;
         if (typeof totalGold !== 'undefined') totalGold = window.totalGold;
 
         // LocalStorage'a kaydet
         localStorage.setItem(LOCAL_KEY, today);
 
-        // Buluta kaydet (SDK varsa)
-        if (yandexPlayer) {
-            try {
-                await yandexPlayer.setData({ [CLOUD_KEY]: today }, true);
-                console.log('✅ [DailyGift] Cloud date saved:', today);
-            } catch (e) {
-                console.warn('[DailyGift] Cloud save failed:', e);
-            }
+        // UI'ı ve yerel verileri gecikmesiz güncelle
+        if (typeof triggerEliteEconomySync === 'function') {
+            triggerEliteEconomySync(true);
+        } else {
+            saveGame();
+            updateShopUI();
+            if (typeof syncEliteHUD === 'function') syncEliteHUD();
+            const goldValUI = document.getElementById('totalGoldValue');
+            if (goldValUI) goldValUI.innerText = window.totalGold;
         }
-
-        saveGame();
-        updateShopUI();
-        if (typeof syncEliteHUD === 'function') syncEliteHUD();
-        const goldValUI = document.getElementById('totalGoldValue');
-        if (goldValUI) goldValUI.innerText = window.totalGold;
-        showToast((currentLang === 'tr') ? '+1000 ALTIN! 💰' : '+1000 GOLD! 💰', true);
+        showToast((currentLang === 'tr') ? '+1000 ALTIN! 💰' : ((currentLang === 'ru') ? '+1000 ЗОЛОТА! 💰' : '+1000 GOLD! 💰'), true);
         lockBtn();
+
+        // Buluta kaydet (SDK varsa) - UI'ı engellememek için arka planda çalışsın
+        if (yandexPlayer) {
+            yandexPlayer.setData({ [CLOUD_KEY]: today }, true)
+                .then(() => {
+                    console.log('✅ [DailyGift] Cloud date saved:', today);
+                })
+                .catch((e) => {
+                    console.warn('[DailyGift] Cloud save failed:', e);
+                });
+        }
     });
 };
 
@@ -1868,19 +1941,23 @@ window.claimDailyAdGold = function (btn) {
     const today = new Date().toDateString();
     const lastClaim = localStorage.getItem('riverEscape_DailyAdGold');
     if (lastClaim === today) {
-        showToast((currentLang === 'tr') ? 'BUGÜNLÜK HAKKINIZ BİTTİ! ⏳' : 'DAILY LIMIT REACHED! ⏳', false);
+        showToast((currentLang === 'tr') ? 'BUGÜNLÜK HAKKINIZ BİTTİ! ⏳' : ((currentLang === 'ru') ? 'ДНЕВНОЙ ЛИМИТ ИСЧЕРПАН! ⏳' : 'DAILY LIMIT REACHED! ⏳'), false);
         return;
     }
-    showRewardedAd(btn, (currentLang === 'tr') ? 'ALINDI' : 'CLAIMED', () => {
+    showRewardedAd(btn, (currentLang === 'tr') ? 'ALINDI' : ((currentLang === 'ru') ? 'ПОЛУЧЕНО' : 'CLAIMED'), () => {
         window.totalGold = (window.totalGold || 0) + 200;
         if (typeof totalGold !== 'undefined') totalGold = window.totalGold;
         localStorage.setItem('riverEscape_DailyAdGold', today);
-        saveGame();
-        updateShopUI();
-        if (typeof syncEliteHUD === 'function') syncEliteHUD();
-        const goldValUI = document.getElementById('totalGoldValue');
-        if (goldValUI) goldValUI.innerText = window.totalGold;
-        showToast((currentLang === 'tr') ? '+200 ALTIN! 💰' : '+200 GOLD! 💰', true);
+        if (typeof triggerEliteEconomySync === 'function') {
+            triggerEliteEconomySync(true);
+        } else {
+            saveGame();
+            updateShopUI();
+            if (typeof syncEliteHUD === 'function') syncEliteHUD();
+            const goldValUI = document.getElementById('totalGoldValue');
+            if (goldValUI) goldValUI.innerText = window.totalGold;
+        }
+        showToast((currentLang === 'tr') ? '+200 ALTIN! 💰' : ((currentLang === 'ru') ? '+200 ЗОЛОТА! 💰' : '+200 GOLD! 💰'), true);
     });
 };
 
@@ -2773,7 +2850,7 @@ function togglePause() {
 
     const t = translations[currentLang];
     if (isPaused) {
-        // v1.99.70.01: Yandex gameplay stop hook
+        // v1.90.77.33: Yandex gameplay stop hook
         if (typeof EliteAdManager !== 'undefined' && EliteAdManager.gameplayStop) {
             EliteAdManager.gameplayStop();
         }
@@ -2793,7 +2870,7 @@ function togglePause() {
         }
         if (pauseBtn) pauseBtn.innerText = "⏸";
 
-        // v1.99.70.01: Yandex gameplay start hook
+        // v1.90.77.33: Yandex gameplay start hook
         if (typeof EliteAdManager !== 'undefined' && EliteAdManager.gameplayStart) {
             EliteAdManager.gameplayStart();
         }
@@ -2804,7 +2881,7 @@ function togglePause() {
     }
 }
 function startGame() {
-    // v1.99.70.01: Yandex gameplay start hook
+    // v1.90.77.33: Yandex gameplay start hook
     if (typeof EliteAdManager !== 'undefined' && EliteAdManager.gameplayStart) {
         EliteAdManager.gameplayStart();
     }
@@ -2953,7 +3030,7 @@ if (lbCloseBtn) lbCloseBtn.addEventListener('click', () => {
 function gameOver(reason = 'unknown') {
     if (isGameOver) return;
 
-    // v1.99.70.01: Yandex gameplay stop hook
+    // v1.90.77.33: Yandex gameplay stop hook
     if (typeof EliteAdManager !== 'undefined' && EliteAdManager.gameplayStop) {
         EliteAdManager.gameplayStop();
     }
@@ -3082,7 +3159,15 @@ window.triggerEliteEconomySync = function (force = false) {
         const charName = document.getElementById('char-preview-name');
         if (charImg && currentLAsset) {
             charImg.src = `assets/Kayik.png`;
-            if (charName) charName.innerText = currentLang === 'tr' ? currentLAsset.titleTR : currentLAsset.titleEN;
+            if (charName) {
+                if (currentLang === 'tr') {
+                    charName.innerText = currentLAsset.titleTR;
+                } else if (currentLang === 'ru') {
+                    charName.innerText = currentLAsset.titleRU || currentLAsset.titleEN;
+                } else {
+                    charName.innerText = currentLAsset.titleEN;
+                }
+            }
         }
 
         const finalGoldValue = document.getElementById('finalGoldValue');
@@ -3102,7 +3187,7 @@ function setTheme(theme) {
     localStorage.setItem('riverEscapeTheme', theme);
 }
 
-// v1.99.64.66: ELITE HUD SYNC (Throttled for Performance)
+// v1.90.77.33: ELITE HUD SYNC (Throttled for Performance)
 let lastHudSync = 0;
 function syncEliteHUD() {
     const now = performance.now();
@@ -3839,7 +3924,7 @@ function update(dt) {
                     if (obs.type === 'redHippo' || obs.type === 'blueCroc') {
                         totalGold += 200;
                         window.totalGold = totalGold;
-                        showToast("+200 GOLD! 💰", true);
+                        showToast((currentLang === 'tr') ? "+200 ALTIN! 💰" : ((currentLang === 'ru') ? "+200 ЗОЛОТА! 💰" : "+200 GOLD! 💰"), true);
                         // Visual coin explosion effect towards score UI
                         for (var p = 0; p < 8; p++) {
                             setTimeout(() => { playCoinSound(); }, p * 100);
@@ -3909,7 +3994,7 @@ function updatePlayer(dt) {
     const isDZ = (typeof getDZStatus === 'function') ? getDZStatus() : false;
 
     // Force consistent pixels-per-second base speed to fix "teleporting" movement
-    const baseSpeed = 450 * gameScale;
+    const baseSpeed = 250 * gameScale; // Reduced from 450 for smoother keyboard handling
     const finalSpeed = (isDashing ? baseSpeed * 2.5 : baseSpeed) * (isDZ ? 1.3 : 1.0);
 
     // Horizontal Movement
@@ -3962,13 +4047,13 @@ function fireBomb() {
 
         // v1.99.64.02: ELITE AD REFILL OFFER
         showEliteConfirm(
-            t.noAmmoTitle || "MÜHİMMAT BİTTİ",
-            (currentLang === 'tr' ? "Bombaların bitti! Reklam izleyip +10 Bomba almak ister misin?" : "Out of Bombs! Watch ad for +10 Bombs?"),
-            (currentLang === 'tr' ? "İZLE & AL" : "WATCH & GET"),
+            t.noAmmoTitle || (currentLang === 'tr' ? "MÜHİMMAT BİTTİ" : (currentLang === 'ru' ? "НЕТ ЯДЕР" : "AMMO DEPLETED")),
+            t.outOfBombsAdMsg || (currentLang === 'tr' ? "Bombaların bitti! Reklam izleyip +10 Bomba almak ister misin?" : (currentLang === 'ru' ? "Бомбы закончились! Посмотреть рекламу и получить +10 бомб?" : "Out of Bombs! Watch ad for +10 Bombs?")),
+            t.watchAndGet || (currentLang === 'tr' ? "İZLE & AL" : (currentLang === 'ru' ? "СМОТРЕТЬ И ПОЛУЧИТЬ" : "WATCH & GET")),
             "🎯",
             () => {
                 const btn = document.getElementById('bomb-action-btn');
-                // v1.99.64.66: Save innerHTML to preserve the crosshair icon
+                // v1.90.77.33: Save innerHTML to preserve the crosshair icon
                 showRewardedAd(btn, btn.innerHTML, () => {
                     bombCount += 10;
                     // v1.99.64.68: Remove redundant saveGame (togglePause will handle it)
@@ -3982,7 +4067,7 @@ function fireBomb() {
                     }, 100);
 
                     if (isPaused) togglePause();
-                    showToast("+10 BOMBS! 💣", true);
+                    showToast((currentLang === 'tr') ? "+10 BOMBA! 💣" : ((currentLang === 'ru') ? "+10 БОМБ! 💣" : "+10 BOMBS! 💣"), true);
                 });
             }
         );
@@ -5642,12 +5727,12 @@ function goToMainMenu() {
     isPlaying = false;
     isGameOver = false;
 
-    // v1.99.70.01: Yandex gameplay stop hook
+    // v1.90.77.33: Yandex gameplay stop hook
     if (typeof EliteAdManager !== 'undefined' && EliteAdManager.gameplayStop) {
         EliteAdManager.gameplayStop();
     }
 
-    // v1.99.70.01: Yandex leaderboard score submit
+    // v1.90.77.33: Yandex leaderboard score submit
     if (typeof Leaderboard !== 'undefined' && Leaderboard.submitProgress) {
         const finalScore = Math.floor(window.score || 0);
         const finalLevel = window.currentLevel || 1;
@@ -5896,7 +5981,7 @@ if (adGoldBtn) {
             triggerEliteEconomySync(true);
             saveGame();
             updateShopUI();
-            showToast(`${translations[currentLang].rewardPrefix} 200 GOLD! 💰`, true);
+            showToast(`${translations[currentLang].rewardPrefix} 200 ${(translations[currentLang].goldLabel || "GOLD")}! 💰`, true);
             for (var i = 0; i < 4; i++) setTimeout(playCoinSound, i * 100);
         });
     });
@@ -5905,9 +5990,9 @@ if (adGoldBtn) {
 const adAmmoBtn = document.getElementById('ad-ammo-btn');
 if (adAmmoBtn) {
     adAmmoBtn.addEventListener('click', () => {
-        showRewardedAd(adAmmoBtn, "+10 (AD)", () => {
+        showRewardedAd(adAmmoBtn, (currentLang === 'tr') ? "+10 (REKLAM)" : ((currentLang === 'ru') ? "+10 (РЕКЛАМА)" : "+10 (AD)"), () => {
             bombCount += 10;
-            showToast("+10 BOMBS! 💣", true);
+            showToast((currentLang === 'tr') ? "+10 BOMBA! 💣" : ((currentLang === 'ru') ? "+10 БОМБ! 💣" : "+10 BOMBS! 💣"), true);
             setTimeout(() => { saveGame(); updateShopUI(); }, 200);
         });
     });
@@ -5916,11 +6001,11 @@ if (adAmmoBtn) {
 const adArmorBtn = document.getElementById('ad-armor-btn');
 if (adArmorBtn) {
     adArmorBtn.addEventListener('click', () => {
-        showRewardedAd(adArmorBtn, "+3 💎 (AD)", () => {
+        showRewardedAd(adArmorBtn, (currentLang === 'tr') ? "+3 💎 (REKLAM)" : ((currentLang === 'ru') ? "+3 💎 (РЕКЛАМА)" : "+3 💎 (AD)"), () => {
             armorCharge += 3;
             levelUpInvuln = true;
             setTimeout(() => { levelUpInvuln = false; }, 5000);
-            showToast("+3 ARMOR! 💎", true);
+            showToast((currentLang === 'tr') ? "+3 ZIRH! 💎" : ((currentLang === 'ru') ? "+3 БРОНИ! 💎" : "+3 ARMOR! 💎"), true);
             if (typeof updateArmorUI === 'function') updateArmorUI();
             if (typeof syncEliteHUD === 'function') syncEliteHUD();
             setTimeout(() => { saveGame(); updateShopUI(); }, 200);

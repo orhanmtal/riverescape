@@ -66,7 +66,7 @@ const GameStore = {
 
     // Satın Alma İşlemini Başlat
     buy(productId) {
-        // v1.99.70.01: Yandex rewarded-ad purchase bypass
+        // v1.99.70.22: Yandex rewarded-ad purchase bypass
         if (window.isYandexGames) {
             console.log("🎮 [STORE] Yandex Ad-Purchase Triggered for:", productId);
             if (typeof showRewardedAd === 'function') {
@@ -167,8 +167,11 @@ const GameStore = {
 
     // v1.99.61.100: ELITE CURRENCY LOCALIZER
     getLocalizedPrice(productId) {
-        // v1.99.70.01: Yandex rewarded-ad label
-        if (window.isYandexGames) return "AD (FREE)";
+        // v1.90.77.33: Yandex rewarded-ad label
+        if (window.isYandexGames) {
+            const lang = (typeof currentLang !== 'undefined') ? currentLang : 'tr';
+            return lang === 'tr' ? "REKLAM (ÜCRETSİZ)" : (lang === 'ru' ? "РЕКЛАМА (БЕСПЛАТНО)" : "AD (FREE)");
+        }
 
         const p = this.PRODUCTS.find(item => item.id === productId);
         if (!p) return "";

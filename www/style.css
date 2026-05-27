@@ -16,6 +16,15 @@ html, body {
     font-family: 'Outfit', sans-serif;
     color: #fff;
     touch-action: none;
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Old versions of Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version */
+    cursor: default;
+    image-rendering: auto; 
+    -webkit-font-smoothing: antialiased;
 }
 
 body::before {
@@ -25,11 +34,6 @@ body::before {
     background: radial-gradient(circle at 50% 50%, rgba(0,229,255,0.05) 0%, transparent 70%);
     opacity: 0.15;
     pointer-events: none;
-}
-    cursor: default;
-    /* Puruzsuz HD Goruntu Muhuru */
-    image-rendering: auto; 
-    -webkit-font-smoothing: antialiased;
 }
 
 

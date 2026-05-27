@@ -44,11 +44,11 @@ function makeWhiteTransparent(imageElement, isAggressive = false) {
 }
 
 
-// v1.99.70.12: ELITE ROBUST PATH HUNTER
+// v1.99.70.22: ELITE ROBUST PATH HUNTER
 const assetLoadStats = { total: 0, loaded: 0, failed: 0, logs: [] };
 
 function resolveAssetPath(src) {
-    // v1.99.70.12: Try multiple variations for Linux/Yandex compatibility
+    // v1.99.70.22: Try multiple variations for Linux/Yandex compatibility
     const variations = [];
     variations.push(src); // 1. Original (e.g. assets/Kayik.png)
     
@@ -69,7 +69,7 @@ function trackAssetLoad(name, success, path) {
         assetLoadStats.logs.push(`❌ FAILED: ${name} (${path})`);
     }
     
-    // v1.99.70.12: Emergency Screen Log if too many fails
+    // v1.99.70.22: Emergency Screen Log if too many fails
     if (assetLoadStats.failed > 5 && !document.getElementById('asset-error-log')) {
         const logDiv = document.createElement('div');
         logDiv.id = 'asset-error-log';

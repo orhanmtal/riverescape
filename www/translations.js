@@ -1,4 +1,4 @@
-// River Escape - Dil Paketleri * RIVER ESCAPE ELITE - v1.99.70.12 (ELITE UNIFORM ENGINE)
+// River Escape - Dil Paketleri * RIVER ESCAPE ELITE - v1.90.77.33 (ELITE UNIFORM ENGINE)
 const translations = {
     tr: {
         startDesc: "",
@@ -41,7 +41,7 @@ const translations = {
         resetDesc: "Tum altinlarin ve magaza gelistirmelerin silinecek. En bastan baslamak istedigine emin misin?",
         resetYes: "EVET, SIFIRLA",
         resetNo: "HAYIR, VAZGEC",
-        scoreLabel: "",
+        scoreLabel: "SKOR:",
         goldLabel: "ALTIN",
         totalScoreLabel: "TOPLAM SKOR",
         vaultLabel: "KASA:",
@@ -136,8 +136,8 @@ const translations = {
         armorCharged: "Zirh Sarj Edildi! 🔋",
         maxArmor: "Maksimum Zirh!",
         buyBtnShort: "AL",
-        VERSION: "1.99.70.12",
-        VERSION_CODE: "19970012",
+        VERSION: "1.90.77.33",
+        VERSION_CODE: "19077033",
         maxBtn: "MAX",
         ownedBtn: "SAHIPSIN",
         boathouseTitle: "KAYIKHANE 🛶",
@@ -201,7 +201,10 @@ const translations = {
         goShopBtn: "MAGAZAYA GIT",
         buyAmmoMsg: "50 adet Bomba Paketi satin almak istiyor musunuz? (1000 Altin)",
         buyArmorMsg: "30 adet Zirh Paketi satin almak istiyor musunuz? (1000 Altin)",
-        licenseRequiredToast: "Once Nehir Topu lisansi almalisin! 📡"
+        licenseRequiredToast: "Once Nehir Topu lisansi almalisin! 📡",
+        outOfArmorAdMsg: "Zırhın bitti! Reklam izleyip +3 Zırh almak ister misin?",
+        outOfBombsAdMsg: "Bombaların bitti! Reklam izleyip +10 Bomba almak ister misin?",
+        watchAndGet: "İZLE & AL"
     },
     en: {
         startDesc: "",
@@ -244,7 +247,7 @@ const translations = {
         resetDesc: "All your gold and upgrades will be deleted. Are you sure you want to start over?",
         resetYes: "YES, RESET",
         resetNo: "NO, CANCEL",
-        scoreLabel: "",
+        scoreLabel: "SCORE:",
         goldLabel: "GOLD",
         totalScoreLabel: "TOTAL SCORE",
         vaultLabel: "VAULT:",
@@ -339,8 +342,8 @@ const translations = {
         armorCharged: "Armor Charged! 🔋",
         maxArmor: "Maximum Armor!",
         buyBtnShort: "BUY",
-        VERSION: "1.99.70.12",
-        VERSION_CODE: "19970012",
+        VERSION: "1.90.77.33",
+        VERSION_CODE: "19077033",
         maxBtn: "MAX",
         ownedBtn: "OWNED",
         boathouseTitle: "BOATHOUSE 🛶",
@@ -404,7 +407,10 @@ const translations = {
         goShopBtn: "GO TO SHOP",
         buyAmmoMsg: "Do you want to buy 50 Bomb Packs? (1000 Gold)",
         buyArmorMsg: "Do you want to buy 30 Armor Packs? (1000 Gold)",
-        licenseRequiredToast: "You must get a River Cannon license first! 📡"
+        licenseRequiredToast: "You must get a River Cannon license first! 📡",
+        outOfArmorAdMsg: "Out of Armor! Watch ad for +3 Armor?",
+        outOfBombsAdMsg: "Out of Bombs! Watch ad for +10 Bombs?",
+        watchAndGet: "WATCH & GET"
     },
     ru: {
         startDesc: "",
@@ -418,7 +424,7 @@ const translations = {
         scoreTitle: "Ваш счет:",
         goldTitle: "СОБРАННОЕ ЗОЛОТО:",
         reviveBtn: "+3 ЖИЗНИ (РЕКЛАМА)",
-        reviveGoldBtn: "+3 ЖIЗНИ (250 ЗОЛОТА)",
+        reviveGoldBtn: "+3 ЖИЗНИ (250 ЗОЛОТА)",
         purchaseSuccess: "ПОКУПКА УСПЕШНА!",
         owned: "КУПЛЕНО",
         hardResetBtn: "СБРОС",
@@ -447,7 +453,7 @@ const translations = {
         resetDesc: "Все ваше золото и улучшения будут удалены. Вы уверены, что хотите начать заново?",
         resetYes: "ДА, СБРОСИТЬ",
         resetNo: "НЕТ, ОТМЕНА",
-        scoreLabel: "",
+        scoreLabel: "СЧЕТ:",
         goldLabel: "ЗОЛОТО",
         totalScoreLabel: "ОБЩИЙ СЧЕТ",
         vaultLabel: "КАССА:",
@@ -457,7 +463,7 @@ const translations = {
         l1Title: "ВЕСЕННЯЯ РЕКА", l2Title: "ЛЕТНЯЯ РЕКА", l3Title: "ОСЕННИЙ ПАВОДОК", l4Title: "МОРОЗНАЯ ЗИМА",
         spinWheelTitle: "КОЛЕСО УДАЧИ",
         spinBtn: "КРУТИТЬ!",
-        spinNextBtn: "КРУТИТЬ (AD)",
+        spinNextBtn: "КРУТИТЬ (РЕКЛАМА)",
         spinReward: "ПОЗДРАВЛЯЕМ!",
         spinClose: "ЗАКРЫТЬ",
         spinWait: "Крутится...",
@@ -515,7 +521,7 @@ const translations = {
         identitySynced: "ЛИЧНОСТЬ СОХРАНЕНА В ОБЛАКЕ! 🏛️",
         identityError: "ОШИБКА СОХРАНЕНИЯ ЛИЧНОСТИ!",
         nameUpdated: "ИМЯ ОБНОВЛЕНО! 🏆",
-        invalidName: "ВВЕДИТЕ КОРРЕКТНОЕ IМЯ!",
+        invalidName: "ВВЕДИТЕ КОРРЕКТНОЕ ИМЯ!",
         dataSynced: "ДАННЫЕ СОХРАНЕНЫ В ОБЛАКЕ! 🏛️",
         rankingsFetchError: "НЕ УДАЛОСЬ ПОЛУЧИТЬ РЕЙТИНГ!",
         logoutConfirmTitle: "ВЫЙТИ?",
@@ -542,8 +548,8 @@ const translations = {
         armorCharged: "Броня заряжена! 🔋",
         maxArmor: "Максимум брони!",
         buyBtnShort: "КУПИТЬ",
-        VERSION: "1.99.70.12",
-        VERSION_CODE: "19970012",
+        VERSION: "1.90.77.33",
+        VERSION_CODE: "19077033",
         maxBtn: "МАКС",
         ownedBtn: "ЕСТЬ",
         boathouseTitle: "ЭЛЛИНГ 🛶",
@@ -560,14 +566,14 @@ const translations = {
         editBtn: "ИЗМЕНИТЬ",
         cancelBtnModal: "ОТМЕНА",
         armorBadgeLabel: "БРОНЯ",
-        reviveAdBtn: "+3 ЖIЗНИ (AD)",
-        reviveGoldBtnLong: "+3 ЖIЗНИ (250 ЗОЛОТА)",
+        reviveAdBtn: "+3 ЖИЗНИ (РЕКЛАМА)",
+        reviveGoldBtnLong: "+3 ЖИЗНИ (250 ЗОЛОТА)",
         restartBtnLong: "ЗАНОВО 🔄",
         returnToMenu: "В МЕНЮ 🏠",
         settingsSaveBtn: "СОХРАНИТЬ",
         musicVolLabel: "🎵 Музыка",
         sfxVolLabel: "🔊 Эффекты",
-        vibrationLabel: "📳 Вибрация",
+        vibrationToggleLabel: "📳 Вибрация",
         logoutConfirmTitleModal: "ВЫЙТИ?",
         logoutConfirmDesc: "Ваши данные в безопасности в облаке, но для входа нужен интернет.",
         logoutYes: "ДА, ВЫЙТИ",
@@ -607,7 +613,10 @@ const translations = {
         goShopBtn: "В МАГАЗИН",
         buyAmmoMsg: "Купить 50 ядер? (1000 золота)",
         buyArmorMsg: "Купить 30 зарядов брони? (1000 золота)",
-        licenseRequiredToast: "Сначала нужна лицензия! 📡"
+        licenseRequiredToast: "Сначала нужна лицензия! 📡",
+        outOfArmorAdMsg: "Броня на исходе! Посмотреть рекламу и получить +3 к броне?",
+        outOfBombsAdMsg: "Бомбы закончились! Посмотреть рекламу и получить +10 бомб?",
+        watchAndGet: "СМОТРЕТЬ И ПОЛУЧИТЬ"
     }
 };
 

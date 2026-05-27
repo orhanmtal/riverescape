@@ -58,20 +58,33 @@ window.Leaderboard = {
                     console.warn("Yandex Player Auth Error (Guest Mode):", e);
                 }
 
-                // v1.99.70.12: Yandex Language Sync
+                // v1.99.70.22: Yandex Language Sync
                 const yandexLang = this.ysdk.environment.i18n.lang;
-                if (yandexLang && ['tr', 'en', 'ru'].includes(yandexLang)) {
+                if (yandexLang) {
                     console.log("🌍 [YANDEX LANG] SDK Language Detected:", yandexLang);
-                    window.currentLang = yandexLang;
-                    localStorage.setItem('riverEscapeLang', yandexLang);
-                    // Force UI Update if possible
-                    if (typeof window.updateLanguageUI === 'function') {
+                    let finalLang = 'en'; // Default fallback
+                    if (['tr', 'en', 'ru'].includes(yandexLang)) {
+                        finalLang = yandexLang;
+                    } else if (yandexLang === 'be' || yandexLang === 'kk' || yandexLang === 'uk' || yandexLang === 'uz') {
+                        finalLang = 'ru'; // Fallback to Russian for CIS languages if needed, or English
+                    }
+                    
+                    window.currentLang = finalLang;
+                    localStorage.setItem('riverEscapeLang', finalLang);
+                    
+                    if (typeof window.initLanguage === 'function') {
+                        window.initLanguage();
+                    } else if (typeof window.updateLanguageUI === 'function') {
                         window.updateLanguageUI();
                     }
                 }
 
                 this.restoreFromCloud();
-                this.ysdk.features?.LoadingAPI?.ready();
+                
+                if (this.ysdk && this.ysdk.features && this.ysdk.features.LoadingAPI && this.ysdk.features.LoadingAPI.ready) {
+                    this.ysdk.features.LoadingAPI.ready();
+                    console.log("🚀 [YANDEX SDK] LoadingAPI.ready() fired!");
+                }
             } catch (e) {
                 console.error("Yandex SDK Init Failed:", e);
             }
@@ -138,7 +151,7 @@ window.Leaderboard = {
                     canSetScore = await this.ysdk.isAvailableMethod('leaderboards.setScore');
                 }
                 if (canSetScore) {
-                    await this.ysdk.leaderboards.setScore('TopRiders', finalScore);
+                    await this.ysdk.leaderboards.setScore('EliteRiders', finalScore);
                 }
                 console.log("🏆 [YANDEX LB] Score Submitted:", finalScore);
             } catch(e) {
@@ -226,14 +239,16 @@ window.Leaderboard = {
         if (!this.ysdk || !this.ysdk.leaderboards) {
             // Local fallback
             const localBest = Number(localStorage.getItem('riverEscapeHighScore') || 0);
-            this.renderLeaderboard([{ rank: 1, name: "YOU (LOCAL)", score: localBest, isMe: true }]);
+            const youLocal = (window.currentLang === 'tr') ? "SEN (YEREL)" : ((window.currentLang === 'ru') ? "ВЫ (ЛОКАЛЬНО)" : "YOU (LOCAL)");
+            this.renderLeaderboard([{ rank: 1, name: youLocal, score: localBest, isMe: true }]);
             return;
         }
 
         try {
-            const result = await this.ysdk.leaderboards.getEntries('TopRiders', { quantityTop: 5, includeUser: true });
+            const result = await this.ysdk.leaderboards.getEntries('EliteRiders', { quantityTop: 5, includeUser: true });
+            const playerDefault = (window.currentLang === 'tr') ? "OYUNCU" : ((window.currentLang === 'ru') ? "ИГРОК" : "PLAYER");
             const items = result.entries.map(entry => ({
-                name: entry.player.publicName || "PLAYER",
+                name: entry.player.publicName || playerDefault,
                 score: entry.score,
                 rank: entry.rank,
                 isMe: entry.player.uniqueID === this.playerID
@@ -241,7 +256,8 @@ window.Leaderboard = {
             this.renderLeaderboard(items);
         } catch (e) {
             console.error("Leaderboard fetch error:", e);
-            lbList.innerHTML = `<div style="text-align: center; color: #ff5252; padding: 40px;">ERROR LOADING RANKINGS</div>`;
+            const errText = (window.translations && window.translations[window.currentLang]) ? window.translations[window.currentLang].rankingsFetchError : "ERROR LOADING RANKINGS";
+            lbList.innerHTML = `<div style="text-align: center; color: #ff5252; padding: 40px;">${errText}</div>`;
         }
     },
 
@@ -255,10 +271,11 @@ window.Leaderboard = {
             const rankEmoji = item.rank === 1 ? "🥇" : item.rank === 2 ? "🥈" : item.rank === 3 ? "🥉" : "";
             const itemBg = isMe ? 'rgba(0, 229, 255, 0.15)' : 'rgba(255,255,255,0.02)';
             
+            const meLabel = (window.translations && window.translations[window.currentLang]) ? window.translations[window.currentLang].leaderboardMe : "YOU";
             html += `
                 <div style="background: ${itemBg}; border-radius: 15px; padding: 15px; margin-bottom: 10px; display: flex; align-items: center; border: 1px solid ${isMe ? '#00e5ff' : 'rgba(255,255,255,0.1)'};">
                     <div style="width: 40px; font-weight: 900; color: #00e5ff; font-size: 20px;">${rankEmoji || item.rank}</div>
-                    <div style="flex: 1; color: #fff; font-weight: bold; font-family: 'Outfit';">${item.name.toUpperCase()} ${isMe ? '<span style="font-size: 10px; background: #00e5ff; color: #000; padding: 2px 5px; border-radius: 5px; margin-left: 5px;">YOU</span>' : ''}</div>
+                    <div style="flex: 1; color: #fff; font-weight: bold; font-family: 'Outfit';">${item.name.toUpperCase()} ${isMe ? `<span style="font-size: 10px; background: #00e5ff; color: #000; padding: 2px 5px; border-radius: 5px; margin-left: 5px;">${meLabel.toUpperCase()}</span>` : ''}</div>
                     <div style="color: #00e5ff; font-weight: 900; font-size: 18px;">${item.score.toLocaleString()}</div>
                 </div>
             `;

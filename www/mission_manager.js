@@ -5,8 +5,8 @@
 
 window.MissionManager = (function() {
     let missions = [
-        { id: 'destroy_obstacle_100', labelTR: 'Engel Avcısı', labelEN: 'Obstacle Destroyer', descTR: '100 engeli bomba veya kalkanla yok et.', descEN: 'Destroy 100 obstacles with bombs or shield.', target: 100, current: 0, reward: 500, type: 'destroy_obstacle', completed: false },
-        { id: 'gold_200', labelTR: 'Altın Avcısı', labelEN: 'Gold Hunter', descTR: '200 altın topla.', descEN: 'Collect 200 gold in one run.', target: 200, current: 0, reward: 500, type: 'gold', completed: false }
+        { id: 'destroy_obstacle_100', labelTR: 'Engel Avcısı', labelEN: 'Obstacle Destroyer', labelRU: 'Разрушитель препятствий', descTR: '100 engeli bomba veya kalkanla yok et.', descEN: 'Destroy 100 obstacles with bombs or shield.', descRU: 'Уничтожьте 100 препятствий с помощью бомб или щита.', target: 100, current: 0, reward: 500, type: 'destroy_obstacle', completed: false },
+        { id: 'gold_200', labelTR: 'Altın Avcısı', labelEN: 'Gold Hunter', labelRU: 'Искатель золота', descTR: '200 altın topla.', descEN: 'Collect 200 gold in one run.', descRU: 'Собрать 200 золота за один заезд.', target: 200, current: 0, reward: 500, type: 'gold', completed: false }
     ];
 
     let missionCycle = 1;
@@ -140,7 +140,7 @@ window.MissionManager = (function() {
         }
 
         if (typeof window.showToast === 'function') {
-            const label = window.currentLang === 'tr' ? mission.labelTR : mission.labelEN;
+            const label = window.currentLang === 'tr' ? mission.labelTR : (window.currentLang === 'ru' ? mission.labelRU : mission.labelEN);
             window.showToast(translations[window.currentLang].missionCompletedToast.replace('{label}', label).replace('{reward}', mission.reward), true);
         }
     }
@@ -169,7 +169,7 @@ window.MissionManager = (function() {
             const item = document.createElement('div');
             item.className = 'mission-item' + (m.completed ? ' completed' : '');
             
-            const label = window.currentLang === 'tr' ? m.labelTR : m.labelEN;
+            const label = window.currentLang === 'tr' ? m.labelTR : (window.currentLang === 'ru' ? m.labelRU : m.labelEN);
             
             item.innerHTML = `
                 <div class="mission-info">
