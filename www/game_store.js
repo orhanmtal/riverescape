@@ -167,7 +167,7 @@ const GameStore = {
 
     // v1.99.61.100: ELITE CURRENCY LOCALIZER
     getLocalizedPrice(productId) {
-        // v1.90.77.33: Yandex rewarded-ad label
+        // v1.99.80.00: Yandex rewarded-ad label
         if (window.isYandexGames) {
             const lang = (typeof currentLang !== 'undefined') ? currentLang : 'tr';
             return lang === 'tr' ? "REKLAM (ÜCRETSİZ)" : (lang === 'ru' ? "РЕКЛАМА (БЕСПЛАТНО)" : "AD (FREE)");

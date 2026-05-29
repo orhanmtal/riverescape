@@ -1,4 +1,4 @@
-// River Escape - Dil Paketleri * RIVER ESCAPE ELITE - v1.90.77.33 (ELITE UNIFORM ENGINE)
+// River Escape - Dil Paketleri * RIVER ESCAPE ELITE - v1.99.80.00 (ELITE UNIFORM ENGINE)
 const translations = {
     tr: {
         startDesc: "",
@@ -136,8 +136,8 @@ const translations = {
         armorCharged: "Zirh Sarj Edildi! 🔋",
         maxArmor: "Maksimum Zirh!",
         buyBtnShort: "AL",
-        VERSION: "1.90.77.33",
-        VERSION_CODE: "19077033",
+        VERSION: "1.99.80.00",
+        VERSION_CODE: "19980000",
         maxBtn: "MAX",
         ownedBtn: "SAHIPSIN",
         boathouseTitle: "KAYIKHANE 🛶",
@@ -342,8 +342,8 @@ const translations = {
         armorCharged: "Armor Charged! 🔋",
         maxArmor: "Maximum Armor!",
         buyBtnShort: "BUY",
-        VERSION: "1.90.77.33",
-        VERSION_CODE: "19077033",
+        VERSION: "1.99.80.00",
+        VERSION_CODE: "19980000",
         maxBtn: "MAX",
         ownedBtn: "OWNED",
         boathouseTitle: "BOATHOUSE 🛶",
@@ -548,8 +548,8 @@ const translations = {
         armorCharged: "Броня заряжена! 🔋",
         maxArmor: "Максимум брони!",
         buyBtnShort: "КУПИТЬ",
-        VERSION: "1.90.77.33",
-        VERSION_CODE: "19077033",
+        VERSION: "1.99.80.00",
+        VERSION_CODE: "19980000",
         maxBtn: "МАКС",
         ownedBtn: "ЕСТЬ",
         boathouseTitle: "ЭЛЛИНГ 🛶",

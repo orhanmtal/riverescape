@@ -1,12 +1,12 @@
-/* RİVER ESCAPE ELİTE - v1.90.77.33 (STABLE AAB RELEASE)
+/* RİVER ESCAPE ELİTE - v1.99.80.00 (STABLE AAB RELEASE)
  * DEVELOPMENT RULES:
  * 1. NO PLACEHOLDERS 2. PERFORMANCE FIRST 3. VISUAL EXCELLENCE
  * 4. CODE INTEGRITY 5. ELITE SYNC
  * 6. CLOUD SEAL v66
  */
 
-const VERSION = "v1.90.77.33";
-const VERSION_CODE = 19077033;
+const VERSION = "v1.99.80.00";
+const VERSION_CODE = 19980000;
 
 // Elite Platform Detect
 const isAndroid = window.isAndroid;
@@ -174,7 +174,7 @@ function buyArmorLicense() {
         if (typeof playPowerupSound === 'function') playPowerupSound();
         setTimeout(() => { for (var i = 0; i < 3; i++) setTimeout(playCoinSound, i * 150); }, 150);
         if (typeof triggerEliteEconomySync === 'function') triggerEliteEconomySync(true);
-        // v1.90.77.33: Post-Purchase Invincibility
+        // v1.99.80.00: Post-Purchase Invincibility
         hasShield = true; levelUpInvuln = true;
         setTimeout(() => { hasShield = false; levelUpInvuln = false; }, 3000);
         showToast(t.armorReloaded, true);
@@ -422,7 +422,7 @@ function drawParticles() {
 }
 
 // v1.99.61.81: ELITE PARTICLE POOL
-// v1.90.77.33: PERF - Reduced pool size from 250 to 120 for browser stability
+// v1.99.80.00: PERF - Reduced pool size from 250 to 120 for browser stability
 const PARTICLE_POOL_SIZE = 120;
 const particlePool = Array.from({ length: PARTICLE_POOL_SIZE }, () => new Particle());
 
@@ -773,7 +773,7 @@ const EliteAdManager = {
     }
 };
 
-// v1.90.77.33: Yandex Games rewarded ads. Reward is granted only from onRewarded.
+// v1.99.80.00: Yandex Games rewarded ads. Reward is granted only from onRewarded.
 function showRewardedAd(btnElem, defaultText, callback) {
     const t = translations[currentLang];
 
@@ -1162,7 +1162,7 @@ function syncPlayerDimensions() {
 
 // v1.99.61.106: ELITE RESPONSIVE ENGINE (Direct CSS Pixel Mapping)
 function resizeCanvas() {
-    // v1.90.77.33: Yandex responsive fix
+    // v1.99.80.00: Yandex responsive fix
     const isWeb = !isAndroid || isYandexGames;
     let baseWidth = window.innerWidth;
     let baseHeight = window.innerHeight;
@@ -1303,14 +1303,14 @@ var currentLAsset = currentAsset;
 
 var totalGold = 0;
 window.totalGold = 0;
-var currentVersion = "v1.90.77.33"; // YANDEX GAMES RELEASE
+var currentVersion = "v1.99.80.00"; // YANDEX GAMES RELEASE
 
 var magnetLevel = 0;
 var shieldLevel = 0;
 var hasWeapon = true; // v1.99.64.02: ALWAYS ENABLED
 var bombCount = 0;
 
-// v1.90.77.33: Yandex starter gift
+// v1.99.80.00: Yandex starter gift
 if (isYandexGames && !localStorage.getItem('yandex_starter_gift_v1')) {
     bombCount = 10;
     localStorage.setItem('yandex_starter_gift_v1', 'true');
@@ -2850,7 +2850,7 @@ function togglePause() {
 
     const t = translations[currentLang];
     if (isPaused) {
-        // v1.90.77.33: Yandex gameplay stop hook
+        // v1.99.80.00: Yandex gameplay stop hook
         if (typeof EliteAdManager !== 'undefined' && EliteAdManager.gameplayStop) {
             EliteAdManager.gameplayStop();
         }
@@ -2870,7 +2870,7 @@ function togglePause() {
         }
         if (pauseBtn) pauseBtn.innerText = "⏸";
 
-        // v1.90.77.33: Yandex gameplay start hook
+        // v1.99.80.00: Yandex gameplay start hook
         if (typeof EliteAdManager !== 'undefined' && EliteAdManager.gameplayStart) {
             EliteAdManager.gameplayStart();
         }
@@ -2881,7 +2881,7 @@ function togglePause() {
     }
 }
 function startGame() {
-    // v1.90.77.33: Yandex gameplay start hook
+    // v1.99.80.00: Yandex gameplay start hook
     if (typeof EliteAdManager !== 'undefined' && EliteAdManager.gameplayStart) {
         EliteAdManager.gameplayStart();
     }
@@ -3030,7 +3030,7 @@ if (lbCloseBtn) lbCloseBtn.addEventListener('click', () => {
 function gameOver(reason = 'unknown') {
     if (isGameOver) return;
 
-    // v1.90.77.33: Yandex gameplay stop hook
+    // v1.99.80.00: Yandex gameplay stop hook
     if (typeof EliteAdManager !== 'undefined' && EliteAdManager.gameplayStop) {
         EliteAdManager.gameplayStop();
     }
@@ -3187,7 +3187,7 @@ function setTheme(theme) {
     localStorage.setItem('riverEscapeTheme', theme);
 }
 
-// v1.90.77.33: ELITE HUD SYNC (Throttled for Performance)
+// v1.99.80.00: ELITE HUD SYNC (Throttled for Performance)
 let lastHudSync = 0;
 function syncEliteHUD() {
     const now = performance.now();
@@ -4053,7 +4053,7 @@ function fireBomb() {
             "🎯",
             () => {
                 const btn = document.getElementById('bomb-action-btn');
-                // v1.90.77.33: Save innerHTML to preserve the crosshair icon
+                // v1.99.80.00: Save innerHTML to preserve the crosshair icon
                 showRewardedAd(btn, btn.innerHTML, () => {
                     bombCount += 10;
                     // v1.99.64.68: Remove redundant saveGame (togglePause will handle it)
@@ -5727,12 +5727,12 @@ function goToMainMenu() {
     isPlaying = false;
     isGameOver = false;
 
-    // v1.90.77.33: Yandex gameplay stop hook
+    // v1.99.80.00: Yandex gameplay stop hook
     if (typeof EliteAdManager !== 'undefined' && EliteAdManager.gameplayStop) {
         EliteAdManager.gameplayStop();
     }
 
-    // v1.90.77.33: Yandex leaderboard score submit
+    // v1.99.80.00: Yandex leaderboard score submit
     if (typeof Leaderboard !== 'undefined' && Leaderboard.submitProgress) {
         const finalScore = Math.floor(window.score || 0);
         const finalLevel = window.currentLevel || 1;

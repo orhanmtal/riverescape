@@ -18,19 +18,19 @@ def replace_in_file(filepath, pattern, replacement, encoding='utf-8'):
         print(f"No changes in {filepath}")
 
 def run_update():
-    print("Updating version names to 1.90.77.33 and codes to 19077033...")
+    print("Updating version names to 1.99.80.00 and codes to 19980000...")
     
     # 1. www/version.js
-    replace_in_file('www/version.js', r'1\.99\.70\.22', '1.90.77.33')
-    replace_in_file('www/version.js', r'19970012', '19077033')
+    replace_in_file('www/version.js', r'1\.90\.77\.33', '1.99.80.00')
+    replace_in_file('www/version.js', r'19077033', '19980000')
     
     # 2. www/index.html
-    replace_in_file('www/index.html', r'1\.99\.70\.22', '1.90.77.33')
-    replace_in_file('www/index.html', r'19970012', '19077033')
+    replace_in_file('www/index.html', r'1\.90\.77\.33', '1.99.80.00')
+    replace_in_file('www/index.html', r'19077033', '19980000')
     
     # 3. www/translations.js
-    replace_in_file('www/translations.js', r'1\.99\.70\.22', '1.90.77.33')
-    replace_in_file('www/translations.js', r'19970012', '19077033')
+    replace_in_file('www/translations.js', r'1\.90\.77\.33', '1.99.80.00')
+    replace_in_file('www/translations.js', r'19077033', '19980000')
     
     # 4. www/game_unbeatable_v3.js (detect encoding)
     try:
@@ -40,22 +40,22 @@ def run_update():
     except:
         enc = 'utf-8'
         
-    replace_in_file('www/game_unbeatable_v3.js', r'1\.99\.70\.22', '1.90.77.33', encoding=enc)
-    replace_in_file('www/game_unbeatable_v3.js', r'19970022', '19077033', encoding=enc)
+    replace_in_file('www/game_unbeatable_v3.js', r'1\.90\.77\.33', '1.99.80.00', encoding=enc)
+    replace_in_file('www/game_unbeatable_v3.js', r'19077033', '19980000', encoding=enc)
     
     # 5. android/app/build.gradle
-    replace_in_file('android/app/build.gradle', r'1\.99\.70\.22', '1.90.77.33')
-    replace_in_file('android/app/build.gradle', r'19970022', '19077033')
+    replace_in_file('android/app/build.gradle', r'1\.90\.77\.33', '1.99.80.00')
+    replace_in_file('android/app/build.gradle', r'19077033', '19980000')
     
     # 6. create_pro_zip.py
-    replace_in_file('create_pro_zip.py', r'1\.99\.70\.22', '1.90.77.33')
+    replace_in_file('create_pro_zip.py', r'1\.90\.77\.33', '1.99.80.00')
     
     # 7. package.json
-    replace_in_file('package.json', r'1\.99\.64', '1.90.77.33')
+    replace_in_file('package.json', r'1\.90\.77\.33', '1.99.80.00')
     
     # 8. update_versions.py
-    replace_in_file('update_versions.py', r'1\.99\.70\.22', '1.90.77.33')
-    replace_in_file('update_versions.py', r'19970022', '19077033')
+    replace_in_file('update_versions.py', r'1\.90\.77\.33', '1.99.80.00')
+    replace_in_file('update_versions.py', r'19077033', '19980000')
     
     print("Done! Version strings updated.")
 
