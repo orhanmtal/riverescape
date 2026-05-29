@@ -1621,26 +1621,34 @@ const closeShopBtn = document.getElementById('shop-close-btn');
 
 if (closeShopBtn) {
     closeShopBtn.addEventListener('click', () => {
-        const menuScr = document.getElementById('start-screen');
         if (shopScreen) {
             shopScreen.classList.remove('active');
             shopScreen.classList.add('hidden');
             shopScreen.style.display = 'none';
         }
-        // v1.99.64.127: PERF — overlay flag clear
         _isOverlayOpenFlag = false;
 
         // v1.99.64.120: Akıllı Geri Dönüş (Direct Resume with Protection)
         if (isPlaying) {
-            if (isPaused && typeof togglePause === 'function') {
-                // Oyuncuya 5 saniye koruma ver ve direkt oyuna döndür (Pause ekranını atla)
-                levelUpInvuln = true;
-                setTimeout(() => { levelUpInvuln = false; }, 5000);
+            // Oyuncuya 5 saniye koruma ver ve direkt oyuna döndür (Pause ekranını atla)
+            levelUpInvuln = true;
+            setTimeout(() => { levelUpInvuln = false; }, 5000);
 
-                // Pause ekranını gizle ve oyunu başlat
-                const pauseScr = document.getElementById('pause-screen');
-                if (pauseScr) pauseScr.classList.add('hidden');
-                togglePause();
+            // Pause ekranını gizle ve oyuna başlat
+            const pauseScr = document.getElementById('pause-screen');
+            if (pauseScr) pauseScr.classList.add('hidden');
+
+            if (isPaused) {
+                if (typeof togglePause === 'function') togglePause();
+            } else {
+                // Güvenli Geri Dönüş: Eğer durumlar desenkronize olduysa zorla başlat
+                isPaused = false;
+                window.isPaused = false;
+                window.isAdShowing = false;
+                lastTime = performance.now();
+                if (typeof EliteAdManager !== 'undefined' && EliteAdManager.gameplayStart) {
+                    EliteAdManager.gameplayStart();
+                }
             }
         } else {
             const menuScr = document.getElementById('start-screen');
