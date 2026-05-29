@@ -766,7 +766,13 @@ function showRewardedAd(btnElem, defaultText, callback) {
         Leaderboard.analytics.logEvent('ad_request', { ad_type: 'rewarded' });
     }
     const t = translations[currentLang];
-    const isLocalTest = ['localhost', '127.0.0.1'].includes(window.location.hostname);
+    const isLocalTest = (
+        ['localhost', '127.0.0.1', '::1'].includes(window.location.hostname) ||
+        window.location.hostname.startsWith('192.168.') ||
+        window.location.hostname.startsWith('10.') ||
+        window.location.hostname.startsWith('172.') ||
+        window.location.hostname.endsWith('.local')
+    );
 
     if (isLocalTest) {
         if (btnElem) {
@@ -813,7 +819,13 @@ async function showInterstitialAd() {
     if (typeof Leaderboard !== 'undefined' && Leaderboard.analytics) {
         Leaderboard.analytics.logEvent('ad_request', { ad_type: 'interstitial' });
     }
-    const isLocalTest = ['localhost', '127.0.0.1'].includes(window.location.hostname);
+    const isLocalTest = (
+        ['localhost', '127.0.0.1', '::1'].includes(window.location.hostname) ||
+        window.location.hostname.startsWith('192.168.') ||
+        window.location.hostname.startsWith('10.') ||
+        window.location.hostname.startsWith('172.') ||
+        window.location.hostname.endsWith('.local')
+    );
     if (isLocalTest) {
         console.log("🎮 [GD SDK] Simulating Interstitial Ad locally");
         return;
