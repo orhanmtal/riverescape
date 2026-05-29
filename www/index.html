@@ -51,13 +51,6 @@ if (!['localhost', '127.0.0.1'].includes(window.location.hostname)) {
             window.isAdShowing = false;
             if (window.audioCtx) window.audioCtx.resume();
             
-            // Restore previous pause state
-            if (typeof window.wasPausedBeforeAd !== 'undefined') {
-                window.isPaused = window.wasPausedBeforeAd;
-            } else {
-                window.isPaused = false;
-            }
-            
             // Restore active button UI
             if (window.activeAdButton) {
                 window.activeAdButton.innerHTML = window.activeAdButtonText;
@@ -81,7 +74,6 @@ if (!['localhost', '127.0.0.1'].includes(window.location.hostname)) {
                         console.log("🎮 [GD SDK] Game Pause requested (Ad starting)");
                         window.isAdShowing = true;
                         if (window.audioCtx) window.audioCtx.suspend();
-                        window.isPaused = true;
                         if (typeof gtag === 'function') {
                             gtag('event', 'ad_show_start');
                         }
