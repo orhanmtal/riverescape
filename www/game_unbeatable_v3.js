@@ -757,23 +757,24 @@ const EliteAdManager = {
 // v1.99.80.00: GameDistribution rewarded ads. Reward is granted only from SDK_REWARDED_WATCH_COMPLETE.
 function showRewardedAd(btnElem, defaultText, callback) {
     const t = translations[currentLang];
+    const isLocalTest = ['localhost', '127.0.0.1'].includes(window.location.hostname);
+
+    if (isLocalTest) {
+        if (btnElem) {
+            btnElem.disabled = true;
+            btnElem.innerText = 'Simulating...';
+        }
+        setTimeout(() => {
+            if (btnElem) {
+                btnElem.innerHTML = defaultText;
+                btnElem.disabled = false;
+            }
+            callback();
+        }, 1000);
+        return;
+    }
 
     if (typeof gdsdk === 'undefined') {
-        const isLocalTest = ['localhost', '127.0.0.1'].includes(window.location.hostname);
-        if (isLocalTest) {
-            if (btnElem) {
-                btnElem.disabled = true;
-                btnElem.innerText = 'Simulating...';
-            }
-            setTimeout(() => {
-                if (btnElem) {
-                    btnElem.innerHTML = defaultText;
-                    btnElem.disabled = false;
-                }
-                callback();
-            }, 1000);
-            return;
-        }
         showToast(t.adLoadFail);
         return;
     }
@@ -800,6 +801,12 @@ function showRewardedAd(btnElem, defaultText, callback) {
 }
 
 async function showInterstitialAd() {
+    const isLocalTest = ['localhost', '127.0.0.1'].includes(window.location.hostname);
+    if (isLocalTest) {
+        console.log("🎮 [GD SDK] Simulating Interstitial Ad locally");
+        return;
+    }
+
     if (typeof gdsdk === 'undefined') return;
     
     window.wasPausedBeforeAd = isPaused;
