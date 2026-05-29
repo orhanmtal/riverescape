@@ -35,6 +35,9 @@ const finalGoldElem = document.getElementById('finalGoldValue');
 var levelUpOverlay = document.getElementById('level-up-overlay');
 window.addEventListener('load', () => {
     levelUpOverlay = document.getElementById('level-up-overlay');
+    if (typeof Leaderboard !== 'undefined' && Leaderboard.analytics) {
+        Leaderboard.analytics.logEvent('screen_view', { screen_name: 'Main Menu' });
+    }
 });
 const reviveBtn = document.getElementById('revive-btn');
 const reviveGoldBtn = document.getElementById('revive-gold-btn');
@@ -759,6 +762,9 @@ const EliteAdManager = {
 
 // v1.99.80.00: GameDistribution rewarded ads. Reward is granted only from SDK_REWARDED_WATCH_COMPLETE.
 function showRewardedAd(btnElem, defaultText, callback) {
+    if (typeof Leaderboard !== 'undefined' && Leaderboard.analytics) {
+        Leaderboard.analytics.logEvent('ad_request', { ad_type: 'rewarded' });
+    }
     const t = translations[currentLang];
     const isLocalTest = ['localhost', '127.0.0.1'].includes(window.location.hostname);
 
@@ -804,6 +810,9 @@ function showRewardedAd(btnElem, defaultText, callback) {
 }
 
 async function showInterstitialAd() {
+    if (typeof Leaderboard !== 'undefined' && Leaderboard.analytics) {
+        Leaderboard.analytics.logEvent('ad_request', { ad_type: 'interstitial' });
+    }
     const isLocalTest = ['localhost', '127.0.0.1'].includes(window.location.hostname);
     if (isLocalTest) {
         console.log("🎮 [GD SDK] Simulating Interstitial Ad locally");
@@ -1356,6 +1365,9 @@ function updateArmorUI() {
 
 // v1.99.27.11: MASTER UNIFIED SHOP TRIGGER
 function openShop() {
+    if (typeof Leaderboard !== 'undefined' && Leaderboard.analytics) {
+        Leaderboard.analytics.logEvent('screen_view', { screen_name: 'Shop' });
+    }
     const sScr = document.getElementById('shop-screen');
     const pScr = document.getElementById('pause-screen');
     const startScr = document.getElementById('start-screen');
@@ -1460,6 +1472,9 @@ if (eliteShopBtn) eliteShopBtn.onclick = () => {
 if (eliteSpinBtn) eliteSpinBtn.onclick = () => {
     playHaptic('light');
     if (typeof playUIClick === 'function') playUIClick();
+    if (typeof Leaderboard !== 'undefined' && Leaderboard.analytics) {
+        Leaderboard.analytics.logEvent('screen_view', { screen_name: 'LuckySpin' });
+    }
     const sScr = document.getElementById('spin-screen');
     const menuScr = document.getElementById('start-screen');
     if (sScr) {
@@ -1505,6 +1520,9 @@ if (eliteOynaBtn) eliteOynaBtn.onclick = () => {
 const settingsOpenBtnElite = document.getElementById('open-settings-btn');
 if (settingsOpenBtnElite) settingsOpenBtnElite.addEventListener('click', () => {
     if (typeof playUIClick === 'function') playUIClick();
+    if (typeof Leaderboard !== 'undefined' && Leaderboard.analytics) {
+        Leaderboard.analytics.logEvent('screen_view', { screen_name: 'Settings' });
+    }
     const menuScr = document.getElementById('start-screen');
     settingsScreen.classList.remove('hidden');
     settingsScreen.classList.add('active');
@@ -1518,6 +1536,12 @@ if (settingsOpenBtnElite) settingsOpenBtnElite.addEventListener('click', () => {
 
 const closeSettingsElite = () => {
     saveGame(); 
+    if (typeof Leaderboard !== 'undefined' && Leaderboard.analytics) {
+        Leaderboard.analytics.logEvent('audio_settings_changed', {
+            music_volume: Math.round((window.isMusicVolume || 0) * 100),
+            sfx_volume: Math.round((window.isSFXVolume || 0) * 100)
+        });
+    }
 
     if (settingsScreen) {
         settingsScreen.classList.remove('active');
@@ -2731,6 +2755,10 @@ function togglePause() {
     if (!isPlaying || isGameOver) return;
     isPaused = !isPaused;
 
+    if (typeof Leaderboard !== 'undefined' && Leaderboard.analytics) {
+        Leaderboard.analytics.logEvent(isPaused ? 'game_pause' : 'game_resume');
+    }
+
     const t = translations[currentLang];
     if (isPaused) {
         // v1.99.80.00: Yandex gameplay stop hook
@@ -2764,6 +2792,12 @@ function togglePause() {
     }
 }
 function startGame() {
+    if (typeof Leaderboard !== 'undefined' && Leaderboard.analytics) {
+        Leaderboard.analytics.logEvent('game_start', {
+            level: window.resumeLevel || 1,
+            score: window.resumeScore || 0
+        });
+    }
     // v1.99.80.00: Yandex gameplay start hook
     if (typeof EliteAdManager !== 'undefined' && EliteAdManager.gameplayStart) {
         EliteAdManager.gameplayStart();
@@ -5558,6 +5592,9 @@ if (startBtn) startBtn.addEventListener('click', startGame);
 
 // v1.99.27.07: MASTER ZERO-LAG MENU TRANSITION
 function goToMainMenu() {
+    if (typeof Leaderboard !== 'undefined' && Leaderboard.analytics) {
+        Leaderboard.analytics.logEvent('screen_view', { screen_name: 'Main Menu' });
+    }
 
 
     // v1.99.30.06: ELITE SESSION SUSPEND (Do not reset if voluntary exit)

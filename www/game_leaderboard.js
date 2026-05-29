@@ -94,5 +94,14 @@ window.Leaderboard = {
 
     renderLeaderboard(data) {
         // UI removed
+    },
+
+    analytics: {
+        logEvent(name, params) {
+            console.log(`📊 [Analytics] Event: ${name}`, params || {});
+            if (typeof gtag === 'function') {
+                gtag('event', name, params || {});
+            }
+        }
     }
 };

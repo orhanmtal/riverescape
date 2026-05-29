@@ -63,6 +63,9 @@ if (!['localhost', '127.0.0.1'].includes(window.location.hostname)) {
                         window.isAdShowing = true;
                         if (window.audioCtx) window.audioCtx.suspend();
                         window.isPaused = true;
+                        if (typeof gtag === 'function') {
+                            gtag('event', 'ad_show_start');
+                        }
                         break;
                     case "SDK_GAME_START":
                         console.log("🎮 [GD SDK] Game Start requested (Ad finished)");
@@ -78,6 +81,9 @@ if (!['localhost', '127.0.0.1'].includes(window.location.hostname)) {
                         break;
                     case "SDK_REWARDED_WATCH_COMPLETE":
                         console.log("🎮 [GD SDK] Rewarded Watch Complete");
+                        if (typeof gtag === 'function') {
+                            gtag('event', 'ad_watch_success', { ad_type: 'rewarded' });
+                        }
                         if (typeof window.activeRewardedCallback === 'function') {
                             window.activeRewardedCallback();
                             window.activeRewardedCallback = null;
@@ -85,6 +91,9 @@ if (!['localhost', '127.0.0.1'].includes(window.location.hostname)) {
                         break;
                     case "SDK_REWARDED_WATCH_FAILED":
                         console.log("🎮 [GD SDK] Rewarded Watch Failed/Skipped");
+                        if (typeof gtag === 'function') {
+                            gtag('event', 'ad_watch_failed', { ad_type: 'rewarded' });
+                        }
                         window.activeRewardedCallback = null;
                         break;
                 }
