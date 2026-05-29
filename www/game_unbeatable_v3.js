@@ -10,7 +10,8 @@ const VERSION_CODE = 19980000;
 
 // Elite Platform Detect
 const isAndroid = window.isAndroid;
-const isYandexGames = true; // Yandex Games Branch Strategy
+const isGameDistribution = true; // GameDistribution Branch Strategy
+const isYandexGames = false;
 
 // --- v1.99.36.80: ELITE GLOBAL CONSTANTS (Locked & Sealed) ---
 const STAGES_PER_BIOME = 3;
@@ -67,7 +68,7 @@ const settingsCloseBtn = document.getElementById('settings-close-btn');
 // v1.99.19.09: Elite Button Central Controls
 const eliteShopBtn = document.getElementById('open-shop-btn');
 const eliteSpinBtn = document.getElementById('spin-btn');
-const eliteLeaderboardBtn = document.getElementById('leaderboard-btn');
+const eliteLeaderboardBtn = null;
 const eliteOynaBtn = document.getElementById('start-btn');
 const spinScreen = document.getElementById('spin-screen');
 const spinCloseBtn = document.getElementById('spin-close-btn');
@@ -531,17 +532,7 @@ function initLanguage() {
     } catch (e) {
         console.warn("Failed to parse URL lang parameter", e);
     }
-    if (!finalLang && window.ysdk && window.ysdk.environment && window.ysdk.environment.i18n) {
-        const yandexLang = window.ysdk.environment.i18n.lang;
-        if (yandexLang) {
-            const cleanLang = yandexLang.toLowerCase().split('-')[0];
-            if (['tr', 'en', 'ru'].includes(cleanLang)) {
-                finalLang = cleanLang;
-            } else if (['be', 'kk', 'uk', 'uz'].includes(cleanLang)) {
-                finalLang = 'ru';
-            }
-        }
-    }
+
     if (!finalLang) {
         let saved = localStorage.getItem("riverEscapeLang");
         if (saved && ["tr", "en", "ru"].includes(saved)) {
@@ -753,31 +744,21 @@ function showToast(msg, isReward = false) {
     }, 1500); // v1.68 Fix: 1.5 saniye ekranda kalacak!
 }
 
-// Yandex Games ad and gameplay manager
+// GameDistribution ad and gameplay manager
 const EliteAdManager = {
     gameplayStart: function () {
-        if (window.ysdk && window.ysdk.features && window.ysdk.features.GameplayAPI) {
-            try {
-                window.ysdk.features.GameplayAPI.start();
-                console.log('[YANDEX SDK] gameplayStart sent');
-            } catch (e) { }
-        }
+        console.log('[GD SDK] gameplayStart stub');
     },
     gameplayStop: function () {
-        if (window.ysdk && window.ysdk.features && window.ysdk.features.GameplayAPI) {
-            try {
-                window.ysdk.features.GameplayAPI.stop();
-                console.log('[YANDEX SDK] gameplayStop sent');
-            } catch (e) { }
-        }
+        console.log('[GD SDK] gameplayStop stub');
     }
 };
 
-// v1.99.80.00: Yandex Games rewarded ads. Reward is granted only from onRewarded.
+// v1.99.80.00: GameDistribution rewarded ads. Reward is granted only from SDK_REWARDED_WATCH_COMPLETE.
 function showRewardedAd(btnElem, defaultText, callback) {
     const t = translations[currentLang];
 
-    if (!window.ysdk || !window.ysdk.adv) {
+    if (typeof gdsdk === 'undefined') {
         const isLocalTest = ['localhost', '127.0.0.1'].includes(window.location.hostname);
         if (isLocalTest) {
             if (btnElem) {
@@ -797,63 +778,36 @@ function showRewardedAd(btnElem, defaultText, callback) {
         return;
     }
 
-    const wasPausedBeforeAd = isPaused;
+    // Register active states globally for the index.html event handler to access
+    window.wasPausedBeforeAd = isPaused;
+    window.activeAdButton = btnElem;
+    window.activeAdButtonText = defaultText;
+    window.activeRewardedCallback = callback;
 
-    window.ysdk.adv.showRewardedVideo({
-        callbacks: {
-            onOpen: () => {
-                if (window.audioCtx) window.audioCtx.suspend();
-                isPaused = true;
-                window.isAdShowing = true;
-                EliteAdManager.gameplayStop();
-            },
-            onRewarded: () => {
-                callback();
-            },
-            onClose: () => {
-                if (window.audioCtx) window.audioCtx.resume();
-                // v1.99.70.09: Only restore if not already resumed by callback
-                if (isPaused) {
-                    isPaused = wasPausedBeforeAd;
-                }
-                window.isAdShowing = false;
-                EliteAdManager.gameplayStart();
-            },
-            onError: (e) => {
-                console.error('Yandex Reward Error:', e);
-                if (window.audioCtx) window.audioCtx.resume();
-                if (isPaused) {
-                    isPaused = wasPausedBeforeAd;
-                }
-                window.isAdShowing = false;
-                EliteAdManager.gameplayStart();
-                showToast(t.adLoadFail);
-            }
+    if (btnElem) {
+        btnElem.disabled = true;
+    }
+
+    try {
+        gdsdk.showAd('rewarded');
+    } catch (e) {
+        console.error('GD Rewarded Error:', e);
+        if (btnElem) {
+            btnElem.disabled = false;
         }
-    });
+        showToast(t.adLoadFail);
+    }
 }
 
 async function showInterstitialAd() {
-    if (!window.ysdk || !window.ysdk.adv) return;
-    window.ysdk.adv.showFullscreenAdv({
-        callbacks: {
-            onOpen: () => {
-                if (window.audioCtx) window.audioCtx.suspend();
-                window.isAdShowing = true;
-                EliteAdManager.gameplayStop();
-            },
-            onClose: () => {
-                if (window.audioCtx) window.audioCtx.resume();
-                window.isAdShowing = false;
-                EliteAdManager.gameplayStart();
-            },
-            onError: () => {
-                if (window.audioCtx) window.audioCtx.resume();
-                window.isAdShowing = false;
-                EliteAdManager.gameplayStart();
-            }
-        }
-    });
+    if (typeof gdsdk === 'undefined') return;
+    
+    window.wasPausedBeforeAd = isPaused;
+    try {
+        gdsdk.showAd('interstitial');
+    } catch (e) {
+        console.error('GD Interstitial Error:', e);
+    }
 }
 
 // --- HAPTICS (TİTREŞİM SİSTEMİ) v3.2 ---
@@ -1303,18 +1257,18 @@ var currentLAsset = currentAsset;
 
 var totalGold = 0;
 window.totalGold = 0;
-var currentVersion = "v1.99.80.00"; // YANDEX GAMES RELEASE
+var currentVersion = "v1.99.80.00"; // GAMEDISTRIBUTION RELEASE
 
 var magnetLevel = 0;
 var shieldLevel = 0;
 var hasWeapon = true; // v1.99.64.02: ALWAYS ENABLED
 var bombCount = 0;
 
-// v1.99.80.00: Yandex starter gift
-if (isYandexGames && !localStorage.getItem('yandex_starter_gift_v1')) {
+// v1.99.80.00: GameDistribution starter gift
+if (isGameDistribution && !localStorage.getItem('gd_starter_gift_v1')) {
     bombCount = 10;
-    localStorage.setItem('yandex_starter_gift_v1', 'true');
-    console.log("🎁 [ELITE] 10 Bombs gift granted for Yandex player!");
+    localStorage.setItem('gd_starter_gift_v1', 'true');
+    console.log("🎁 [ELITE] 10 Bombs gift granted for GameDistribution player!");
 }
 var powerupTimer = 0;
 var hasShield = false;
@@ -1491,12 +1445,7 @@ if (eliteShopBtn) eliteShopBtn.onclick = () => {
     openShop();
 };
 
-if (eliteLeaderboardBtn) eliteLeaderboardBtn.onclick = () => {
-    playHaptic('light');
-    if (window.Leaderboard && typeof Leaderboard.show === 'function') {
-        Leaderboard.show();
-    }
-};
+
 
 if (eliteSpinBtn) eliteSpinBtn.onclick = () => {
     playHaptic('light');
@@ -2994,38 +2943,7 @@ function startGame() {
     gameLoopRequestId = requestAnimationFrame(gameLoop);
 }
 
-// v1.99.61.81: Modern Leaderboard Connector
-const lbMainBtn = document.getElementById('leaderboard-btn');
-if (lbMainBtn) lbMainBtn.addEventListener('click', () => {
-    const lbScr = document.getElementById('leaderboard-screen');
-    const menuScr = document.getElementById('start-screen');
-    if (lbScr) {
-        lbScr.classList.remove('hidden');
-        lbScr.classList.add('active');
-        if (menuScr) menuScr.classList.add('hidden');
-        lbScr.style.display = 'flex';
-        // v1.99.61.81: Trigger data refresh
-        if (typeof Leaderboard !== 'undefined' && typeof Leaderboard.refreshData === 'function') {
-            Leaderboard.refreshData();
-        }
-    }
-});
 
-// v1.99.61.81: TOP RIDERS CLOSE BUTTON FIX ❌
-const lbCloseBtn = document.getElementById('leaderboard-close-btn');
-if (lbCloseBtn) lbCloseBtn.addEventListener('click', () => {
-    const lbScr = document.getElementById('leaderboard-screen');
-    const menuScr = document.getElementById('start-screen');
-    if (lbScr) {
-        lbScr.classList.add('hidden');
-        lbScr.classList.remove('active');
-        lbScr.style.display = 'none';
-        if (menuScr) {
-            menuScr.classList.remove('hidden');
-            menuScr.style.display = 'flex';
-        }
-    }
-});
 
 function gameOver(reason = 'unknown') {
     if (isGameOver) return;
@@ -5727,17 +5645,17 @@ function goToMainMenu() {
     isPlaying = false;
     isGameOver = false;
 
-    // v1.99.80.00: Yandex gameplay stop hook
+    // gameplay stop hook
     if (typeof EliteAdManager !== 'undefined' && EliteAdManager.gameplayStop) {
         EliteAdManager.gameplayStop();
     }
 
-    // v1.99.80.00: Yandex leaderboard score submit
+    // Local progress save
     if (typeof Leaderboard !== 'undefined' && Leaderboard.submitProgress) {
         const finalScore = Math.floor(window.score || 0);
         const finalLevel = window.currentLevel || 1;
         Leaderboard.submitProgress(finalScore, finalLevel, true);
-        console.log("🏆 [ELITE SCORE] Submitted to Yandex:", finalScore);
+        console.log("💾 [ELITE SCORE] Local progress saved:", finalScore);
     }
 
     if (gameLoopRequestId) cancelAnimationFrame(gameLoopRequestId);
@@ -5766,7 +5684,7 @@ function goToMainMenu() {
         startScreen.style.opacity = '1';
 
         // v1.99.33.61: Restore Missing Buttons
-        const btnsToShow = ['start-btn', 'open-shop-btn', 'leaderboard-btn', 'spin-btn', 'open-settings-btn', 'mission-panel'];
+        const btnsToShow = ['start-btn', 'open-shop-btn', 'spin-btn', 'open-settings-btn', 'mission-panel'];
         btnsToShow.forEach(id => {
             const el = document.getElementById(id);
             if (el) {

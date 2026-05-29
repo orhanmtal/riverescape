@@ -66,9 +66,9 @@ const GameStore = {
 
     // Satın Alma İşlemini Başlat
     buy(productId) {
-        // v1.99.70.22: Yandex rewarded-ad purchase bypass
-        if (window.isYandexGames) {
-            console.log("🎮 [STORE] Yandex Ad-Purchase Triggered for:", productId);
+        // v1.99.80.00: GameDistribution rewarded-ad purchase bypass
+        if (window.isGameDistribution) {
+            console.log("🎮 [STORE] GD Ad-Purchase Triggered for:", productId);
             if (typeof showRewardedAd === 'function') {
                 // Pass a dummy element since it's a card click
                 showRewardedAd({ disabled: false, innerText: "" }, "Ad", () => {
@@ -167,8 +167,8 @@ const GameStore = {
 
     // v1.99.61.100: ELITE CURRENCY LOCALIZER
     getLocalizedPrice(productId) {
-        // v1.99.80.00: Yandex rewarded-ad label
-        if (window.isYandexGames) {
+        // v1.99.80.00: GameDistribution rewarded-ad label
+        if (window.isGameDistribution) {
             const lang = (typeof currentLang !== 'undefined') ? currentLang : 'tr';
             return lang === 'tr' ? "REKLAM (ÜCRETSİZ)" : (lang === 'ru' ? "РЕКЛАМА (БЕСПЛАТНО)" : "AD (FREE)");
         }
