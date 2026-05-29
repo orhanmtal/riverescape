@@ -615,16 +615,19 @@ function updateLanguageUI() {
         document.getElementById('shop-void-armor-desc').innerHTML = `${t.armorChargeDesc.replace('{count}', '<span id="shop-armor-count" style="color:#fff;">'+count+'</span>')}`;
     }
 
-    // Daily Gift Labels
-    if (document.querySelector('#daily-gift-btn .amount')) document.querySelector('#daily-gift-btn .amount').innerText = `1.000 ${t.goldLabel || "GOLD"}`;
+    // Ad Gold Reward Labels
     const adWord = t.spinNextBtn ? t.spinNextBtn.split(' ')[1].replace(/[()]/g, '') : "AD";
-    if (document.querySelector('#daily-gift-btn .price')) document.querySelector('#daily-gift-btn .price').innerText = `📽️ ${adWord}`;
-    if (document.getElementById('daily-gift-desc')) document.getElementById('daily-gift-desc').innerText = t.magmaCannonDesc ? t.magmaCannonDesc.split('|')[0].trim().replace('Owned:', '').replace('Mevcut:', '').replace('Есть:', '').trim() + " 1.000 " + (t.goldLabel || "GOLD") : "1.000 GOLD";
-    
-    // Better way for daily gift desc: let's just use a dedicated translation if it exists or generic one
+    if (document.getElementById('shop-gold-market-title')) {
+        document.getElementById('shop-gold-market-title').innerText = (currentLang === 'tr') ? "REKLAMLA ALTIN AL" : (currentLang === 'ru' ? "ЗОЛОТО ЗА РЕКЛАМУ" : "GET AD GOLD");
+    }
     if (document.getElementById('daily-gift-desc')) {
-        const giftDesc = (currentLang === 'tr') ? "Her gun 1.000 Altin!" : (currentLang === 'ru' ? "1.000 Золота каждый день!" : "1,000 Gold every day!");
-        document.getElementById('daily-gift-desc').innerText = giftDesc;
+        document.getElementById('daily-gift-desc').innerText = (currentLang === 'tr') ? "Her reklam +250 Altin!" : (currentLang === 'ru' ? "Смотрите рекламу для +250 Золота!" : "Watch ad for +250 Gold!");
+    }
+    if (document.querySelector('#daily-gift-btn .amount')) {
+        document.querySelector('#daily-gift-btn .amount').innerText = `+250 ${t.goldLabel || "GOLD"}`;
+    }
+    if (document.querySelector('#daily-gift-btn .price')) {
+        document.querySelector('#daily-gift-btn .price').innerText = `📽️ ${adWord}`;
     }
 
     // Upgrade/Buy Button Texts
@@ -1819,51 +1822,12 @@ function updateShopUI() {
 
     } catch (e) { console.warn("Shop UI Error:", e); }
 }
-// v1.99.65.17: Daily Gift (1000 Gold) - Takvim günü bazlı, Bulut + LocalStorage
-window.claimDailyGift = async function (btn) {
-    const LOCAL_KEY = 'riverEscape_DailyGift_date';
-    const CLOUD_KEY = 'dailyGift_date';
-    const today     = new Date().toDateString(); // ör: "Sat May 10 2026"
-
-    const lockBtn = () => {
-        if (!btn) return;
-        btn.innerHTML = (currentLang === 'tr') ? 'ALINDI ✅' : ((currentLang === 'ru') ? 'ПОЛУЧЕНО ✅' : 'CLAIMED ✅');
-        btn.disabled  = true;
-        btn.style.opacity = '0.5';
-    };
-
-    // 1. LocalStorage hızlı kontrol
-    if (localStorage.getItem(LOCAL_KEY) === today) {
-        showToast((currentLang === 'tr') ? 'BUGÜNKÜ HEDİYENİZİ ALDINIZ! ⏳' : ((currentLang === 'ru') ? 'ЕЖЕДНЕВНЫЙ ПОДАРОК УЖЕ ПОЛУЧЕН! ⏳' : 'DAILY GIFT ALREADY CLAIMED! ⏳'), false);
-        lockBtn();
-        return;
-    }
-
-    // 2. Bulut kontrolü (SDK varsa — tarayıcı temizlense bile geçerli)
-    const yandexPlayer = window.Leaderboard && window.Leaderboard.player;
-    if (yandexPlayer) {
-        try {
-            const cloudData = await yandexPlayer.getData([CLOUD_KEY]);
-            const cloudDate = cloudData && cloudData[CLOUD_KEY];
-            if (cloudDate === today) {
-                localStorage.setItem(LOCAL_KEY, today); // Local'i senkronize et
-                showToast((currentLang === 'tr') ? 'BUGÜNKÜ HEDİYENİZİ ALDINIZ! ⏳' : ((currentLang === 'ru') ? 'ЕЖЕДНЕВНЫЙ ПОДАРОК УЖЕ ПОЛУЧЕН! ⏳' : 'DAILY GIFT ALREADY CLAIMED! ⏳'), false);
-                lockBtn();
-                return;
-            }
-        } catch (e) {
-            console.warn('[DailyGift] Cloud check failed, proceeding with local:', e);
-        }
-    }
-
-    // 3. Kontrol geçti — reklamı göster ve ödülü ver
-    const claimedLabel = (currentLang === 'tr') ? 'ALINDI ✅' : ((currentLang === 'ru') ? 'ПОЛУЧЕНО ✅' : 'CLAIMED ✅');
+// claimAdGold: Repeatable ad gold reward (+250 gold per ad)
+window.claimAdGold = function (btn) {
+    const claimedLabel = (currentLang === 'tr') ? '+250 G' : ((currentLang === 'ru') ? '+250 З' : '+250 G');
     showRewardedAd(btn, claimedLabel, () => {
-        window.totalGold = (window.totalGold || 0) + 1000;
+        window.totalGold = (window.totalGold || 0) + 250;
         if (typeof totalGold !== 'undefined') totalGold = window.totalGold;
-
-        // LocalStorage'a kaydet
-        localStorage.setItem(LOCAL_KEY, today);
 
         // UI'ı ve yerel verileri gecikmesiz güncelle
         if (typeof triggerEliteEconomySync === 'function') {
@@ -1875,45 +1839,8 @@ window.claimDailyGift = async function (btn) {
             const goldValUI = document.getElementById('totalGoldValue');
             if (goldValUI) goldValUI.innerText = window.totalGold;
         }
-        showToast((currentLang === 'tr') ? '+1000 ALTIN! 💰' : ((currentLang === 'ru') ? '+1000 ЗОЛОТА! 💰' : '+1000 GOLD! 💰'), true);
-        lockBtn();
-
-        // Buluta kaydet (SDK varsa) - UI'ı engellememek için arka planda çalışsın
-        if (yandexPlayer) {
-            yandexPlayer.setData({ [CLOUD_KEY]: today }, true)
-                .then(() => {
-                    console.log('✅ [DailyGift] Cloud date saved:', today);
-                })
-                .catch((e) => {
-                    console.warn('[DailyGift] Cloud save failed:', e);
-                });
-        }
-    });
-};
-
-
-// v1.99.65: Daily Gold Ad
-window.claimDailyAdGold = function (btn) {
-    const today = new Date().toDateString();
-    const lastClaim = localStorage.getItem('riverEscape_DailyAdGold');
-    if (lastClaim === today) {
-        showToast((currentLang === 'tr') ? 'BUGÜNLÜK HAKKINIZ BİTTİ! ⏳' : ((currentLang === 'ru') ? 'ДНЕВНОЙ ЛИМИТ ИСЧЕРПАН! ⏳' : 'DAILY LIMIT REACHED! ⏳'), false);
-        return;
-    }
-    showRewardedAd(btn, (currentLang === 'tr') ? 'ALINDI' : ((currentLang === 'ru') ? 'ПОЛУЧЕНО' : 'CLAIMED'), () => {
-        window.totalGold = (window.totalGold || 0) + 200;
-        if (typeof totalGold !== 'undefined') totalGold = window.totalGold;
-        localStorage.setItem('riverEscape_DailyAdGold', today);
-        if (typeof triggerEliteEconomySync === 'function') {
-            triggerEliteEconomySync(true);
-        } else {
-            saveGame();
-            updateShopUI();
-            if (typeof syncEliteHUD === 'function') syncEliteHUD();
-            const goldValUI = document.getElementById('totalGoldValue');
-            if (goldValUI) goldValUI.innerText = window.totalGold;
-        }
-        showToast((currentLang === 'tr') ? '+200 ALTIN! 💰' : ((currentLang === 'ru') ? '+200 ЗОЛОТА! 💰' : '+200 GOLD! 💰'), true);
+        showToast((currentLang === 'tr') ? '+250 ALTIN! 💰' : ((currentLang === 'ru') ? '+250 ЗОЛОТА! 💰' : '+250 GOLD! 💰'), true);
+        for (var i = 0; i < 5; i++) setTimeout(playCoinSound, i * 150);
     });
 };
 
