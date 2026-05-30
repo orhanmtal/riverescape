@@ -1542,3 +1542,8 @@ input:checked + .toggle-slider:before {
     text-align: center !important;
     background: linear-gradient(to top, rgba(0, 0, 0, 0.5), transparent) !important;
 }
+
+/* Hide game container during ads so they don't overlap */
+body.ad-showing #game-container {
+    visibility: hidden !important;
+}

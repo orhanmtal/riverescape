@@ -44,11 +44,11 @@ if (!['localhost', '127.0.0.1'].includes(window.location.hostname)) {
 }
 </script>
     <script src="version.js?v=1.99.80.00"></script>
-    
-    <!-- GameDistribution HTML5 SDK -->
+        <!-- GameDistribution HTML5 SDK -->
     <script>
         function resumeGameAfterAd() {
             window.isAdShowing = false;
+            document.body.classList.remove('ad-showing');
             if (window.audioCtx) window.audioCtx.resume();
             
             // Restore active button UI
@@ -73,6 +73,7 @@ if (!['localhost', '127.0.0.1'].includes(window.location.hostname)) {
                     case "SDK_GAME_PAUSE":
                         console.log("🎮 [GD SDK] Game Pause requested (Ad starting)");
                         window.isAdShowing = true;
+                        document.body.classList.add('ad-showing');
                         if (window.audioCtx) window.audioCtx.suspend();
                         if (typeof gtag === 'function') {
                             gtag('event', 'ad_show_start');
