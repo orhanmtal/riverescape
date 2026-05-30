@@ -1543,7 +1543,12 @@ input:checked + .toggle-slider:before {
     background: linear-gradient(to top, rgba(0, 0, 0, 0.5), transparent) !important;
 }
 
-/* Hide game container during ads so they don't overlap */
+/* Hide game container and all screens during ads so they don't overlap */
 body.ad-showing #game-container {
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+body.ad-showing .screen {
+    display: none !important;
     visibility: hidden !important;
 }
